@@ -173,7 +173,8 @@ fun PennyApp(
                 DashboardScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp)
+                        .padding(16.dp),
+
                 )
             }
             composable(route = PennyScreen.Transaction.name) {
