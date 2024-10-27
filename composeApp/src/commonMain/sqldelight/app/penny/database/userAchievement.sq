@@ -1,0 +1,7 @@
+
+CREATE TABLE userAchievementEntity (
+    achievement_id INTEGER PRIMARY KEY,  -- 成就ID
+    unlocked_at INTEGER NOT NULL,        -- 解锁时间（Unix时间戳）
+    FOREIGN KEY (achievement_id) REFERENCES achievementEntity(achievement_id)
+);
+

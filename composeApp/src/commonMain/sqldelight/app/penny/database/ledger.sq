@@ -1,0 +1,10 @@
+CREATE TABLE ledgerEntity (
+    ledger_id INTEGER PRIMARY KEY AUTOINCREMENT,   -- 账本ID
+    name TEXT NOT NULL,
+    currency_code TEXT NOT NULL,   -- 货币代码
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间（默认当前时间）
+    updated_at INTEGER NOT NULL   DEFAULT (strftime('%s','now'))  -- 修改时间（默认当前时间）
+);
+
+insertLedger:
+INSERT INTO ledgerEntity (name, currency_code) VALUES (?, ?);

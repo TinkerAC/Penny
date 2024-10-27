@@ -1,0 +1,7 @@
+CREATE TABLE achievementEntity (
+    achievement_id INTEGER PRIMARY KEY AUTOINCREMENT,  -- 成就ID
+    name TEXT NOT NULL,             -- 成就名称
+    description TEXT NOT NULL,      -- 成就描述
+    icon_uri TEXT NOT NULL          -- 成就图标URI
+
+);

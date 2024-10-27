@@ -1,0 +1,24 @@
+CREATE TABLE transactionEntity (
+    transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ledger_id INTEGER NOT NULL,            -- 所属账本ID，引用 ledger(ledger_id)
+    transaction_date INTEGER NOT NULL,     -- 交易日期（Unix时间戳）
+    category_id INTEGER NOT NULL,          -- 分类ID，引用 category(category_id)
+    transaction_type TEXT NOT NULL,        -- 交易类型（INCOME、EXPENSE、TRANSFER）
+    amount INTEGER NOT NULL,               -- 金额（最小货币单位，如分、厘）
+    currency_code TEXT NOT NULL,           -- 货币代码
+    content TEXT,                          -- 交易内容（可为空）
+    screenshot_uri TEXT,                   -- 截图URI（可为空）
+    note TEXT,                             -- 备注（可为空）
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间（默认当前时间）
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),  -- 修改时间（默认当前时间）
+
+    FOREIGN KEY (ledger_id) REFERENCES ledgerEntity(ledger_id),
+    FOREIGN KEY (category_id) REFERENCES categoryEntity(category_id)
+);
+
+selectAll:
+SELECT * FROM transactionEntity;
+
+
+insertTransaction:
+INSERT INTO transactionEntity (ledger_id, transaction_date, category_id, transaction_type, amount, currency_code, content, screenshot_uri, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
