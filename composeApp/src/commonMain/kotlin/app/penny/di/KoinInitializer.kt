@@ -2,7 +2,6 @@ package app.penny.di
 
 
 import org.koin.core.context.startKoin
-import org.koin.dsl.KoinAppDeclaration
 
 fun initKoin() {
     startKoin {
@@ -16,14 +15,3 @@ fun initKoin() {
 
 }
 
-fun initKoinAndroid(appDeclaration: KoinAppDeclaration = {}) {
-    startKoin {
-        modules(
-            listOf(
-                platformModule(),
-                commonModule()
-            )
-        )
-        appDeclaration()
-    }
-}

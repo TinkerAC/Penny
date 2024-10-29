@@ -1,9 +1,9 @@
 package app.penny.presentation
 
-import app.penny.domain.model.Transaction
+import app.penny.domain.model.TransactionModel
 
 data class DashboardUiState(
-    val transactions: List<Transaction> = emptyList(),
+    val transactions: List<TransactionModel> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )

@@ -1,42 +1,93 @@
 package app.penny.data.model
 
 
+import app.penny.database.AchievementEntity
+import app.penny.database.CategoryEntity
+import app.penny.database.LedgerEntity
 import app.penny.database.TransactionEntity
-import app.penny.domain.model.Transaction
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import app.penny.database.UserAchievementEntity
+import app.penny.domain.model.AchievementModel
+import app.penny.domain.model.CategoryModel
+import app.penny.domain.model.LedgerModel
+import app.penny.domain.model.TransactionModel
+import app.penny.domain.model.UserAchievementModel
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import kotlinx.datetime.Clock
 
-// TransactionEntity 转换为 Transaction（Domain 模型）
-fun TransactionEntity.toDomainModel(): Transaction {
-    return Transaction(
-        id = this.transaction_id.toString(),
-        amount = this.amount.toInt(),
-        // 从Unix时间戳转换为LocalDateTime
-        date = Instant.fromEpochMilliseconds(this.transaction_date)
-            .toLocalDateTime(TimeZone.UTC) // 或根据需要选择其他时区
+
+fun LedgerEntity.toModel(): LedgerModel {
+    return LedgerModel(
+        id = id,
+        name = name,
+        currencyCode = currency_code,
+
+        )
+}
+
+
+fun TransactionModel.toEntity(): TransactionEntity {
+    return TransactionEntity(
+        id = 0,
+        ledger_id = ledgerId,
+        transaction_date = transactionDate,
+        category_id = categoryId,
+        transaction_type = transactionType.name,
+        amount = amount.toString(),
+        currency_code = currencyCode,
+        content = content,
+        screenshot_uri = screenshotUri,
+        note = note,
+        created_at = Clock.System.now().toEpochMilliseconds(),
+        updated_at = Clock.System.now().toEpochMilliseconds()
+
+
     )
 }
 
 
-// Model 转换为 Entity
-//fun TransactionEntity.toD
+fun TransactionEntity.toModel(): TransactionModel {
+    return TransactionModel(
+
+        ledgerId = ledger_id,
+        amount = BigDecimal.parseString(amount),
+        currencyCode = currency_code,
+        content = content,
+        screenshotUri = screenshot_uri,
+        note = note,
+
+    )
+}
+
+fun CategoryEntity.toModel(): CategoryModel {
+    return CategoryModel(
+        id = id,
+        parentId = parent_id,
+        name = name,
+        iconUri = icon_uri,
+
+        )
+}
+
+fun AchievementEntity.toModel(): AchievementModel {
+    return AchievementModel(
+        id = id,
+        name = name,
+        description = description,
+        iconUri = icon_uri,
+        goal = goal
+    )
+}
+
+fun UserAchievementEntity.toModel(): UserAchievementModel {
+    return UserAchievementModel(
+        id = id,
+        achievementId = achievement_id,
+        progress = progress,
+        completedAt = completed_at,
+
+        )
+}
 
 
-//// TransactionDto 转换为 Transaction（Domain 模型）
-//fun TransactionDto.toDomainModel(): Transaction {
-//    return Transaction(
-//        id = this.id,
-//        amount = this.amount,
-//        date = this.timestamp.toLocalDateTime()
-//    )
-//}
-//
-//// TransactionDto 转换为 TransactionEntity
-//fun TransactionDto.toEntity(): TransactionEntity {
-//    return TransactionEntity(
-//        id = this.id,
-//        amount = this.amount,
-//        timestamp = this.timestamp
-//    )
-//}
+
+

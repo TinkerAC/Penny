@@ -1,9 +1,31 @@
 CREATE TABLE categoryEntity (
-    category_id INTEGER PRIMARY KEY AUTOINCREMENT,   -- 分类ID
+    id INTEGER PRIMARY KEY AUTOINCREMENT,   -- 分类ID
     parent_id INTEGER,             -- 父分类ID（可为空）
     name TEXT NOT NULL,            -- 分类名称
     icon_uri TEXT NOT NULL,        -- 图标URI
     created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间（默认当前时间）
     updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),  -- 修改时间（默认当前时间）
-    FOREIGN KEY (parent_id) REFERENCES categoryEntity(category_id)
+    FOREIGN KEY (parent_id) REFERENCES categoryEntity(id)
 );
+
+
+
+
+insertCategory:
+INSERT INTO categoryEntity (parent_id, name, icon_uri) VALUES (?, ?, ?);
+
+
+getCategoryById:
+SELECT * FROM categoryEntity WHERE id = ?;
+
+
+getAllCategories:
+SELECT * FROM categoryEntity;
+
+updateCategory:
+UPDATE categoryEntity SET parent_id = ?, name = ?, icon_uri = ?, updated_at = strftime('%s','now') WHERE id = ?;
+
+
+
+deleteCategory:
+DELETE FROM categoryEntity WHERE id = ?;

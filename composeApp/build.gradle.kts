@@ -12,26 +12,6 @@ plugins {
 }
 
 kotlin {
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        moduleName = "composeApp"
-        browser {
-            val rootDirPath = project.rootDir.path
-            val projectDirPath = project.projectDir.path
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(rootDirPath)
-                        add(projectDirPath)
-                    }
-                }
-            }
-        }
-        binaries.executable()
-    }
-
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -52,60 +32,72 @@ kotlin {
         }
     }
 
+    applyDefaultHierarchyTemplate() // this one
+
+
     sourceSets {
-        val desktopMain by getting
-        androidMain.dependencies {
-            implementation(libs.ktor.client.android)
-            implementation(libs.android.driver)
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.sqldelight.android.driver)
-            implementation(libs.insert.koin.koin.core.ext)
-            implementation(libs.insert.koin.koin.android.ext)
-            implementation(libs.koin.android)
-
-        }
-        commonMain.dependencies {
-
-            implementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
-            implementation(libs.voyager.koin)
-            implementation(libs.cafe.voyager.screenmodel)
-            implementation(libs.sqldelight.runtime)
-            implementation(libs.voyager.tab.navigator)
-            implementation(libs.voyager.navigator) // Voyager依赖
-            implementation(libs.voyager.transitions) // 可选，动画支持
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.runtime)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.koin.core)
-
-            implementation(libs.navigation.compose)
-            implementation(compose.material3)
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-        }
-        desktopMain.dependencies {
-            implementation(libs.sqlite.driver)
-            implementation(libs.jdbc.driver)
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.sqldelight.sqlite.driver)
-
+        val commonMain by getting {
+            dependencies {
+                // Koin 核心依赖，统一版本为 3.5.0
+                implementation(libs.koin.core)
+                // 其他依赖
+                implementation(libs.bignum)
+                implementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
+                implementation(libs.voyager.koin)
+                implementation(libs.cafe.voyager.screenmodel)
+                implementation(libs.runtime)
+                implementation(libs.voyager.tab.navigator)
+                implementation(libs.voyager.navigator)
+                implementation(libs.voyager.transitions)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.kotlinx.datetime)
+                implementation(compose.material3)
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                implementation(compose.ui)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+                implementation(libs.androidx.lifecycle.viewmodel)
+            }
         }
 
-        iosMain.dependencies {
-            implementation(libs.sqldelight.native.driver)
-            implementation(libs.ktor.client.darwin)
-            implementation(libs.native.driver)
+        val androidMain by getting {
+            dependencies {
+
+                implementation(libs.ktor.client.android)
+                implementation(compose.preview)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.android.driver)
+                // Koin Android 依赖，版本统一为 3.5.0
+                implementation(libs.koin.android)
+                implementation(libs.koin.android.ext)
+                // 如果需要 Koin Core 扩展
+                implementation(libs.koin.core.ext)
+            }
+        }
+
+        val desktopMain by getting {
+            dependencies {
+                // Koin 核心依赖，版本统一为 3.5.0
+                implementation(libs.koin.core)
+                // 其他依赖
+                implementation(libs.sqlite.driver)
+                implementation(libs.jdbc.driver)
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
+            }
+        }
+
+        val iosMain by getting {
+            dependencies {
+                implementation(libs.native.driver)
+                // 其他依赖
+                implementation(libs.ktor.client.darwin)
+            }
         }
     }
 }
@@ -152,11 +144,11 @@ compose.desktop {
         }
     }
 }
+
 sqldelight {
     databases {
         create("PennyDatabase") {
             packageName.set("app.penny.database")
-
         }
     }
 }

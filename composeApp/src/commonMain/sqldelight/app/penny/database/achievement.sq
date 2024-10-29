@@ -1,7 +1,26 @@
 CREATE TABLE achievementEntity (
-    achievement_id INTEGER PRIMARY KEY AUTOINCREMENT,  -- 成就ID
+    id INTEGER PRIMARY KEY AUTOINCREMENT,  -- 成就ID
     name TEXT NOT NULL,             -- 成就名称
+    goal INTEGER NOT NULL,          -- 成就目标
     description TEXT NOT NULL,      -- 成就描述
     icon_uri TEXT NOT NULL          -- 成就图标URI
 
 );
+
+
+insertAchievement:
+INSERT INTO achievementEntity (name, goal, description, icon_uri) VALUES (?, ?, ?, ?);
+
+getAchievementById:
+SELECT * FROM achievementEntity WHERE id = ?;
+
+getAllAchievements:
+SELECT * FROM achievementEntity;
+
+
+updateAchievement:
+UPDATE achievementEntity SET name = ?, goal = ?, description = ?, icon_uri = ? WHERE id = ?;
+
+
+deleteAchievement:
+DELETE FROM achievementEntity WHERE id = ?;

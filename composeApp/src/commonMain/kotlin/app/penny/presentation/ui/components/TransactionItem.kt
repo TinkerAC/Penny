@@ -5,12 +5,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.penny.domain.model.Transaction
+import app.penny.domain.model.TransactionModel
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: TransactionModel) {
     Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-        Text(text = transaction.id, modifier = Modifier.weight(1f))
+
+        Text(text = transaction.content ?: "No content")
         Text(text = transaction.amount.toString())
     }
 }

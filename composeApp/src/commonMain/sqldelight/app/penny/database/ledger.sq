@@ -1,5 +1,5 @@
 CREATE TABLE ledgerEntity (
-    ledger_id INTEGER PRIMARY KEY AUTOINCREMENT,   -- 账本ID
+    id INTEGER PRIMARY KEY AUTOINCREMENT,   -- 账本ID
     name TEXT NOT NULL,
     currency_code TEXT NOT NULL,   -- 货币代码
     created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间（默认当前时间）
@@ -8,3 +8,15 @@ CREATE TABLE ledgerEntity (
 
 insertLedger:
 INSERT INTO ledgerEntity (name, currency_code) VALUES (?, ?);
+
+getLedgerById:
+SELECT * FROM ledgerEntity WHERE id = ?;
+
+getAllLedgers:
+SELECT * FROM ledgerEntity;
+
+updateLedger:
+UPDATE ledgerEntity SET name = ?, currency_code = ?, updated_at = strftime('%s','now') WHERE id = ?;
+
+deleteLedger:
+DELETE FROM ledgerEntity WHERE id = ?;

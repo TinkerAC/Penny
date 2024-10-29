@@ -1,7 +1,28 @@
 
 CREATE TABLE userAchievementEntity (
-    achievement_id INTEGER PRIMARY KEY,  -- 成就ID
-    unlocked_at INTEGER NOT NULL,        -- 解锁时间（Unix时间戳）
-    FOREIGN KEY (achievement_id) REFERENCES achievementEntity(achievement_id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,  -- 用户成就ID
+    achievement_id INTEGER NOT NULL,      -- 成就ID，引用 achievementEntity(achievement_id)
+    completed_at INTEGER NOT NULL,        -- 解锁时间（Unix时间戳）
+    progress INTEGER NOT NULL,           -- 成就进度
+
+    FOREIGN KEY (achievement_id) REFERENCES achievementEntity(id)
+
 );
 
+
+
+insertUserAchievement:
+INSERT INTO userAchievementEntity (achievement_id, completed_at, progress) VALUES (?, ?, ?);
+
+getUserAchievementById:
+SELECT * FROM userAchievementEntity WHERE id = ?;
+
+getAllUserAchievements:
+SELECT * FROM userAchievementEntity;
+
+updateUserAchievement:
+UPDATE userAchievementEntity SET achievement_id = ?, completed_at = ?, progress = ? WHERE id = ?;
+
+
+deleteUserAchievement:
+DELETE FROM userAchievementEntity WHERE id = ?;
