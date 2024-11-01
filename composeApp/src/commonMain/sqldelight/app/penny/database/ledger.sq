@@ -2,12 +2,14 @@ CREATE TABLE ledgerEntity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,   -- 账本ID
     name TEXT NOT NULL,
     currency_code TEXT NOT NULL,   -- 货币代码
+    cover_name TEXT NOT NULL,   -- 封面名称(Enum.name)
+    description TEXT,   -- 描述
     created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间（默认当前时间）
     updated_at INTEGER NOT NULL   DEFAULT (strftime('%s','now'))  -- 修改时间（默认当前时间）
 );
 
 insertLedger:
-INSERT INTO ledgerEntity (name, currency_code) VALUES (?, ?);
+INSERT INTO ledgerEntity (name, currency_code, cover_name, description) VALUES (?, ?, ?, ?);
 
 getLedgerById:
 SELECT * FROM ledgerEntity WHERE id = ?;

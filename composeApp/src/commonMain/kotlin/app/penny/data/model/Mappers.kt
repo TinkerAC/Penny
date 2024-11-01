@@ -6,6 +6,7 @@ import app.penny.database.CategoryEntity
 import app.penny.database.LedgerEntity
 import app.penny.database.TransactionEntity
 import app.penny.database.UserAchievementEntity
+import app.penny.domain.enum.LedgerCover
 import app.penny.domain.model.AchievementModel
 import app.penny.domain.model.CategoryModel
 import app.penny.domain.model.LedgerModel
@@ -14,14 +15,29 @@ import app.penny.domain.model.UserAchievementModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
 
-
 fun LedgerEntity.toModel(): LedgerModel {
     return LedgerModel(
         id = id,
         name = name,
         currencyCode = currency_code,
+        cover = LedgerCover.valueOf(cover_name),
+        description = description,
+        count = 0,
+        balance = BigDecimal.ZERO
 
-        )
+    )
+}
+
+fun LedgerModel.toEntity(): LedgerEntity {
+    return LedgerEntity(
+        id = id,
+        name = name,
+        currency_code = currencyCode,
+        cover_name = cover.name,
+        description = "",
+        created_at = 0,
+        updated_at = 0
+    )
 }
 
 
@@ -55,7 +71,7 @@ fun TransactionEntity.toModel(): TransactionModel {
         screenshotUri = screenshot_uri,
         note = note,
 
-    )
+        )
 }
 
 fun CategoryEntity.toModel(): CategoryModel {

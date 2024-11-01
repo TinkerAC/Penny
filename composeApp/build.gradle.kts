@@ -89,6 +89,9 @@ kotlin {
                 implementation(libs.jdbc.driver)
                 implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutines.swing)
+
+                
+                implementation(libs.ui.tooling.preview.desktop)
             }
         }
 
