@@ -1,4 +1,4 @@
-package app.penny.presentation.ui.screens
+package app.penny.presentation.ui.screens.newLedger
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -10,22 +10,30 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.domain.enum.LedgerCover
 import app.penny.presentation.ui.components.CurrencySelectorModal
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
-import app.penny.presentation.viewmodel.NewLedgerViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 
-class NewLedgerScreen : Screen {
+class NewLedgerScreen(
+    val updateMyLedgerCallBack: () -> Unit
+) : Screen {
 
 
     @Composable
@@ -36,16 +44,45 @@ class NewLedgerScreen : Screen {
         val uiState = viewModel.uiState.collectAsState()
         val rootNavigator = LocalNavigator.current
 
+        val eventFlow = viewModel.eventFlow
+
+        val scope = rememberCoroutineScope()
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        // 收集事件流
+        LaunchedEffect(Unit) {
+            eventFlow.collect { event ->
+                when (event) {
+                    is NewLedgerUiEvent.ShowSnackbar -> {
+                        snackbarHostState.showSnackbar(
+                            message = event.message,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+
+                    is NewLedgerUiEvent.NavigateBack -> {
+                        updateMyLedgerCallBack()
+                        rootNavigator?.pop()
+                    }
+                }
+            }
+        }
+
 
         Scaffold(
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+
             topBar = {
                 SingleNavigateBackTopBar(
                     title = "新建账本",
-                    onNavigateBack = { rootNavigator?.pop() }
+                    onNavigateBack = {
+                        updateMyLedgerCallBack()
+                        rootNavigator?.pop()
+                    }
                 )
             },
 
-            ) {paddingValues ->
+            ) { paddingValues ->
 
             Column(
                 modifier = Modifier.padding(paddingValues)
@@ -54,8 +91,8 @@ class NewLedgerScreen : Screen {
                 Text("设置我的账本")
 
                 TextField(
-                    value = "",
-                    onValueChange = { viewModel.setName(it) },
+                    value = uiState.value.ledgerName,
+                    onValueChange = { viewModel.handleIntent(NewLedgerIntent.SetLedgerName(it)) },
                     label = { Text("账本名称") }
                 )
 
@@ -64,7 +101,12 @@ class NewLedgerScreen : Screen {
                 LazyRow {
                     items(LedgerCover.entries) { cover ->
                         Column(
-                            modifier = Modifier.clickable { viewModel.setCover(cover) }
+                            modifier = Modifier.clickable {
+                                viewModel.handleIntent(
+
+                                    NewLedgerIntent.SelectCover(cover = cover)
+                                )
+                            }
                         ) {
 
                             Text(if (cover == uiState.value.ledgerCover) "选中" else "" + cover.coverName)
@@ -80,7 +122,7 @@ class NewLedgerScreen : Screen {
 
                 Row(
                     modifier = Modifier.clickable {
-                        viewModel.setCurrencySelectorModalVisible(true)
+                        viewModel.handleIntent(NewLedgerIntent.OpenCurrencySelectorModal)
                     }
                 ) {
 
@@ -95,14 +137,8 @@ class NewLedgerScreen : Screen {
 
 
                 Button(onClick = {
-                    viewModel.createNewLedger(
-                        uiState.value.ledgerName,
-                        uiState.value.ledgerCurrencyCode,
-                        cover = uiState.value.ledgerCover,
-                        description = uiState.value.ledgerDescription
-                    )
+                    viewModel.handleIntent(NewLedgerIntent.ConfirmCreateLedger)
 
-                    rootNavigator?.pop()
                 }) {
                     Text("创建账本")
                 }
@@ -110,12 +146,26 @@ class NewLedgerScreen : Screen {
             }
         }
 
+
+        // 显示错误消息
+        LaunchedEffect(uiState.value.errorMessage) {
+            uiState.value.errorMessage?.let { message ->
+                scope.launch {
+                    snackbarHostState.showSnackbar(message)
+                }
+
+            }
+        }
+
+
         if (uiState.value.currencySelectorModalVisible) {
             CurrencySelectorModal(
-                onDismiss = { viewModel.setCurrencySelectorModalVisible(false) },
+                onDismiss = { viewModel.handleIntent(NewLedgerIntent.CloseCurrencySelectorModal) },
                 viewModel = viewModel
             )
         }
+
+
 
 
     }

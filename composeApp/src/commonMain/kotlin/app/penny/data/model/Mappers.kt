@@ -14,12 +14,14 @@ import app.penny.domain.model.TransactionModel
 import app.penny.domain.model.UserAchievementModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
+import app.penny.domain.enum.Currency
+
 
 fun LedgerEntity.toModel(): LedgerModel {
     return LedgerModel(
         id = id,
         name = name,
-        currencyCode = currency_code,
+        currency = Currency.valueOf(currency_code),
         cover = LedgerCover.valueOf(cover_name),
         description = description,
         count = 0,
@@ -32,7 +34,7 @@ fun LedgerModel.toEntity(): LedgerEntity {
     return LedgerEntity(
         id = id,
         name = name,
-        currency_code = currencyCode,
+        currency_code = currency.currencyCode,
         cover_name = cover.name,
         description = "",
         created_at = 0,

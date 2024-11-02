@@ -1,17 +1,19 @@
 package app.penny.presentation.viewmodel
 
 import app.penny.domain.usecase.InsertLedgerUseCase
-import app.penny.presentation.DashboardUiState
+import app.penny.presentation.uiState.DashboardUiState
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
-class DashboardViewModel (
+
+class UiIntent
+
+
+class DashboardViewModel(
     private val insertLedgerUseCase: InsertLedgerUseCase
-): ScreenModel {
+) : ScreenModel {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
 
@@ -28,8 +30,6 @@ class DashboardViewModel (
     fun insertTransaction() {
         _uiState.value = DashboardUiState(isLoading = true)
     }
-
-
 
 
 }

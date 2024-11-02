@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,8 +19,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.penny.domain.enum.Currency
-import app.penny.presentation.viewmodel.NewLedgerViewModel
+import app.penny.presentation.ui.screens.newLedger.NewLedgerViewModel
 import org.jetbrains.compose.resources.painterResource
+
+
+import app.penny.presentation.ui.screens.newLedger.NewLedgerIntent
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +44,7 @@ fun CurrencySelectorModal(
                 Row(
                     modifier = Modifier.fillMaxSize().clickable(
                         onClick = {
-                            viewModel.setCurrency(currency)
+                            viewModel.handleIntent(NewLedgerIntent.SelectCurrency(currency))
                             onDismiss()
                         })
                 ) {

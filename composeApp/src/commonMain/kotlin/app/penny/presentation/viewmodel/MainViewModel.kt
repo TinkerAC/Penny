@@ -1,9 +1,10 @@
 package app.penny.presentation.viewmodel
 
 import app.penny.data.repository.LedgerRepository
+import app.penny.domain.enum.Currency
 import app.penny.domain.enum.LedgerCover
 import app.penny.domain.usecase.InsertLedgerUseCase
-import app.penny.presentation.MainUiState
+import app.penny.presentation.uiState.MainUiState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,11 +29,11 @@ class MainViewModel(
     }
 
 
-    fun insertLedger(name: String, currencyCode: String, description: String, cover: LedgerCover) {
+    fun insertLedger(name: String, currency:Currency, description: String, cover: LedgerCover) {
         screenModelScope.launch {
             insertLedgerUseCase(
                 name = name,
-                currencyCode = currencyCode,
+                currency = currency,
                 cover = cover,
                 description = description
             )

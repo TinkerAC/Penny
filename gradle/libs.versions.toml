@@ -15,6 +15,7 @@ bignum = "0.3.10"
 compose-plugin = "1.6.11"
 jdbcDriver = "2.0.2"
 junit = "4.13.2"
+kermit = "2.0.4"
 koin = "3.5.0"  # 统一 Koin 版本为 3.5.0
 koin-android = "3.5.0"
 koin-core-ext = "3.0.2"
@@ -33,6 +34,7 @@ voyagerVersion = "1.1.0-beta02"
 
 [libraries]
 # Koin 依赖，版本统一为 3
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-core-ext = { module = "io.insert-koin:koin-core-ext", version.ref = "koin-core-ext" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-android" }
