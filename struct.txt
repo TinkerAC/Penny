@@ -34,7 +34,7 @@
 │       │   │           │   └── ui                      // UI 组件和屏幕
 │       │   │           │       ├── screens             // 屏幕界面：各个页面
 │       │   │           │       │   ├── DashboardScreen.kt      // 仪表盘界面
-│       │   │           │       │   ├── TransactionScreen.kt    // 交易列表界面
+│       │   │           │       │   ├── NewTransactionScreen.kt    // 交易列表界面
 │       │   │           │       │   └── ...             // 其他屏幕
 │       │   │           │       └── components          // 可重用的 UI 组件
 │       │   │           │           ├── TransactionItem.kt      // 交易项组件

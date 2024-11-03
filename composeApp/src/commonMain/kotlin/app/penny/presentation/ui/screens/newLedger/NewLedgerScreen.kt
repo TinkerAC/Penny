@@ -28,7 +28,6 @@ import app.penny.presentation.ui.components.SingleNavigateBackTopBar
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 
 class NewLedgerScreen(
@@ -147,25 +146,12 @@ class NewLedgerScreen(
         }
 
 
-        // 显示错误消息
-        LaunchedEffect(uiState.value.errorMessage) {
-            uiState.value.errorMessage?.let { message ->
-                scope.launch {
-                    snackbarHostState.showSnackbar(message)
-                }
-
-            }
-        }
-
-
         if (uiState.value.currencySelectorModalVisible) {
             CurrencySelectorModal(
                 onDismiss = { viewModel.handleIntent(NewLedgerIntent.CloseCurrencySelectorModal) },
                 viewModel = viewModel
             )
         }
-
-
 
 
     }

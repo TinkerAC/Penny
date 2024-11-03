@@ -12,11 +12,12 @@ import app.penny.domain.usecase.DeleteLedgerUseCase
 import app.penny.domain.usecase.GetAllLedgerUseCase
 import app.penny.domain.usecase.GetTransactionsUseCase
 import app.penny.domain.usecase.InsertLedgerUseCase
-import app.penny.presentation.viewmodel.DashboardViewModel
-import app.penny.presentation.viewmodel.MainViewModel
+import app.penny.presentation.ui.components.numPad.NumPadViewModel
 import app.penny.presentation.ui.screens.myLedger.MyLedgerViewModel
 import app.penny.presentation.ui.screens.newLedger.NewLedgerViewModel
-import app.penny.presentation.viewmodel.TransactionViewModel
+import app.penny.presentation.ui.screens.newTransaction.NewTransactionViewModel
+import app.penny.presentation.viewmodel.DashboardViewModel
+import app.penny.presentation.viewmodel.MainViewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -53,11 +54,15 @@ fun commonModule() = module {
 
 
     // 注入 ViewModel
-    factory { TransactionViewModel(get()) }
+    factory { NewTransactionViewModel(get()) }
 
     factory { DashboardViewModel(get()) }
 
     factory { MainViewModel(get(), get()) }
+    factory { MyLedgerViewModel(get(), get()) }
+    factory { NewLedgerViewModel(get()) }
+
+    factory { NumPadViewModel() }
 
 
 

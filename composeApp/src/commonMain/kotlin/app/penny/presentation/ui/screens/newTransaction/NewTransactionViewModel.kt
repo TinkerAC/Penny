@@ -1,4 +1,4 @@
-package app.penny.presentation.viewmodel
+package app.penny.presentation.ui.screens.newTransaction
 
 
 import app.penny.data.model.TransactionType
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
-class TransactionViewModel(
+class NewTransactionViewModel(
     private val transactionRepository: TransactionRepository
 ) : ScreenModel {
 
