@@ -1,25 +1,28 @@
+// file: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/newTransaction/NewTransactionScreen.kt
 package app.penny.presentation.ui.screens.newTransaction
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.domain.enum.TransactionType
-import app.penny.presentation.ui.components.numPad.NumPadScreen
+import app.penny.presentation.ui.components.numPad.NumPad
+import app.penny.presentation.ui.components.numPad.NumPadButton
 import app.penny.presentation.ui.components.numPad.NumPadViewModel
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
@@ -40,35 +43,43 @@ class NewTransactionScreen : Screen, ScreenTransition {
     override fun Content() {
         val newTransactionViewModel = koinScreenModel<NewTransactionViewModel>()
 
-        val numPadViewModel = koinScreenModel<NumPadViewModel>()
-
         val rootNavigator = LocalNavigator.currentOrThrow
 
-        val selectedTabIndex = remember { mutableStateOf(0) }
-
+        val uiState by newTransactionViewModel.uiState.collectAsState()
 
         val tabs = TransactionType.entries.map { it.name }
+
+        // 监听交易完成事件
+        if (uiState.transactionCompleted) {
+            LaunchedEffect(Unit) {
+                rootNavigator.pop()
+                newTransactionViewModel.resetTransactionCompleted()
+            }
+        }
 
         Scaffold(
             topBar = {
                 TopAppBar(title = {
-                    Row(
-                    ) {
+                    Row {
                         Column(
                             modifier = Modifier.weight(2f)
                         ) {
-
-                            Text("New Transaction")//TODO: Navigate back button
-
+                            Text("New Transaction")
+                            // TODO: 返回按钮
                         }
                         Column(
                             modifier = Modifier.weight(8f)
                         ) {
-                            TabRow(selectedTabIndex = selectedTabIndex.value) {
+                            TabRow(selectedTabIndex = uiState.selectedTab.tabIndex) {
                                 tabs.forEachIndexed { index, title ->
-                                    Tab(text = { Text(title) },
-                                        selected = selectedTabIndex.value == index,
-                                        onClick = { selectedTabIndex.value = index }
+                                    Tab(
+                                        text = { Text(title) },
+                                        selected = uiState.selectedTab.tabIndex == index,
+                                        onClick = {
+                                            newTransactionViewModel.handleIntent(
+                                                NewTransactionIntent.SelectTab(NewTransactionTab.entries[index])
+                                            )
+                                        }
                                     )
                                 }
                             }
@@ -78,29 +89,50 @@ class NewTransactionScreen : Screen, ScreenTransition {
             },
 
             bottomBar = {
-                //TODO: The NumPad component
-
                 BottomAppBar(
-                    modifier = Modifier.height(350.dp)
-                    //why wrapContentSize didn't work?
+                    modifier = Modifier.height(300.dp)
                 ) {
-                    NumPadScreen().Content()
+                    NumPad(
+                        amountText = uiState.amountText,
+                        remarkText = uiState.remarkText,
+                        doneButtonText = uiState.doneButtonText,
+                        onRemarkChanged = { newRemark ->
+                            newTransactionViewModel.onRemarkChanged(newRemark)
+                        },
+                        onNumPadButtonClicked = { numPadButton ->
+                            newTransactionViewModel.onNumPadButtonClicked(numPadButton)
+                        },
+                        onDoneButtonClicked = {
+                            newTransactionViewModel.onDoneButtonClicked()
+                        }
+                    )
                 }
-
             }
 
-        )
-        { paddingValues ->
+        ) { paddingValues ->
             Column(
                 modifier = Modifier.padding(paddingValues)
+                    .background(MaterialTheme.colorScheme.surface)
             ) {
-                when (selectedTabIndex.value) {
+                when (uiState.selectedTab.tabIndex) {
                     0 -> {
-                        NewExpenseTransactionTabContent()
+                        NewExpenseTransactionTabContent(
+                            onCategorySelected = { category ->
+                                newTransactionViewModel.handleIntent(
+                                    NewTransactionIntent.SelectExpenseCategory(category)
+                                )
+                            }
+                        )
                     }
 
                     1 -> {
-                        NewIncomeTransactionTabContent()
+                        NewIncomeTransactionTabContent(
+                            onCategorySelected = { category ->
+                                newTransactionViewModel.handleIntent(
+                                    NewTransactionIntent.SelectIncomeCategory(category)
+                                )
+                            }
+                        )
                     }
                 }
             }
@@ -108,7 +140,3 @@ class NewTransactionScreen : Screen, ScreenTransition {
     }
 
 }
-
-
-
-

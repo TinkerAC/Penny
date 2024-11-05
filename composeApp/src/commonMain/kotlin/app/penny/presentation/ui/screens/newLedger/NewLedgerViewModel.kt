@@ -28,7 +28,6 @@ class NewLedgerViewModel(
     // 处理用户意图
     fun handleIntent(intent: NewLedgerIntent) {
         when (intent) {
-            NewLedgerIntent.CreateLedger -> createNewLedger()
             NewLedgerIntent.OpenCurrencySelectorModal -> openCurrencySelectorModal()
             NewLedgerIntent.CloseCurrencySelectorModal -> closeCurrencySelectorModal()
             NewLedgerIntent.ConfirmCreateLedger -> confirmCreateLedger()
@@ -38,10 +37,6 @@ class NewLedgerViewModel(
         }
     }
 
-    // 处理创建新账本的意图（可选，根据需求决定是否保留）
-    private fun createNewLedger() {
-        // 如果没有其他用途，可以考虑移除此函数
-    }
 
     // 打开货币选择模态框
     private fun openCurrencySelectorModal() {

@@ -1,6 +1,6 @@
 package app.penny.domain.enum
 
-
+import androidx.compose.ui.graphics.painter.Painter
 
 
 enum class IncomeCategory(
@@ -172,5 +172,20 @@ enum class ExpenseCategory(
     // Miscellaneous Categories
     MISCELLANEOUS(null, "Miscellaneous", "ic_category_miscellaneous"),
     OTHER_EXPENSES(MISCELLANEOUS, "Other Expenses", "ic_category_other_expenses"),
-    UNCATEGORIZED(MISCELLANEOUS, "Uncategorized", "ic_category_uncategorized"),
+    UNCATEGORIZED(MISCELLANEOUS, "Uncategorized", "ic_category_uncategorized");
+
+
+    companion object {
+        // 获取所有父类
+        fun getAllParentCategories(): List<ExpenseCategory> {
+            return values().filter { it.parent == null }
+        }
+
+        // 获取指定父类的所有子类
+        fun getSubCategories(parentCategory: ExpenseCategory): List<ExpenseCategory> {
+            return values().filter { it.parent == parentCategory }
+        }
+    }
+
+
 }

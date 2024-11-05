@@ -62,7 +62,7 @@ fun commonModule() = module {
     factory { MyLedgerViewModel(get(), get()) }
     factory { NewLedgerViewModel(get()) }
 
-    factory { NumPadViewModel() }
+//    factory { NumPadViewModel() }
 
 
 
