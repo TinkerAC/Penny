@@ -35,6 +35,7 @@ voyagerVersion = "1.1.0-beta02"
 [libraries]
 # Koin 依赖，版本统一为 3
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+kermit-koin = { module = "co.touchlab:kermit-koin", version.ref = "kermit" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-core-ext = { module = "io.insert-koin:koin-core-ext", version.ref = "koin-core-ext" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-android" }

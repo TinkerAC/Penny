@@ -27,6 +27,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.ScreenTransition
+import co.touchlab.kermit.Logger
 
 @OptIn(ExperimentalVoyagerApi::class)
 class MainScreen : Screen, ScreenTransition {
@@ -47,7 +48,7 @@ class MainScreen : Screen, ScreenTransition {
                         modifier = Modifier.background(color = MaterialTheme.colorScheme.primary),
                         uiState = uiState,
                         onLedgerSelected = { ledger ->
-                            println("Selected ledger: $ledger")
+                            Logger.d("Selected ledger: $ledger")
                         }
                     )
                 },
@@ -67,7 +68,7 @@ class MainScreen : Screen, ScreenTransition {
                                         // Replace the entire stack with the new screen
                                         navigator.replaceAll(item.screen)
                                     }
-                                    println(
+                                    Logger.d(
                                         "Current screen: ${navigator.lastItem}"
                                     )
                                 }

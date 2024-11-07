@@ -26,27 +26,28 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.penny.domain.enum.Category
+import app.penny.presentation.ui.screens.newTransaction.NewTransactionIntent
+import app.penny.presentation.ui.screens.newTransaction.NewTransactionViewModel
 
 @Composable
-fun <T> CategorySelector(
+fun CategorySelector(
     modifier: Modifier = Modifier,
-    parentCategories: List<T>,
-    getSubCategories: (T) -> List<T>,
-    getCategoryName: (T) -> String,
-    onCategorySelected: (T) -> Unit
+    parentCategories: List<Category>,
+    getSubCategories: (Category) -> List<Category>,
+    getCategoryName: (Category) -> String,
+    viewModel: NewTransactionViewModel
 ) {
+
     val groupedParentCategories = parentCategories.chunked(5)
-    var selectedParentCategory by remember { mutableStateOf<T?>(null) }
-    var selectedSubCategory by remember { mutableStateOf<T?>(null) }
+    val uiState by viewModel.uiState.collectAsState()
 
     LazyColumn(
         modifier = modifier
@@ -57,19 +58,14 @@ fun <T> CategorySelector(
             item(key = "parent_row_$rowIndex") {
                 CategoryRowWithSubGrid(
                     parentCategories = parentGroup,
-                    selectedParentCategory = selectedParentCategory,
+                    selectedParentCategory = uiState.selectedParentCategory,
                     onParentCategoryClick = { parent ->
-                        selectedParentCategory =
-                            if (selectedParentCategory == parent) null else parent
-                        if (selectedParentCategory != parent) {
-                            selectedSubCategory = null
-                        }
+                        viewModel.handleIntent(NewTransactionIntent.SelectParentCategory(parent))
                     },
                     getSubCategories = getSubCategories,
-                    selectedSubCategory = selectedSubCategory,
+                    selectedSubCategory = uiState.selectedSubCategory,
                     onSubCategoryClick = { subCategory ->
-                        selectedSubCategory = subCategory
-                        onCategorySelected(subCategory)
+                        viewModel.handleIntent(NewTransactionIntent.SelectSubCategory(subCategory))
                     },
                     getCategoryName = getCategoryName
                 )
@@ -81,14 +77,14 @@ fun <T> CategorySelector(
 
 
 @Composable
-fun <T> CategoryRowWithSubGrid(
-    parentCategories: List<T>,
-    selectedParentCategory: T?,
-    onParentCategoryClick: (T) -> Unit,
-    getSubCategories: (T) -> List<T>,
-    selectedSubCategory: T?,
-    onSubCategoryClick: (T) -> Unit,
-    getCategoryName: (T) -> String
+fun CategoryRowWithSubGrid(
+    parentCategories: List<Category>,
+    selectedParentCategory: Category?,
+    onParentCategoryClick: (Category) -> Unit,
+    getSubCategories: (Category) -> List<Category>,
+    selectedSubCategory: Category?,
+    onSubCategoryClick: (Category) -> Unit,
+    getCategoryName: (Category) -> String
 ) {
     Column {
         // 父分类行

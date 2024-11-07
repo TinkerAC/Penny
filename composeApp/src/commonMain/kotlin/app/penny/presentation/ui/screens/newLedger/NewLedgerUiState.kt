@@ -1,5 +1,6 @@
 package app.penny.presentation.ui.screens.newLedger
 
+import androidx.compose.material3.SnackbarHostState
 import app.penny.domain.enum.Currency
 import app.penny.domain.enum.LedgerCover
 
@@ -11,7 +12,8 @@ data class NewLedgerUiState(
     val currency: Currency = Currency.USD,
     val currencySelectorModalVisible: Boolean = false,
     val errorMessage: String? = null,
-    val ledgerCreateSuccess: Boolean? = null
+    val ledgerCreateSuccess: Boolean? = null,
+    val snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
 
 }

@@ -12,7 +12,6 @@ import app.penny.domain.usecase.DeleteLedgerUseCase
 import app.penny.domain.usecase.GetAllLedgerUseCase
 import app.penny.domain.usecase.GetTransactionsUseCase
 import app.penny.domain.usecase.InsertLedgerUseCase
-import app.penny.presentation.ui.components.numPad.NumPadViewModel
 import app.penny.presentation.ui.screens.myLedger.MyLedgerViewModel
 import app.penny.presentation.ui.screens.newLedger.NewLedgerViewModel
 import app.penny.presentation.ui.screens.newTransaction.NewTransactionViewModel
@@ -54,7 +53,7 @@ fun commonModule() = module {
 
 
     // 注入 ViewModel
-    factory { NewTransactionViewModel(get()) }
+    factory { NewTransactionViewModel(get(), get()) }
 
     factory { DashboardViewModel(get()) }
 
@@ -65,10 +64,12 @@ fun commonModule() = module {
 //    factory { NumPadViewModel() }
 
 
-
     factory { MyLedgerViewModel(get(), get()) }
 
     factory { NewLedgerViewModel(get()) }
+
+
+    //Kermit Logger
 
 
 }

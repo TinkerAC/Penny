@@ -22,7 +22,9 @@ class NewLedgerViewModel(
     val uiState: StateFlow<NewLedgerUiState> = _uiState.asStateFlow()
 
     // 管理一次性事件的 SharedFlow
-    private val _eventFlow = MutableSharedFlow<NewLedgerUiEvent>()
+    private val _eventFlow = MutableSharedFlow<NewLedgerUiEvent>(
+        replay = 0
+    )
     val eventFlow = _eventFlow.asSharedFlow()
 
     // 处理用户意图

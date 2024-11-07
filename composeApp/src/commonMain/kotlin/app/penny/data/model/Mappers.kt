@@ -48,13 +48,12 @@ fun TransactionModel.toEntity(): TransactionEntity {
         id = 0,
         ledger_id = ledgerId,
         transaction_date = transactionDate,
-        category_id = categoryId,
+        category_name = category.name,
         transaction_type = transactionType.name,
-        amount = amount.toString(),
-        currency_code = currencyCode,
-        content = content,
+        amount = amount.toPlainString(),
+        currency_code = currency.currencyCode ,
+        remark = remark,
         screenshot_uri = screenshotUri,
-        note = note,
         created_at = Clock.System.now().toEpochMilliseconds(),
         updated_at = Clock.System.now().toEpochMilliseconds()
 
@@ -68,11 +67,9 @@ fun TransactionEntity.toModel(): TransactionModel {
 
         ledgerId = ledger_id,
         amount = BigDecimal.parseString(amount),
-        currencyCode = currency_code,
-        content = content,
+        currency = Currency.valueOf(currency_code),
+        remark = remark,
         screenshotUri = screenshot_uri,
-        note = note,
-
         )
 }
 

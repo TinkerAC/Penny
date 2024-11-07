@@ -64,6 +64,7 @@ kotlin {
                 implementation(libs.androidx.lifecycle.viewmodel)
                 //logger
                 implementation(libs.kermit)
+                implementation(libs.kermit.koin)
             }
         }
 

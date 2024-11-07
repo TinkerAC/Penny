@@ -12,14 +12,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.domain.enum.LedgerCover
@@ -45,15 +42,12 @@ class NewLedgerScreen(
 
         val eventFlow = viewModel.eventFlow
 
-        val scope = rememberCoroutineScope()
-        val snackbarHostState = remember { SnackbarHostState() }
-
         // 收集事件流
         LaunchedEffect(Unit) {
             eventFlow.collect { event ->
                 when (event) {
                     is NewLedgerUiEvent.ShowSnackbar -> {
-                        snackbarHostState.showSnackbar(
+                        uiState.value.snackbarHostState.showSnackbar(
                             message = event.message,
                             duration = SnackbarDuration.Short
                         )
@@ -69,7 +63,7 @@ class NewLedgerScreen(
 
 
         Scaffold(
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            snackbarHost = { SnackbarHost(hostState = uiState.value.snackbarHostState) },
 
             topBar = {
                 SingleNavigateBackTopBar(

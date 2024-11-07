@@ -1,94 +1,175 @@
 // file: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/newTransaction/NewTransactionViewModel.kt
 package app.penny.presentation.ui.screens.newTransaction
 
-import app.penny.data.model.TransactionType
+import app.penny.data.repository.LedgerRepository
 import app.penny.data.repository.TransactionRepository
-import app.penny.domain.enum.ExpenseCategory
-import app.penny.domain.enum.IncomeCategory
+import app.penny.domain.enum.Category
+import app.penny.domain.enum.Currency
+import app.penny.domain.enum.TransactionType
+import app.penny.domain.model.LedgerModel
 import app.penny.domain.model.TransactionModel
 import app.penny.presentation.ui.components.numPad.DoneButtonState
 import app.penny.presentation.ui.components.numPad.NumPadButton
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import co.touchlab.kermit.Logger
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 class NewTransactionViewModel(
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val ledgerRepository: LedgerRepository
 ) : ScreenModel {
+
 
     private val _uiState = MutableStateFlow(NewTransactionUiState())
     val uiState: StateFlow<NewTransactionUiState> = _uiState.asStateFlow()
 
-    private val operators = setOf("+", "-", "×", "÷")
+    private val _eventFlow = MutableSharedFlow<NewTransactionUiEvent>(
+        replay = 0
+    )
+    val eventFlow = _eventFlow.asSharedFlow()
+
 
     private val decimalMode =
         DecimalMode(20, roundingMode = RoundingMode.ROUND_HALF_CEILING, scale = 2)
 
-    // 处理用户意图
+
+    init {
+        fetchLedgers()
+        selectParentCategory(
+            when (_uiState.value.selectedTab) {
+                NewTransactionTab.INCOME -> Category.OTHER_INCOME
+                NewTransactionTab.EXPENSE -> Category.MISCELLANEOUS
+            }
+        )
+    }
+
+
     fun handleIntent(intent: NewTransactionIntent) {
         when (intent) {
-            is NewTransactionIntent.InsertTransaction -> insertTransaction()
             is NewTransactionIntent.SelectTab -> selectTab(intent.tab)
             is NewTransactionIntent.SetAmount -> setAmount(intent.amount)
-            is NewTransactionIntent.SelectIncomeCategory -> selectIncomeCategory(intent.category)
-            is NewTransactionIntent.SelectExpenseCategory -> selectExpenseCategory(intent.category)
+            is NewTransactionIntent.SelectCategory -> selectCategory(intent.category)
             is NewTransactionIntent.SetRemark -> setRemark(intent.remark)
+            is NewTransactionIntent.ToggleLedgerDropdown -> toggleLedgerDropdown()
+            is NewTransactionIntent.SelectLedger -> selectLedger(intent.ledger)
+            is NewTransactionIntent.SelectParentCategory -> selectParentCategory(intent.category)
+            is NewTransactionIntent.SelectSubCategory -> selectSubCategory(intent.category)
         }
     }
 
+    private fun selectSubCategory(category: Category) {
+        _uiState.value = _uiState.value.copy(selectedSubCategory = category)
+        Logger.d("`selectSubCategory` called{${category.name}}")
+    }
+
+    private fun selectParentCategory(category: Category) {
+        _uiState.value = _uiState.value.copy(selectedParentCategory = category)
+        _uiState.value =
+            _uiState.value.copy(selectedSubCategory = Category.getSubCategories(category).first())
+
+        Logger.d("`selectParentCategory` called{${category.name}}")
+    }
+
+
     private fun insertTransaction() {
+
+        val transaction: TransactionModel = TransactionModel(
+            ledgerId = _uiState.value.selectedLedger?.id ?: 0,
+            transactionDate = Clock.System.now().toEpochMilliseconds(),
+            category = _uiState.value.selectedSubCategory ?: Category.MISCELLANEOUS,
+            transactionType = _uiState.value.selectedTransactionType,
+            amount = _uiState.value.amount,
+            currency = _uiState.value.selectedLedger?.currency ?: Currency.USD,
+            remark = _uiState.value.remark,
+            screenshotUri = "",
+        )
         screenModelScope.launch {
             transactionRepository.insertTransaction(
-                TransactionModel(
-                    ledgerId = 1,
-                    transactionDate = Clock.System.now().toEpochMilliseconds(),
-                    categoryId = 1,
-                    transactionType = TransactionType.EXPENSE,
-                    amount = BigDecimal.ONE,
-                    currencyCode = "CNY",
-                    content = "sample",
-                    screenshotUri = "",
-                    note = "note"
-                )
+                transaction
             )
-            _uiState.value = _uiState.value.copy(transactionCompleted = true)
         }
+        Logger.d("`insertTransaction` called ￥{$transaction}")
     }
 
     private fun selectTab(tab: NewTransactionTab) {
+
+
         _uiState.value = _uiState.value.copy(selectedTab = tab)
+        // initial numpad and category state
+        _uiState.value = _uiState.value.copy(
+            operand1 = "0.00",
+            operator = "",
+            operand2 = "",
+            amountText = "0.00",
+            selectedTransactionType = when (tab) {
+                NewTransactionTab.INCOME -> TransactionType.INCOME
+                NewTransactionTab.EXPENSE -> TransactionType.EXPENSE
+            }
+        )
+        selectParentCategory(
+            when (tab) {
+                NewTransactionTab.INCOME -> Category.OTHER_INCOME
+                NewTransactionTab.EXPENSE -> Category.MISCELLANEOUS
+            }
+        )
+        Logger.d("`selectTab` called{${tab.name}}")
     }
 
     private fun setAmount(amount: BigDecimal) {
         _uiState.value = _uiState.value.copy(amount = amount)
+        Logger.d("`setAmount` called{${amount.toPlainString()}}")
     }
 
-    private fun selectIncomeCategory(category: IncomeCategory) {
-        _uiState.value = _uiState.value.copy(selectedIncomeCategory = category)
-    }
 
-    private fun selectExpenseCategory(category: ExpenseCategory) {
-        _uiState.value = _uiState.value.copy(selectedExpenseCategory = category)
+    private fun selectCategory(category: Category) {
+        _uiState.value = _uiState.value.copy(selectedCategory = category)
+        Logger.d("`selectCategory` called{${category.name}}")
     }
 
     private fun setRemark(remark: String) {
         _uiState.value = _uiState.value.copy(remark = remark)
+        Logger.d("`setRemark` called{${remark}}")
     }
+
+
+    private fun toggleLedgerDropdown() {
+        _uiState.value =
+            _uiState.value.copy(isLedgerDropdownExpanded = !_uiState.value.isLedgerDropdownExpanded)
+        Logger.d("`toggleLedgerDropdown` called{${_uiState.value.isLedgerDropdownExpanded}}")
+    }
+
+    private fun selectLedger(ledger: LedgerModel) {
+        _uiState.value = _uiState.value.copy(selectedLedger = ledger)
+        Logger.d("`selectLedger` called{${ledger.name}}")
+    }
+
+
+    private fun fetchLedgers() {
+        screenModelScope.launch {
+            val ledgers = ledgerRepository.getAllLedgers()
+            _uiState.value = _uiState.value.copy(ledgers = ledgers)
+        }
+        Logger.d("`fetchLedgers` called")
+    }
+
 
     // 以下是从 NumPadViewModel 移植过来的方法
 
     fun onNumPadButtonClicked(numPadButton: NumPadButton) {
         when (numPadButton) {
             is NumPadButton.Number -> handleNumber(numPadButton)
-            NumPadButton.Decimal -> handleDecimal()
-            NumPadButton.Backspace -> handleBackspace()
+            is NumPadButton.Decimal -> handleDecimal()
+            is NumPadButton.Backspace -> handleBackspace()
             is NumPadButton.Operator -> handleOperator(numPadButton)
             is NumPadButton.Function.AddAnotherTransaction -> handleAddAnotherTransaction()
             else -> Unit
@@ -98,17 +179,27 @@ class NewTransactionViewModel(
 
     fun onDoneButtonClicked() {
         when (_uiState.value.doneButtonState) {
+            //
             DoneButtonState.CANCEL -> {
-                // 处理取消逻辑
-            }
-            DoneButtonState.COMPLETE -> {
-                if (_uiState.value.amountText == "0.00" || _uiState.value.amountText == "错误") {
-                    // 无效的金额
-                    return
+                screenModelScope.launch {
+                    _eventFlow.emit(NewTransactionUiEvent.NavigateBack)
                 }
-                _uiState.value = _uiState.value.copy(amount = BigDecimal.parseString(_uiState.value.amountText))
-                insertTransaction()
             }
+
+            DoneButtonState.COMPLETE -> {
+                val isValid = validateTransaction()
+                if (isValid) {
+                    insertTransaction()
+                    _uiState.value = _uiState.value.copy(transactionCompleted = true)
+                    screenModelScope.launch {
+                        _eventFlow.emit(NewTransactionUiEvent.ShowSnackbar("Transaction completed"))
+                        _eventFlow.emit(NewTransactionUiEvent.NavigateBack)
+                    }
+
+                }
+
+            }
+
             DoneButtonState.EQUAL -> {
                 calculate()
                 _uiState.value = _uiState.value.copy(doneButtonState = DoneButtonState.COMPLETE)
@@ -169,6 +260,14 @@ class NewTransactionViewModel(
     }
 
     private fun handleBackspace() {
+        try {
+            val amount = BigDecimal.parseString(_uiState.value.amountText)
+            if (amount == BigDecimal.ZERO) {
+                return
+            }
+        } catch (_: Exception) {
+        }
+
         if (_uiState.value.operand2.isNotEmpty()) {
             var operand2 = _uiState.value.operand2
             operand2 = operand2.dropLast(1)
@@ -211,6 +310,44 @@ class NewTransactionViewModel(
         _uiState.value = NewTransactionUiState()
     }
 
+
+    private fun validateTransaction(): Boolean {
+        var errorMessage: String = ""
+        var result = true
+        try {
+            val amount = BigDecimal.parseString(_uiState.value.amountText)
+            if (amount <= BigDecimal.ZERO) {
+                errorMessage = "Amount must be greater than 0"
+                result = false
+            }
+            if (_uiState.value.selectedLedger == null) {
+                errorMessage = "Please select a ledger"
+                result = false
+            }
+
+            if (_uiState.value.selectedParentCategory == null) {
+                errorMessage = "Please select a parent category"
+                result = false
+            }
+            if (_uiState.value.selectedSubCategory == null) {
+                errorMessage = "Please select a sub category"
+                result = false
+            }
+
+
+        } catch (_: Exception) {
+            Logger.d("Failed to parse amount: ${_uiState.value.amountText}")
+        }
+        if (!result) {
+            screenModelScope.launch {
+                _eventFlow.emit(NewTransactionUiEvent.ShowSnackbar(errorMessage))
+            }
+
+        }
+        return result
+    }
+
+
     private fun calculate() {
         val operand1Str = _uiState.value.operand1
         val operator = _uiState.value.operator
@@ -233,10 +370,24 @@ class NewTransactionViewModel(
                     if (operand2 == BigDecimal.ZERO) throw IllegalArgumentException("除数不能为 0")
                     operand1.divide(operand2, decimalMode)
                 }
+
                 else -> throw IllegalArgumentException("未知的运算符 $operator")
             }
 
             result = result.divide(BigDecimal.ONE, decimalMode)
+
+
+            Logger.d(
+                "processing ${operand1.toPlainString()} ${
+                    when (operator) {
+                        "+" -> "plus"
+                        "-" -> "minus"
+                        "×" -> "times"
+                        "÷" -> "divided by"
+                        else -> "unknown operator"
+                    }
+                } ${operand2.toPlainString()} = ${result.toPlainString()}"
+            )
 
             _uiState.value = _uiState.value.copy(
                 operand1 = result.toPlainString(),
@@ -269,15 +420,10 @@ class NewTransactionViewModel(
             else -> DoneButtonState.COMPLETE
         }
 
-        val newText = when (newState) {
-            DoneButtonState.CANCEL -> "取消"
-            DoneButtonState.COMPLETE -> "完成"
-            DoneButtonState.EQUAL -> "="
-        }
+
 
         _uiState.value = _uiState.value.copy(
-            doneButtonState = newState,
-            doneButtonText = newText
+            doneButtonState = newState
         )
     }
 

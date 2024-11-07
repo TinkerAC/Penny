@@ -12,13 +12,12 @@ class TransactionLocalDataSource(
         transactionsQueries.insertTransaction(
             ledger_id = transaction.ledger_id,
             transaction_date = transaction.transaction_date,
-            category_id = transaction.category_id,
+            category_name = transaction.category_name,
             transaction_type = transaction.transaction_type,
             amount = transaction.amount,
             currency_code = transaction.currency_code,
-            content = transaction.content,
+            remark = transaction.remark,
             screenshot_uri = transaction.screenshot_uri,
-            note = transaction.note,
         )
     }
 
@@ -34,13 +33,12 @@ class TransactionLocalDataSource(
         transactionsQueries.updateTransaction(
             ledger_id = transaction.ledger_id,
             transaction_date = transaction.transaction_date,
-            category_id = transaction.category_id,
+            category_name = transaction.category_name,
             transaction_type = transaction.transaction_type,
             amount = transaction.amount,
             currency_code = transaction.currency_code,
-            content = transaction.content,
+            remark = transaction.remark,
             screenshot_uri = transaction.screenshot_uri,
-            note = transaction.note,
             id = transaction.id
         )
     }

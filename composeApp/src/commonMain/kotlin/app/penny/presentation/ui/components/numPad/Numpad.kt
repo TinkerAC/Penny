@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 fun NumPad(
     amountText: String,
     remarkText: String,
-    doneButtonText: String,
+    doneButtonState: DoneButtonState,
     onRemarkChanged: (String) -> Unit,
     onNumPadButtonClicked: (NumPadButton) -> Unit,
     onDoneButtonClicked: () -> Unit,
@@ -178,7 +178,7 @@ fun NumPad(
                 NumPadButton(
                     numPadButton = NumPadButton.Function.Done,
                     onClick = { onDoneButtonClicked() },
-                    text = doneButtonText,
+                    text = doneButtonState.displayText,
                     modifier = Modifier.weight(1f)
                 )
             }
