@@ -35,3 +35,7 @@ UPDATE transactionEntity SET ledger_id = ?, transaction_date = ?, category_name 
 
 deleteTransaction:
 DELETE FROM transactionEntity WHERE id = ?;
+
+
+getTransactionsByLedgerId:
+SELECT * FROM transactionEntity WHERE ledger_id = ?;

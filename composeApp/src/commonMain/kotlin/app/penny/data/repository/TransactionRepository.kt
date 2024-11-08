@@ -10,5 +10,6 @@ interface TransactionRepository {
     suspend fun insertTransaction(transaction: TransactionModel)
     suspend fun updateTransactionById(transactionId: Long, transaction: TransactionModel)
     suspend fun deleteTransactionById(transactionId: Long)
+    suspend fun getTransactionsByLedger(ledgerId: Long): List<TransactionModel>
 
 }

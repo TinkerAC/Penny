@@ -12,9 +12,11 @@ androidx-lifecycle = "2.8.2"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 bignum = "0.3.10"
+chartVersion = "Beta-1.0.1"
 compose-plugin = "1.6.11"
 jdbcDriver = "2.0.2"
 junit = "4.13.2"
+kandyLetsPlot = "0.7.0"
 kermit = "2.0.4"
 koin = "3.5.0"  # 统一 Koin 版本为 3.5.0
 koin-android = "3.5.0"
@@ -34,6 +36,8 @@ voyagerVersion = "1.1.0-beta02"
 
 [libraries]
 # Koin 依赖，版本统一为 3
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+kandy-lets-plot = { module = "org.jetbrains.kotlinx:kandy-lets-plot", version.ref = "kandyLetsPlot" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 kermit-koin = { module = "co.touchlab:kermit-koin", version.ref = "kermit" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -51,6 +55,7 @@ runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqlDelight" }
 # 其他依赖
 bignum = { module = "com.ionspin.kotlin:bignum", version.ref = "bignum" }
 org-jetbrains-kotlin-kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+thechance101-chart = { module = "io.github.thechance101:chart", version.ref = "chartVersion" }
 ui-tooling-preview-desktop = { module = "org.jetbrains.compose.ui:ui-tooling-preview-desktop" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyagerVersion" }
 cafe-voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyagerVersion" }
@@ -94,3 +99,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

@@ -4,10 +4,11 @@ import app.penny.domain.enum.Category
 import app.penny.domain.enum.Currency
 import app.penny.domain.enum.TransactionType
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import kotlinx.datetime.Instant
 
 data class TransactionModel(
     val ledgerId: Long = 0,
-    val transactionDate: Long = 0,
+    val transactionDate: Instant,
     val category: Category = Category.MISCELLANEOUS,
     val transactionType: TransactionType = TransactionType.EXPENSE,
     val amount: BigDecimal = BigDecimal.ZERO,

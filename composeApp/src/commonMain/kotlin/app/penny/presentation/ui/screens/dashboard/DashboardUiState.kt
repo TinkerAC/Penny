@@ -1,4 +1,4 @@
-package app.penny.presentation.uiState
+package app.penny.presentation.ui.screens.dashboard
 
 import app.penny.domain.model.TransactionModel
 

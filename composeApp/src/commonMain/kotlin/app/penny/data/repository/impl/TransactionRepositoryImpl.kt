@@ -32,4 +32,8 @@ class TransactionRepositoryImpl(
     override suspend fun deleteTransactionById(transactionId: Long) {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getTransactionsByLedger(ledgerId:Long): List<TransactionModel> {
+        return localDataSource.getTransactionsByLedger(ledgerId).map { it.toModel() }
+    }
 }

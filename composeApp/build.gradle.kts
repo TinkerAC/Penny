@@ -62,9 +62,14 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.androidx.lifecycle.viewmodel)
+                //chart support
+                implementation(libs.thechance101.chart)
+
                 //logger
                 implementation(libs.kermit)
                 implementation(libs.kermit.koin)
+                //icon Extended
+                implementation(compose.materialIconsExtended)
             }
         }
 
@@ -103,6 +108,7 @@ kotlin {
                 implementation(libs.native.driver)
                 // 其他依赖
                 implementation(libs.ktor.client.darwin)
+
             }
         }
     }

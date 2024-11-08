@@ -85,7 +85,7 @@ class NewTransactionViewModel(
 
         val transaction: TransactionModel = TransactionModel(
             ledgerId = _uiState.value.selectedLedger?.id ?: 0,
-            transactionDate = Clock.System.now().toEpochMilliseconds(),
+            transactionDate = Clock.System.now(),
             category = _uiState.value.selectedSubCategory ?: Category.MISCELLANEOUS,
             transactionType = _uiState.value.selectedTransactionType,
             amount = _uiState.value.amount,

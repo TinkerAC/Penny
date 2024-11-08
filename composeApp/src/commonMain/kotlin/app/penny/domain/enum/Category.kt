@@ -212,6 +212,25 @@ enum class Category(
     UNCATEGORIZED(MISCELLANEOUS, "Uncategorized", "ic_category_uncategorized");
 
 
+    // Add helper functions
+    fun getLevel1Category(): Category {
+        var currentCategory = this
+        while (currentCategory.parentCategory != null && currentCategory.parentCategory != INCOME && currentCategory.parentCategory != EXPENSE) {
+            currentCategory = currentCategory.parentCategory!!
+        }
+        return currentCategory
+    }
+
+    fun getLevel(): Int {
+        var level = 0
+        var parent = this.parentCategory
+        while (parent != null) {
+            level++
+            parent = parent.parentCategory
+        }
+        return level
+    }
+
     companion object {
         // 获取所有顶级分类
         fun getAllParentCategories(): List<Category> {
@@ -239,6 +258,13 @@ enum class Category(
         }
 
 
+        fun getLevel1Categories(): List<Category> {
+            return getSubCategories(INCOME) + getSubCategories(EXPENSE)
+        }
+
+        fun getLevel2Categories(): List<Category> {
+            return getLevel1Categories().flatMap { getSubCategories(it) }
+        }
     }
 
 

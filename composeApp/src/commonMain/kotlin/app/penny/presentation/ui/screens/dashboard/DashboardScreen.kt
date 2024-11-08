@@ -1,12 +1,11 @@
 // DashboardScreen.kt
-package app.penny.presentation.ui.screens
+package app.penny.presentation.ui.screens.dashboard
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import app.penny.presentation.ui.screens.myLedger.MyLedgerScreen
 import app.penny.presentation.ui.screens.newTransaction.NewTransactionScreen
-import app.penny.presentation.viewmodel.DashboardViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -37,6 +36,14 @@ class DashboardScreen : Screen {
             Text("My Ledger")
         }
 
+
+        Button(
+            onClick = {
+                dashboardViewModel.handleIntent(DashboardIntent.insertRandomTransaction)
+            }
+        ) {
+            Text("Insert Random Transaction")
+        }
 
 
     }

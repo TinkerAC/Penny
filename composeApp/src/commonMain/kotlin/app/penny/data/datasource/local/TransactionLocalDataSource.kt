@@ -48,5 +48,9 @@ class TransactionLocalDataSource(
         transactionsQueries.deleteTransaction(id)
     }
 
+    fun getTransactionsByLedger(ledgerId: Long): List<TransactionEntity> {
+        return transactionsQueries.getTransactionsByLedgerId(ledgerId).executeAsList()
+    }
+
 
 }

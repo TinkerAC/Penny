@@ -6,6 +6,8 @@ import app.penny.database.CategoryEntity
 import app.penny.database.LedgerEntity
 import app.penny.database.TransactionEntity
 import app.penny.database.UserAchievementEntity
+import app.penny.domain.enum.Category
+import app.penny.domain.enum.Currency
 import app.penny.domain.enum.LedgerCover
 import app.penny.domain.model.AchievementModel
 import app.penny.domain.model.CategoryModel
@@ -14,7 +16,7 @@ import app.penny.domain.model.TransactionModel
 import app.penny.domain.model.UserAchievementModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
-import app.penny.domain.enum.Currency
+import kotlinx.datetime.Instant
 
 
 fun LedgerEntity.toModel(): LedgerModel {
@@ -47,29 +49,28 @@ fun TransactionModel.toEntity(): TransactionEntity {
     return TransactionEntity(
         id = 0,
         ledger_id = ledgerId,
-        transaction_date = transactionDate,
+        transaction_date = transactionDate.epochSeconds,
         category_name = category.name,
         transaction_type = transactionType.name,
         amount = amount.toPlainString(),
-        currency_code = currency.currencyCode ,
+        currency_code = currency.currencyCode,
         remark = remark,
         screenshot_uri = screenshotUri,
-        created_at = Clock.System.now().toEpochMilliseconds(),
-        updated_at = Clock.System.now().toEpochMilliseconds()
-
-
+        created_at = Clock.System.now().epochSeconds,
+        updated_at = Clock.System.now().epochSeconds
     )
 }
 
 
 fun TransactionEntity.toModel(): TransactionModel {
     return TransactionModel(
-
         ledgerId = ledger_id,
         amount = BigDecimal.parseString(amount),
         currency = Currency.valueOf(currency_code),
         remark = remark,
         screenshotUri = screenshot_uri,
+        transactionDate = Instant.fromEpochSeconds(transaction_date),
+        category = Category.valueOf(category_name),
         )
 }
 

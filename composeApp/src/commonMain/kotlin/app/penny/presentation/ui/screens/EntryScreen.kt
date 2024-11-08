@@ -9,8 +9,6 @@ class EntryScreen : Screen {
     @Composable
     override fun Content() {
 
-        Text("Entry")
-
 
     }
 

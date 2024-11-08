@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -19,13 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.presentation.ui.components.PennyTopBar
 import app.penny.presentation.ui.screens.BottomNavItem
+import app.penny.presentation.ui.screens.transactions.TransactionScreen
 import app.penny.presentation.viewmodel.MainViewModel
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.CurrentScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
 import co.touchlab.kermit.Logger
 
@@ -37,6 +42,9 @@ class MainScreen : Screen, ScreenTransition {
 
         val viewModel = koinScreenModel<MainViewModel>()
         val uiState by viewModel.uiState.collectAsState()
+
+        val rootNavigator = LocalNavigator.currentOrThrow
+
         Navigator(
             screen = remember { BottomNavItem.items.first().screen },
         ) { navigator ->
@@ -73,7 +81,21 @@ class MainScreen : Screen, ScreenTransition {
                                     )
                                 }
                             )
+
+
                         }
+
+                        BottomNavigationItem(
+                            icon = { Icon(Icons.Default.Menu, contentDescription = "Transaction") },
+                            label = { Text("Transaction") },
+                            selected = false,
+                            onClick = {
+                                rootNavigator.push(
+                                    TransactionScreen()
+                                )
+                            }
+                        )
+
                     }
                 },
                 content = { paddingValues ->

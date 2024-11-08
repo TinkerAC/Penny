@@ -6,8 +6,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.penny.presentation.ui.screens.dashboard.DashboardScreen
 import cafe.adriel.voyager.core.screen.Screen
 
 sealed class BottomNavItem(
@@ -19,18 +19,14 @@ sealed class BottomNavItem(
     data object Dashboard :
         BottomNavItem("dashboard", Icons.Filled.Home, "Dashboard", DashboardScreen())
 
-    data object Entries : BottomNavItem("entries", Icons.Filled.Info, "Entries", EntryScreen())
-
     data object Analytics :
         BottomNavItem("analytics", Icons.Filled.Info, "Analytics", AnalyticsScreen())
 
     data object Profile : BottomNavItem("profile", Icons.Filled.Person, "Profile", ProfileScreen())
 
     companion object {
-        val items = listOf(Dashboard, Entries, Analytics, Profile)
+        val items = listOf(Dashboard, Analytics, Profile)
     }
-
-
 }
 
 
