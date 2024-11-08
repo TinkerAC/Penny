@@ -178,7 +178,7 @@ fun GroupByBar(
                     FilterChip(
                         selected = isSelected,
                         onClick = {
-                            viewModel.handleIntent(TransactionIntent.SelectGroupByType(groupByType))
+                            viewModel.handleIntent(TransactionIntent.ShowSharedDropdown(groupByType))
                         },
                         label = {
                             Text(

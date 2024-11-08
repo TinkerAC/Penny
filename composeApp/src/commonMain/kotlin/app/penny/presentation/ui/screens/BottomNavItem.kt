@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.penny.presentation.ui.screens.analytics.AnalyticScreen
 import app.penny.presentation.ui.screens.dashboard.DashboardScreen
 import cafe.adriel.voyager.core.screen.Screen
 
@@ -20,7 +21,7 @@ sealed class BottomNavItem(
         BottomNavItem("dashboard", Icons.Filled.Home, "Dashboard", DashboardScreen())
 
     data object Analytics :
-        BottomNavItem("analytics", Icons.Filled.Info, "Analytics", AnalyticsScreen())
+        BottomNavItem("analytics", Icons.Filled.Info, "Analytics", AnalyticScreen())
 
     data object Profile : BottomNavItem("profile", Icons.Filled.Person, "Profile", ProfileScreen())
 

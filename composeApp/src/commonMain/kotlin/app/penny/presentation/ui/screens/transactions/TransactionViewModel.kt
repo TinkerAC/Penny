@@ -24,23 +24,24 @@ class TransactionViewModel(
 
     fun handleIntent(intent: TransactionIntent) {
         when (intent) {
-            is TransactionIntent.SelectGroupByType -> selectGroupByType(intent.groupByType)
+            is TransactionIntent.ShowSharedDropdown -> showSharedDropdown(intent.groupByType)
             is TransactionIntent.SelectGroupByOption -> selectGroupByOption(intent.groupBy)
             is TransactionIntent.DismissSharedDropdown -> dismissSharedDropdown()
         }
     }
 
-    private fun selectGroupByType(groupByType: GroupByType) {
+
+    /**
+     * Show the shared dropdown for selecting group by options, will not change the selected group by option.
+     */
+
+    private fun showSharedDropdown(
+        groupByType: GroupByType,
+        newSelectedGroupByOption: GroupBy? = null
+    ) {
         val groupByOptions = GroupByType.getGroupByOptions(groupByType)
-        val newSelectedGroupByOption = when {
-            groupByOptions.isNotEmpty() -> groupByOptions.first()
-            groupByType == GroupByType.Ledger -> GroupBy.Ledger
-            else -> null
-        }
 
         _uiState.value = _uiState.value.copy(
-            selectedGroupByType = groupByType,
-            selectedGroupByOption = newSelectedGroupByOption,
             groupByOptions = groupByOptions,
             isSharedPopupVisible = groupByOptions.isNotEmpty()
         )
@@ -57,6 +58,11 @@ class TransactionViewModel(
     private fun dismissSharedDropdown() {
         _uiState.value = _uiState.value.copy(isSharedPopupVisible = false)
     }
+
+
+    /**
+     * Group transactions based on the selected group by option.
+     */
 
     private fun doGroupBy(groupBy: GroupBy) {
         val groupedTransactions = when (groupBy) {

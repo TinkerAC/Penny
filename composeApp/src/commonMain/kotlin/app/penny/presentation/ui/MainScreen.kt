@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.penny.presentation.ui.components.PennyTopBar
 import app.penny.presentation.ui.screens.BottomNavItem
 import app.penny.presentation.ui.screens.transactions.TransactionScreen
 import app.penny.presentation.viewmodel.MainViewModel
@@ -51,14 +50,14 @@ class MainScreen : Screen, ScreenTransition {
 
             Scaffold(
                 topBar = {
-                    PennyTopBar(
-                        title = "Penny",
-                        modifier = Modifier.background(color = MaterialTheme.colorScheme.primary),
-                        uiState = uiState,
-                        onLedgerSelected = { ledger ->
-                            Logger.d("Selected ledger: $ledger")
-                        }
-                    )
+//                    PennyTopBar(
+//                        title = "Penny",
+//                        modifier = Modifier.background(color = MaterialTheme.colorScheme.primary),
+//                        uiState = uiState,
+//                        onLedgerSelected = { ledger ->
+//                            Logger.d("Selected ledger: $ledger")
+//                        }
+//                    )
                 },
                 bottomBar = {
                     BottomNavigation(
@@ -79,7 +78,8 @@ class MainScreen : Screen, ScreenTransition {
                                     Logger.d(
                                         "Current screen: ${navigator.lastItem}"
                                     )
-                                }
+                                },
+                                modifier = Modifier.background(color = MaterialTheme.colorScheme.primary)
                             )
 
 

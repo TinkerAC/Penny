@@ -15,6 +15,7 @@ import app.penny.domain.usecase.GetTransactionByLedgerUseCase
 import app.penny.domain.usecase.GetTransactionsUseCase
 import app.penny.domain.usecase.InsertLedgerUseCase
 import app.penny.domain.usecase.InsertRandomTransactionUseCase
+import app.penny.presentation.ui.screens.analytics.AnalyticViewModel
 import app.penny.presentation.ui.screens.dashboard.DashboardViewModel
 import app.penny.presentation.ui.screens.myLedger.MyLedgerViewModel
 import app.penny.presentation.ui.screens.newLedger.NewLedgerViewModel
@@ -61,7 +62,7 @@ fun commonModule() = module {
     factory { NewTransactionViewModel(get(), get()) }
     factory { DashboardViewModel(get(), get()) }
 
-
+    factory { AnalyticViewModel() }
     factory { TransactionViewModel(get()) }
     factory { MainViewModel(get(), get()) }
     factory { MyLedgerViewModel(get(), get()) }

@@ -1,6 +1,6 @@
 // file: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/transactions/utils/DateUtils.kt
-package app.penny.presentation.ui.screens.transactions.utils
-
+package app.penny.utils
+import kotlinx.datetime.LocalDate
 import app.penny.presentation.ui.screens.transactions.GroupBy
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
@@ -21,4 +21,8 @@ object TimeUtils {
 
 }
 
+
+fun localDateNow(): LocalDate {
+    return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+}
 
