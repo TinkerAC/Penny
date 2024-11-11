@@ -6,6 +6,6 @@ import app.penny.database.PennyDatabase
 
 actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver {
-        return NativeSqliteDriver(PennyDatabase.Schema, "app.db")
+        return NativeSqliteDriver(PennyDatabase.Schema, "penny.db")
     }
 }

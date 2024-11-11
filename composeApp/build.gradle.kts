@@ -15,32 +15,34 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
     jvm("desktop")
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
+    // 新的 iOS 目标配置方式
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    configure(listOf(iosX64(), iosArm64(), iosSimulatorArm64())) {
+        binaries {
+            framework {
+                baseName = "ComposeApp"
+                isStatic = true
+                linkerOpts("-lsqlite3")
+            }
         }
     }
-
-    applyDefaultHierarchyTemplate() // this one
-
+    // 应用默认的层次结构模板
+    applyDefaultHierarchyTemplate()
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                // Koin 核心依赖，统一版本为 3.5.0
+                // 公共依赖项
                 implementation(libs.koin.core)
-                // 其他依赖
                 implementation(libs.bignum)
                 implementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
                 implementation(libs.voyager.koin)
@@ -62,43 +64,32 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.androidx.lifecycle.viewmodel)
-                //chart support
                 implementation(libs.thechance101.chart)
-
-                //logger
                 implementation(libs.kermit)
                 implementation(libs.kermit.koin)
-                //icon Extended
                 implementation(compose.materialIconsExtended)
             }
         }
 
         val androidMain by getting {
             dependencies {
-
                 implementation(libs.ktor.client.android)
                 implementation(compose.preview)
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.android.driver)
-                // Koin Android 依赖，版本统一为 3.5.0
                 implementation(libs.koin.android)
                 implementation(libs.koin.android.ext)
-                // 如果需要 Koin Core 扩展
                 implementation(libs.koin.core.ext)
             }
         }
 
         val desktopMain by getting {
             dependencies {
-                // Koin 核心依赖，版本统一为 3.5.0
                 implementation(libs.koin.core)
-                // 其他依赖
                 implementation(libs.sqlite.driver)
                 implementation(libs.jdbc.driver)
                 implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutines.swing)
-
-                
                 implementation(libs.ui.tooling.preview.desktop)
             }
         }
@@ -106,9 +97,7 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation(libs.native.driver)
-                // 其他依赖
                 implementation(libs.ktor.client.darwin)
-
             }
         }
     }
@@ -136,8 +125,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

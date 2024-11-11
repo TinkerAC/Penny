@@ -12,7 +12,10 @@ androidx-lifecycle = "2.8.2"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 bignum = "0.3.10"
-chartVersion = "Beta-1.0.1"
+chartVersion = "Beta-0.0.5"
+#Why is there a reversed versioning scheme? Took me forever to track down the issue until I saw the release dates on Maven Central.
+
+
 compose-plugin = "1.6.11"
 jdbcDriver = "2.0.2"
 junit = "4.13.2"
