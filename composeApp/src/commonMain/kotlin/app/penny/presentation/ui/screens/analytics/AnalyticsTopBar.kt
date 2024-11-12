@@ -21,8 +21,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.penny.presentation.ui.screens.analytics.AnalyticIntent
 import app.penny.presentation.ui.screens.analytics.AnalyticTab
 import app.penny.presentation.ui.screens.analytics.AnalyticUiState
+import app.penny.presentation.ui.screens.analytics.AnalyticViewModel
 import app.penny.presentation.ui.screens.analytics.YearMonth
 import app.penny.utils.localDateNow
 import kotlinx.datetime.LocalDate
@@ -30,9 +32,9 @@ import kotlinx.datetime.LocalDate
 
 @Composable
 fun AnalyticsTopBar(
+    viewModel: AnalyticViewModel,
     uiState: AnalyticUiState,
     onTabSelected: (AnalyticTab) -> Unit,
-    onLedgerIconClicked: () -> Unit,
     onYearSelected: (Int) -> Unit,
     onYearMonthSelected: (YearMonth) -> Unit,
     onStartDateSelected: (LocalDate) -> Unit,
@@ -42,7 +44,7 @@ fun AnalyticsTopBar(
         TopTabRow(
             selectedTab = uiState.selectedTab,
             onTabSelected = onTabSelected,
-            onLedgerIconClicked = onLedgerIconClicked
+            viewModel = viewModel
         )
         when (uiState.selectedTab) {
             AnalyticTab.Monthly -> {
@@ -80,7 +82,7 @@ fun AnalyticsTopBar(
 fun TopTabRow(
     selectedTab: AnalyticTab,
     onTabSelected: (AnalyticTab) -> Unit,
-    onLedgerIconClicked: () -> Unit
+    viewModel: AnalyticViewModel
 ) {
     val tabs = listOf(
         AnalyticTab.Recent,
@@ -100,9 +102,12 @@ fun TopTabRow(
                 text = { Text(tab.name) }
             )
         }
-//        Spacer(modifier = Modifier.weight(1f))//TODO: fix this
         Spacer(modifier = Modifier)
-        IconButton(onClick = onLedgerIconClicked) {
+        IconButton(onClick =
+        {
+            viewModel.handleIntent(AnalyticIntent.ShowLedgerSelectionDialog())
+        }
+        ) {
             Icon(
                 imageVector = Icons.Filled.SwapHoriz,
                 contentDescription = "Switch Ledger"

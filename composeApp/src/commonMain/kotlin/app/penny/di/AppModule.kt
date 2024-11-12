@@ -3,15 +3,18 @@ package app.penny.di
 import app.cash.sqldelight.db.SqlDriver
 import app.penny.data.datasource.local.LedgerLocalDataSource
 import app.penny.data.datasource.local.TransactionLocalDataSource
+import app.penny.data.datasource.local.UserDataManager
 import app.penny.data.repository.LedgerRepository
 import app.penny.data.repository.TransactionRepository
+import app.penny.data.repository.UserDataRepository
 import app.penny.data.repository.impl.LedgerRepositoryImpl
 import app.penny.data.repository.impl.TransactionRepositoryImpl
+import app.penny.data.repository.impl.UserDataRepositoryImpl
 import app.penny.database.PennyDatabase
 import app.penny.domain.usecase.DeleteLedgerUseCase
 import app.penny.domain.usecase.GetAllLedgerUseCase
 import app.penny.domain.usecase.GetAllTransactionsUseCase
-import app.penny.domain.usecase.GetTransactionByLedgerUseCase
+import app.penny.domain.usecase.GetTransactionsByLedgerUseCase
 import app.penny.domain.usecase.GetTransactionsUseCase
 import app.penny.domain.usecase.InsertLedgerUseCase
 import app.penny.domain.usecase.InsertRandomTransactionUseCase
@@ -44,10 +47,17 @@ fun commonModule() = module {
     single { LedgerLocalDataSource(get()) }
 
 
+
+    //SettingManager
+    single { UserDataManager(get ()) }
+
     // 提供 Repository
     single<TransactionRepository> { TransactionRepositoryImpl(get()) }
 
     single<LedgerRepository> { LedgerRepositoryImpl(get()) }
+
+    single<UserDataRepository> { UserDataRepositoryImpl(get()) }
+
 
     // 提供 UseCase
     factory { GetTransactionsUseCase(get()) }
@@ -55,14 +65,14 @@ fun commonModule() = module {
     factory { GetAllLedgerUseCase(get()) }
     factory { InsertRandomTransactionUseCase(get(), get()) }
     factory { DeleteLedgerUseCase(get()) }
-    factory { GetTransactionByLedgerUseCase(get()) }
+    factory { GetTransactionsByLedgerUseCase(get()) }
     factory { GetAllTransactionsUseCase(get()) }
 
     // 注入 ViewModel
     factory { NewTransactionViewModel(get(), get()) }
     factory { DashboardViewModel(get(), get()) }
 
-    factory { AnalyticViewModel() }
+    factory { AnalyticViewModel(get(), get(), get()) }
     factory { TransactionViewModel(get()) }
     factory { MainViewModel(get(), get()) }
     factory { MyLedgerViewModel(get(), get()) }

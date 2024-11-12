@@ -15,7 +15,7 @@ bignum = "0.3.10"
 chartVersion = "Beta-0.0.5"
 #Why is there a reversed versioning scheme? Took me forever to track down the issue until I saw the release dates on Maven Central.
 
-
+multiplatformSettings = "1.1.1"
 compose-plugin = "1.6.11"
 jdbcDriver = "2.0.2"
 junit = "4.13.2"
@@ -92,6 +92,10 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+
+# Settings
+multiplatformSettings-noArg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
+multiplatformSettings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
 
 # Compose 和 Kotlin 插件
 [plugins]

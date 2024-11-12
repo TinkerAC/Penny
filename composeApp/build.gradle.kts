@@ -42,6 +42,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 // 公共依赖项
+                api(libs.multiplatformSettings.noArg)
+                api(libs.multiplatformSettings.coroutines)
                 implementation(libs.koin.core)
                 implementation(libs.bignum)
                 implementation(libs.org.jetbrains.kotlin.kotlin.stdlib)

@@ -1,10 +1,13 @@
 package app.penny.presentation.ui.screens.analytics
 
 import AnalyticsTopBar
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import app.penny.presentation.ui.components.LedgerSelectionDialog
+import app.penny.presentation.ui.screens.analytics.chart.IncomeExpenseTrendChart
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 
@@ -21,7 +24,6 @@ class AnalyticScreen : Screen {
             onTabSelected = { tab ->
                 viewModel.handleIntent(AnalyticIntent.OnTabSelected(tab))
             },
-            onLedgerIconClicked = { /* 处理Ledger切换逻辑 */ },
             onYearSelected = { year -> viewModel.handleIntent(AnalyticIntent.OnYearSelected(year)) },
             onYearMonthSelected = { yearMonth ->
                 viewModel.handleIntent(
@@ -43,8 +45,46 @@ class AnalyticScreen : Screen {
                         date
                     )
                 )
-            }
+            },
+            viewModel = viewModel
         )
+
+
+
+        Column {
+            // 显示图表
+            if (uiState.transactions.isNotEmpty()) {
+                IncomeExpenseTrendChart(
+                    transactions = uiState.transactions
+                )
+            }
+        }
+
+        when (uiState.ledgerSelectionDialogVisible) {
+            true -> {
+                // 显示账本选择对话框
+                LedgerSelectionDialog(
+                    ledgers = uiState.ledgers,
+                    selectedLedger = uiState.selectedLedger,
+                    onLedgerSelected = { ledger ->
+                        viewModel.handleIntent(
+                            AnalyticIntent.SelectLedger(
+                                ledger
+                            )
+                        )
+                    },
+                    onDismiss = {
+                        viewModel.handleIntent(AnalyticIntent.DismissLedgerSelectionDialog())
+                    }
+                )
+            }
+
+
+            false -> {
+                // 无需显示账本选择对话框
+            }
+
+        }
 
 
     }

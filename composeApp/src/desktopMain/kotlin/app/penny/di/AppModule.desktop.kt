@@ -3,6 +3,7 @@ package app.penny.di
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.sqldelight.db.SqlDriver
 import app.penny.database.PennyDatabase
+import app.penny.platform.MultiplatformSettingsWrapper
 import org.koin.dsl.module
 
 actual fun platformModule() = module {
@@ -17,4 +18,6 @@ actual fun platformModule() = module {
         }
         driver
     }
+
+    single { MultiplatformSettingsWrapper().createSettings()    }
 }
