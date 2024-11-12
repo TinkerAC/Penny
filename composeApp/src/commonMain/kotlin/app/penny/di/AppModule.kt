@@ -15,7 +15,6 @@ import app.penny.domain.usecase.DeleteLedgerUseCase
 import app.penny.domain.usecase.GetAllLedgerUseCase
 import app.penny.domain.usecase.GetAllTransactionsUseCase
 import app.penny.domain.usecase.GetTransactionsByLedgerUseCase
-import app.penny.domain.usecase.GetTransactionsUseCase
 import app.penny.domain.usecase.InsertLedgerUseCase
 import app.penny.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.presentation.ui.screens.analytics.AnalyticViewModel
@@ -60,7 +59,6 @@ fun commonModule() = module {
 
 
     // 提供 UseCase
-    factory { GetTransactionsUseCase(get()) }
     factory { InsertLedgerUseCase(get()) }
     factory { GetAllLedgerUseCase(get()) }
     factory { InsertRandomTransactionUseCase(get(), get()) }

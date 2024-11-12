@@ -4,15 +4,13 @@ import app.penny.domain.model.LedgerModel
 import kotlinx.datetime.LocalDate
 
 sealed class AnalyticIntent {
-    class OnTabSelected(val tab: AnalyticTab) : AnalyticIntent()
-    class OnYearSelected(val year: Int) : AnalyticIntent()
-    class OnYearMonthSelected(val yearMonth: YearMonth) : AnalyticIntent()
-    class OnStartDateSelected(val date: LocalDate) : AnalyticIntent()
-    class OnEndDateSelected(val date: LocalDate) : AnalyticIntent()
+    data class OnTabSelected(val tab: AnalyticTab) : AnalyticIntent()
+    data class OnYearSelected(val year: Int) : AnalyticIntent()
+    data class OnYearMonthSelected(val yearMonth: YearMonth) : AnalyticIntent()
+    data class OnStartDateSelected(val date: LocalDate) : AnalyticIntent()
+    data class OnEndDateSelected(val date: LocalDate) : AnalyticIntent()
 
-
-    class ShowLedgerSelectionDialog : AnalyticIntent()
-    class DismissLedgerSelectionDialog : AnalyticIntent()
-    class SelectLedger(val ledger: LedgerModel) : AnalyticIntent()
-
+    object ShowLedgerSelectionDialog : AnalyticIntent()
+    object DismissLedgerSelectionDialog : AnalyticIntent()
+    data class SelectLedger(val ledger: LedgerModel) : AnalyticIntent()
 }

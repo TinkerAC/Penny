@@ -23,6 +23,9 @@ object TimeUtils {
 
 
 fun localDateNow(): LocalDate {
-    return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    val now = Clock.System.now()
+    now.toLocalDateTime(TimeZone.currentSystemDefault())
+    return now.toLocalDateTime(TimeZone.currentSystemDefault()).date
+
 }
 

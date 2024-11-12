@@ -32,19 +32,19 @@ import kotlinx.datetime.LocalDate
 
 @Composable
 fun AnalyticsTopBar(
-    viewModel: AnalyticViewModel,
     uiState: AnalyticUiState,
     onTabSelected: (AnalyticTab) -> Unit,
     onYearSelected: (Int) -> Unit,
     onYearMonthSelected: (YearMonth) -> Unit,
     onStartDateSelected: (LocalDate) -> Unit,
-    onEndDateSelected: (LocalDate) -> Unit
+    onEndDateSelected: (LocalDate) -> Unit,
+    onLedgerSelectionClick: () -> Unit
 ) {
     Column {
         TopTabRow(
             selectedTab = uiState.selectedTab,
             onTabSelected = onTabSelected,
-            viewModel = viewModel
+            onLedgerSelectionClick = onLedgerSelectionClick
         )
         when (uiState.selectedTab) {
             AnalyticTab.Monthly -> {
@@ -82,7 +82,7 @@ fun AnalyticsTopBar(
 fun TopTabRow(
     selectedTab: AnalyticTab,
     onTabSelected: (AnalyticTab) -> Unit,
-    viewModel: AnalyticViewModel
+    onLedgerSelectionClick: () -> Unit
 ) {
     val tabs = listOf(
         AnalyticTab.Recent,
@@ -104,9 +104,8 @@ fun TopTabRow(
         }
         Spacer(modifier = Modifier)
         IconButton(onClick =
-        {
-            viewModel.handleIntent(AnalyticIntent.ShowLedgerSelectionDialog())
-        }
+            onLedgerSelectionClick
+
         ) {
             Icon(
                 imageVector = Icons.Filled.SwapHoriz,

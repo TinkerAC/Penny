@@ -39,3 +39,6 @@ DELETE FROM transactionEntity WHERE id = ?;
 
 getTransactionsByLedgerId:
 SELECT * FROM transactionEntity WHERE ledger_id = ?;
+
+getTransactionsBetweenTimeStamps:
+SELECT * FROM transactionEntity WHERE transaction_date >= ? AND transaction_date <= ?;

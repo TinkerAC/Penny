@@ -5,6 +5,7 @@ import app.penny.data.model.toEntity
 import app.penny.data.model.toModel
 import app.penny.data.repository.TransactionRepository
 import app.penny.domain.model.TransactionModel
+import kotlinx.datetime.Instant
 
 class TransactionRepositoryImpl(
 
@@ -15,6 +16,17 @@ class TransactionRepositoryImpl(
         return localDataSource.getTransactionById(transactionId).toModel()
 
 
+    }
+
+    override suspend fun getTransactionsBetween(
+        startInstant: Instant,
+        endInstant: Instant
+    ): List<TransactionModel> {
+
+        return localDataSource.getTransactionsBetween(
+            startInstant.epochSeconds,
+            endInstant.epochSeconds
+        ).map { it.toModel() }
     }
 
     override suspend fun getAllTransactions(): List<TransactionModel> {

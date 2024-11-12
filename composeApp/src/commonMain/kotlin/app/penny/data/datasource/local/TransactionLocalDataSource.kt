@@ -52,5 +52,9 @@ class TransactionLocalDataSource(
         return transactionsQueries.getTransactionsByLedgerId(ledgerId).executeAsList()
     }
 
+    fun getTransactionsBetween(startTimeStamp:Long, endTimeStamp:Long): List<TransactionEntity> {
+        return transactionsQueries.getTransactionsBetweenTimeStamps(startTimeStamp, endTimeStamp).executeAsList()
+    }
+
 
 }
