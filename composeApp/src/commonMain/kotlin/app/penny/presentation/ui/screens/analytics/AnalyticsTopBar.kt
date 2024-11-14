@@ -49,7 +49,6 @@ fun AnalyticsTopBar(
         when (uiState.selectedTab) {
             AnalyticTab.Monthly -> {
                 MonthlyTabContent(
-
                     selectedYearMonth = uiState.selectedYearMonth,
                     onYearMonthSelected = onYearMonthSelected,
                 )
@@ -103,7 +102,8 @@ fun TopTabRow(
             )
         }
         Spacer(modifier = Modifier)
-        IconButton(onClick =
+        IconButton(
+            onClick =
             onLedgerSelectionClick
 
         ) {
@@ -139,26 +139,15 @@ fun MonthlyTabContent(
         Column(
             modifier = Modifier.padding(16.dp).weight(3f)
         )
-        {// 显示年份
-//            ScrollableTabRow(
-//                selectedTabIndex = years.indexOf(selectedYear),
-//                edgePadding = 0.dp
-//            ) {
-//                years.forEach { year ->
-//                    Tab(
-//                        selected = selectedYear == year,
-//                        onClick = { onYearSelected(year) },
-//                        text = { Text(year.toString()) }
-//                    )
-//                }
-//            }
+        {
             Text(text = selectedYearMonth.year.toString())
         }
         Column(
             modifier = Modifier.padding(16.dp).weight(7f)
         ) {
             LazyRow(
-                modifier = Modifier.weight(7f)
+//                modifier = Modifier.weight(7f) //TAKES ME 3DAYS to find this bug!!! weight can't be used in LazyRow
+
             ) {
                 items(yearMonths) { yearMonth ->
                     YearMonthItem(

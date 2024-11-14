@@ -39,7 +39,7 @@ class DashboardScreen : Screen {
 
         Button(
             onClick = {
-                dashboardViewModel.handleIntent(DashboardIntent.insertRandomTransaction)
+                dashboardViewModel.handleIntent(DashboardIntent.InsertRandomTransaction)
             }
         ) {
             Text("Insert Random Transaction")

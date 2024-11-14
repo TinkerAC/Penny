@@ -74,15 +74,7 @@ fun TransactionEntity.toModel(): TransactionModel {
         )
 }
 
-fun CategoryEntity.toModel(): CategoryModel {
-    return CategoryModel(
-        id = id,
-        parentId = parent_id,
-        name = name,
-        iconUri = icon_uri,
 
-        )
-}
 
 fun AchievementEntity.toModel(): AchievementModel {
     return AchievementModel(

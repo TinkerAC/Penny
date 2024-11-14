@@ -35,7 +35,7 @@ class DashboardViewModel(
 
     fun handleIntent(intent: DashboardIntent) {
         when (intent) {
-            is DashboardIntent.insertRandomTransaction ->
+            is DashboardIntent.InsertRandomTransaction ->
                 insertRandomTransaction()
         }
     }

@@ -2,6 +2,7 @@ package app.penny.presentation.ui.screens.analytics
 
 import app.penny.domain.model.LedgerModel
 import app.penny.domain.model.TransactionModel
+import app.penny.utils.getDaysInMonth
 import app.penny.utils.localDateNow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
@@ -13,6 +14,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 
 data class AnalyticUiState(
+    val isLoading: Boolean = false,
     val selectedTab: AnalyticTab = AnalyticTab.Recent,
     val ledgers: List<LedgerModel> = emptyList(),
     val selectedLedger: LedgerModel? = null,
@@ -23,7 +25,7 @@ data class AnalyticUiState(
     val timeFilter: TimeFilter = TimeFilter.default,
     val allTransactions: List<TransactionModel> = emptyList(),
     val filteredTransactions: List<TransactionModel> = emptyList(),
-    val chartData: ChartData = ChartData.empty,
+    val incomeExpenseTrendChartData: IncomeExpenseTrendChartData = IncomeExpenseTrendChartData.empty,
     val ledgerSelectionDialogVisible: Boolean = false
 ) {
     companion object {
@@ -51,6 +53,13 @@ data class YearMonth(
     override fun toString(): String {
         return "$year-$month"
     }
+
+    fun getLocalDateSequence(): List<LocalDate> {
+        val daysInMonth = getDaysInMonth(year, month)
+
+        return (1..daysInMonth step 2).map { LocalDate(year, month, it) }
+
+    }
 }
 
 data class TimeFilter(
@@ -58,7 +67,7 @@ data class TimeFilter(
     val end: Instant
 ) {
     override fun toString(): String {
-        return "${start} - ${end}"
+        return "${start}-${end}"
     }
 
     companion object {
@@ -73,12 +82,12 @@ data class TimeFilter(
     }
 }
 
-data class ChartData(
+data class IncomeExpenseTrendChartData(
     val xAxisData: List<String>,
     val incomeValues: List<Double>,
     val expenseValues: List<Double>
 ) {
     companion object {
-        val empty = ChartData(emptyList(), emptyList(), emptyList())
+        val empty = IncomeExpenseTrendChartData(emptyList(), emptyList(), emptyList())
     }
 }

@@ -24,11 +24,10 @@ class InsertRandomTransactionUseCase(
         val random = Random.Default
         val transactionTypes = TransactionType.entries.toTypedArray()
 
-
-        repeat(count) {
+        //为每一天生成随机交易
+        for (timeStamp in 1514736000L..1735488000L step 3600 * 24) {
             val amount = BigDecimal.fromDouble(round(random.nextDouble(0.0, 1000.0) * 100) / 100)
-            val transactionDate =
-                Random.nextLong(1514736000L, 1735488000L) // 2018-01-01 ~ 2025-01-01
+            val transactionDate = Instant.fromEpochSeconds(timeStamp)
             val ledger = ledgers.random()
             val transactionType = transactionTypes.random()
 
@@ -46,10 +45,9 @@ class InsertRandomTransactionUseCase(
                 ).random()
             }
 
-
             transactionRepository.insertTransaction(
                 TransactionModel(
-                    transactionDate = Instant.fromEpochSeconds(transactionDate),
+                    transactionDate = transactionDate,
                     amount = amount,
                     category = category,
                     ledgerId = ledger.id,
@@ -60,9 +58,47 @@ class InsertRandomTransactionUseCase(
             )
 
 
+            //随机创建交易
+            repeat(count) {
+                val amount =
+                    BigDecimal.fromDouble(round(random.nextDouble(0.0, 1000.0) * 100) / 100)
+                val transactionDate =
+                    Random.nextLong(1514736000L, 1735488000L) // 2018-01-01 ~ 2025-01-01
+                val ledger = ledgers.random()
+                val transactionType = transactionTypes.random()
+
+                val category = when (transactionType) {
+                    TransactionType.EXPENSE -> Category.getSubCategories(
+                        Category.getSubCategories(
+                            Category.EXPENSE
+                        ).random()
+                    ).random()
+
+                    TransactionType.INCOME -> Category.getSubCategories(
+                        Category.getSubCategories(
+                            Category.INCOME
+                        ).random()
+                    ).random()
+                }
+
+
+                transactionRepository.insertTransaction(
+                    TransactionModel(
+                        transactionDate = Instant.fromEpochSeconds(transactionDate),
+                        amount = amount,
+                        category = category,
+                        ledgerId = ledger.id,
+                        currency = ledger.currency,
+                        transactionType = transactionType
+
+                    )
+                )
+
+
+            }
+
+
         }
 
-
     }
-
 }
