@@ -5,9 +5,11 @@ import app.penny.domain.enum.TransactionType
 import app.penny.domain.model.LedgerModel
 import app.penny.domain.model.TransactionModel
 import app.penny.domain.usecase.GetAllLedgerUseCase
-import app.penny.domain.usecase.GetTransactionsByLedgerUseCase
+import app.penny.domain.usecase.SearchTransactionsUseCase
 import app.penny.utils.generateDateSequence
+import app.penny.utils.generateMonthSequence
 import app.penny.utils.getDaysInMonth
+import app.penny.utils.localDateNow
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -15,25 +17,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.minus
-import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 
 class AnalyticViewModel(
-    private val getTransactionsByLedgerUseCase: GetTransactionsByLedgerUseCase,
     private val userDataRepository: UserDataRepository,
-    private val getAllLedgerUseCase: GetAllLedgerUseCase
+    private val getAllLedgerUseCase: GetAllLedgerUseCase,
+    private val searchTransactionsUseCase: SearchTransactionsUseCase
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(AnalyticUiState())
     val uiState: StateFlow<AnalyticUiState> = _uiState.asStateFlow()
@@ -50,68 +45,39 @@ class AnalyticViewModel(
                 val recentLedger = _uiState.value.ledgers.find { it.id == recentLedgerId }
                 Logger.d("get recentLedger $recentLedger")
                 selectLedger(recentLedger!!)
-                filterAndProcessTransactions("recent", ProcessStrategy.RECENT)
+                prepareDataForCharts()
 
             } else {
                 // 如果没有最近使用的账本，显示账本选择对话框
                 showLedgerSelectionDialog()
             }
-
-
         }
+        selectTab(AnalyticTab.Recent)
     }
 
     fun handleIntent(intent: AnalyticIntent) {
         when (intent) {
             is AnalyticIntent.OnTabSelected -> {
-                _uiState.value = _uiState.value.copy(selectedTab = intent.tab)
-                updateTimeFilterBasedOnTab(intent.tab)
-                filterAndProcessTransactions(
-                    "recent/month/year/custom",
-                    strategy = when (intent.tab) {
-                        AnalyticTab.Recent -> ProcessStrategy.RECENT
-                        AnalyticTab.Monthly -> ProcessStrategy.MONTHLY
-                        AnalyticTab.Yearly -> ProcessStrategy.YEARLY
-                        AnalyticTab.Custom -> ProcessStrategy.CUSTOM
-                    }
-                )
+                selectTab(intent.tab)
+
             }
 
             is AnalyticIntent.OnYearSelected -> {
-                _uiState.value = _uiState.value.copy(selectedYear = intent.year)
-                updateTimeFilterForYear(intent.year)
-                filterAndProcessTransactions(
-                    type = _uiState.value.selectedLedger.toString(),
-                    strategy = ProcessStrategy.YEARLY
-                )
+                selectYear(intent.year)
             }
 
             is AnalyticIntent.OnYearMonthSelected -> {
-                Logger.d("selected YearMonth${intent.yearMonth}")
-                _uiState.value = _uiState.value.copy(selectedYearMonth = intent.yearMonth)
-                updateTimeFilterForYearMonth(intent.yearMonth)
-                filterAndProcessTransactions(
-                    type = _uiState.value.selectedYearMonth.toString(),
-                    strategy = ProcessStrategy.MONTHLY
-                )
+                selectYearMonth(intent.yearMonth)
             }
 
             is AnalyticIntent.OnStartDateSelected -> {
                 _uiState.value = _uiState.value.copy(startDate = intent.date)
-                updateTimeFilterForCustomDate()
-                filterAndProcessTransactions(
-                    type = "${_uiState.value.startDate}- ${_uiState.value.endDate}",
-                    strategy = ProcessStrategy.CUSTOM
-                )
+
             }
 
             is AnalyticIntent.OnEndDateSelected -> {
                 _uiState.value = _uiState.value.copy(endDate = intent.date)
-                updateTimeFilterForCustomDate()
-                filterAndProcessTransactions(
-                    type = "${_uiState.value.startDate}- ${_uiState.value.endDate}",
-                    strategy = ProcessStrategy.CUSTOM
-                )
+
             }
 
             AnalyticIntent.ShowLedgerSelectionDialog -> {
@@ -126,6 +92,102 @@ class AnalyticViewModel(
         }
     }
 
+    private fun selectYear(year: Int) {
+        Logger.d("selected Year${year}")
+        _uiState.value = _uiState.value.copy(selectedYear = year)
+
+        if (_uiState.value.selectedYear != year) {
+            _uiState.value = _uiState.value.copy(selectedYear = year)
+        }
+
+        //设置时间区间
+        _uiState.value = _uiState.value.copy(
+            startDate = LocalDate(year, 1, 1),
+            endDate = LocalDate(year, 12, 31)
+        )
+
+
+        performFilter()
+    }
+
+    private fun selectYearMonth(yearMonth: YearMonth) {
+        Logger.d("selected YearMonth${yearMonth}")
+        if (yearMonth !== _uiState.value.selectedYearMonth) {
+            //update the selectedYearMonth
+            _uiState.value = _uiState.value.copy(
+                selectedYearMonth = yearMonth,
+
+                )
+        }
+        //set the startDate and endDate
+        _uiState.value = _uiState.value.copy(
+            startDate = LocalDate(yearMonth.year, yearMonth.month, 1),
+            endDate = LocalDate(
+                yearMonth.year,
+                yearMonth.month,
+                getDaysInMonth(yearMonth.year, yearMonth.month)
+            )
+        )
+        performFilter()
+    }
+
+
+    private fun selectTab(tab: AnalyticTab) {
+        _uiState.value = _uiState.value.copy(selectedTab = tab)
+        // 设定新的StartDate 和 EndDate
+
+        //设置时间区间
+        when (tab) {
+            //最近7天,直接设置_uiState的startDate和endDate
+            AnalyticTab.Recent -> {
+                _uiState.value = _uiState.value.copy(
+                    startDate = localDateNow().minus(DatePeriod(days = 7)), endDate = localDateNow()
+                )
+            }
+            //按月统计,通过selectYearMonth设置startDate和endDate
+            AnalyticTab.Monthly -> {
+                //从_uiState 中获取上次选择的年月,并跟新时间区间
+                selectYearMonth(_uiState.value.selectedYearMonth)
+            }
+
+            //按年统计,通过selectYear设置startDate和endDate
+            AnalyticTab.Yearly -> {
+                selectYear(_uiState.value.selectedYear)
+            }
+            //自定义时间,通过界面上的TimePicker设置startDate和endDate
+            AnalyticTab.Custom -> {
+
+            }
+        }
+
+        performFilter()
+
+
+    }
+
+    private fun performFilter() {
+        //从数据库获取对应的ledgerId和StartDate和EndDate之间的交易记录，赋值给_uiState的filteredTransactions
+        if (_uiState.value.selectedLedger != null) {
+            //从数据库获取对应的ledgerId和StartDate和EndDate之间的交易记录
+            screenModelScope.launch {
+
+                val transactions = searchTransactionsUseCase(
+                    ledgerId = _uiState.value.selectedLedger!!.id,
+                    startDate = _uiState.value.startDate,
+                    endDate = _uiState.value.endDate
+
+                )
+                _uiState.value = _uiState.value.copy(filteredTransactions = transactions)
+            }
+        } else {
+            //如果没有选择ledger,设置filteredTransactions为空
+            _uiState.value = _uiState.value.copy(filteredTransactions = emptyList())
+        }
+
+        prepareDataForCharts()
+    }
+
+
     private fun showLedgerSelectionDialog() {
         _uiState.value = _uiState.value.copy(ledgerSelectionDialogVisible = true)
     }
@@ -134,15 +196,6 @@ class AnalyticViewModel(
         _uiState.value = _uiState.value.copy(ledgerSelectionDialogVisible = false)
     }
 
-    private fun fetchTransactionsOfSelectedLedger() {
-        // 从数据库中获取数据
-        screenModelScope.launch {
-            uiState.value.selectedLedger?.let { ledger ->
-                val transactions = getTransactionsByLedgerUseCase(ledger.id)
-                _uiState.value = _uiState.value.copy(allTransactions = transactions)
-            }
-        }
-    }
 
     private suspend fun fetchAllLedgers() {
         val ledgers = getAllLedgerUseCase()
@@ -156,26 +209,29 @@ class AnalyticViewModel(
             userDataRepository.saveRecentLedgerId(ledger.id)
             Logger.d("Save recentLedgerId ${ledger.id}")
             dismissLedgerSelectionDialog()
-            fetchTransactionsOfSelectedLedger()
         }
+        //redo selectTab
+        selectTab(_uiState.value.selectedTab)
     }
 
 
-    private fun filterAndProcessTransactions(type: String, strategy: ProcessStrategy) {
-        val startInstant = _uiState.value.timeFilter.start
-        val endInstant = _uiState.value.timeFilter.end
-        val filtered = _uiState.value.allTransactions.filter {
-            it.transactionDate in startInstant..endInstant
-        }
-        _uiState.value = _uiState.value.copy(filteredTransactions = filtered)
-        processLineChartData(filtered, strategy)
-        processPieChartData(filtered, strategy)
-        Logger.d("filtered ${_uiState.value.filteredTransactions.size} records in $type of ${_uiState.value.allTransactions.size}")
+    private fun prepareDataForCharts() {
+        processLineChartData(
+            transactions = _uiState.value.filteredTransactions,
+            strategy = when (_uiState.value.selectedTab) {
+                AnalyticTab.Recent -> ProcessStrategy.RECENT
+                AnalyticTab.Monthly -> ProcessStrategy.MONTHLY
+                AnalyticTab.Yearly -> ProcessStrategy.YEARLY
+                AnalyticTab.Custom -> ProcessStrategy.CUSTOM
+            }
+        )
+//        processPieChartData(filtered, strategy)
     }
 
+
+    //
     private fun processLineChartData(
-        transactions: List<TransactionModel>,
-        strategy: ProcessStrategy
+        transactions: List<TransactionModel>, strategy: ProcessStrategy
     ) {
         val timeZone = TimeZone.currentSystemDefault()
         if (transactions.isEmpty()) {
@@ -230,22 +286,26 @@ class AnalyticViewModel(
                 }
 
                 // 汇总收入和支出
-                groupedTransactions.forEach { (date, transactionsInGroup) ->
-                    transactionsInGroup.forEach { transaction ->
+
+
+                for ((date, transactionsInGroup) in groupedTransactions) {
+                    for (transaction in transactionsInGroup) {
                         val amount = transaction.amount.toPlainString().toDouble()
                         when (transaction.transactionType) {
                             TransactionType.INCOME -> {
+
                                 incomeByDate[date] = (incomeByDate[date] ?: 0.0) + amount
+
                             }
 
                             TransactionType.EXPENSE -> {
                                 expenseByDate[date] = (expenseByDate[date] ?: 0.0) + amount
                             }
 
-                            else -> {}
                         }
                     }
                 }
+
 
                 // 准备图表数据
                 xAxisLabels = localDateSequence.map { localTimeMappingFunction(it) }
@@ -257,8 +317,8 @@ class AnalyticViewModel(
 
             ProcessStrategy.RECENT -> {
                 // 最近7天，按天分组
-                val startDate = _uiState.value.timeFilter.start.toLocalDateTime(timeZone).date
-                val endDate = _uiState.value.timeFilter.end.toLocalDateTime(timeZone).date
+                val startDate = _uiState.value.startDate
+                val endDate = _uiState.value.endDate
                 val dateSequence = generateDateSequence(startDate, endDate)
 
                 // 初始化收入和支出映射
@@ -358,20 +418,17 @@ class AnalyticViewModel(
             }
 
             ProcessStrategy.CUSTOM -> {
-
-                //TODO: 1.按天分组 2.按月分组 3.按年分组
-
                 //根据时间跨度决定分组方式
                 val start = _uiState.value.startDate
                 val end = _uiState.value.endDate
                 val days = start.daysUntil(end)
-
                 when (days) {
-                    in 0..7 -> {
+                    in 0..15 -> {
                         //按天分组
                         val dateSequence = generateDateSequence(start, end)
                         val incomeByDate = mutableMapOf<LocalDate, Double>()
                         val expenseByDate = mutableMapOf<LocalDate, Double>()
+
                         dateSequence.forEach { date ->
                             incomeByDate[date] = 0.0
                             expenseByDate[date] = 0.0
@@ -379,6 +436,7 @@ class AnalyticViewModel(
                         val groupedTransactions = transactions.groupBy {
                             it.transactionDate.toLocalDateTime(timeZone).date
                         }
+
                         groupedTransactions.forEach { (date, transactionsInGroup) ->
                             transactionsInGroup.forEach { transaction ->
                                 val amount = transaction.amount.toPlainString().toDouble()
@@ -390,138 +448,171 @@ class AnalyticViewModel(
                                     TransactionType.EXPENSE -> {
                                         expenseByDate[date] = (expenseByDate[date] ?: 0.0) + amount
                                     }
-
-                                    else -> {}
                                 }
                             }
                         }
+
+
+
                         xAxisLabels = dateSequence.map { localTimeMappingFunction(it) }
                         incomeValues = dateSequence.map { incomeByDate[it] ?: 0.0 }
                         expenseValues = dateSequence.map { expenseByDate[it] ?: 0.0 }
                     }
 
-                    in 8..31 -> {
-                        //按月分组
-                        val startMonth = start.monthNumber
-                        val endMonth = end.monthNumber
-                        val monthsInYear = (startMonth..endMonth).toList()
-                        val incomeByMonth = mutableMapOf<Int, Double>()
-                        val expenseByMonth = mutableMapOf<Int, Double>()
-                        monthsInYear.forEach { month ->
-                            incomeByMonth[month] = 0.0
-                            expenseByMonth[month] = 0.0
+                    in 16..31 -> {
+                        //每2天一组
+
+                        val dateSequence = generateDateSequence(start, end, stepDay = 2)
+                        val incomeByDate = mutableMapOf<LocalDate, Double>()
+                        val expenseByDate = mutableMapOf<LocalDate, Double>()
+
+                        dateSequence.forEach { date ->
+                            incomeByDate[date] = 0.0
+                            expenseByDate[date] = 0.0
                         }
+
                         val groupedTransactions = transactions.groupBy {
-                            it.transactionDate.toLocalDateTime(timeZone).date.monthNumber
+                            mappingDayOfMonth(
+                                mappingDayOfMonth(
+                                    it.transactionDate.toLocalDateTime(
+                                        timeZone
+                                    ).date
+                                )
+                            )
                         }
-                        groupedTransactions.forEach { (month, transactionsInGroup) ->
+
+                        groupedTransactions.forEach { (date, transactionsInGroup) ->
                             transactionsInGroup.forEach { transaction ->
                                 val amount = transaction.amount.toPlainString().toDouble()
                                 when (transaction.transactionType) {
                                     TransactionType.INCOME -> {
-                                        incomeByMonth[month] =
-                                            (incomeByMonth[month] ?: 0.0) + amount
+                                        incomeByDate[date] = (incomeByDate[date] ?: 0.0) + amount
                                     }
 
                                     TransactionType.EXPENSE -> {
-
+                                        expenseByDate[date] = (expenseByDate[date] ?: 0.0) + amount
                                     }
-
-
                                 }
                             }
                         }
+
+
+
+                        xAxisLabels = dateSequence.map { localTimeMappingFunction(it) }
+                        incomeValues = dateSequence.map { incomeByDate[it] ?: 0.0 }
+                        expenseValues = dateSequence.map { expenseByDate[it] ?: 0.0 }
+
+
+                    }
+
+                    //按月分组
+                    in 32..365 -> {
+                        val startMonth = start.monthNumber
+                        val endMonth = end.monthNumber
+
+
+                        val yearMonthSequence = generateMonthSequence(start, end)
+
+                        val incomeByMonth = mutableMapOf<YearMonth, Double>()
+                        val expenseByMonth = mutableMapOf<YearMonth, Double>()
+
+                        yearMonthSequence.forEach { yearMonth ->
+                            incomeByMonth[yearMonth] = 0.0
+                            expenseByMonth[yearMonth] = 0.0
+                        }
+
+
+                        val groupedTransactions = transactions.groupBy {
+                            YearMonth(
+                                it.transactionDate.toLocalDateTime(timeZone).date.year,
+                                it.transactionDate.toLocalDateTime(timeZone).date.monthNumber
+                            )
+                        }
+
+                        groupedTransactions.forEach { (yearMonth, transactionsInGroup) ->
+                            transactionsInGroup.forEach { transaction ->
+                                val amount = transaction.amount.toPlainString().toDouble()
+                                when (transaction.transactionType) {
+                                    TransactionType.INCOME -> {
+                                        incomeByMonth[yearMonth] =
+                                            (incomeByMonth[yearMonth] ?: 0.0) + amount
+                                    }
+
+                                    TransactionType.EXPENSE -> {
+                                        expenseByMonth[yearMonth] =
+                                            (expenseByMonth[yearMonth] ?: 0.0) + amount
+                                    }
+                                }
+                            }
+                        }
+
+
+                        xAxisLabels = yearMonthSequence.map { "${it.year}-${it.month}" }
+                        incomeValues = yearMonthSequence.map { incomeByMonth[it] ?: 0.0 }
+                        expenseValues = yearMonthSequence.map { expenseByMonth[it] ?: 0.0 }
+
+
+                    }
+
+
+                    in 366..Int.MAX_VALUE -> {
+                        //按年分组
+                        val startYear = start.year
+                        val endYear = end.year
+
+                        val years = (startYear..endYear).toList()
+
+                        val incomeByYear = mutableMapOf<Int, Double>()
+                        val expenseByYear = mutableMapOf<Int, Double>()
+
+                        years.forEach { year ->
+                            incomeByYear[year] = 0.0
+                            expenseByYear[year] = 0.0
+                        }
+
+                        val groupedTransactions = transactions.groupBy {
+                            it.transactionDate.toLocalDateTime(timeZone).date.year
+                        }
+
+                        groupedTransactions.forEach { (year, transactionsInGroup) ->
+                            transactionsInGroup.forEach { transaction ->
+                                val amount = transaction.amount.toPlainString().toDouble()
+                                when (transaction.transactionType) {
+                                    TransactionType.INCOME -> {
+                                        incomeByYear[year] = (incomeByYear[year] ?: 0.0) + amount
+                                    }
+
+                                    TransactionType.EXPENSE -> {
+                                        expenseByYear[year] = (expenseByYear[year] ?: 0.0) + amount
+                                    }
+                                }
+                            }
+                        }
+
+                        xAxisLabels = years.map { it.toString() }
+                        incomeValues = years.map { incomeByYear[it] ?: 0.0 }
+                        expenseValues = years.map { expenseByYear[it] ?: 0.0 }
                     }
                 }
 
 
-                // 更新 UI 状态
-                _uiState.value = _uiState.value.copy(
-                    incomeExpenseTrendChartData = IncomeExpenseTrendChartData(
-                        xAxisData = xAxisLabels,
-                        incomeValues = incomeValues,
-                        expenseValues = expenseValues
-                    )
-                )
-
             }
+
         }
+        // 更新 UI 状态
+        _uiState.value = _uiState.value.copy(
+            incomeExpenseTrendChartData = IncomeExpenseTrendChartData(
+                xAxisData = xAxisLabels,
+                incomeValues = incomeValues,
+                expenseValues = expenseValues
+            )
+        )
     }
 
 
-    private fun updateTimeFilterBasedOnTab(tab: AnalyticTab) {
-        val timeZone = TimeZone.currentSystemDefault()
-        val now = Clock.System.now().toLocalDateTime(timeZone)
-        val start: Instant
-        val end: Instant
-
-        when (tab) {
-            AnalyticTab.Recent -> {
-                start = now.date.minus(DatePeriod(days = 7)).atStartOfDayIn(timeZone)
-                end = now.date.atStartOfDayIn(timeZone)
-            }
-
-            AnalyticTab.Monthly -> {
-                val yearMonth = _uiState.value.selectedYearMonth
-                val startDate = LocalDate(yearMonth.year, yearMonth.month, 1)
-                val endDate =
-                    startDate.plus(DatePeriod(months = 1)).minus(DatePeriod(days = 1))
-                start = startDate.atStartOfDayIn(timeZone)
-                end = endDate.atStartOfDayIn(timeZone)
-            }
-
-            AnalyticTab.Yearly -> {
-                val year = _uiState.value.selectedYear
-                val startDate = LocalDate(year, 1, 1)
-                val endDate = LocalDate(year, 12, 31)
-                start = startDate.atStartOfDayIn(timeZone)
-                end = endDate.atStartOfDayIn(timeZone)
-            }
-
-            AnalyticTab.Custom -> {
-                val startDate = _uiState.value.startDate
-                val endDate = _uiState.value.endDate
-                start = startDate.atStartOfDayIn(timeZone)
-                end = endDate.atStartOfDayIn(timeZone)
-            }
-        }
-
-        _uiState.value = _uiState.value.copy(timeFilter = TimeFilter(start, end))
-    }
-
-    private fun updateTimeFilterForYear(year: Int) {
-        val timeZone = TimeZone.currentSystemDefault()
-        val startDate = LocalDate(year, 1, 1)
-        val endDate = LocalDate(year, 12, 31)
-        val start = startDate.atStartOfDayIn(timeZone)
-        val end = endDate.atStartOfDayIn(timeZone)
-        _uiState.value = _uiState.value.copy(timeFilter = TimeFilter(start, end))
-    }
-
-    private fun updateTimeFilterForYearMonth(yearMonth: YearMonth) {
-        val timeZone = TimeZone.currentSystemDefault()
-        val startDate = LocalDate(yearMonth.year, yearMonth.month, 1)
-        val endDate = startDate.plus(DatePeriod(months = 1)).minus(DatePeriod(days = 1))
-        val start = startDate.atStartOfDayIn(timeZone)
-        val end = endDate.atStartOfDayIn(timeZone).plus(23.hours).plus(59.minutes)
-            .plus(59.seconds)
-        _uiState.value = _uiState.value.copy(timeFilter = TimeFilter(start, end))
-    }
-
-    private fun updateTimeFilterForCustomDate() {
-        val timeZone = TimeZone.currentSystemDefault()
-        val startDate = _uiState.value.startDate
-        val endDate = _uiState.value.endDate
-        val start = startDate.atStartOfDayIn(timeZone)
-        val end = endDate.atStartOfDayIn(timeZone)
-        _uiState.value = _uiState.value.copy(timeFilter = TimeFilter(start, end))
-    }
 }
 
 
 enum class ProcessStrategy {
-    RECENT,
-    MONTHLY,
-    YEARLY,
-    CUSTOM
+    RECENT, MONTHLY, YEARLY, CUSTOM
 }

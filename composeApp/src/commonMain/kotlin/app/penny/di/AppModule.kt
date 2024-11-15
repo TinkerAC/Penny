@@ -17,6 +17,7 @@ import app.penny.domain.usecase.GetAllTransactionsUseCase
 import app.penny.domain.usecase.GetTransactionsByLedgerUseCase
 import app.penny.domain.usecase.InsertLedgerUseCase
 import app.penny.domain.usecase.InsertRandomTransactionUseCase
+import app.penny.domain.usecase.SearchTransactionsUseCase
 import app.penny.presentation.ui.screens.analytics.AnalyticViewModel
 import app.penny.presentation.ui.screens.dashboard.DashboardViewModel
 import app.penny.presentation.ui.screens.myLedger.MyLedgerViewModel
@@ -46,9 +47,8 @@ fun commonModule() = module {
     single { LedgerLocalDataSource(get()) }
 
 
-
     //SettingManager
-    single { UserDataManager(get ()) }
+    single { UserDataManager(get()) }
 
     // 提供 Repository
     single<TransactionRepository> { TransactionRepositoryImpl(get()) }
@@ -65,6 +65,8 @@ fun commonModule() = module {
     factory { DeleteLedgerUseCase(get()) }
     factory { GetTransactionsByLedgerUseCase(get()) }
     factory { GetAllTransactionsUseCase(get()) }
+    factory { SearchTransactionsUseCase(get()) }
+
 
     // 注入 ViewModel
     factory { NewTransactionViewModel(get(), get()) }

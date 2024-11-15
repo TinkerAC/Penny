@@ -1,13 +1,16 @@
 // file: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/transactions/utils/DateUtils.kt
 package app.penny.utils
 
+import app.penny.presentation.ui.screens.analytics.YearMonth
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import app.penny.presentation.ui.screens.transactions.GroupBy
-import kotlinx.datetime.*
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.*
-import kotlin.math.floor
 
 object TimeUtils {
 
@@ -59,12 +62,30 @@ fun getDaysInMonth(year: Int, month: Int): Int {
 }
 
 
-fun generateDateSequence(startDate: LocalDate, endDate: LocalDate): List<LocalDate> {
+fun generateDateSequence(
+    startDate: LocalDate,
+    endDate: LocalDate,
+    stepDay: Int = 1
+): List<LocalDate> {
     val dates = mutableListOf<LocalDate>()
     var currentDate = startDate
     while (currentDate <= endDate) {
         dates.add(currentDate)
-        currentDate = currentDate.plus(DatePeriod(days = 1))
+        currentDate = currentDate.plus(DatePeriod(days = stepDay))
     }
     return dates
+}
+
+fun generateMonthSequence(startDate: LocalDate, endDate: LocalDate): List<YearMonth> {
+    val months = mutableListOf<YearMonth>()
+    var currentMonth = YearMonth(startDate.year, startDate.monthNumber)
+    while (currentMonth <= YearMonth(endDate.year, endDate.monthNumber)) {
+        months.add(currentMonth)
+        currentMonth = if (currentMonth.month == 12) {
+            YearMonth(currentMonth.year + 1, 1)
+        } else {
+            YearMonth(currentMonth.year, currentMonth.month + 1)
+        }
+    }
+    return months
 }

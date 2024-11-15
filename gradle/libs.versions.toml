@@ -15,6 +15,7 @@ bignum = "0.3.10"
 chartVersion = "Beta-0.0.5"
 #Why is there a reversed versioning scheme? Took me forever to track down the issue until I saw the release dates on Maven Central.
 
+kotlinx_datetime_ext = "1.3.1"
 multiplatformSettings = "1.1.1"
 compose-plugin = "1.6.11"
 jdbcDriver = "2.0.2"
@@ -50,6 +51,7 @@ koin-android-ext = { module = "io.insert-koin:koin-android-ext", version.ref = "
 
 # SQLDelight 驱动
 android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "jdbcDriver" }
+kotlinx_datetime_ext = { module = "com.raedghazal:kotlinx_datetime_ext", version.ref = "kotlinx_datetime_ext" }
 native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "jdbcDriver" }
 sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "jdbcDriver" }
 jdbc-driver = { module = "app.cash.sqldelight:jdbc-driver", version.ref = "jdbcDriver" }

@@ -70,6 +70,8 @@ kotlin {
                 implementation(libs.kermit)
                 implementation(libs.kermit.koin)
                 implementation(compose.materialIconsExtended)
+
+                implementation(libs.kotlinx.datetime.ext)
             }
         }
 

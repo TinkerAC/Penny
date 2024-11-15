@@ -20,12 +20,15 @@ data class AnalyticUiState(
     val selectedLedger: LedgerModel? = null,
     val selectedYear: Int = currentYear,
     val selectedYearMonth: YearMonth = currentYearMonth,
+
+
     val startDate: LocalDate = defaultStartDate,
     val endDate: LocalDate = defaultEndDate,
-    val timeFilter: TimeFilter = TimeFilter.default,
-    val allTransactions: List<TransactionModel> = emptyList(),
+
     val filteredTransactions: List<TransactionModel> = emptyList(),
+
     val incomeExpenseTrendChartData: IncomeExpenseTrendChartData = IncomeExpenseTrendChartData.empty,
+
     val ledgerSelectionDialogVisible: Boolean = false
 ) {
     companion object {
@@ -60,27 +63,21 @@ data class YearMonth(
         return (1..daysInMonth step 2).map { LocalDate(year, month, it) }
 
     }
-}
 
-data class TimeFilter(
-    val start: Instant,
-    val end: Instant
-) {
-    override fun toString(): String {
-        return "${start}-${end}"
+    operator fun compareTo(yearMonth: YearMonth): Int {
+        return when {
+            year > yearMonth.year -> 1
+            year < yearMonth.year -> -1
+            month > yearMonth.month -> 1
+            month < yearMonth.month -> -1
+            else -> 0
+        }
     }
 
-    companion object {
-        val default: TimeFilter
-            get() {
-                val timeZone = TimeZone.currentSystemDefault()
-                val now = localDateNow()
-                val start = now.minus(DatePeriod(days = 7)).atStartOfDayIn(timeZone)
-                val end = now.atStartOfDayIn(timeZone)
-                return TimeFilter(start, end)
-            }
-    }
+
 }
+
+
 
 data class IncomeExpenseTrendChartData(
     val xAxisData: List<String>,

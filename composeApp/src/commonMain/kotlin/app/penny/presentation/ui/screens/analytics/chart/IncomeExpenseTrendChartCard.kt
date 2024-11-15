@@ -52,7 +52,7 @@ fun IncomeExpenseTrendChartCard(
         shape = MaterialTheme.shapes.medium
     ) {
 
-        if (incomeValues.isEmpty() && expenseValues.isEmpty()) {
+        if (incomeValues.isEmpty() && expenseValues.isEmpty()){
             Box(
                 modifier = Modifier.fillMaxWidth().height(300.dp),
                 contentAlignment = androidx.compose.ui.Alignment.Center
@@ -74,7 +74,6 @@ fun IncomeExpenseTrendChartCard(
                 isGrid = true,
                 gridColor = Color.LightGray,
                 yAxisStyle = TextStyle(color = Color.Black),
-
                 xAxisStyle = TextStyle(
                     color = Color.Black,
                     fontSize = 12.sp
@@ -82,6 +81,9 @@ fun IncomeExpenseTrendChartCard(
                 descriptionStyle = TextStyle(color = Color.Black),
                 showGridWithSpacer = true,
             )
+
+
+
         }
 
     }
