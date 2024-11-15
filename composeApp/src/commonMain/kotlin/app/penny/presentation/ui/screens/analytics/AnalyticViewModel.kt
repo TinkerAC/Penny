@@ -1,5 +1,6 @@
 package app.penny.presentation.ui.screens.analytics
 
+import androidx.compose.ui.graphics.Color
 import app.penny.data.repository.UserDataRepository
 import app.penny.domain.enum.TransactionType
 import app.penny.domain.model.LedgerModel
@@ -13,6 +14,7 @@ import app.penny.utils.localDateNow
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
+import com.aay.compose.donutChart.model.PieChartData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,6 +25,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
+import kotlin.random.Random
 
 
 class AnalyticViewModel(
@@ -175,7 +178,6 @@ class AnalyticViewModel(
                     ledgerId = _uiState.value.selectedLedger!!.id,
                     startDate = _uiState.value.startDate,
                     endDate = _uiState.value.endDate
-
                 )
                 _uiState.value = _uiState.value.copy(filteredTransactions = transactions)
             }
@@ -225,14 +227,23 @@ class AnalyticViewModel(
                 AnalyticTab.Custom -> ProcessStrategy.CUSTOM
             }
         )
-//        processPieChartData(filtered, strategy)
+        val (incomePieChartData, expensePieChartData) = processPieChartData(
+            transactions = _uiState.value.filteredTransactions
+        )
+
+
+
+        _uiState.value = _uiState.value.copy(
+            incomePieChartData = incomePieChartData,
+            expensePieChartData = expensePieChartData
+        )
     }
 
 
     //
     private fun processLineChartData(
         transactions: List<TransactionModel>, strategy: ProcessStrategy
-    ) {
+    ): Unit {
         val timeZone = TimeZone.currentSystemDefault()
         if (transactions.isEmpty()) {
             // 如果没有交易数据，设置为空的图表数据
@@ -610,8 +621,69 @@ class AnalyticViewModel(
     }
 
 
-}
+    private fun processPieChartData(
+        transactions: List<TransactionModel>
+    ): Pair<List<PieChartData>, List<PieChartData>> {
 
+        val incomeTransactions =
+            transactions.filter { it.transactionType == TransactionType.INCOME }
+        val expenseTransactions =
+            transactions.filter { it.transactionType == TransactionType.EXPENSE }
+
+
+        val incomeLevel1CategoryPieChartData = incomeTransactions.groupBy {
+            it.category.parentCategory!!
+        }.map {
+            PieChartData(
+                data = it.value.sumOf { transaction ->
+                    transaction.amount.toPlainString().toDouble()
+                },
+                partName = it.key.name,
+                //random color
+                color = Color(
+                    Random.nextInt(0, 255),
+                    Random.nextInt(0, 255),
+                    Random.nextInt(0, 255)
+                )
+            )
+        }
+
+
+        val expenseLevel1CategoryPieChartData = expenseTransactions.groupBy {
+            it.category.parentCategory!!
+        }.map {
+            PieChartData(
+                data = it.value.sumOf { transaction ->
+                    transaction.amount.toPlainString().toDouble()
+                },
+                partName = it.key.name,
+                //random color
+                color = Color(
+                    Random.nextInt(0, 255),
+                    Random.nextInt(0, 255),
+                    Random.nextInt(0, 255)
+                )
+            )
+        }
+        return Pair(incomeLevel1CategoryPieChartData, expenseLevel1CategoryPieChartData)
+    }
+
+
+    private fun processAssetTrendLineChartData(
+        transactions: List<TransactionModel>
+    ): Triple<List<String>, List<Double>, List<Double>> {
+        throw NotImplementedError()
+    }
+
+
+    private fun processAssetTableData(
+        transactions: List<TransactionModel>
+    ) {
+        throw NotImplementedError()
+    }
+
+
+}
 
 enum class ProcessStrategy {
     RECENT, MONTHLY, YEARLY, CUSTOM

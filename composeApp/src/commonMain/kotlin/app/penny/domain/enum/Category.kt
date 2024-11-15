@@ -258,10 +258,17 @@ enum class Category(
         }
 
 
+        /**
+         * return all level 1 categories
+         */
+
         fun getLevel1Categories(): List<Category> {
             return getSubCategories(INCOME) + getSubCategories(EXPENSE)
         }
 
+        /**
+         * return all level 2 categories
+         */
         fun getLevel2Categories(): List<Category> {
             return getLevel1Categories().flatMap { getSubCategories(it) }
         }

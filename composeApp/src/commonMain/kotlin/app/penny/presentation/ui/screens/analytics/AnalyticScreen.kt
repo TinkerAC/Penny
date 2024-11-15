@@ -3,12 +3,12 @@ package app.penny.presentation.ui.screens.analytics
 import AnalyticsTopBar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import app.penny.presentation.ui.components.LedgerSelectionDialog
 import app.penny.presentation.ui.components.LoadingScreen
+import app.penny.presentation.ui.screens.analytics.chart.CategoryPieChart
 import app.penny.presentation.ui.screens.analytics.chart.IncomeExpenseTrendChartCard
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -62,9 +62,10 @@ class AnalyticScreen : Screen {
                         )
                     }
                     item {
-//                        CategoryPieChart(
-//
-//                        )
+                        CategoryPieChart(
+                            incomePieChartData = uiState.incomePieChartData,
+                            expensePieChartData = uiState.expensePieChartData
+                        )
                     }
 
                 }

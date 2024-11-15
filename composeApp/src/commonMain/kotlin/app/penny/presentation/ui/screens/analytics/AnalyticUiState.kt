@@ -3,13 +3,11 @@ package app.penny.presentation.ui.screens.analytics
 import app.penny.domain.model.LedgerModel
 import app.penny.domain.model.TransactionModel
 import app.penny.utils.getDaysInMonth
-import app.penny.utils.localDateNow
+import com.aay.compose.donutChart.model.PieChartData
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 
@@ -28,6 +26,10 @@ data class AnalyticUiState(
     val filteredTransactions: List<TransactionModel> = emptyList(),
 
     val incomeExpenseTrendChartData: IncomeExpenseTrendChartData = IncomeExpenseTrendChartData.empty,
+
+    val incomePieChartData: List<PieChartData> = emptyList(),
+    val expensePieChartData: List<PieChartData> = emptyList(),
+
 
     val ledgerSelectionDialogVisible: Boolean = false
 ) {
@@ -76,7 +78,6 @@ data class YearMonth(
 
 
 }
-
 
 
 data class IncomeExpenseTrendChartData(

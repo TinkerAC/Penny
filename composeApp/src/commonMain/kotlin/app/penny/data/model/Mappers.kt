@@ -2,15 +2,14 @@ package app.penny.data.model
 
 
 import app.penny.database.AchievementEntity
-import app.penny.database.CategoryEntity
 import app.penny.database.LedgerEntity
 import app.penny.database.TransactionEntity
 import app.penny.database.UserAchievementEntity
 import app.penny.domain.enum.Category
 import app.penny.domain.enum.Currency
 import app.penny.domain.enum.LedgerCover
+import app.penny.domain.enum.TransactionType
 import app.penny.domain.model.AchievementModel
-import app.penny.domain.model.CategoryModel
 import app.penny.domain.model.LedgerModel
 import app.penny.domain.model.TransactionModel
 import app.penny.domain.model.UserAchievementModel
@@ -68,12 +67,12 @@ fun TransactionEntity.toModel(): TransactionModel {
         amount = BigDecimal.parseString(amount),
         currency = Currency.valueOf(currency_code),
         remark = remark,
+        transactionType = TransactionType.valueOf(transaction_type),
         screenshotUri = screenshot_uri,
         transactionDate = Instant.fromEpochSeconds(transaction_date),
         category = Category.valueOf(category_name),
-        )
+    )
 }
-
 
 
 fun AchievementEntity.toModel(): AchievementModel {
