@@ -11,7 +11,6 @@ import app.penny.utils.getDaysInMonth
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,12 +21,10 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.daysUntil
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.daysUntil
-import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -171,13 +168,15 @@ class AnalyticViewModel(
             it.transactionDate in startInstant..endInstant
         }
         _uiState.value = _uiState.value.copy(filteredTransactions = filtered)
-        processChartData(filtered, strategy)
+        processLineChartData(filtered, strategy)
+        processPieChartData(filtered, strategy)
         Logger.d("filtered ${_uiState.value.filteredTransactions.size} records in $type of ${_uiState.value.allTransactions.size}")
     }
 
-    private fun processChartData(transactions: List<TransactionModel>, strategy: ProcessStrategy) {
-
-
+    private fun processLineChartData(
+        transactions: List<TransactionModel>,
+        strategy: ProcessStrategy
+    ) {
         val timeZone = TimeZone.currentSystemDefault()
         if (transactions.isEmpty()) {
             // 如果没有交易数据，设置为空的图表数据
@@ -360,20 +359,93 @@ class AnalyticViewModel(
 
             ProcessStrategy.CUSTOM -> {
 
+                //TODO: 1.按天分组 2.按月分组 3.按年分组
+
+                //根据时间跨度决定分组方式
+                val start = _uiState.value.startDate
+                val end = _uiState.value.endDate
+                val days = start.daysUntil(end)
+
+                when (days) {
+                    in 0..7 -> {
+                        //按天分组
+                        val dateSequence = generateDateSequence(start, end)
+                        val incomeByDate = mutableMapOf<LocalDate, Double>()
+                        val expenseByDate = mutableMapOf<LocalDate, Double>()
+                        dateSequence.forEach { date ->
+                            incomeByDate[date] = 0.0
+                            expenseByDate[date] = 0.0
+                        }
+                        val groupedTransactions = transactions.groupBy {
+                            it.transactionDate.toLocalDateTime(timeZone).date
+                        }
+                        groupedTransactions.forEach { (date, transactionsInGroup) ->
+                            transactionsInGroup.forEach { transaction ->
+                                val amount = transaction.amount.toPlainString().toDouble()
+                                when (transaction.transactionType) {
+                                    TransactionType.INCOME -> {
+                                        incomeByDate[date] = (incomeByDate[date] ?: 0.0) + amount
+                                    }
+
+                                    TransactionType.EXPENSE -> {
+                                        expenseByDate[date] = (expenseByDate[date] ?: 0.0) + amount
+                                    }
+
+                                    else -> {}
+                                }
+                            }
+                        }
+                        xAxisLabels = dateSequence.map { localTimeMappingFunction(it) }
+                        incomeValues = dateSequence.map { incomeByDate[it] ?: 0.0 }
+                        expenseValues = dateSequence.map { expenseByDate[it] ?: 0.0 }
+                    }
+
+                    in 8..31 -> {
+                        //按月分组
+                        val startMonth = start.monthNumber
+                        val endMonth = end.monthNumber
+                        val monthsInYear = (startMonth..endMonth).toList()
+                        val incomeByMonth = mutableMapOf<Int, Double>()
+                        val expenseByMonth = mutableMapOf<Int, Double>()
+                        monthsInYear.forEach { month ->
+                            incomeByMonth[month] = 0.0
+                            expenseByMonth[month] = 0.0
+                        }
+                        val groupedTransactions = transactions.groupBy {
+                            it.transactionDate.toLocalDateTime(timeZone).date.monthNumber
+                        }
+                        groupedTransactions.forEach { (month, transactionsInGroup) ->
+                            transactionsInGroup.forEach { transaction ->
+                                val amount = transaction.amount.toPlainString().toDouble()
+                                when (transaction.transactionType) {
+                                    TransactionType.INCOME -> {
+                                        incomeByMonth[month] =
+                                            (incomeByMonth[month] ?: 0.0) + amount
+                                    }
+
+                                    TransactionType.EXPENSE -> {
+
+                                    }
+
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                // 更新 UI 状态
+                _uiState.value = _uiState.value.copy(
+                    incomeExpenseTrendChartData = IncomeExpenseTrendChartData(
+                        xAxisData = xAxisLabels,
+                        incomeValues = incomeValues,
+                        expenseValues = expenseValues
+                    )
+                )
 
             }
         }
-
-
-        // 更新 UI 状态
-        _uiState.value = _uiState.value.copy(
-            incomeExpenseTrendChartData = IncomeExpenseTrendChartData(
-                xAxisData = xAxisLabels,
-                incomeValues = incomeValues,
-                expenseValues = expenseValues
-            )
-        )
-
     }
 
 
@@ -392,7 +464,8 @@ class AnalyticViewModel(
             AnalyticTab.Monthly -> {
                 val yearMonth = _uiState.value.selectedYearMonth
                 val startDate = LocalDate(yearMonth.year, yearMonth.month, 1)
-                val endDate = startDate.plus(DatePeriod(months = 1)).minus(DatePeriod(days = 1))
+                val endDate =
+                    startDate.plus(DatePeriod(months = 1)).minus(DatePeriod(days = 1))
                 start = startDate.atStartOfDayIn(timeZone)
                 end = endDate.atStartOfDayIn(timeZone)
             }
@@ -430,7 +503,8 @@ class AnalyticViewModel(
         val startDate = LocalDate(yearMonth.year, yearMonth.month, 1)
         val endDate = startDate.plus(DatePeriod(months = 1)).minus(DatePeriod(days = 1))
         val start = startDate.atStartOfDayIn(timeZone)
-        val end = endDate.atStartOfDayIn(timeZone).plus(23.hours).plus(59.minutes).plus(59.seconds)
+        val end = endDate.atStartOfDayIn(timeZone).plus(23.hours).plus(59.minutes)
+            .plus(59.seconds)
         _uiState.value = _uiState.value.copy(timeFilter = TimeFilter(start, end))
     }
 
