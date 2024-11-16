@@ -4,6 +4,7 @@ import app.penny.domain.model.LedgerModel
 import app.penny.domain.model.TransactionModel
 import app.penny.utils.getDaysInMonth
 import com.aay.compose.donutChart.model.PieChartData
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
@@ -29,6 +30,9 @@ data class AnalyticUiState(
 
     val incomePieChartData: List<PieChartData> = emptyList(),
     val expensePieChartData: List<PieChartData> = emptyList(),
+
+    val assetChangeTableData: List<Pair<LocalDate, Triple<BigDecimal, BigDecimal, BigDecimal>>> = emptyList(),
+    val assetTrendLineChartData:Pair<List<String>, List<Double>> = Pair(emptyList(), emptyList()),
 
 
     val ledgerSelectionDialogVisible: Boolean = false

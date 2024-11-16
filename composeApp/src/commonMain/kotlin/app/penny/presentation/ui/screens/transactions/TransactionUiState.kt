@@ -1,7 +1,7 @@
 package app.penny.presentation.ui.screens.transactions
 
 import app.penny.domain.model.TransactionModel
-
+import kotlinx.datetime.LocalDate
 
 data class TransactionUiState(
     val isLoading: Boolean = false,
@@ -11,12 +11,14 @@ data class TransactionUiState(
     val selectedGroupByOption: GroupBy? = null,
     val isSharedPopupVisible: Boolean = false,
     val groupByOptions: List<GroupBy> = GroupByType.getGroupByOptions(GroupByType.Time),
-    val groupedTransactions: List<GroupedTransaction> = emptyList()
+    val groupedTransactions: List<GroupedTransaction> = emptyList(),
+    val isCalendarView: Boolean = false,  // 新增，标记当前是否为日历视图
+    val selectedDate: LocalDate? = null   // 新增，选中的日期
 )
 
 sealed class GroupBy(val displayText: String) {
 
-    // Time category and its subcategories
+    // 时间类别及其子类别
     sealed class Time(displayText: String) : GroupBy(displayText) {
         object Day : Time("Day")
         object Week : Time("Week")
@@ -29,7 +31,7 @@ sealed class GroupBy(val displayText: String) {
         }
     }
 
-    // Category and its subcategories
+    // 分类类别及其子类别
     sealed class Category(displayText: String) : GroupBy(displayText) {
         object Level1 : Category("Level 1")
         object Level2 : Category("Level 2")
@@ -39,7 +41,7 @@ sealed class GroupBy(val displayText: String) {
         }
     }
 
-    // Other independent categories
+    // 其他独立类别
     object Ledger : GroupBy("Ledger")
 }
 
@@ -60,7 +62,6 @@ sealed class GroupByType(val displayName: String) {
         }
     }
 }
-
 
 data class GroupedTransaction(
     val groupKey: String,

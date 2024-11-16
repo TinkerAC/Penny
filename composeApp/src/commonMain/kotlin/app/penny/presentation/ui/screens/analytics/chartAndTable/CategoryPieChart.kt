@@ -1,4 +1,4 @@
-package app.penny.presentation.ui.screens.analytics.chart
+package app.penny.presentation.ui.screens.analytics.chartAndTable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
+import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.donutChart.PieChart
 import com.aay.compose.donutChart.model.PieChartData
 
@@ -52,6 +53,7 @@ fun CategoryPieChart(
             PieChart(
                 modifier = Modifier.fillMaxWidth(),
                 pieChartData = if (chartType == 0) expensePieChartData else incomePieChartData,
+                legendPosition = LegendPosition.TOP
             )
         }
     }

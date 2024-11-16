@@ -1,6 +1,6 @@
-// File: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/transactions/TransactionViewModel.kt
 package app.penny.presentation.ui.screens.transactions
 
+import app.penny.domain.model.TransactionModel
 import app.penny.domain.usecase.GetAllTransactionsUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -27,13 +28,21 @@ class TransactionViewModel(
             is TransactionIntent.ShowSharedDropdown -> showSharedDropdown(intent.groupByType)
             is TransactionIntent.SelectGroupByOption -> selectGroupByOption(intent.groupBy)
             is TransactionIntent.DismissSharedDropdown -> dismissSharedDropdown()
+            is TransactionIntent.ToggleView -> toggleView()
+            is TransactionIntent.SelectDate -> selectDate(intent.date)
         }
     }
 
+    private fun toggleView() {
+        _uiState.value = _uiState.value.copy(
+            isCalendarView = !_uiState.value.isCalendarView,
+            selectedDate = null // 切换视图时重置选中的日期
+        )
+    }
 
-    /**
-     * Show the shared dropdown for selecting group by options, will not change the selected group by option.
-     */
+    private fun selectDate(date: LocalDate) {
+        _uiState.value = _uiState.value.copy(selectedDate = date)
+    }
 
     private fun showSharedDropdown(
         groupByType: GroupByType,
@@ -50,7 +59,14 @@ class TransactionViewModel(
     }
 
     private fun selectGroupByOption(groupBy: GroupBy) {
-        _uiState.value = _uiState.value.copy(selectedGroupByOption = groupBy)
+        _uiState.value = _uiState.value.copy(
+            selectedGroupByOption = groupBy,
+            selectedGroupByType = when (groupBy) {
+                is GroupBy.Time -> GroupByType.Time
+                is GroupBy.Category -> GroupByType.Category
+                is GroupBy.Ledger -> GroupByType.Ledger
+            }
+        )
         dismissSharedDropdown()
         doGroupBy(groupBy)
     }
@@ -59,11 +75,9 @@ class TransactionViewModel(
         _uiState.value = _uiState.value.copy(isSharedPopupVisible = false)
     }
 
-
     /**
-     * Group transactions based on the selected group by option.
+     * 根据选定的分组选项对交易进行分组
      */
-
     private fun doGroupBy(groupBy: GroupBy) {
         val groupedTransactions = when (groupBy) {
             is GroupBy.Time -> groupByTime(groupBy)
@@ -78,13 +92,13 @@ class TransactionViewModel(
             _uiState.value = _uiState.value.copy(isLoading = true)
             val transactions = getAllTransactionsUseCase()
             _uiState.value = _uiState.value.copy(transactions = transactions, isLoading = false)
-            // Initial grouping
+            // 初始分组
             _uiState.value.selectedGroupByOption?.let { doGroupBy(it) }
         }
     }
 
     /**
-     * Group transactions by time.
+     * 按时间分组交易
      */
     private fun groupByTime(groupBy: GroupBy.Time): List<GroupedTransaction> {
         val transactions = _uiState.value.transactions
@@ -124,7 +138,7 @@ class TransactionViewModel(
             }
         }
 
-        // Sort the groups in descending order of time
+        // 按时间降序排列分组
         val sortedGroups = groupedMap.entries.sortedByDescending { it.key }
 
         return sortedGroups.map { (key, value) ->
@@ -135,7 +149,7 @@ class TransactionViewModel(
     }
 
     /**
-     * Group transactions by category.
+     * 按类别分组交易
      */
     private fun groupByCategory(groupBy: GroupBy.Category): List<GroupedTransaction> {
         val transactions = _uiState.value.transactions
@@ -151,7 +165,7 @@ class TransactionViewModel(
             }
         }
 
-        // Sort the groups alphabetically
+        // 按字母顺序排列分组
         val sortedGroups = groupedMap.entries
 
         return sortedGroups.map { (key, value) ->
@@ -160,14 +174,14 @@ class TransactionViewModel(
     }
 
     /**
-     * Group transactions by ledger.
+     * 按账本分组交易
      */
     private fun groupByLedger(): List<GroupedTransaction> {
         val transactions = _uiState.value.transactions
         val groupedMap = transactions.groupBy { transaction ->
             transaction.ledgerId.toString()
         }
-        // Sort the groups alphabetically
+        // 按字母顺序排列分组
         val sortedGroups = groupedMap.entries
         return sortedGroups.map { (key, value) ->
             GroupedTransaction(groupKey = key ?: "Unknown", transactions = value)

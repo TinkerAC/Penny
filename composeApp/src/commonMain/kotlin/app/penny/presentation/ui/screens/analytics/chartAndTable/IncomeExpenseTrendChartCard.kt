@@ -1,4 +1,4 @@
-package app.penny.presentation.ui.screens.analytics.chart
+package app.penny.presentation.ui.screens.analytics.chartAndTable
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

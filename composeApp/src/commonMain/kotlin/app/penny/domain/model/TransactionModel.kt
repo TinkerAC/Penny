@@ -11,7 +11,7 @@ data class TransactionModel(
     val transactionDate: Instant,
     val category: Category = Category.MISCELLANEOUS,
     val transactionType: TransactionType = TransactionType.EXPENSE,
-    val amount: BigDecimal = BigDecimal.ZERO,
+    var amount: BigDecimal = BigDecimal.ZERO,
     val currency: Currency = Currency.USD,
     val screenshotUri: String? = null,
     val remark: String? = null,

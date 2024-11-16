@@ -15,6 +15,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
 import com.aay.compose.donutChart.model.PieChartData
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -218,7 +219,7 @@ class AnalyticViewModel(
 
 
     private fun prepareDataForCharts() {
-        processLineChartData(
+        processIncomeExpenseTrendLineChartData(
             transactions = _uiState.value.filteredTransactions,
             strategy = when (_uiState.value.selectedTab) {
                 AnalyticTab.Recent -> ProcessStrategy.RECENT
@@ -227,21 +228,29 @@ class AnalyticViewModel(
                 AnalyticTab.Custom -> ProcessStrategy.CUSTOM
             }
         )
-        val (incomePieChartData, expensePieChartData) = processPieChartData(
+        val (incomePieChartData, expensePieChartData) = processCategoryPieChartData(
             transactions = _uiState.value.filteredTransactions
         )
 
 
+        val assetDailyChangeTableData = processAssetTableData(
+            transactions = _uiState.value.filteredTransactions
+        )
+
+
+        val assetTrendLineChartData = processAssetTrendLineChartData(assetDailyChangeTableData)
 
         _uiState.value = _uiState.value.copy(
             incomePieChartData = incomePieChartData,
-            expensePieChartData = expensePieChartData
+            expensePieChartData = expensePieChartData,
+            assetChangeTableData = assetDailyChangeTableData,
+            assetTrendLineChartData = assetTrendLineChartData
         )
     }
 
 
     //
-    private fun processLineChartData(
+    private fun processIncomeExpenseTrendLineChartData(
         transactions: List<TransactionModel>, strategy: ProcessStrategy
     ): Unit {
         val timeZone = TimeZone.currentSystemDefault()
@@ -621,7 +630,7 @@ class AnalyticViewModel(
     }
 
 
-    private fun processPieChartData(
+    private fun processCategoryPieChartData(
         transactions: List<TransactionModel>
     ): Pair<List<PieChartData>, List<PieChartData>> {
 
@@ -670,16 +679,55 @@ class AnalyticViewModel(
 
 
     private fun processAssetTrendLineChartData(
-        transactions: List<TransactionModel>
-    ): Triple<List<String>, List<Double>, List<Double>> {
-        throw NotImplementedError()
+        assetChangeTableData: List<Pair<LocalDate, Triple<BigDecimal, BigDecimal, BigDecimal>>>
+    ): Pair<List<String>, List<Double>> {
+
+
+        val xAxisLabels = assetChangeTableData.map { it.first.toString() }
+        val assetValues = assetChangeTableData.map { it.second.third }
+
+        return xAxisLabels to assetValues.map { it.toPlainString().toDouble() }
+
+
     }
 
 
+    /**
+     * 处理资产表数据
+     * @return Pair<LocalDate, Triple<Double, Double, Double>>
+     *     第一个元素是日期, 第二个元素是日收入、日支出、日结余
+     */
     private fun processAssetTableData(
         transactions: List<TransactionModel>
-    ) {
-        throw NotImplementedError()
+    ): List<Pair<LocalDate, Triple<BigDecimal, BigDecimal, BigDecimal>>> {
+
+        val groupedTransactions = transactions.groupBy {
+            it.transactionDate.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        }
+
+        val assetTableData =
+            mutableListOf<Pair<LocalDate, Triple<BigDecimal, BigDecimal, BigDecimal>>>()
+        for ((date, transactionsInGroup) in groupedTransactions) {
+            val income = transactionsInGroup.filter { it.transactionType == TransactionType.INCOME }
+                .fold(
+                    BigDecimal.ZERO
+                ) { acc, transactionModel ->
+                    acc + transactionModel.amount
+                }
+            val expense =
+                transactionsInGroup.filter { it.transactionType == TransactionType.EXPENSE }
+                    .fold(
+                        BigDecimal.ZERO
+                    ) { acc, transactionModel ->
+                        acc + transactionModel.amount
+                    }
+            val balance = income - expense
+            assetTableData.add(date to Triple(income, expense, balance))
+        }
+
+        return assetTableData
+
+
     }
 
 

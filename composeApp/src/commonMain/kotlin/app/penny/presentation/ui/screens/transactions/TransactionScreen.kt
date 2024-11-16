@@ -1,31 +1,16 @@
-// File: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/transactions/TransactionScreen.kt
 package app.penny.presentation.ui.screens.transactions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -41,6 +26,7 @@ import app.penny.presentation.ui.components.SingleNavigateBackTopBar
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 
 class TransactionScreen : Screen {
@@ -59,21 +45,40 @@ class TransactionScreen : Screen {
                         title = "Transactions",
                         onNavigateBack = {
                             rootNavigator.pop()
+                        },
+                        actions = {
+                            IconButton(onClick = {
+                                viewModel.handleIntent(TransactionIntent.ToggleView)
+                            }) {
+                                Icon(
+                                    imageVector = if (uiState.isCalendarView)
+                                        Icons.Default.List
+                                    else
+                                        Icons.Default.CalendarToday,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     )
                 },
                 bottomBar = {
-                    GroupByBar(
-                        uiState = uiState,
-                        viewModel = viewModel,
-                    )
+                    if (!uiState.isCalendarView) {
+                        GroupByBar(
+                            uiState = uiState,
+                            viewModel = viewModel,
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxSize()
             ) { paddingValues ->
-                TransactionList(
-                    groupedTransactions = uiState.groupedTransactions,
-                    modifier = Modifier.padding(paddingValues)
-                )
+                // 次级 Navigator，用于切换视图
+                Navigator(screen = if (uiState.isCalendarView) {
+                    CalendarViewScreen()
+                } else {
+                    TransactionListScreen()
+                }) { navigator ->
+                    navigator.lastItem.Content()
+                }
             }
 
             if (uiState.isSharedPopupVisible) {
@@ -91,6 +96,17 @@ class TransactionScreen : Screen {
             }
         }
     }
+}
+
+@Composable
+fun TransactionListScreen() {
+    val viewModel = koinScreenModel<TransactionViewModel>()
+    val uiState by viewModel.uiState.collectAsState()
+
+    TransactionList(
+        groupedTransactions = uiState.groupedTransactions,
+        modifier = Modifier.fillMaxSize()
+    )
 }
 
 @Composable
@@ -112,7 +128,7 @@ fun GroupedTransactionItem(group: GroupedTransaction) {
     var isExpanded by remember { mutableStateOf(true) }
 
     Column {
-        // Group header
+        // 组标题
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,7 +146,7 @@ fun GroupedTransactionItem(group: GroupedTransaction) {
                 contentDescription = null
             )
         }
-        // Transactions
+        // 交易列表
         if (isExpanded) {
             group.transactions.forEach { transaction ->
                 TransactionItem(transaction)
@@ -141,9 +157,9 @@ fun GroupedTransactionItem(group: GroupedTransaction) {
 
 @Composable
 fun TransactionItem(transaction: TransactionModel) {
-    // Customize the transaction item as needed
+    // 根据需要自定义交易项的显示
     Text(
-        text = "${transaction.category} - ${transaction.amount.toPlainString()}",
+        text = "${transaction.category.categoryName} - ${transaction.amount.toPlainString()}",
         modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
     )
 }

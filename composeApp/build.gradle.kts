@@ -42,6 +42,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 // 公共依赖项
+                implementation(libs.composable.table)
+
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
                 implementation(libs.koin.core)
@@ -71,7 +73,6 @@ kotlin {
                 implementation(libs.kermit.koin)
                 implementation(compose.materialIconsExtended)
 
-                implementation(libs.kotlinx.datetime.ext)
             }
         }
 
