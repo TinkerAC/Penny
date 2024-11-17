@@ -9,7 +9,7 @@ data class TransactionUiState(
     val errorMessage: String = "",
     val selectedGroupByType: GroupByType? = null,
     val selectedGroupByOption: GroupBy? = null,
-    val isSharedPopupVisible: Boolean = false,
+    val sharedPopUpVisible: Boolean = false,
     val groupByOptions: List<GroupBy> = GroupByType.getGroupByOptions(GroupByType.Time),
     val groupedTransactions: List<GroupedTransaction> = emptyList(),
     val isCalendarView: Boolean = false,  // 新增，标记当前是否为日历视图

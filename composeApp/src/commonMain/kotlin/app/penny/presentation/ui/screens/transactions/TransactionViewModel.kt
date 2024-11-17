@@ -1,9 +1,9 @@
 package app.penny.presentation.ui.screens.transactions
 
-import app.penny.domain.model.TransactionModel
 import app.penny.domain.usecase.GetAllTransactionsUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,6 +38,7 @@ class TransactionViewModel(
             isCalendarView = !_uiState.value.isCalendarView,
             selectedDate = null // 切换视图时重置选中的日期
         )
+        Logger.d("Toggle view to ${if (_uiState.value.isCalendarView) "Calendar" else "List"}")
     }
 
     private fun selectDate(date: LocalDate) {
@@ -52,9 +53,8 @@ class TransactionViewModel(
 
         _uiState.value = _uiState.value.copy(
             groupByOptions = groupByOptions,
-            isSharedPopupVisible = groupByOptions.isNotEmpty()
+            sharedPopUpVisible = groupByOptions.isNotEmpty()
         )
-
         newSelectedGroupByOption?.let { doGroupBy(it) }
     }
 
@@ -72,7 +72,7 @@ class TransactionViewModel(
     }
 
     private fun dismissSharedDropdown() {
-        _uiState.value = _uiState.value.copy(isSharedPopupVisible = false)
+        _uiState.value = _uiState.value.copy(sharedPopUpVisible = false)
     }
 
     /**
@@ -84,6 +84,7 @@ class TransactionViewModel(
             is GroupBy.Category -> groupByCategory(groupBy)
             is GroupBy.Ledger -> groupByLedger()
         }
+        Logger.d("Group by ${groupBy}, groupedTransactions: ${groupedTransactions.size}")
         _uiState.value = _uiState.value.copy(groupedTransactions = groupedTransactions)
     }
 
