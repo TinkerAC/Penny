@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -64,34 +67,82 @@ class MainScreen : Screen, ScreenTransition {
                         modifier = Modifier.background(color = MaterialTheme.colorScheme.primary),
                         elevation = 8.dp
                     ) {
-                        BottomNavItem.items.forEach { item ->
-                            val isSelected = navigator.lastItem == item.screen
-                            BottomNavigationItem(
-                                icon = { Icon(item.icon, contentDescription = item.route) },
-                                label = { Text(item.title) },
-                                selected = isSelected,
-                                onClick = {
-                                    if (!isSelected) {
-                                        // Replace the entire stack with the new screen
-                                        navigator.replaceAll(item.screen)
-                                    }
-                                    Logger.d(
-                                        "Current screen: ${navigator.lastItem}"
-                                    )
-                                },
-                                modifier = Modifier.background(color = MaterialTheme.colorScheme.primary)
-                            )
+                        BottomNavigationItem(
+                            modifier = Modifier.background(color = MaterialTheme.colorScheme.primary),
+                            icon = {
+                                Icon(
+                                    Icons.Filled.Home,
+                                    contentDescription = "Dashboard"
+                                )
+                            },
+                            label = { Text("Dashboard") },
+                            selected = true,
+                            onClick = {
+                                navigator.replaceAll(
+                                    BottomNavItem.Dashboard.screen
+                                )
+                            }
+
+                        )
 
 
-                        }
+                        // BottomNavItem.Analytics
 
                         BottomNavigationItem(
-                            icon = { Icon(Icons.Default.Menu, contentDescription = "Transaction") },
+                            modifier = Modifier.background(color = MaterialTheme.colorScheme.primary),
+                            icon = {
+                                Icon(
+                                    Icons.Filled.PieChart,
+                                    contentDescription = "Analytics"
+                                )
+                            },
+                            label = { Text("Analytics") },
+                            selected = false,
+                            onClick = {
+                                navigator.replaceAll(
+                                    BottomNavItem.Analytics.screen
+                                )
+                            }
+                        )
+
+
+                        // BottomNavItem.Transactions
+
+                        BottomNavigationItem(
+                            modifier = Modifier.background(color = MaterialTheme.colorScheme.primary),
+                            icon = {
+                                Icon(
+                                    Icons.Filled.SwapHoriz,
+                                    contentDescription = "Transaction"
+                                )
+                            },
                             label = { Text("Transaction") },
                             selected = false,
                             onClick = {
                                 rootNavigator.push(
                                     TransactionScreen()
+                                )
+                            }
+
+
+                        )
+
+
+                        //BottomNavItem.Profile
+
+                        BottomNavigationItem(
+                            modifier = Modifier.background(color = MaterialTheme.colorScheme.primary),
+                            icon = {
+                                Icon(
+                                    Icons.Filled.Person,
+                                    contentDescription = "Profile"
+                                )
+                            },
+                            label = { Text("Profile") },
+                            selected = false,
+                            onClick = {
+                                navigator.replaceAll(
+                                    BottomNavItem.Profile.screen
                                 )
                             }
                         )

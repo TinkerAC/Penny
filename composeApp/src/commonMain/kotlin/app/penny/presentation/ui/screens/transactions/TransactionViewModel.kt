@@ -20,7 +20,11 @@ class TransactionViewModel(
     val uiState: StateFlow<TransactionUiState> = _uiState.asStateFlow()
 
     init {
-        fetchTransactions()
+        fetchTransactions()//TODO: replace with partial fetch
+
+        //select the "Day" group by option by default
+        handleIntent(TransactionIntent.SelectGroupByOption(GroupBy.Time.Day))
+
     }
 
     fun handleIntent(intent: TransactionIntent) {

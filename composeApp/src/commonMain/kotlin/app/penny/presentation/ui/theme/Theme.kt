@@ -1,6 +1,7 @@
 package app.penny.presentation.ui.theme
 
 
+import AppTypography
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

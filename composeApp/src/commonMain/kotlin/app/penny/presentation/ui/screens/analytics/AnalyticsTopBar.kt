@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Note
+import androidx.compose.material.icons.filled.NoteAlt
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -108,7 +110,7 @@ fun TopTabRow(
 
         ) {
             Icon(
-                imageVector = Icons.Filled.SwapHoriz,
+                imageVector = Icons.Filled.NoteAlt,
                 contentDescription = "Switch Ledger"
             )
         }
