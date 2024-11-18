@@ -58,9 +58,9 @@ class MyLedgerScreen : Screen {
             }
         )
         { paddingValues ->
-            LazyColumn (
+            LazyColumn(
                 modifier = Modifier.padding(paddingValues)
-            ){
+            ) {
                 items(uiState.value.ledgers) { ledger ->
                     LedgerCard(
                         ledgerModel = ledger

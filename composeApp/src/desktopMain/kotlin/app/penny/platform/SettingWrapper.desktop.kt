@@ -5,7 +5,6 @@ import com.russhwolf.settings.Settings
 import java.util.prefs.Preferences
 
 
-
 actual class MultiplatformSettingsWrapper {
     actual fun createSettings(): Settings {
         val delegate: Preferences = Preferences.userRoot()

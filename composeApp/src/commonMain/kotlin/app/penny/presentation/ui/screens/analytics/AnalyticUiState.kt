@@ -32,7 +32,7 @@ data class AnalyticUiState(
     val expensePieChartData: List<PieChartData> = emptyList(),
 
     val assetChangeTableData: List<Pair<LocalDate, Triple<BigDecimal, BigDecimal, BigDecimal>>> = emptyList(),
-    val assetTrendLineChartData:Pair<List<String>, List<Double>> = Pair(emptyList(), emptyList()),
+    val assetTrendLineChartData: Pair<List<String>, List<Double>> = Pair(emptyList(), emptyList()),
 
 
     val ledgerSelectionDialogVisible: Boolean = false

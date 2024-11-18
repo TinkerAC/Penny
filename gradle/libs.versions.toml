@@ -16,7 +16,9 @@ chartVersion = "Beta-0.0.5"
 #Why is there a reversed versioning scheme? Took me forever to track down the issue until I saw the release dates on Maven Central.
 
 composableTable = "1.2.0"
+datastorePreferences = "1.1.1"
 kotlinx_datetime_ext = "1.3.1"
+kotlinxSerializationJson = "1.5.1"
 multiplatformSettings = "1.1.1"
 compose-plugin = "1.6.11"
 jdbcDriver = "2.0.2"
@@ -41,6 +43,7 @@ voyagerVersion = "1.1.0-beta02"
 
 [libraries]
 # Koin 依赖，版本统一为 3
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 composable-table = { module = "io.github.sunny-chung:composable-table", version.ref = "composableTable" }
 kandy-lets-plot = { module = "org.jetbrains.kotlinx:kandy-lets-plot", version.ref = "kandyLetsPlot" }
@@ -53,6 +56,7 @@ koin-android-ext = { module = "io.insert-koin:koin-android-ext", version.ref = "
 
 # SQLDelight 驱动
 android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "jdbcDriver" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx_datetime_ext = { module = "com.raedghazal:kotlinx_datetime_ext", version.ref = "kotlinx_datetime_ext" }
 native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "jdbcDriver" }
 sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "jdbcDriver" }

@@ -13,4 +13,12 @@ class UserDataRepositoryImpl(
     override suspend fun saveRecentLedgerId(ledgerId: Long) {
         userDataManager.putLong(UserDataManager.RECENT_LEDGER_ID, ledgerId)
     }
+
+    override suspend fun saveContinuousCheckInDays(days: Int) {
+        userDataManager.putInt(UserDataManager.CONTINUOUS_CHECK_IN_DAYS, days)
+    }
+
+    override suspend fun getContinuousCheckInDays(): Int {
+        return userDataManager.getInt(UserDataManager.CONTINUOUS_CHECK_IN_DAYS)
+    }
 }

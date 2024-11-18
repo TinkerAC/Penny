@@ -73,6 +73,9 @@ kotlin {
                 implementation(libs.kermit.koin)
                 implementation(compose.materialIconsExtended)
 
+                //键值对存储
+//                implementation(libs.androidx.datastore.preferences)
+//                implementation(libs.kotlinx.serialization.json) // 用于序列化
             }
         }
 

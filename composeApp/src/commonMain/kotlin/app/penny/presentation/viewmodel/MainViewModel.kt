@@ -29,7 +29,7 @@ class MainViewModel(
     }
 
 
-    fun insertLedger(name: String, currency:Currency, description: String, cover: LedgerCover) {
+    fun insertLedger(name: String, currency: Currency, description: String, cover: LedgerCover) {
         screenModelScope.launch {
             insertLedgerUseCase(
                 name = name,

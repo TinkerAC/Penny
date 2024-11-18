@@ -20,7 +20,7 @@ fun main() = application {
             width = 600.dp,
             height = 1200.dp,
 
-        )
+            )
     ) {
         App()
     }

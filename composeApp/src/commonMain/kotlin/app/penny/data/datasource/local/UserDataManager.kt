@@ -23,7 +23,16 @@ class UserDataManager(
 
     companion object {
         const val RECENT_LEDGER_ID = "recent_ledger_id"
+        const val CONTINUOUS_CHECK_IN_DAYS = "continuous_check_in_days"
+
     }
+
+
+    fun putInt(key: String, value: Int) {
+        settings.set(key = key, value = value)
+    }
+
+    fun getInt(key: String) = settings.getInt(key = key, defaultValue = 0)
 
 
 }

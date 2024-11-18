@@ -21,7 +21,6 @@ class TransactionViewModel(
 
     init {
         fetchTransactions()//TODO: replace with partial fetch
-
         //select the "Day" group by option by default
         handleIntent(TransactionIntent.SelectGroupByOption(GroupBy.Time.Day))
 

@@ -12,6 +12,12 @@ interface TransactionRepository {
     suspend fun updateTransactionById(transactionId: Long, transaction: TransactionModel)
     suspend fun deleteTransactionById(transactionId: Long)
     suspend fun getTransactionsByLedger(ledgerId: Long): List<TransactionModel>
-    suspend fun getTransactionsBetween(startInstant: Instant, endInstant: Instant): List<TransactionModel>
+    suspend fun getTransactionsBetween(
+        startInstant: Instant,
+        endInstant: Instant
+    ): List<TransactionModel>
+
+
+    suspend fun getTransactionsCount(): Int
 
 }

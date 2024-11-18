@@ -192,7 +192,7 @@ class NewTransactionViewModel(
                     insertTransaction()
                     _uiState.value = _uiState.value.copy(transactionCompleted = true)
                     screenModelScope.launch {
-                        _eventFlow.emit(NewTransactionUiEvent.ShowSnackbar("Transaction completed"))
+                        _eventFlow.emit(NewTransactionUiEvent.ShowSnackBar("Transaction completed"))
                         _eventFlow.emit(NewTransactionUiEvent.NavigateBack)
                     }
 
@@ -340,7 +340,7 @@ class NewTransactionViewModel(
         }
         if (!result) {
             screenModelScope.launch {
-                _eventFlow.emit(NewTransactionUiEvent.ShowSnackbar(errorMessage))
+                _eventFlow.emit(NewTransactionUiEvent.ShowSnackBar(errorMessage))
             }
 
         }

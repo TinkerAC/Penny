@@ -4,12 +4,12 @@ package app.penny.presentation.ui.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.penny.presentation.ui.screens.analytics.AnalyticScreen
 import app.penny.presentation.ui.screens.dashboard.DashboardScreen
+import app.penny.presentation.ui.screens.profile.ProfileScreen
 import cafe.adriel.voyager.core.screen.Screen
 
 sealed class BottomNavItem(

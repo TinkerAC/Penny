@@ -17,7 +17,7 @@ class LedgerLocalDataSource(
         )
     }
 
-    fun getLedgerById(id: Long): LedgerEntity{
+    fun getLedgerById(id: Long): LedgerEntity {
         return ledgerQueries.getLedgerById(id).executeAsOne()
     }
 

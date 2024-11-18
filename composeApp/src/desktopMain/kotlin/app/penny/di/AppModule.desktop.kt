@@ -19,5 +19,5 @@ actual fun platformModule() = module {
         driver
     }
 
-    single { MultiplatformSettingsWrapper().createSettings()    }
+    single { MultiplatformSettingsWrapper().createSettings() }
 }

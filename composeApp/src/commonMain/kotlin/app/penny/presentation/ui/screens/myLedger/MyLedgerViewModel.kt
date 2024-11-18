@@ -34,10 +34,6 @@ class MyLedgerViewModel(
     }
 
 
-
-
-
-
     private fun getLedgers() {
         // 通过协程获取数据
         screenModelScope.launch {

@@ -66,7 +66,7 @@ class NewTransactionScreen : Screen, ScreenTransition {
                         rootNavigator.pop()
                     }
 
-                    is NewTransactionUiEvent.ShowSnackbar -> {
+                    is NewTransactionUiEvent.ShowSnackBar -> {
                         uiState.snackbarHostState.showSnackbar(
                             message = event.message,
                             duration = SnackbarDuration.Short

@@ -14,8 +14,6 @@ class TransactionRepositoryImpl(
 ) : TransactionRepository {
     override suspend fun getTransactionById(transactionId: Long): TransactionModel {
         return localDataSource.getTransactionById(transactionId).toModel()
-
-
     }
 
     override suspend fun getTransactionsBetween(
@@ -45,7 +43,11 @@ class TransactionRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTransactionsByLedger(ledgerId:Long): List<TransactionModel> {
+    override suspend fun getTransactionsByLedger(ledgerId: Long): List<TransactionModel> {
         return localDataSource.getTransactionsByLedger(ledgerId).map { it.toModel() }
+    }
+
+    override suspend fun getTransactionsCount(): Int {
+        return localDataSource.getTransactionsCount()
     }
 }

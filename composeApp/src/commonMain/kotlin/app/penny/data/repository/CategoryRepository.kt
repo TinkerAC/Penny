@@ -7,6 +7,6 @@ interface CategoryRepository {
     suspend fun getCategoryById(categoryId: Long): CategoryModel
     suspend fun getAllCategories(): List<CategoryModel>
     suspend fun updateCategory(categoryModel: CategoryModel)
-    suspend fun deleteCategory(categoryId:Long)
+    suspend fun deleteCategory(categoryId: Long)
 
 }

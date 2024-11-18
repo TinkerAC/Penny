@@ -52,7 +52,7 @@ fun AssetTrendChart(
         shape = MaterialTheme.shapes.medium
     ) {
 
-        if (assetValues.isEmpty() && liabilityValues.isEmpty()){
+        if (assetValues.isEmpty() && liabilityValues.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxWidth().height(300.dp),
                 contentAlignment = androidx.compose.ui.Alignment.Center
