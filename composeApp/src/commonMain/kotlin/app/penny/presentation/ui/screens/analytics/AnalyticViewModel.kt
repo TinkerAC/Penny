@@ -48,7 +48,7 @@ class AnalyticViewModel(
             if (recentLedgerId != -1L) {
                 val recentLedger = _uiState.value.ledgers.find { it.id == recentLedgerId }
                 Logger.d("get recentLedger $recentLedger")
-                selectLedger(recentLedger!!)
+                selectLedger(recentLedger!!) //
                 prepareDataForCharts()
 
             } else {

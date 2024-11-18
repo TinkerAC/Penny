@@ -5,10 +5,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
+
 }
 
 kotlin {
@@ -42,8 +43,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 // 公共依赖项
+                implementation(project(":shared"))
                 implementation(libs.composable.table)
-
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
                 implementation(libs.koin.core)
