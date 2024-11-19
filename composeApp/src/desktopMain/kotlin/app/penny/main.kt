@@ -8,7 +8,7 @@ import androidx.compose.ui.window.rememberWindowState
 import app.penny.di.initKoin
 import co.touchlab.kermit.Logger
 
-
+//JVM entry point
 fun main() = application {
     initKoin()
 

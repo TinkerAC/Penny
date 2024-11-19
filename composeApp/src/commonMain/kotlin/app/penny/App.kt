@@ -14,8 +14,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App(
 ) {
-
-
     Logger.i("isSystemInDarkTheme: ${isSystemInDarkTheme()}")
     AppTheme {
         // 顶级 Navigator,可用于实现一些覆盖全屏的功能

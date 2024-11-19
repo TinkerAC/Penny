@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">Penny</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="dashboard">Dashboard</string>
-    <string name="transaction">Transaction</string>
-    <string name="analytics">Analytics</string>
-    <string name="profile">Profile</string>
-    <string name="back_button">Back</string>
-</resources>

@@ -21,30 +21,16 @@ kotlin {
     }
 
     jvm("desktop")
-
-    // 新的 iOS 目标配置方式
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
-    configure(listOf(iosX64(), iosArm64(), iosSimulatorArm64())) {
-        binaries {
-            framework {
-                baseName = "ComposeApp"
-                isStatic = true
-                linkerOpts("-lsqlite3")
-            }
-        }
-    }
-    // 应用默认的层次结构模板
-    applyDefaultHierarchyTemplate()
+    iosX64 { binaries.framework { baseName = "ComposeApp" } }
+    iosArm64 { binaries.framework { baseName = "ComposeApp" } }
+    iosSimulatorArm64 { binaries.framework { baseName = "ComposeApp" } }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 // 公共依赖项
                 implementation(project(":shared"))
-                implementation(libs.composable.table)
+//                implementation(libs.composable.table)
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
                 implementation(libs.koin.core)
@@ -103,12 +89,7 @@ kotlin {
             }
         }
 
-        val iosMain by getting {
-            dependencies {
-                implementation(libs.native.driver)
-                implementation(libs.ktor.client.darwin)
-            }
-        }
+
     }
 }
 
@@ -151,14 +132,6 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "app.penny"
             packageVersion = "1.0.0"
-        }
-    }
-}
-
-sqldelight {
-    databases {
-        create("PennyDatabase") {
-            packageName.set("app.penny.database")
         }
     }
 }
