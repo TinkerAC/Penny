@@ -1,12 +1,16 @@
 package app.penny.presentation.ui.screens.profile
 
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-data class ProfileUiState(
+
+data class ProfileUiState @OptIn(ExperimentalUuidApi::class) constructor(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val name: String = "",
     val email: String = "",
     val profileImage: String = "",
+    val userUuid: Uuid = Uuid.fromLongs(0, 0),
 
     //连续签到天数
     val continuousCheckInDays: Int = 0,

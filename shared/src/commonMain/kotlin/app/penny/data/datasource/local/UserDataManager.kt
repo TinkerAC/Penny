@@ -1,7 +1,9 @@
 package app.penny.data.datasource.local
 
+import kotlin.uuid.Uuid
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
+import kotlin.uuid.ExperimentalUuidApi
 
 class UserDataManager(
     private val settings: Settings
@@ -21,10 +23,18 @@ class UserDataManager(
 
     fun getLong(key: String) = settings.getLong(key = key, defaultValue = 0)
 
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun generateUserUuid(): String {
+        return Uuid.random().toString()
+    }
+
+
+
     companion object {
         const val RECENT_LEDGER_ID = "recent_ledger_id"
         const val CONTINUOUS_CHECK_IN_DAYS = "continuous_check_in_days"
-
+        const val USER_UUID = "user_uuid"
     }
 
 

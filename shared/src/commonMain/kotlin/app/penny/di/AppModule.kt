@@ -18,11 +18,13 @@ import app.penny.domain.usecase.GetTransactionsByLedgerUseCase
 import app.penny.domain.usecase.InsertLedgerUseCase
 import app.penny.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.domain.usecase.SearchTransactionsUseCase
+import app.penny.presentation.ui.screens.BottomNavItem
 import app.penny.presentation.ui.screens.analytics.AnalyticViewModel
 import app.penny.presentation.ui.screens.dashboard.DashboardViewModel
 import app.penny.presentation.ui.screens.myLedger.MyLedgerViewModel
 import app.penny.presentation.ui.screens.newLedger.NewLedgerViewModel
 import app.penny.presentation.ui.screens.newTransaction.NewTransactionViewModel
+import app.penny.presentation.ui.screens.profile.ProfileViewModel
 import app.penny.presentation.ui.screens.transactions.TransactionViewModel
 import app.penny.presentation.viewmodel.MainViewModel
 import org.koin.core.module.Module
@@ -77,16 +79,12 @@ fun commonModule() = module {
     factory { MainViewModel(get(), get()) }
     factory { MyLedgerViewModel(get(), get()) }
     factory { NewLedgerViewModel(get()) }
-
-//    factory { NumPadViewModel() }
-
+    factory { ProfileViewModel(get()) }
 
     factory { MyLedgerViewModel(get(), get()) }
 
     factory { NewLedgerViewModel(get()) }
 
-
-    //Kermit Logger
 
 
 }

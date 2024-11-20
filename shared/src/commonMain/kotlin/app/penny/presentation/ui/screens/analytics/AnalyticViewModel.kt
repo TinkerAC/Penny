@@ -1,7 +1,6 @@
 package app.penny.presentation.ui.screens.analytics
 
 import androidx.compose.ui.graphics.Color
-import app.penny.data.repository.UserDataRepository
 import app.penny.domain.enum.TransactionType
 import app.penny.domain.model.LedgerModel
 import app.penny.domain.model.TransactionModel

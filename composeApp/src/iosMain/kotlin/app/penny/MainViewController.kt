@@ -6,7 +6,6 @@ import app.penny.di.initKoin
 
 
 fun MainViewController() = ComposeUIViewController {
-
     initKoin()
     App()
 

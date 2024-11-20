@@ -36,6 +36,7 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
+
             dependencies {
                 // 公共依赖项
 //                implementation(libs.composable.table)
@@ -71,6 +72,13 @@ kotlin {
                 //键值对存储
 //                implementation(libs.androidx.datastore.preferences)
 //                implementation(libs.kotlinx.serialization.json) // 用于序列化
+
+
+                // 用于生成 UUID
+                implementation(libs.uuid)
+
+
+
             }
         }
 
