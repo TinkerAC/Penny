@@ -7,14 +7,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.log
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class ProfileViewModel(
     private val userDataRepository: UserDataRepository
 ) : ScreenModel {
 
-    @OptIn(ExperimentalUuidApi::class)
     private val _uiState = MutableStateFlow(ProfileUiState())
 
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
@@ -22,6 +23,13 @@ class ProfileViewModel(
     init {
         screenModelScope.launch {
             fetchProfileStatistics()
+        }
+    }
+
+
+    fun handleIntent(intent: ProfileIntent) {
+        when (intent) {
+            ProfileIntent.TryLogin -> tryLogin()
         }
     }
 
@@ -37,4 +45,16 @@ class ProfileViewModel(
         )
 
     }
+
+
+    private fun tryLogin() {
+        //pop the login modal
+        _uiState.value = _uiState.value.copy(
+            loggingModalVisible = true
+        )
+    }
+
+
+
+
 }

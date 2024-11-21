@@ -33,4 +33,17 @@ class UserDataRepositoryImpl(
     override suspend fun saveUserUuid(uuid: String) {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getLastSyncedAt(): Long {
+        if (userDataManager.getLong(UserDataManager.LAST_SYNCED_AT) == 0L) {
+            Logger.d("No last synced at found, setting to 0")
+            userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, 0)
+        }
+        return userDataManager.getLong(UserDataManager.LAST_SYNCED_AT)
+    }
+
+
+    override suspend fun saveLastSyncedAt(lastSyncedAt: Long) {
+        userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, lastSyncedAt)
+    }
 }

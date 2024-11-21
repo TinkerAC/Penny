@@ -10,4 +10,7 @@ interface UserDataRepository {
     suspend fun getUserUuid(): String
     suspend fun saveUserUuid(uuid: String)
 
+    suspend fun getLastSyncedAt(): Long
+    suspend fun saveLastSyncedAt(lastSyncedAt: Long)
+
 }

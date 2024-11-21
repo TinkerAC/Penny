@@ -1,10 +1,10 @@
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
+    alias(libs.plugins.kotlinxSerialization)
     application
 
-    //serialization plugin
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
+    //serialization plugin （libs）
 
 }
 

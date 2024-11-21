@@ -12,6 +12,10 @@ data class ProfileUiState @OptIn(ExperimentalUuidApi::class) constructor(
     val profileImage: String = "",
     val userUuid: Uuid = Uuid.fromLongs(0, 0),
 
+
+
+    val loggingModalVisible: Boolean = false,
+
     //连续签到天数
     val continuousCheckInDays: Int = 0,
     //记账总笔数

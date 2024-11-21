@@ -5,21 +5,22 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 
 object JwtConfig {
-    private const val secret = "secret" // 需要替换为安全的密钥
-    private const val issuer = "ktor.io"
-    private const val validityInMs = 36_000_00 * 24 // 24 小时
+    private const val SECRET = "secret" // 需要替换为安全的密钥
 
-    private val algorithm = Algorithm.HMAC512(secret)
+    private const val ISSUER = "ktor.io"
+    private const val VALIDITY_IN_MS = 36_000_00 * 24 // 24 小时
+
+    private val algorithm = Algorithm.HMAC512(SECRET)
 
     val verifier: JWTVerifier = JWT.require(algorithm)
-        .withIssuer(issuer)
+        .withIssuer(ISSUER)
         .build()
 
     fun makeToken(userId: Int): String = JWT.create()
-        .withIssuer(issuer)
+        .withIssuer(ISSUER)
         .withClaim("userId", userId)
         .withExpiresAt(getExpiration())
         .sign(algorithm)
 
-    private fun getExpiration() = java.util.Date(System.currentTimeMillis() + validityInMs)
+    private fun getExpiration() = java.util.Date(System.currentTimeMillis() + VALIDITY_IN_MS)
 }
