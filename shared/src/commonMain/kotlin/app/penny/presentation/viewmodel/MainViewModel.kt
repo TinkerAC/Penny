@@ -1,9 +1,9 @@
 package app.penny.presentation.viewmodel
 
-import app.penny.data.repository.LedgerRepository
-import app.penny.domain.enum.Currency
-import app.penny.domain.enum.LedgerCover
-import app.penny.domain.usecase.InsertLedgerUseCase
+import app.penny.core.data.repository.LedgerRepository
+import app.penny.core.domain.enum.Currency
+import app.penny.core.domain.enum.LedgerCover
+import app.penny.core.domain.usecase.InsertLedgerUseCase
 import app.penny.presentation.uiState.MainUiState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope

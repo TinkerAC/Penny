@@ -18,12 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import app.penny.domain.enum.Currency
-import app.penny.presentation.ui.screens.newLedger.NewLedgerViewModel
+import app.penny.core.domain.enum.Currency
+import app.penny.feature.newLedger.NewLedgerViewModel
 import org.jetbrains.compose.resources.painterResource
 
 
-import app.penny.presentation.ui.screens.newLedger.NewLedgerIntent
+import app.penny.feature.newLedger.NewLedgerIntent
 
 
 @OptIn(ExperimentalMaterial3Api::class)

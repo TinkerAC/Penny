@@ -1,16 +1,8 @@
 package app.penny.presentation.ui.components.transactionFilter
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import app.penny.presentation.ui.screens.transactions.TransactionViewModel
+import app.penny.feature.transactions.TransactionViewModel
 
 @Composable
 fun TransactionFilterBar(

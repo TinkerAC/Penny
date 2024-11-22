@@ -1,6 +1,6 @@
 package app.penny.presentation.uiState
 
-import app.penny.domain.model.LedgerModel
+import app.penny.core.domain.model.LedgerModel
 
 data class MainUiState(
     val ledgers: List<LedgerModel> = emptyList(),

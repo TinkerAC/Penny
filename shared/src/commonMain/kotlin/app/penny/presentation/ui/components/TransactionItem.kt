@@ -7,7 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.penny.domain.model.TransactionModel
+import app.penny.core.domain.model.TransactionModel
 
 @Composable
 fun TransactionItem(transaction: TransactionModel) {

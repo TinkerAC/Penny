@@ -17,7 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import app.penny.domain.model.LedgerModel
+import app.penny.core.domain.model.LedgerModel
 import app.penny.presentation.uiState.MainUiState
 
 @OptIn(ExperimentalMaterial3Api::class)

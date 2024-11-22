@@ -17,7 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.penny.domain.model.LedgerModel
+import app.penny.core.domain.model.LedgerModel
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

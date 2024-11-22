@@ -33,9 +33,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.penny.domain.enum.Category
-import app.penny.presentation.ui.screens.newTransaction.NewTransactionIntent
-import app.penny.presentation.ui.screens.newTransaction.NewTransactionViewModel
+import app.penny.core.domain.enum.Category
+import app.penny.feature.newTransaction.NewTransactionIntent
+import app.penny.feature.newTransaction.NewTransactionViewModel
 
 @Composable
 fun CategorySelector(

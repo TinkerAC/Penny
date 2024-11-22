@@ -23,7 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.presentation.ui.screens.BottomNavItem
-import app.penny.presentation.ui.screens.transactions.TransactionScreen
+import app.penny.feature.transactions.TransactionScreen
 import app.penny.presentation.viewmodel.MainViewModel
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
@@ -34,7 +34,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
-import co.touchlab.kermit.Logger
 
 @OptIn(ExperimentalVoyagerApi::class)
 class MainScreen : Screen, ScreenTransition {
