@@ -4,9 +4,11 @@ package app.penny.routes
 
 // Exposed相关
 import app.penny.config.JwtConfig
-import app.penny.servershared.dto.PushLedgersRequest
-import app.penny.servershared.dto.PushLedgersResponse
+import app.penny.servershared.dto.DownloadLedgerResponse
+import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.RegisterResponse
+import app.penny.servershared.dto.UploadLedgerRequest
+import app.penny.servershared.dto.UploadLedgerResponse
 import app.penny.services.LedgerService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
@@ -28,7 +30,7 @@ fun Route.syncRoutes(
             "/ledger",
         ) {
 
-            get("/pull") {
+            get("/download") {
 
 
                 val jwt = call.request.headers["Authorization"]
@@ -36,9 +38,10 @@ fun Route.syncRoutes(
                 if (jwt == null) {
                     call.respond(
                         HttpStatusCode.Unauthorized,
-                        RegisterResponse(
-                            success = false,
-                            message = "No token provided"
+                        DownloadLedgerResponse(
+                            total = 0,
+                            ledgers = emptyList(),
+                            lastSyncedAt = 0
                         )
                     )
                     return@get
@@ -47,10 +50,23 @@ fun Route.syncRoutes(
                 val userId = jwtConfig.getUserIdFromToken(jwt)
 
 
+                val ledgerDownloadRequest = call.receive<UploadLedgerRequest>()
 
-//                call.respond(
-////                    ledgers
-//                )
+                val lastSyncedAt = ledgerDownloadRequest.lastSyncedAt
+
+                val ledgers: List<LedgerDto> = ledgerService.getLedgersByUserIdAfterLastSync(
+                    userId,
+                    lastSyncedAt
+                )
+
+                call.respond(
+                    DownloadLedgerResponse(
+                        total = ledgers.size,
+                        ledgers = ledgers,
+                        lastSyncedAt = System.currentTimeMillis()
+                    )
+                )
+
 
             }
 
@@ -66,7 +82,7 @@ fun Route.syncRoutes(
                     )
                 }
 
-                val pushLedgerRequest: PushLedgersRequest = call.receive()
+                val pushLedgerRequest: UploadLedgerRequest = call.receive()
 
                 val ledgerDTOs = pushLedgerRequest.ledgers
 
@@ -76,7 +92,7 @@ fun Route.syncRoutes(
                     )
                 } catch (e: Exception) {
                     call.respond(
-                        PushLedgersResponse(
+                        UploadLedgerResponse(
                             success = true,
                             changedLines = 0
                         )
@@ -84,18 +100,13 @@ fun Route.syncRoutes(
                 }
 
                 call.respond(
-                    PushLedgersResponse(
+                    UploadLedgerResponse(
                         success = true,
                         changedLines = ledgerDTOs.size
                     )
                 )
-
-
+                
             }
-        }
-
-        route("/transaction") {
-
         }
 
 

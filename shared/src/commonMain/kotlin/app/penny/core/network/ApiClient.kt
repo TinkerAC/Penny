@@ -3,7 +3,7 @@ package app.penny.core.network
 import app.penny.config.Config.API_URL
 import app.penny.core.network.dto.LoginResponseDto
 import app.penny.servershared.dto.LedgerDto
-import app.penny.servershared.dto.PushLedgersRequest
+import app.penny.servershared.dto.UploadLedgerRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -59,7 +59,7 @@ class ApiClient(private val httpClient: HttpClient) {
         ) {
             contentType(ContentType.Application.Json)
             setBody(
-                PushLedgersRequest(
+                UploadLedgerRequest(
                     total = ledgers.size,
                     ledgers = ledgers
                 )
