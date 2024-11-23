@@ -45,6 +45,15 @@ class DashboardScreen : Screen {
             Text("Insert Random Transaction")
         }
 
+        Button(
+            onClick = {
+                dashboardViewModel.handleIntent(DashboardIntent.UploadUpdatedLedgers)
+            }
+        ) {
+            Text("Upload Ledgers")
+        }
+
+
 
     }
 }

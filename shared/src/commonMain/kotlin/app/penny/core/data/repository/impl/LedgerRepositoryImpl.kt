@@ -5,6 +5,9 @@ import app.penny.core.data.model.toEntity
 import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.LedgerModel
+import app.penny.database.LedgerEntity
+import app.penny.feature.transactions.GroupBy
+import kotlinx.datetime.Instant
 
 class LedgerRepositoryImpl(
 
@@ -31,5 +34,13 @@ class LedgerRepositoryImpl(
 
     override suspend fun deleteLedger(ledgerId: Long) {
         ledgerLocalDataSource.deleteLedger(ledgerId)
+    }
+
+    override suspend fun getLedgersUpdatedAfter(lastSyncedAt: Instant) :List<LedgerModel>{
+        return ledgerLocalDataSource.getLedgersUpdatedAfter(
+            lastSyncedAt.epochSeconds
+        ).map {
+            it.toModel()
+        }
     }
 }

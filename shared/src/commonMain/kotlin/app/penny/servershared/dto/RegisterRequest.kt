@@ -1,9 +1,10 @@
-package app.penny.models.dto
+package app.penny.servershared.dto
 
 import kotlinx.serialization.Serializable
 
+
 @Serializable
-data class UserCredentials(
+data class RegisterRequest (
     val username: String,
     val password: String
 )

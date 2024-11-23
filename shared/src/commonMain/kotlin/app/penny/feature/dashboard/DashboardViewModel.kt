@@ -2,6 +2,7 @@ package app.penny.feature.dashboard
 
 import app.penny.core.domain.usecase.InsertLedgerUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
+import app.penny.core.domain.usecase.UploadUpdatedLedgersUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val insertLedgerUseCase: InsertLedgerUseCase,
-    private val insertRandomTransactionUseCase: InsertRandomTransactionUseCase
+    private val insertRandomTransactionUseCase: InsertRandomTransactionUseCase,
+    private val uploadUpdatedLedgersUseCase: UploadUpdatedLedgersUseCase
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
@@ -37,6 +39,9 @@ class DashboardViewModel(
         when (intent) {
             is DashboardIntent.InsertRandomTransaction ->
                 insertRandomTransaction()
+
+            is DashboardIntent.UploadUpdatedLedgers ->
+                uploadUpdatedLedgers()
         }
     }
 
@@ -46,6 +51,13 @@ class DashboardViewModel(
         }
         Logger.d("inserted Random Transactions ,count $count")
 
+    }
+
+    private fun uploadUpdatedLedgers() {
+        screenModelScope.launch {
+            uploadUpdatedLedgersUseCase()
+        }
+        Logger.d("uploaded updated ledgers")
     }
 }
 

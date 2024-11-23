@@ -1,5 +1,7 @@
 package app.penny.core.data.repository
 
+import kotlinx.datetime.Instant
+
 interface UserDataRepository {
     suspend fun saveRecentLedgerId(ledgerId: Long?)
     suspend fun getRecentLedgerId(): Long
@@ -10,7 +12,7 @@ interface UserDataRepository {
     suspend fun getUserUuid(): String
     suspend fun saveUserUuid(uuid: String)
 
-    suspend fun getLastSyncedAt(): Long
+    suspend fun getLastSyncedAt(): Instant
     suspend fun saveLastSyncedAt(lastSyncedAt: Long)
 
 }

@@ -16,11 +16,14 @@ import app.penny.core.domain.model.UserAchievementModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-
+@OptIn(ExperimentalUuidApi::class)
 fun LedgerEntity.toModel(): LedgerModel {
     return LedgerModel(
         id = id,
+        uuid = Uuid.parse(uuid),
         name = name,
         currency = Currency.valueOf(currency_code),
         cover = LedgerCover.valueOf(cover_name),
@@ -31,9 +34,11 @@ fun LedgerEntity.toModel(): LedgerModel {
     )
 }
 
+@OptIn(ExperimentalUuidApi::class)
 fun LedgerModel.toEntity(): LedgerEntity {
     return LedgerEntity(
         id = id,
+        uuid = uuid.toString(),
         name = name,
         currency_code = currency.currencyCode,
         cover_name = cover.name,
@@ -44,9 +49,11 @@ fun LedgerModel.toEntity(): LedgerEntity {
 }
 
 
+@OptIn(ExperimentalUuidApi::class)
 fun TransactionModel.toEntity(): TransactionEntity {
     return TransactionEntity(
         id = 0,
+        uuid = Uuid.toString(),
         ledger_id = ledgerId,
         transaction_date = transactionDate.epochSeconds,
         category_name = category.name,

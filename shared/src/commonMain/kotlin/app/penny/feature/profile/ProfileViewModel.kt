@@ -2,6 +2,7 @@ package app.penny.feature.profile
 
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.usecase.CheckIsUsernameValidUseCase
+import app.penny.core.domain.usecase.LoginUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,8 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 class ProfileViewModel(
     private val userDataRepository: UserDataRepository,
-    private val checkIsUsernameValidUseCase: CheckIsUsernameValidUseCase
+    private val checkIsUsernameValidUseCase: CheckIsUsernameValidUseCase,
+    private val loginUseCase: LoginUseCase
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -51,10 +53,8 @@ class ProfileViewModel(
 
         screenModelScope.launch {
             //login
-            val userUuid = userDataRepository.login(username, password)
-            _uiState.value = _uiState.value.copy(
-                userUuid = userUuid
-            )
+//            val userUuid = loginUseCase(username, password)
+            loginUseCase(username, password)
 
 
         }

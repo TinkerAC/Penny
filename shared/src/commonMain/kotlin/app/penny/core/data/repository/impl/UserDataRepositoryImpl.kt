@@ -3,6 +3,7 @@ package app.penny.core.data.repository.impl
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.kvstore.UserDataManager
 import co.touchlab.kermit.Logger
+import kotlinx.datetime.Instant
 
 class UserDataRepositoryImpl(
     private val userDataManager: UserDataManager
@@ -35,12 +36,14 @@ class UserDataRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getLastSyncedAt(): Long {
+    override suspend fun getLastSyncedAt(): Instant {
         if (userDataManager.getLong(UserDataManager.LAST_SYNCED_AT) == 0L) {
             Logger.d("No last synced at found, setting to 0")
             userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, 0)
         }
-        return userDataManager.getLong(UserDataManager.LAST_SYNCED_AT)
+        return Instant.fromEpochSeconds(
+            userDataManager.getLong(UserDataManager.LAST_SYNCED_AT)
+        )
     }
 
 

@@ -9,6 +9,7 @@ class CategoryLocalDataSource(
 
     fun insertCategory(categoryEntity: CategoryEntity) {
         categoryQueries.insertCategory(
+            uuid = categoryEntity.uuid,
             parent_id = categoryEntity.parent_id,
             name = categoryEntity.name,
             icon_uri = categoryEntity.icon_uri,

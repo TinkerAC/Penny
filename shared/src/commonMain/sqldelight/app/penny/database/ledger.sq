@@ -1,5 +1,6 @@
 CREATE TABLE ledgerEntity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,   -- 账本ID
+    uuid TEXT NOT NULL,   -- UUID
     name TEXT NOT NULL,
     currency_code TEXT NOT NULL,   -- 货币代码
     cover_name TEXT NOT NULL,   -- 封面名称(Enum.name)
@@ -8,8 +9,9 @@ CREATE TABLE ledgerEntity (
     updated_at INTEGER NOT NULL   DEFAULT (strftime('%s','now'))  -- 修改时间（默认当前时间）
 );
 
+
 insertLedger:
-INSERT INTO ledgerEntity (name, currency_code, cover_name, description) VALUES (?, ?, ?, ?);
+INSERT INTO ledgerEntity (uuid, name, currency_code, cover_name, description) VALUES (?, ?, ?, ?, ?);
 
 getLedgerById:
 SELECT * FROM ledgerEntity WHERE id = ?;
@@ -22,3 +24,7 @@ UPDATE ledgerEntity SET name = ?, currency_code = ?, updated_at = strftime('%s',
 
 deleteLedger:
 DELETE FROM ledgerEntity WHERE id = ?;
+
+
+getLedgersUpdatedAfter:
+SELECT * FROM ledgerEntity WHERE updated_at > ?;

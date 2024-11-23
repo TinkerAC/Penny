@@ -10,6 +10,7 @@ class TransactionLocalDataSource(
 
     fun insertTransaction(transaction: TransactionEntity) {
         transactionsQueries.insertTransaction(
+            uuid = transaction.uuid,
             ledger_id = transaction.ledger_id,
             transaction_date = transaction.transaction_date,
             category_name = transaction.category_name,

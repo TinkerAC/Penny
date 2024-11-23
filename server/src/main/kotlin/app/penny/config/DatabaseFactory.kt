@@ -1,6 +1,6 @@
 package app.penny.config
 
-import app.penny.models.User
+import app.penny.models.Users
 import com.typesafe.config.ConfigFactory
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -23,7 +23,7 @@ object DatabaseFactory {
         Database.connect(jdbcURL, driver = driverClassName, user = user, password = password)
 
         transaction {
-            SchemaUtils.create(User)
+            SchemaUtils.create(Users)
         }
     }
 }

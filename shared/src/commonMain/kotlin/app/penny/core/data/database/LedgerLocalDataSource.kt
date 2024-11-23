@@ -10,6 +10,7 @@ class LedgerLocalDataSource(
 
     fun insertLedger(ledgerEntity: LedgerEntity) {
         ledgerQueries.insertLedger(
+            uuid = ledgerEntity.uuid,
             name = ledgerEntity.name,
             currency_code = ledgerEntity.currency_code,
             cover_name = ledgerEntity.cover_name,
@@ -37,6 +38,10 @@ class LedgerLocalDataSource(
 
     fun deleteLedger(id: Long) {
         ledgerQueries.deleteLedger(id)
+    }
+
+    fun getLedgersUpdatedAfter(timestamp: Long): List<LedgerEntity> {
+        return ledgerQueries.getLedgersUpdatedAfter(timestamp).executeAsList()
     }
 
 

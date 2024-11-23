@@ -1,10 +1,11 @@
-package app.penny.models.dto
+package app.penny.core.network.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserResponse(
-    val id: Int,
+data class LoginResponseDto
+    (
+    val id: Long,
     val username: String,
     val token: String
 )

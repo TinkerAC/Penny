@@ -24,7 +24,7 @@
 │       │   │           │   │   ├── GetTransactionsUseCase.kt   // 获取交易列表的用例
 │       │   │           │   │   └── ...                 // 其他用例
 │       │   │           │   └── model                   // Domain 层的模型：业务对象
-│       │   │           │       ├── Transaction.kt              // 交易业务模型
+│       │   │           │       ├── Transactions.kt              // 交易业务模型
 │       │   │           │       └── ...                 // 其他业务模型
 │       │   │           ├── presentation                // 表现层：UI 展示和用户交互
 │       │   │           │   ├── viewmodel               // 视图模型：管理 UI 状态

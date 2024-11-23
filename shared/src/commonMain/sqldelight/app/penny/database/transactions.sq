@@ -1,5 +1,6 @@
 CREATE TABLE transactionEntity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uuid TEXT NOT NULL,                    -- UUID
     ledger_id INTEGER NOT NULL,            -- 所属账本ID，引用 ledger(ledger_id)
     transaction_date INTEGER NOT NULL,     -- 交易日期（Unix时间戳）
     category_name TEXT NOT NULL,          -- 分类ID，引用 category(category_name)
@@ -17,7 +18,7 @@ CREATE TABLE transactionEntity (
 
 
 insertTransaction:
-INSERT INTO transactionEntity (ledger_id, transaction_date, category_name, transaction_type, amount, currency_code,remark, screenshot_uri) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO transactionEntity (uuid,ledger_id, transaction_date, category_name, transaction_type, amount, currency_code,remark, screenshot_uri) VALUES (?, ?, ?, ?, ?, ?, ?,?, ?);
 
 
 
