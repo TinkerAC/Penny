@@ -9,7 +9,8 @@ class UserDataRepositoryImpl(
     private val userDataManager: UserDataManager
 ) : UserDataRepository {
     override suspend fun getRecentLedgerId(): Long {
-        return userDataManager.getLong(UserDataManager.RECENT_LEDGER_ID)
+
+       return userDataManager.getLong(UserDataManager.RECENT_LEDGER_ID)
     }
 
     override suspend fun saveRecentLedgerId(ledgerId: Long?) {

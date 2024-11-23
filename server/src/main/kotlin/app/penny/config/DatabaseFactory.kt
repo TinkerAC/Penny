@@ -1,5 +1,7 @@
 package app.penny.config
 
+import app.penny.models.Ledgers
+import app.penny.models.Transactions
 import app.penny.models.Users
 import com.typesafe.config.ConfigFactory
 import org.jetbrains.exposed.sql.Database
@@ -24,6 +26,9 @@ object DatabaseFactory {
 
         transaction {
             SchemaUtils.create(Users)
+            SchemaUtils.create(Ledgers)
+            SchemaUtils.create(Transactions)
+
         }
     }
 }

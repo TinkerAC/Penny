@@ -13,9 +13,9 @@ class LedgerService {
             Ledgers.batchInsert(ledgers) { ledger ->
                 this[Ledgers.uuid] = ledger.uuid
                 this[Ledgers.name] = ledger.name
-                this[Ledgers.coverUri] = ledger.coverUri
-                this[Ledgers.createTime] = ledger.createTime
-                this[Ledgers.updateTime] = ledger.updateTime
+                this[Ledgers.currencyCode] = ledger.currencyCode
+                this[Ledgers.createdAt] = ledger.createdAt
+                this[Ledgers.updatedAt] = ledger.updatedAt
             }
         }
     }

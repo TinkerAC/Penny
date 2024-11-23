@@ -5,8 +5,12 @@ import app.penny.core.domain.enum.Currency
 import app.penny.core.domain.enum.TransactionType
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 data class TransactionModel(
+    val uuid: Uuid = Uuid.parse("00000000-0000-0000-0000-000000000000"),
     val ledgerId: Long = 0,
     val transactionDate: Instant,
     val category: Category = Category.MISCELLANEOUS,

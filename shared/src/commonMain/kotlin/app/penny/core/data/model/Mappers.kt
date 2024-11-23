@@ -1,10 +1,6 @@
 package app.penny.core.data.model
 
 
-import app.penny.database.AchievementEntity
-import app.penny.database.LedgerEntity
-import app.penny.database.TransactionEntity
-import app.penny.database.UserAchievementEntity
 import app.penny.core.domain.enum.Category
 import app.penny.core.domain.enum.Currency
 import app.penny.core.domain.enum.LedgerCover
@@ -13,6 +9,11 @@ import app.penny.core.domain.model.AchievementModel
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.UserAchievementModel
+import app.penny.database.AchievementEntity
+import app.penny.database.LedgerEntity
+import app.penny.database.TransactionEntity
+import app.penny.database.UserAchievementEntity
+import app.penny.servershared.dto.LedgerDto
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -29,8 +30,9 @@ fun LedgerEntity.toModel(): LedgerModel {
         cover = LedgerCover.valueOf(cover_name),
         description = description,
         count = 0,
-        balance = BigDecimal.ZERO
-
+        balance = BigDecimal.ZERO,
+        createdAt = Instant.fromEpochSeconds(created_at),
+        updatedAt = Instant.fromEpochSeconds(updated_at)
     )
 }
 
@@ -67,7 +69,7 @@ fun TransactionModel.toEntity(): TransactionEntity {
     )
 }
 
-
+@OptIn(ExperimentalUuidApi::class)
 fun TransactionEntity.toModel(): TransactionModel {
     return TransactionModel(
         ledgerId = ledger_id,
@@ -103,5 +105,16 @@ fun UserAchievementEntity.toModel(): UserAchievementModel {
 }
 
 
+@OptIn(ExperimentalUuidApi::class)
+fun LedgerModel.toLedgerDto(): LedgerDto {
+    return LedgerDto(
+        uuid = uuid.toString(),
+        name = name,
+        currencyCode = currency.currencyCode,
+        updatedAt = updatedAt.epochSeconds,
+        createdAt = createdAt.epochSeconds,
+        coverUri = "not implemented"
+    )
+}
 
 

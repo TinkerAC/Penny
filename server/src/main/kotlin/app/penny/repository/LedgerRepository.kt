@@ -3,6 +3,7 @@ package app.penny.repository
 import app.penny.models.Ledger
 import app.penny.models.Ledgers
 import app.penny.models.User
+import app.penny.servershared.dto.LedgerDto
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -22,13 +23,12 @@ class LedgerRepository {
         }
     }
 
-    fun insertLedgers(ledgers: List<LedgerDTO>) {
+    fun insertLedgers(ledgers: List<LedgerDto>) {
         transaction {
             ledgers.forEach {
                 Ledger.new {
                     name = it.name
                     currencyCode = it.currencyCode
-                    iconUri = it.iconUri
                     createdAt = it.createdAt
                     updatedAt = it.updatedAt
                 }

@@ -22,5 +22,13 @@ object JwtConfig {
         .withExpiresAt(getExpiration())
         .sign(algorithm)
 
+
+
+    fun getUserIdFromToken(token: String): Int {
+        val jwt = verifier.verify(token)
+        return jwt.getClaim("userId").asInt() ?: -1
+    }
+
+
     private fun getExpiration() = java.util.Date(System.currentTimeMillis() + VALIDITY_IN_MS)
 }

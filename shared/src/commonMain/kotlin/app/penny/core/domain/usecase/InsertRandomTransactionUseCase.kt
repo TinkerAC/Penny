@@ -9,7 +9,9 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Instant
 import kotlin.math.round
 import kotlin.random.Random
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class InsertRandomTransactionUseCase(
     private val ledgerRepository: LedgerRepository,
     private val transactionRepository: TransactionRepository
@@ -26,6 +28,7 @@ class InsertRandomTransactionUseCase(
 
         //为每一天生成随机交易
         for (timeStamp in 1514736000L..1735488000L step 3600 * 24) {
+
             val amount = BigDecimal.fromDouble(round(random.nextDouble(0.0, 1000.0) * 100) / 100)
             val transactionDate = Instant.fromEpochSeconds(timeStamp)
             val ledger = ledgers.random()

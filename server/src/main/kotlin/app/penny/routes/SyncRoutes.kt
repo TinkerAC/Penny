@@ -1,23 +1,26 @@
 package app.penny.routes
 
 // Ktor相关
-import app.penny.models.Ledgers
-import app.penny.servershared.dto.PushLedgersRequest
-import app.penny.services.LedgerService
-import io.ktor.server.application.*
-import io.ktor.server.routing.*  // 用于定义路由
-import io.ktor.server.request.*  // 用于处理请求
-import io.ktor.server.response.*  // 用于发送响应
-import io.ktor.http.*  // HTTP相关
 
 // Exposed相关
-import org.jetbrains.exposed.sql.*  // 用于操作数据库
-import org.jetbrains.exposed.sql.transactions.transaction  // 用于数据库事务
+import app.penny.config.JwtConfig
+import app.penny.servershared.dto.PushLedgersRequest
+import app.penny.servershared.dto.PushLedgersResponse
+import app.penny.servershared.dto.RegisterResponse
+import app.penny.services.LedgerService
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
 
 // 项目相关
 
 fun Route.syncRoutes(
-    ledgerService: LedgerService
+    ledgerService: LedgerService,
+    jwtConfig: JwtConfig
 ) {
     route("/sync") {
 
@@ -27,18 +30,65 @@ fun Route.syncRoutes(
 
             get("/pull") {
 
+
+                val jwt = call.request.headers["Authorization"]
+
+                if (jwt == null) {
+                    call.respond(
+                        HttpStatusCode.Unauthorized,
+                        RegisterResponse(
+                            success = false,
+                            message = "No token provided"
+                        )
+                    )
+                    return@get
+                }
+
+                val userId = jwtConfig.getUserIdFromToken(jwt)
+
+
+
+//                call.respond(
+////                    ledgers
+//                )
+
             }
 
-            post("/push") {
+            post("/upload") {
+
+                if (call.request.headers["Authorization"] == null) {
+                    call.respond(
+                        HttpStatusCode.Unauthorized,
+                        RegisterResponse(
+                            success = false,
+                            message = "No token provided"
+                        )
+                    )
+                }
 
                 val pushLedgerRequest: PushLedgersRequest = call.receive()
 
                 val ledgerDTOs = pushLedgerRequest.ledgers
 
-                ledgerService.insertLedgers(
-                    ledgerDTOs
-                )
+                try {
+                    ledgerService.insertLedgers(
+                        ledgerDTOs
+                    )
+                } catch (e: Exception) {
+                    call.respond(
+                        PushLedgersResponse(
+                            success = true,
+                            changedLines = 0
+                        )
+                    )
+                }
 
+                call.respond(
+                    PushLedgersResponse(
+                        success = true,
+                        changedLines = ledgerDTOs.size
+                    )
+                )
 
 
             }

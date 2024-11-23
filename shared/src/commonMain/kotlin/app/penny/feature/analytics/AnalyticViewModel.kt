@@ -48,7 +48,13 @@ class AnalyticViewModel(
             if (recentLedgerId != -1L) {
                 val recentLedger = _uiState.value.ledgers.find { it.id == recentLedgerId }
                 Logger.d("get recentLedger $recentLedger")
-                selectLedger(recentLedger!!) //
+
+                if (recentLedger != null) {
+                    selectLedger(recentLedger)
+                } else {
+                    // 如果没有最近使用的账本，显示账本选择对话框
+//                    showLedgerSelectionDialog()
+                }
                 prepareDataForCharts()
 
             } else {

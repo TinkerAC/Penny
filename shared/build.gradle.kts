@@ -74,8 +74,11 @@ kotlin {
 //                implementation(libs.kotlinx.serialization.json) // 用于序列化
 
 
-                // 用于生成 UUID
-                implementation(libs.uuid)
+//                // 用于生成 UUID
+//                implementation(libs.uuid)
+
+                implementation(libs.ktor.client.cio)
+
 
 
 
@@ -91,6 +94,9 @@ kotlin {
                 implementation(libs.koin.android)
                 implementation(libs.koin.android.ext)
                 implementation(libs.koin.core.ext)
+
+                //okhttp
+                implementation(libs.ktor.client.okhttp)
             }
         }
 

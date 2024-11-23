@@ -17,5 +17,18 @@ actual fun platformModule() = module {
 
     single { MultiplatformSettingsWrapper().createSettings() }
 
+
+//    // ktor http engine (ios)
+//    single {
+//        HttpClient(
+//            engine = Ios.create {
+//                config {
+//                    retryOnConnectionFailure(true)
+//                }
+//            }
+//        )
+//
+//    }
+
 }
 

@@ -8,6 +8,6 @@ data class LedgerDto(
     val name: String,
     val coverUri: String,
     val currencyCode: String,
-    val createTime: Long,
-    val updateTime: Long
+    val createdAt: Long,
+    val updatedAt: Long
 )

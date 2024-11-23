@@ -1,41 +1,42 @@
 package app.penny.routes
 
+import app.penny.config.JwtConfig
 import app.penny.servershared.dto.LoginRequest
-import app.penny.services.UserService
-
-import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.request.*
-import io.ktor.http.*
-import io.ktor.server.routing.*
 import app.penny.servershared.dto.LoginResponse
 import app.penny.servershared.dto.RegisterRequest
 import app.penny.servershared.dto.RegisterResponse
+import app.penny.services.UserService
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
 
-fun Route.userRoutes(userService: UserService) {
+fun Route.userRoutes(userService: UserService, jwtConfig: JwtConfig) {
     route("/user") {
-        post("/register") {
-            val credentials = call.receive<RegisterRequest>()
-            val response = userService.register(credentials)
 
-            if (response != null) {
+        post("/register") {
+
+            val credentials = call.receive<RegisterRequest>()
+            val success = userService.register(credentials)
+            if (success) {
                 call.respond(
                     RegisterResponse(
                         success = true,
-                        message = "register success"
+                        message = "User registered successfully"
                     )
                 )
             } else {
                 call.respond(
                     RegisterResponse(
                         success = false,
-                        message = "username is duplicated"
+                        message = "User already exists"
                     )
                 )
-
             }
-
         }
+
 
         post("/login") {
             val credentials = call.receive<LoginRequest>()

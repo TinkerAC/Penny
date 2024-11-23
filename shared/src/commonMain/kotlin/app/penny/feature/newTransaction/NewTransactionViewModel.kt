@@ -23,7 +23,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class NewTransactionViewModel(
     private val transactionRepository: TransactionRepository,
     private val ledgerRepository: LedgerRepository
@@ -57,7 +59,6 @@ class NewTransactionViewModel(
     fun handleIntent(intent: NewTransactionIntent) {
         when (intent) {
             is NewTransactionIntent.SelectTab -> selectTab(intent.tab)
-            is NewTransactionIntent.SetAmount -> setAmount(intent.amount)
             is NewTransactionIntent.SelectCategory -> selectCategory(intent.category)
             is NewTransactionIntent.SetRemark -> setRemark(intent.remark)
             is NewTransactionIntent.ToggleLedgerDropdown -> toggleLedgerDropdown()
@@ -88,7 +89,7 @@ class NewTransactionViewModel(
             transactionDate = Clock.System.now(),
             category = _uiState.value.selectedSubCategory ?: Category.MISCELLANEOUS,
             transactionType = _uiState.value.selectedTransactionType,
-            amount = _uiState.value.amount,
+            amount = BigDecimal.parseString(_uiState.value.amountText),
             currency = _uiState.value.selectedLedger?.currency ?: Currency.USD,
             remark = _uiState.value.remark,
             screenshotUri = "",
@@ -125,10 +126,6 @@ class NewTransactionViewModel(
         Logger.d("`selectTab` called{${tab.name}}")
     }
 
-    private fun setAmount(amount: BigDecimal) {
-        _uiState.value = _uiState.value.copy(amount = amount)
-        Logger.d("`setAmount` called{${amount.toPlainString()}}")
-    }
 
 
     private fun selectCategory(category: Category) {
@@ -189,8 +186,10 @@ class NewTransactionViewModel(
             DoneButtonState.COMPLETE -> {
                 val isValid = validateTransaction()
                 if (isValid) {
+
                     insertTransaction()
                     _uiState.value = _uiState.value.copy(transactionCompleted = true)
+
                     screenModelScope.launch {
                         _eventFlow.emit(NewTransactionUiEvent.ShowSnackBar("Transaction completed"))
                         _eventFlow.emit(NewTransactionUiEvent.NavigateBack)
