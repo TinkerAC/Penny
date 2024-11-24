@@ -53,8 +53,15 @@ class DashboardScreen : Screen {
             Text("Upload Ledgers")
         }
 
-        Text("Last Synced At: ${dashboardViewModel.uiState.value.lastSyncedAt}")
+        Button(
+            onClick = {
+                dashboardViewModel.handleIntent(DashboardIntent.ClearUserData)
+            }
+        ) {
+            Text("Clear User Data(Token, User Name, User Email)")
+        }
 
+        Text("Last Synced At: ${dashboardViewModel.uiState.value.lastSyncedAt ?: "Never"}")
 
 
     }

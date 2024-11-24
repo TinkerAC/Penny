@@ -38,7 +38,7 @@ class ApiClient(private val httpClient: HttpClient) {
     }
 
 
-    suspend fun login(email: String, password: String, username: String? = null): LoginResponse {
+    suspend fun login(email: String, password: String): LoginResponse {
         val response: LoginResponse = httpClient.post(
             "$API_URL/user/login"
         ) {
@@ -46,7 +46,6 @@ class ApiClient(private val httpClient: HttpClient) {
             setBody(
                 LoginRequest(
                     email = email,
-                    username = username,
                     password = password
                 )
             )

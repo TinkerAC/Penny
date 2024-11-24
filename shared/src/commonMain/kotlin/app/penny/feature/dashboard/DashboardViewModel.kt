@@ -46,6 +46,9 @@ class DashboardViewModel(
 
             is DashboardIntent.UploadUpdatedLedgers ->
                 uploadUpdatedLedgers()
+
+            is DashboardIntent.ClearUserData ->
+                clearUserData()
         }
     }
 
@@ -69,6 +72,13 @@ class DashboardViewModel(
             val lastSyncedAt = userDataRepository.getLastSyncedAt()
             _uiState.value = _uiState.value.copy(lastSyncedAt = lastSyncedAt)
         }
+    }
+
+    private fun clearUserData() {
+        screenModelScope.launch {
+            userDataRepository.clearUserData()
+        }
+        Logger.d("cleared user data")
     }
 
 }

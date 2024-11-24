@@ -22,7 +22,5 @@ class SessionManager(
         settings.remove(TOKEN_KEY)
     }
 
-    fun isLoggedIn(): Boolean {
-        return getToken() != null
-    }
+
 }

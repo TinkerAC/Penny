@@ -6,10 +6,13 @@ import kotlin.uuid.Uuid
 data class ProfileUiState @OptIn(ExperimentalUuidApi::class) constructor(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val name: String = "",
-    val email: String = "",
+    val username: String? = null,
+    val email: String? = null,
     val profileImage: String = "",
     val userUuid: Uuid = Uuid.fromLongs(0, 0),
+
+
+    val isLoggedIn: Boolean = false,
 
     val isEmailRegistered: Boolean = false,
     val loggingModalVisible: Boolean = false,

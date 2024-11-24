@@ -43,7 +43,7 @@ class AnalyticViewModel(
             fetchAllLedgers()
             _uiState.value = _uiState.value.copy(isLoading = false)
             Logger.d("ledgers: ${_uiState.value.ledgers}")
-            val recentLedgerId = userDataRepository.getRecentLedgerId()
+            val recentLedgerId = userDataRepository.getRecentLedgerIdOrNull()
 
             if (recentLedgerId != -1L) {
                 val recentLedger = _uiState.value.ledgers.find { it.id == recentLedgerId }

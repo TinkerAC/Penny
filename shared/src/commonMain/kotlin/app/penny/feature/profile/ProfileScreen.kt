@@ -58,7 +58,10 @@ class ProfileScreen : Screen {
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            UserInfoSection(viewModel = viewModel)
+            UserInfoSection(
+                viewModel = viewModel,
+                uiState = uiState.value
+            )
             Spacer(modifier = Modifier.height(8.dp))
             FunctionGrid()
             Spacer(modifier = Modifier.height(16.dp))
@@ -96,7 +99,8 @@ fun TopBar() {
 
 @Composable
 fun UserInfoSection(
-    viewModel: ProfileViewModel
+    viewModel: ProfileViewModel,
+    uiState: ProfileUiState
 ) {
     Column(
         modifier = Modifier
@@ -119,7 +123,14 @@ fun UserInfoSection(
             tint = MaterialTheme.colorScheme.onPrimary
         )
         Text(
-            text = "未登录",
+            text =
+            when {
+                uiState.isLoggedIn -> {
+//                    println(uiState)
+                    uiState.username ?: uiState.email?: "PennyPal"}
+                else -> "Tap to login"
+            },
+
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onPrimary
         )

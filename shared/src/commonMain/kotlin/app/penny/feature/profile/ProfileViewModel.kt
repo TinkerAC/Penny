@@ -1,6 +1,8 @@
 package app.penny.feature.profile
 
+import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.data.repository.impl.AuthRepositoryImpl
 import app.penny.core.domain.usecase.CheckIsEmailRegisteredUseCase
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
@@ -18,7 +20,9 @@ class ProfileViewModel(
     private val userDataRepository: UserDataRepository,
     private val checkIsEmailRegisteredUseCase: CheckIsEmailRegisteredUseCase,
     private val loginUseCase: LoginUseCase,
-    private val registerUseCase: RegisterUseCase
+    private val registerUseCase: RegisterUseCase,
+    private val authRepository: AuthRepository
+
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -27,6 +31,11 @@ class ProfileViewModel(
     init {
         screenModelScope.launch {
             fetchProfileStatistics()
+
+            _uiState.value = _uiState.value.copy(
+                isLoggedIn = authRepository.isLoggedIn()
+            )
+
         }
     }
 
@@ -100,7 +109,7 @@ class ProfileViewModel(
                     _uiState.value = _uiState.value.copy(
 
                         loggingModalVisible = false,
-                        name = result.userDto?.username ?: "",
+                        username = result.userDto?.username ?: "",
                         errorMessage = null
                     )
                     fetchProfileStatistics()
@@ -124,8 +133,12 @@ class ProfileViewModel(
         _uiState.value = _uiState.value.copy(
             userUuid = Uuid.parse(
                 userDataRepository.getUserUuid()
-            )
+            ),
+            email = userDataRepository.getUserEmailOrNull(),
+            username = userDataRepository.getUserNameOrNull(),
         )
+
+
     }
 
     private fun tryLogin() {

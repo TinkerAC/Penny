@@ -5,9 +5,11 @@ import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.database.TransactionLocalDataSource
 import app.penny.core.data.kvstore.SessionManager
 import app.penny.core.data.kvstore.UserDataManager
+import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.data.repository.impl.AuthRepositoryImpl
 import app.penny.core.data.repository.impl.LedgerRepositoryImpl
 import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
@@ -70,6 +72,8 @@ fun commonModule() = module {
 
     single<UserDataRepository> { UserDataRepositoryImpl(get()) }
 
+    single<AuthRepository> { AuthRepositoryImpl(get()) }
+
 
     //注入ApiClient
     // Koin 模块定义
@@ -98,9 +102,9 @@ fun commonModule() = module {
     factory { GetAllTransactionsUseCase(get()) }
     factory { SearchTransactionsUseCase(get()) }
     factory { CheckIsEmailRegisteredUseCase(get()) }
-    factory { LoginUseCase(get(), get()) }
+    factory { LoginUseCase(get(), get(), get()) }
     factory { UploadUpdatedLedgersUseCase(get(), get(), get()) }
-    factory { LoginUseCase(get(), get()) }
+    factory { LoginUseCase(get(), get(), get()) }
     factory { RegisterUseCase(get()) }
 
 
@@ -118,7 +122,7 @@ fun commonModule() = module {
     factory { MainViewModel(get(), get()) }
     factory { MyLedgerViewModel(get(), get()) }
     factory { NewLedgerViewModel(get()) }
-    factory { ProfileViewModel(get(), get(), get(), get()) }
+    factory { ProfileViewModel(get(), get(), get(), get(), get()) }
 
     factory { MyLedgerViewModel(get(), get()) }
 

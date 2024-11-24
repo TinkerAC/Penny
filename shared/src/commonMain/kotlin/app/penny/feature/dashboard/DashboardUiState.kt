@@ -8,5 +8,5 @@ data class DashboardUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val addTransactionModalVisible: Boolean = false,
-    val lastSyncedAt: Instant = Instant.DISTANT_PAST
+    val lastSyncedAt: Instant? = null
 )

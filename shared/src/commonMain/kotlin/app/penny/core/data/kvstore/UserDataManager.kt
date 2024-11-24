@@ -12,10 +12,7 @@ class UserDataManager(
         settings.set(key = key, value = value)
     }
 
-    fun getNonFlowString(key: String) = settings.getString(
-        key = key,
-        defaultValue = "",
-    )
+    fun getNonFlowString(key: String) = settings.getString(key = key, defaultValue = "")
 
     fun putLong(key: String, value: Long) {
         settings.set(key = key, value = value)
@@ -24,11 +21,19 @@ class UserDataManager(
     fun getLong(key: String) = settings.getLong(key = key, defaultValue = 0)
 
 
+    fun getLongOrNull(key: String): Long? {
+        return settings.getLongOrNull(key)
+    }
+
+
+    fun getStringOrNull(key: String): String? {
+        return settings.getStringOrNull(key)
+    }
+
     @OptIn(ExperimentalUuidApi::class)
     fun generateUserUuid(): String {
         return Uuid.random().toString()
     }
-
 
 
     companion object {
@@ -37,6 +42,7 @@ class UserDataManager(
         const val USER_UUID = "user_uuid"
         const val LAST_SYNCED_AT = "last_synced_at"
         const val USER_NAME = "user_name"
+        const val USER_EMAIL = "user_email"
     }
 
 
@@ -46,5 +52,7 @@ class UserDataManager(
 
     fun getInt(key: String) = settings.getInt(key = key, defaultValue = 0)
 
-
+    fun clear() {
+        settings.clear()
+    }
 }

@@ -8,14 +8,15 @@ import kotlinx.datetime.Instant
 class UserDataRepositoryImpl(
     private val userDataManager: UserDataManager
 ) : UserDataRepository {
-    override suspend fun getRecentLedgerId(): Long {
+    override suspend fun getRecentLedgerIdOrNull(): Long? {
 
-        return userDataManager.getLong(UserDataManager.RECENT_LEDGER_ID)
+        return userDataManager.getLongOrNull(UserDataManager.RECENT_LEDGER_ID)
     }
 
-    override suspend fun setRecentLedgerId(ledgerId: Long?) {
-        userDataManager.putLong(UserDataManager.RECENT_LEDGER_ID, ledgerId ?: 0)
+    override suspend fun setRecentLedgerId(ledgerId: Long) {
+        userDataManager.putLong(UserDataManager.RECENT_LEDGER_ID, ledgerId)
     }
+
 
     override suspend fun setContinuousCheckInDays(days: Int) {
         userDataManager.putInt(UserDataManager.CONTINUOUS_CHECK_IN_DAYS, days)
@@ -34,17 +35,12 @@ class UserDataRepositoryImpl(
     }
 
     override suspend fun setUserUuid(uuid: String) {
-        TODO("Not yet implemented")
+        userDataManager.setString(UserDataManager.USER_UUID, uuid)
     }
 
-    override suspend fun getLastSyncedAt(): Instant {
-        if (userDataManager.getLong(UserDataManager.LAST_SYNCED_AT) == 0L) {
-            Logger.d("No last synced at found, setting to 0")
-            userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, 0)
-        }
-        return Instant.fromEpochSeconds(
-            userDataManager.getLong(UserDataManager.LAST_SYNCED_AT)
-        )
+    override suspend fun getLastSyncedAt(): Instant? {
+        val lastSyncedAt = userDataManager.getLongOrNull(UserDataManager.LAST_SYNCED_AT)
+        return lastSyncedAt?.let { Instant.fromEpochSeconds(it) }
     }
 
 
@@ -52,12 +48,25 @@ class UserDataRepositoryImpl(
         userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, lastSyncedAt.epochSeconds)
     }
 
-    override suspend fun getUserName(): String {
-
-        return userDataManager.getNonFlowString(UserDataManager.USER_NAME)
+    override suspend fun getUserNameOrNull(): String? {
+        return userDataManager.getStringOrNull(UserDataManager.USER_NAME)
     }
 
     override suspend fun setUserName(userName: String) {
         userDataManager.setString(UserDataManager.USER_NAME, userName)
+    }
+
+    override suspend fun getUserEmailOrNull(): String? {
+        return userDataManager.getStringOrNull(UserDataManager.USER_EMAIL)
+    }
+
+    override suspend fun setUserEmail(userEmail: String) {
+        userDataManager.setString(UserDataManager.USER_EMAIL, userEmail)
+    }
+
+
+    override suspend fun clearUserData() {
+
+        userDataManager.clear()
     }
 }

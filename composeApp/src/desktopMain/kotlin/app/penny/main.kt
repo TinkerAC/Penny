@@ -8,9 +8,13 @@ import co.touchlab.kermit.Logger
 
 //JVM entry point
 fun main() = application {
+
+
+
     initKoin()
 
-    Logger.i("Koin initialized")
+    
+
     Window(
         onCloseRequest = ::exitApplication,
         title = "Penny",
