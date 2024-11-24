@@ -17,6 +17,8 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 // 项目相关
 
@@ -92,9 +94,11 @@ fun Route.syncRoutes(
                     )
                 } catch (e: Exception) {
                     call.respond(
+                        HttpStatusCode.InternalServerError,
                         UploadLedgerResponse(
-                            success = true,
-                            changedLines = 0
+                            success = false,
+                            changedLines = 0,
+                            lastSyncedAt = Clock.System.now().epochSeconds
                         )
                     )
                 }
@@ -102,10 +106,11 @@ fun Route.syncRoutes(
                 call.respond(
                     UploadLedgerResponse(
                         success = true,
-                        changedLines = ledgerDTOs.size
+                        changedLines = ledgerDTOs.size,
+                        lastSyncedAt = Clock.System.now().epochSeconds
                     )
                 )
-                
+
             }
         }
 

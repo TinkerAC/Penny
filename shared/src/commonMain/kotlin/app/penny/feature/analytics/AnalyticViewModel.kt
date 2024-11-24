@@ -215,7 +215,7 @@ class AnalyticViewModel(
         Logger.d("Now Using Ledger: $ledger")
         _uiState.value = _uiState.value.copy(selectedLedger = ledger)
         screenModelScope.launch {
-            userDataRepository.saveRecentLedgerId(ledger.id)
+            userDataRepository.setRecentLedgerId(ledger.id)
             Logger.d("Save recentLedgerId ${ledger.id}")
             dismissLedgerSelectionDialog()
         }

@@ -19,6 +19,7 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.routing
 import io.ktor.server.routing.post
 import io.ktor.server.routing.get
+
 fun main() {
     embeddedServer(Netty, port = 8080) {
         module()
@@ -54,8 +55,8 @@ fun Application.module() {
 
 
         //functional routes
-        userRoutes(userService)
-        syncRoutes(ledgerService)
+        userRoutes(userService, jwtConfig = JwtConfig)
+        syncRoutes(ledgerService, jwtConfig = JwtConfig)
 
     }
 }

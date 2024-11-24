@@ -1,38 +1,22 @@
-// shared/src/commonMain/kotlin/app/penny/presentation/ui/screens/ProfileScreen.kt
-
 package app.penny.feature.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Divider
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -40,22 +24,41 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 
-
 class ProfileScreen : Screen {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-
         val viewModel = koinScreenModel<ProfileViewModel>()
         val uiState = viewModel.uiState.collectAsState()
+
+        val bottomSheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = true
+        )
+
+        if (uiState.value.loggingModalVisible) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    viewModel.handleIntent(ProfileIntent.DismissLoginModal)
+                },
+                sheetState = bottomSheetState,
+            ) {
+                RegisterAndLoginBottomSheet(
+                    viewModel = viewModel,
+                    onDismiss = {
+                        viewModel.handleIntent(ProfileIntent.DismissLoginModal)
+                    },
+                    uiState = uiState.value
+                )
+            }
+        }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            UserInfoSection()
-
+            UserInfoSection(viewModel = viewModel)
             Spacer(modifier = Modifier.height(8.dp))
             FunctionGrid()
             Spacer(modifier = Modifier.height(16.dp))
@@ -64,16 +67,11 @@ class ProfileScreen : Screen {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar() {
     TopAppBar(
-//        backgroundColor = MaterialTheme.colorScheme.primary,
-//        elevation = 4.dp
-        title =
-        {
-
+        title = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -97,7 +95,9 @@ fun TopBar() {
 }
 
 @Composable
-fun UserInfoSection() {
+fun UserInfoSection(
+    viewModel: ProfileViewModel
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -110,7 +110,12 @@ fun UserInfoSection() {
             contentDescription = "用户头像",
             modifier = Modifier
                 .size(64.dp)
-                .padding(8.dp),
+                .padding(8.dp)
+                .clickable(
+                    onClick = {
+                        viewModel.handleIntent(ProfileIntent.TryLogin)
+                    }
+                ),
             tint = MaterialTheme.colorScheme.onPrimary
         )
         Text(
@@ -148,7 +153,6 @@ fun FunctionGrid() {
         "Notification", "My Badge", "Penny's Box", "Settings"
     )
 
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
         modifier = Modifier
@@ -161,7 +165,7 @@ fun FunctionGrid() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
-                    imageVector = Icons.Default.Star, // 替换为实际的功能图标
+                    imageVector = Icons.Default.Star, // Replace with actual icons
                     contentDescription = feature,
                     modifier = Modifier.size(40.dp),
                     tint = MaterialTheme.colorScheme.primary
@@ -196,7 +200,7 @@ fun MenuList() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.Default.Settings, // 替换为实际图标
+                    imageVector = Icons.Default.Settings, // Replace with actual icons
                     contentDescription = menuItem,
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -211,18 +215,3 @@ fun MenuList() {
         }
     }
 }
-
-@Composable
-fun FloatingAddButton() {
-    FloatingActionButton(
-        onClick = { /* 添加记账逻辑 */ },
-        backgroundColor = MaterialTheme.colorScheme.primary
-    ) {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "新增记账",
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
-    }
-}
-

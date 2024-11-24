@@ -11,7 +11,7 @@ import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.impl.LedgerRepositoryImpl
 import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
-import app.penny.core.domain.usecase.CheckIsUsernameValidUseCase
+import app.penny.core.domain.usecase.CheckIsEmailRegisteredUseCase
 import app.penny.core.domain.usecase.DeleteLedgerUseCase
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
 import app.penny.core.domain.usecase.GetAllTransactionsUseCase
@@ -96,7 +96,7 @@ fun commonModule() = module {
     factory { GetTransactionsByLedgerUseCase(get()) }
     factory { GetAllTransactionsUseCase(get()) }
     factory { SearchTransactionsUseCase(get()) }
-    factory { CheckIsUsernameValidUseCase(get()) }
+    factory { CheckIsEmailRegisteredUseCase(get()) }
     factory { LoginUseCase(get(), get()) }
     factory { UploadUpdatedLedgersUseCase(get(), get(), get()) }
     factory { LoginUseCase(get(), get()) }

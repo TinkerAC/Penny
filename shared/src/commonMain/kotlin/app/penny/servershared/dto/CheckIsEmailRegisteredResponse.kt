@@ -3,6 +3,6 @@ package app.penny.servershared.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CheckIsUsernameValidRequest (
-    val username: String
+data class CheckIsEmailRegisteredResponse(
+    val isEmailRegistered: Boolean
 )

@@ -1,7 +1,10 @@
 package app.penny.servershared.dto
 
-class LoginResponse(
-    val id: Int,
-    val username: String,
-    val token: String
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class LoginResponse(
+    val success: Boolean,
+    val userDto: UserDto?,
+    val token: String?
 )

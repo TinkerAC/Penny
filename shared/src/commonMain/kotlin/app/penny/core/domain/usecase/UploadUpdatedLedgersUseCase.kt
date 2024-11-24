@@ -4,6 +4,7 @@ import app.penny.core.data.model.toLedgerDto
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.network.ApiClient
+import app.penny.servershared.dto.UploadLedgerResponse
 import co.touchlab.kermit.Logger
 import kotlinx.datetime.Instant
 
@@ -25,8 +26,21 @@ class UploadUpdatedLedgersUseCase(
 
         try {
             //upload ledgers
-            apiClient.pushLedgers(
-                ledgers.map { it.toLedgerDto() })
+            val response: UploadLedgerResponse =
+                apiClient.pushLedgers(
+                    ledgers = ledgers.map { it.toLedgerDto() },
+                    lastSynced = lastSyncedAt.epochSeconds
+                )
+
+
+            //update last synced at using server response
+
+            val newLastSyncedAt = Instant.fromEpochSeconds(response.lastSyncedAt)
+
+            userDataRepository.setLastSyncedAt(newLastSyncedAt)
+
+
+
         } catch (e: Exception) {
             Logger.e("Failed to upload ${ledgers.size} ledgers", e)
         }

@@ -10,14 +10,14 @@ class UserDataRepositoryImpl(
 ) : UserDataRepository {
     override suspend fun getRecentLedgerId(): Long {
 
-       return userDataManager.getLong(UserDataManager.RECENT_LEDGER_ID)
+        return userDataManager.getLong(UserDataManager.RECENT_LEDGER_ID)
     }
 
-    override suspend fun saveRecentLedgerId(ledgerId: Long?) {
+    override suspend fun setRecentLedgerId(ledgerId: Long?) {
         userDataManager.putLong(UserDataManager.RECENT_LEDGER_ID, ledgerId ?: 0)
     }
 
-    override suspend fun saveContinuousCheckInDays(days: Int) {
+    override suspend fun setContinuousCheckInDays(days: Int) {
         userDataManager.putInt(UserDataManager.CONTINUOUS_CHECK_IN_DAYS, days)
     }
 
@@ -33,7 +33,7 @@ class UserDataRepositoryImpl(
         return userDataManager.getNonFlowString(UserDataManager.USER_UUID)
     }
 
-    override suspend fun saveUserUuid(uuid: String) {
+    override suspend fun setUserUuid(uuid: String) {
         TODO("Not yet implemented")
     }
 
@@ -48,7 +48,7 @@ class UserDataRepositoryImpl(
     }
 
 
-    override suspend fun saveLastSyncedAt(lastSyncedAt: Long) {
-        userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, lastSyncedAt)
+    override suspend fun setLastSyncedAt(lastSyncedAt: Instant) {
+        userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, lastSyncedAt.epochSeconds)
     }
 }
