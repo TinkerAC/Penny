@@ -13,12 +13,15 @@ import app.penny.database.AchievementEntity
 import app.penny.database.LedgerEntity
 import app.penny.database.TransactionEntity
 import app.penny.database.UserAchievementEntity
-import app.penny.servershared.dto.LedgerDto
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import app.penny.servershared.dto.UserDto
+import app.penny.servershared.dto.LedgerDto
+import app.penny.servershared.dto.TransactionDto
+
 
 @OptIn(ExperimentalUuidApi::class)
 fun LedgerEntity.toModel(): LedgerModel {
@@ -114,6 +117,22 @@ fun LedgerModel.toLedgerDto(): LedgerDto {
         updatedAt = updatedAt.epochSeconds,
         createdAt = createdAt.epochSeconds,
         coverUri = "not implemented"
+    )
+}
+
+
+@OptIn(ExperimentalUuidApi::class)
+fun LedgerDto.toModel(): LedgerModel {
+    return LedgerModel(
+        id = 0,
+        uuid = Uuid.parse(uuid),
+        name = name,
+        currency = Currency.valueOf(currencyCode),
+        description = "",
+        count = 0,
+        balance = BigDecimal.ZERO,
+        createdAt = Instant.fromEpochSeconds(createdAt),
+        updatedAt = Instant.fromEpochSeconds(updatedAt)
     )
 }
 

@@ -115,13 +115,14 @@ class ProfileViewModel(
                     fetchProfileStatistics()
                 } else {
                     _uiState.value = _uiState.value.copy(
-                        errorMessage = "Invalid email or password."
+                        errorMessage = result.message
                     )
                 }
 
             } catch (e: Exception) {
+                e.printStackTrace()
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = "An error occurred during login."
+                    errorMessage = "An unknown error occurred during login."
                 )
             }
         }

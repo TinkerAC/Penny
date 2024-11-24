@@ -23,13 +23,10 @@ class LoginUseCase(
             password = password
         )
 
-        Logger.d("Retrieved Server Response: $response")
-
-        val userDto: UserDto = response.userDto!!
 
         if (response.success) {
+            val userDto: UserDto = response.userDto!!
             authRepository.saveToken(response.token!!)
-
             if (userDto.username != null) {
                 userDataRepository.setUserName(
                     userDto.username

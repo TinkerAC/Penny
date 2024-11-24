@@ -7,6 +7,6 @@ class GetAllLedgerUseCase(
 
 ) {
 
-    suspend operator fun invoke() = ledgerRepository.getAllLedgers()
+    suspend operator fun invoke() = ledgerRepository.fetchAllLedgers()
 
 }

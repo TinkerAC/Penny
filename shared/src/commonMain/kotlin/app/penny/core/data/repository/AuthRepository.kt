@@ -10,7 +10,7 @@ interface AuthRepository {
 //    fun saveRefreshToken(token: String)
 //    fun clearRefreshToken()
 
-//    fun refreshToken(): String
+    fun refreshToken(): String
 
 
 

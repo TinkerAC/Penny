@@ -17,7 +17,7 @@ class InsertLedgerUseCase(
         description: String,
         cover: LedgerCover
     ) {
-        ledgerRepository.insertLedger(
+        ledgerRepository.addLedger(
             LedgerModel(
                 name = name,
                 currency = currency,

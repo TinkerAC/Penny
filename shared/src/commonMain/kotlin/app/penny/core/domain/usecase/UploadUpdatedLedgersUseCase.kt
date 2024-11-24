@@ -3,6 +3,7 @@ package app.penny.core.domain.usecase
 import app.penny.core.data.model.toLedgerDto
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.domain.model.LedgerModel
 import app.penny.core.network.ApiClient
 import app.penny.servershared.dto.UploadLedgerResponse
 import co.touchlab.kermit.Logger
@@ -11,8 +12,6 @@ import kotlinx.datetime.Instant
 class UploadUpdatedLedgersUseCase(
     private val userDataRepository: UserDataRepository,
     private val ledgerRepository: LedgerRepository,
-    private val apiClient: ApiClient,
-//    private val logger: Logger // 注入 Logger
 ) {
     suspend operator fun invoke() {
 
@@ -20,7 +19,7 @@ class UploadUpdatedLedgersUseCase(
         val lastSyncedAt: Instant? = userDataRepository.getLastSyncedAt()
 
         // 获取在上次同步后更新的所有账本
-        val ledgers = ledgerRepository.getLedgersUpdatedAfter(
+        val ledgers: List<LedgerModel> = ledgerRepository.findLedgersUpdatedAfter(
             lastSyncedAt ?: Instant.DISTANT_PAST
         )
 
@@ -30,21 +29,30 @@ class UploadUpdatedLedgersUseCase(
         }
 
         try {
+
             // 上传账本
             val response: UploadLedgerResponse =
-                apiClient.pushLedgers(
-                    ledgers = ledgers.map { it.toLedgerDto() },
-                    lastSynced = lastSyncedAt?.epochSeconds ?: 0
+                ledgerRepository.uploadUnsyncedLedgers(
+                    ledgers = ledgers,
+                    lastSyncedAt = lastSyncedAt ?: Instant.DISTANT_PAST
                 )
 
-            // 使用服务器响应更新最后同步时间
-            val newLastSyncedAt = Instant.fromEpochSeconds(response.lastSyncedAt)
-            userDataRepository.setLastSyncedAt(newLastSyncedAt)
+            when {
+                response.success -> {
+                    Logger.d("成功上传了 ${ledgers.size} 个账本。")
+                    // 使用服务器响应更新最后同步时间
+                    userDataRepository.setLastSyncedAt(
+                        Instant.fromEpochSeconds(response.lastSyncedAt)
+                    )
+                }
 
-            Logger.d("成功上传了 ${ledgers.size} 个账本。")
+                else -> {
+                    Logger.e("上传 ${ledgers.size} 个账本失败")
+                }
+            }
 
         } catch (e: Exception) {
-            Logger.e("上传 ${ledgers.size} 个账本失败", e)
+            Logger.e("上传账本失败：${e.message}")
             // 根据需要处理异常，例如重新抛出或执行其他操作
         }
     }

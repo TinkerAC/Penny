@@ -21,4 +21,8 @@ class AuthRepositoryImpl(
     override fun clearToken() {
         sessionManager.clearToken()
     }
+
+    override fun refreshToken(): String {
+        TODO("Not yet implemented")
+    }
 }

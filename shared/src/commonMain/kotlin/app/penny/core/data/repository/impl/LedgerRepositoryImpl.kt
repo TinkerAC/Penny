@@ -2,28 +2,37 @@ package app.penny.core.data.repository.impl
 
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.model.toEntity
+import app.penny.core.data.model.toLedgerDto
 import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.LedgerModel
+import app.penny.core.network.ApiClient
 import app.penny.database.LedgerEntity
 import app.penny.feature.transactions.GroupBy
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
+@OptIn(ExperimentalUuidApi::class)
 
 class LedgerRepositoryImpl(
-
+    private val apiClient: ApiClient,
     private val ledgerLocalDataSource: LedgerLocalDataSource
 ) : LedgerRepository {
-    override suspend fun insertLedger(ledgerModel: LedgerModel) {
-        return ledgerLocalDataSource.insertLedger(
-            ledgerModel.toEntity()
-        )
+
+    override suspend fun addLedger(ledgerModel: LedgerModel) {
+        ledgerModel.uuid = Uuid.random()
+
+        val ledgerEntity = ledgerModel.toEntity()
+
+        ledgerLocalDataSource.insertLedger(ledgerEntity)
     }
 
-    override suspend fun getLedgerById(ledgerId: Long): LedgerModel {
+    override suspend fun findLedgerById(ledgerId: Long): LedgerModel {
         return ledgerLocalDataSource.getLedgerById(ledgerId).toModel()
     }
 
-    override suspend fun getAllLedgers(): List<LedgerModel> {
+    override suspend fun fetchAllLedgers(): List<LedgerModel> {
         return ledgerLocalDataSource.getAllLedgers().map { it.toModel() }
     }
 
@@ -36,11 +45,31 @@ class LedgerRepositoryImpl(
         ledgerLocalDataSource.deleteLedger(ledgerId)
     }
 
-    override suspend fun getLedgersUpdatedAfter(lastSyncedAt: Instant) :List<LedgerModel>{
+    override suspend fun findLedgersUpdatedAfter(lastSyncedAt: Instant): List<LedgerModel> {
         return ledgerLocalDataSource.getLedgersUpdatedAfter(
             lastSyncedAt.epochSeconds
         ).map {
             it.toModel()
         }
+    }
+
+    override suspend fun downloadUnsyncedLedgers(lastSyncedAt: Instant): List<LedgerModel> {
+
+        val downloadLedgerResponse = apiClient.downloadLedgers(lastSyncedAt.epochSeconds)
+        return downloadLedgerResponse.ledgers.map {
+            it.toModel()
+        }
+
+    }
+
+    override suspend fun uploadUnsyncedLedgers(
+        ledgers: List<LedgerModel>,
+        lastSyncedAt: Instant
+    ): Boolean {
+        val ledgerDtos = ledgers.map { it.toLedgerDto() }
+        val uploadUpdatedLedgersResponse =
+            apiClient.uploadLedgers(ledgerDtos, lastSyncedAt.epochSeconds)
+
+        return uploadUpdatedLedgersResponse.success
     }
 }

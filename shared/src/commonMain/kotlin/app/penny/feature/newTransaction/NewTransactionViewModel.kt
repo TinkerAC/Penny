@@ -153,7 +153,7 @@ class NewTransactionViewModel(
 
     private fun fetchLedgers() {
         screenModelScope.launch {
-            val ledgers = ledgerRepository.getAllLedgers()
+            val ledgers = ledgerRepository.fetchAllLedgers()
             _uiState.value = _uiState.value.copy(ledgers = ledgers)
         }
         Logger.d("`fetchLedgers` called")

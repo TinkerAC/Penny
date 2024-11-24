@@ -1,29 +1,27 @@
 package app.penny.core.network
 
 import app.penny.config.Config.API_URL
-import app.penny.servershared.dto.CheckIsEmailRegisteredResponse
-import app.penny.servershared.dto.LedgerDto
-import app.penny.servershared.dto.LoginRequest
-import app.penny.servershared.dto.LoginResponse
-import app.penny.servershared.dto.RegisterRequest
-import app.penny.servershared.dto.RegisterResponse
-import app.penny.servershared.dto.UploadLedgerRequest
-import app.penny.servershared.dto.UploadLedgerResponse
+import app.penny.core.data.repository.AuthRepository
+import app.penny.servershared.dto.*
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.client.request.*
 import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 
 
-class ApiClient(private val httpClient: HttpClient) {
+class ApiClient(
+    httpClient: HttpClient,
+    authRepository: AuthRepository
+) : BaseApiClient(
+    httpClient,
+    authRepository
+) {
 
     suspend fun register(email: String, password: String): RegisterResponse {
-        val response: RegisterResponse = httpClient.post(
-            "$API_URL/user/register"
+        return makeRequest<RegisterResponse>(
+            url = "$API_URL/user/register",
+            method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
             setBody(
@@ -32,15 +30,13 @@ class ApiClient(private val httpClient: HttpClient) {
                     password = password
                 )
             )
-        }.body()
-
-        return response
+        }
     }
 
-
     suspend fun login(email: String, password: String): LoginResponse {
-        val response: LoginResponse = httpClient.post(
-            "$API_URL/user/login"
+        return makeRequest<LoginResponse>(
+            url = "$API_URL/user/login",
+            method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
             setBody(
@@ -49,26 +45,23 @@ class ApiClient(private val httpClient: HttpClient) {
                     password = password
                 )
             )
-        }.body()
-        return response
+        }
     }
 
     suspend fun checkIsEmailRegistered(username: String): Boolean {
-        val response: CheckIsEmailRegisteredResponse = httpClient.get(
-            "$API_URL/user/checkIsEmailRegistered"
+        val response = makeRequest<CheckIsEmailRegisteredResponse>(
+            url = "$API_URL/user/checkIsEmailRegistered",
+            method = HttpMethod.Get
         ) {
             parameter("email", username)
-        }.body()
-
+        }
         return response.isEmailRegistered
-
     }
 
-
-    suspend fun pushLedgers(ledgers: List<LedgerDto>, lastSynced: Long): UploadLedgerResponse {
-
-        return httpClient.post(
-            "$API_URL/sync/ledger/upload"
+    suspend fun uploadLedgers(ledgers: List<LedgerDto>, lastSynced: Long): UploadLedgerResponse {
+        return makeAuthenticatedRequest(
+            url = "$API_URL/sync/ledger/upload",
+            method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
             setBody(
@@ -78,8 +71,42 @@ class ApiClient(private val httpClient: HttpClient) {
                     lastSyncedAt = lastSynced
                 )
             )
-        }.body()
+        }
     }
+
+
+    suspend fun downloadLedgers(
+        lastSyncedAt: Long
+    ): DownloadLedgerResponse {
+        return makeAuthenticatedRequest(
+            url = "$API_URL/sync/ledger/download",
+            method = HttpMethod.Get
+        ) {
+            parameter("lastSyncedAt", lastSyncedAt)
+        }
+    }
+
+
+    suspend fun uploadTransactions(
+        transactions: List<TransactionDto>,
+        lastSynced: Long = 0
+    ): UploadTransactionResponse {
+        return makeAuthenticatedRequest(
+            url = "$API_URL/sync/transaction/upload",
+            method = HttpMethod.Post
+        ) {
+            contentType(ContentType.Application.Json)
+            setBody(
+                UploadTransactionsRequest(
+                    transactions = transactions,
+                    lastSynced = lastSynced
+                )
+            )
+        }
+    }
+
+
+
 
 
 }

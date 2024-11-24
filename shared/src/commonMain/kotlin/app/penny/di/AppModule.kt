@@ -91,7 +91,7 @@ fun commonModule() = module {
     }
 
 
-    single { ApiClient(get()) }
+    single { ApiClient(get(), get()) }
 
     // 提供 UseCase
     factory { InsertLedgerUseCase(get()) }
