@@ -9,9 +9,14 @@ class LoginUseCase(
     private val apiClient: ApiClient,
     private val sessionManager: SessionManager
 ) {
-    suspend operator fun invoke(username: String, password: String) :LoginResponse{
+    suspend operator fun invoke(
+        email: String, password: String
+    ): LoginResponse {
 
-        val response: LoginResponse = apiClient.login(username, password)
+        val response: LoginResponse = apiClient.login(
+            email = email,
+            password = password
+        )
 
         if (response.success) {
             sessionManager.saveToken(response.token!!)

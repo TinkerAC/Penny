@@ -13,6 +13,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
+import java.util.logging.Logger
 
 fun Route.userRoutes(userService: UserService, jwtConfig: JwtConfig) {
     route("/user") {
@@ -61,6 +62,8 @@ fun Route.userRoutes(userService: UserService, jwtConfig: JwtConfig) {
         get(
             "/checkIsEmailRegistered"
         ) {
+
+
             val email = call.request.queryParameters["email"] ?: ""
             if (email.isEmpty()) {
                 call.respond(
@@ -68,6 +71,7 @@ fun Route.userRoutes(userService: UserService, jwtConfig: JwtConfig) {
                         isEmailRegistered = false
                     )
                 )
+
                 return@get
             }
 

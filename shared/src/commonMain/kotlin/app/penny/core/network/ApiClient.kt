@@ -1,7 +1,6 @@
 package app.penny.core.network
 
 import app.penny.config.Config.API_URL
-import app.penny.servershared.dto.CheckIsEmailRegisteredRequest
 import app.penny.servershared.dto.CheckIsEmailRegisteredResponse
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.LoginRequest
@@ -16,9 +15,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 
 
@@ -48,7 +45,7 @@ class ApiClient(private val httpClient: HttpClient) {
     }
 
 
-    suspend fun login(email: String, password: String, username: String?): LoginResponse {
+    suspend fun login(email: String, password: String, username: String? = null): LoginResponse {
         val response: LoginResponse = httpClient.post(
             "$API_URL/user/login"
         ) {
@@ -56,7 +53,7 @@ class ApiClient(private val httpClient: HttpClient) {
             setBody(
                 LoginRequest(
                     email = email,
-                    username = null,
+                    username = username,
                     password = password
                 )
             )
