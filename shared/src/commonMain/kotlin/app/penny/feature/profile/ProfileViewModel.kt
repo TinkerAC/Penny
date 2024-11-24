@@ -3,6 +3,7 @@ package app.penny.feature.profile
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.usecase.CheckIsEmailRegisteredUseCase
 import app.penny.core.domain.usecase.LoginUseCase
+import app.penny.core.domain.usecase.RegisterUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,8 @@ import kotlin.uuid.Uuid
 class ProfileViewModel(
     private val userDataRepository: UserDataRepository,
     private val checkIsEmailRegisteredUseCase: CheckIsEmailRegisteredUseCase,
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val registerUseCase: RegisterUseCase
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -37,19 +39,62 @@ class ProfileViewModel(
         }
     }
 
-    private fun unfocusUsername(username: String) {
+    private fun unfocusUsername(email: String) {
         screenModelScope.launch {
-            val isUsernameValid = checkIsEmailRegisteredUseCase(username)
-            _uiState.value = _uiState.value.copy(
-                isUsernameValid = isUsernameValid
-            )
+            val isEmailRegistered = checkIsEmailRegisteredUseCase(email)
+
+            if (!isEmailRegistered) {
+                // register and login
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "Account will be created for you."
+                )
+
+            } else {
+                // login
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "Welcome back!"
+                )
+            }
+
+
         }
     }
 
-    private fun login(username: String, password: String) {
+    private fun login(email: String, password: String) {
         screenModelScope.launch {
             try {
-                val result = loginUseCase(username, password)
+
+                val isEmailRegistered = checkIsEmailRegisteredUseCase(email)
+
+                if (!isEmailRegistered) {
+                    // register and login
+                    val registerResponse = registerUseCase(email, password)
+                    if (registerResponse.success) {
+                        _uiState.value = _uiState.value.copy(
+                            errorMessage = "Account created successfully."
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            errorMessage = "An error occurred during registration."
+                        )
+
+                    }
+
+                    val loginResponse = loginUseCase(email, password)
+                    if (loginResponse.success) {
+                        _uiState.value = _uiState.value.copy(
+                            errorMessage = "Login successful."
+                        )
+                        handleIntent(ProfileIntent.DismissLoginModal)
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            errorMessage = "An error occurred during login."
+                        )
+                    }
+
+
+                }
+                val result = loginUseCase(email, password)
                 // Handle successful login
                 if (result.success) {
                     _uiState.value = _uiState.value.copy(

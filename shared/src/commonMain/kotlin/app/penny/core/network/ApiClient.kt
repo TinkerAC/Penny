@@ -21,27 +21,20 @@ import io.ktor.http.contentType
 
 class ApiClient(private val httpClient: HttpClient) {
 
-    suspend fun register(email: String, password: String): String {
-        try {
-            val response: RegisterResponse = httpClient.post(
-                "$API_URL/user/checkIsEmailRegistered"
-            ) {
-                setBody(
-                    RegisterRequest(
-                        email = email,
-                        password = password
-                    )
+    suspend fun register(email: String, password: String): RegisterResponse {
+        val response: RegisterResponse = httpClient.post(
+            "$API_URL/user/register"
+        ) {
+            contentType(ContentType.Application.Json)
+            setBody(
+                RegisterRequest(
+                    email = email,
+                    password = password
                 )
-            }.body()
+            )
+        }.body()
 
-            if (response.success) {
-                return "User already registered"
-            }
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return "User registered successfully"
+        return response
     }
 
 

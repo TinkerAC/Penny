@@ -1,5 +1,6 @@
 package app.penny.core.domain.usecase
 
+import androidx.compose.ui.platform.LocalHapticFeedback
 import app.penny.core.data.kvstore.SessionManager
 import app.penny.core.network.ApiClient
 import app.penny.servershared.dto.LoginResponse
@@ -18,12 +19,16 @@ class LoginUseCase(
             password = password
         )
 
+
+        Logger.d("Retrieved Server Response: $response")
+
         if (response.success) {
             sessionManager.saveToken(response.token!!)
-            Logger.d("Login successful")
-        } else {
-            Logger.e("Login failed")
         }
+
+
+
+
         return response
     }
 

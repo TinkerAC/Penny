@@ -36,6 +36,7 @@ class UserDataManager(
         const val CONTINUOUS_CHECK_IN_DAYS = "continuous_check_in_days"
         const val USER_UUID = "user_uuid"
         const val LAST_SYNCED_AT = "last_synced_at"
+        const val USER_NAME = "user_name"
     }
 
 

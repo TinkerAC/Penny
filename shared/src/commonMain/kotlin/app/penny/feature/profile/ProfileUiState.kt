@@ -11,7 +11,7 @@ data class ProfileUiState @OptIn(ExperimentalUuidApi::class) constructor(
     val profileImage: String = "",
     val userUuid: Uuid = Uuid.fromLongs(0, 0),
 
-    val isUsernameValid: Boolean = false,
+    val isEmailRegistered: Boolean = false,
     val loggingModalVisible: Boolean = false,
 
     // 连续签到天数

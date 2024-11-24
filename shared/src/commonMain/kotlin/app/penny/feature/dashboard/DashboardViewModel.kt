@@ -1,5 +1,6 @@
 package app.penny.feature.dashboard
 
+import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.usecase.InsertLedgerUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.UploadUpdatedLedgersUseCase
@@ -15,12 +16,15 @@ import kotlinx.coroutines.launch
 class DashboardViewModel(
     private val insertLedgerUseCase: InsertLedgerUseCase,
     private val insertRandomTransactionUseCase: InsertRandomTransactionUseCase,
-    private val uploadUpdatedLedgersUseCase: UploadUpdatedLedgersUseCase
+    private val uploadUpdatedLedgersUseCase: UploadUpdatedLedgersUseCase,
+    private val userDataRepository: UserDataRepository
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
 
-
+    init {
+        fetchUserData()
+    }
     fun showAddTransactionModal() {
         _uiState.value = _uiState.value.copy(addTransactionModalVisible = true)
     }
@@ -59,6 +63,14 @@ class DashboardViewModel(
         }
         Logger.d("uploaded updated ledgers")
     }
+
+    private fun fetchUserData() {
+        screenModelScope.launch {
+            val lastSyncedAt = userDataRepository.getLastSyncedAt()
+            _uiState.value = _uiState.value.copy(lastSyncedAt = lastSyncedAt)
+        }
+    }
+
 }
 
 

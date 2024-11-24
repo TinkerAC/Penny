@@ -53,6 +53,8 @@ class DashboardScreen : Screen {
             Text("Upload Ledgers")
         }
 
+        Text("Last Synced At: ${dashboardViewModel.uiState.value.lastSyncedAt}")
+
 
 
     }

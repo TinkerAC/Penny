@@ -15,4 +15,9 @@ interface UserDataRepository {
     suspend fun getLastSyncedAt(): Instant
     suspend fun setLastSyncedAt(lastSyncedAt: Instant)
 
+
+
+    suspend fun getUserName(): String
+    suspend fun setUserName(userName: String)
+
 }

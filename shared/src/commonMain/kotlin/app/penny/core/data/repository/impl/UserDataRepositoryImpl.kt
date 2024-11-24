@@ -51,4 +51,13 @@ class UserDataRepositoryImpl(
     override suspend fun setLastSyncedAt(lastSyncedAt: Instant) {
         userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, lastSyncedAt.epochSeconds)
     }
+
+    override suspend fun getUserName(): String {
+
+        return userDataManager.getNonFlowString(UserDataManager.USER_NAME)
+    }
+
+    override suspend fun setUserName(userName: String) {
+        userDataManager.setString(UserDataManager.USER_NAME, userName)
+    }
 }

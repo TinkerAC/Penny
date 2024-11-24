@@ -19,6 +19,7 @@ import app.penny.core.domain.usecase.GetTransactionsByLedgerUseCase
 import app.penny.core.domain.usecase.InsertLedgerUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.LoginUseCase
+import app.penny.core.domain.usecase.RegisterUseCase
 import app.penny.core.domain.usecase.SearchTransactionsUseCase
 import app.penny.core.domain.usecase.UploadUpdatedLedgersUseCase
 import app.penny.core.network.ApiClient
@@ -100,18 +101,24 @@ fun commonModule() = module {
     factory { LoginUseCase(get(), get()) }
     factory { UploadUpdatedLedgersUseCase(get(), get(), get()) }
     factory { LoginUseCase(get(), get()) }
+    factory { RegisterUseCase(get()) }
 
 
     // 注入 ViewModel
     factory { NewTransactionViewModel(get(), get()) }
-    factory { DashboardViewModel(get(), get(), get()) }
+    factory {
+        DashboardViewModel(
+            get(), get(), get(),
+            get()
+        )
+    }
 
     factory { AnalyticViewModel(get(), get(), get()) }
     factory { TransactionViewModel(get()) }
     factory { MainViewModel(get(), get()) }
     factory { MyLedgerViewModel(get(), get()) }
     factory { NewLedgerViewModel(get()) }
-    factory { ProfileViewModel(get(), get(), get()) }
+    factory { ProfileViewModel(get(), get(), get(), get()) }
 
     factory { MyLedgerViewModel(get(), get()) }
 
