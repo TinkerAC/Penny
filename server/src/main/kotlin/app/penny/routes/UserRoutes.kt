@@ -45,7 +45,8 @@ fun Route.userRoutes(userService: UserService, jwtConfig: JwtConfig) {
                     LoginResponse(
                         userDto = response.userDto,
                         token = response.token,
-                        success = true
+                        success = true,
+
                     )
                 )
             } else {
@@ -53,7 +54,8 @@ fun Route.userRoutes(userService: UserService, jwtConfig: JwtConfig) {
                     LoginResponse(
                         userDto = null,
                         token = null,
-                        success = false
+                        success = false,
+                        message = response.message
                     )
                 )
             }

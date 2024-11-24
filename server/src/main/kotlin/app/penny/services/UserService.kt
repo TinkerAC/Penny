@@ -47,7 +47,8 @@ class UserService {
             return LoginResponse(
                 success = false,
                 token = null,
-                userDto = null
+                userDto = null,
+                message = "Invalid email or password"
             )
 
     }

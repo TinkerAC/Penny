@@ -97,7 +97,7 @@ class ProfileViewModel(
                         handleIntent(ProfileIntent.DismissLoginModal)
                     } else {
                         _uiState.value = _uiState.value.copy(
-                            errorMessage = "An error occurred during login."
+                            errorMessage = loginResponse.message
                         )
                     }
 
