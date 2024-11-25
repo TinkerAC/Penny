@@ -1,3 +1,4 @@
+// file: server/src/main/kotlin/app/penny/services/UserService.kt
 package app.penny.services
 
 import app.penny.config.JwtConfig
@@ -9,7 +10,7 @@ import app.penny.servershared.dto.RegisterRequest
 import app.penny.servershared.dto.UserDto
 import org.mindrot.jbcrypt.BCrypt
 
-class UserService {
+class UserService(private val jwtConfig: JwtConfig) {
     private val userRepository = UserRepository()
 
     fun register(credentials: RegisterRequest): Boolean {
@@ -18,41 +19,38 @@ class UserService {
         }
 
         val passwordHash = BCrypt.hashpw(credentials.password, BCrypt.gensalt())
-        val userId = userRepository.insert(credentials.email, passwordHash)
-
+        userRepository.insert(credentials.email, passwordHash)
         return true
     }
 
     fun login(credentials: LoginRequest): LoginResponse {
         val userRow = userRepository.findByEmail(credentials.email) ?: return LoginResponse(
             success = false,
-            accessToken = null,
-            userDto = null
+            userDto = null,
+            message = "Invalid email or password"
         )
         val passwordHash = userRow[Users.passwordHash]
-        if (BCrypt.checkpw(credentials.password, passwordHash)) {
+        return if (BCrypt.checkpw(credentials.password, passwordHash)) {
             val userId = userRow[Users.id].value
-            val token = JwtConfig.makeToken(userId)
-            return LoginResponse(
+            val token = jwtConfig.makeAccessToken(userId)
+            LoginResponse(
                 success = true,
                 accessToken = token,
                 userDto = UserDto(
-                    id = userRow[Users.id].value.toLong(),
+                    id = userId.toLong(),
                     username = userRow[Users.username],
                     email = userRow[Users.email]
                 )
-
             )
-        } else
-            return LoginResponse(
+        } else {
+            LoginResponse(
                 success = false,
                 accessToken = null,
                 userDto = null,
                 message = "Invalid email or password"
             )
-
+        }
     }
-
 
     fun checkIsEmailRegistered(email: String): Boolean {
         return userRepository.findByEmail(email) != null

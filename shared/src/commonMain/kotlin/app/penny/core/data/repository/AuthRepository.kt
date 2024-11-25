@@ -8,4 +8,7 @@ interface AuthRepository {
 
     fun getAccessToken(): String?
     fun isLoggedIn(): Boolean
+
+    // 用于检查 Token 是否过期,本地判断
+    fun checkTokenExpired(): Boolean
 }

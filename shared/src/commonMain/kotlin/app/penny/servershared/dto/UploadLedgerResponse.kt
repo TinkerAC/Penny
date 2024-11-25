@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class UploadLedgerResponse(
     val success: Boolean,
     val changedLines: Int,
-    val lastSyncedAt: Long
+    val lastSyncedAt: Long,
+    val message: String = ""
 )

@@ -3,6 +3,7 @@ package app.penny.core.data.repository.impl
 import app.penny.core.data.kvstore.TokenStorage
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.network.ApiClient
+import kotlinx.datetime.Instant
 
 class AuthRepositoryImpl(
     private val tokenStorage: TokenStorage,
@@ -27,9 +28,12 @@ class AuthRepositoryImpl(
             ?: throw IllegalStateException("Refresh Token not found")
 
         val response = apiClient.refreshAccessToken(refreshToken)
-        if (response.isSuccessful) {
-            val newAccessToken = response.accessToken
+        if (response.success) {
+            val newAccessToken = response.accessToken!!
+            val newRefreshToken = response.refreshToken!!
             tokenStorage.saveAccessToken(newAccessToken) // 更新 Access Token
+            tokenStorage.saveRefreshToken(newRefreshToken) // 更新 Refresh Token
+
             return true
         }
         return false
@@ -46,5 +50,24 @@ class AuthRepositoryImpl(
 
     override fun isLoggedIn(): Boolean {
         return tokenStorage.getAccessToken() != null
+    }
+
+    private fun getExpirationTime(token: String): Instant {
+        // get the expiration time of the token
+
+    }
+
+
+    private fun checkIsTokenExpired(): Boolean {
+        if (tokenStorage.getAccessToken() == null) {
+            return true
+        } else {
+            //get the expiration time of the token
+
+            // check if the token is expired
+
+
+
+        }
     }
 }

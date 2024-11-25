@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class LedgerDto(
     val uuid: String,
     val name: String,
-    val coverUri: String,
+    val coverUri: String = "", // nyi
     val currencyCode: String,
     val createdAt: Long,
     val updatedAt: Long

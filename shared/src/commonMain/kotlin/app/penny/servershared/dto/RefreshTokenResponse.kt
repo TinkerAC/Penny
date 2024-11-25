@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RefreshTokenResponse(
-    val suppress: Boolean,
+    val success: Boolean,
     val accessToken: String? = null,
     val refreshToken: String? = null
 )
