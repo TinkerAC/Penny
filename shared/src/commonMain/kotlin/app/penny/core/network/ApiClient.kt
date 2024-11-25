@@ -105,8 +105,19 @@ class ApiClient(
         }
     }
 
-
-
+    fun refreshAccessToken(refreshToken: String): RefreshTokenResponse {
+        return makeRequest(
+            url = "$API_URL/auth/refresh",
+            method = HttpMethod.Post
+        ) {
+            contentType(ContentType.Application.Json)
+            setBody(
+                RefreshTokenRequest(
+                    refreshToken = refreshToken
+                )
+            )
+        }
+    }
 
 
 }

@@ -1,18 +1,11 @@
 package app.penny.core.data.repository
 
 interface AuthRepository {
+    suspend fun login(username: String, password: String): Boolean
+    suspend fun refreshToken(): Boolean
+    suspend fun logout()
+
+
+    fun getAccessToken(): String?
     fun isLoggedIn(): Boolean
-    fun getToken(): String?
-    fun saveToken(token: String)
-    fun clearToken()
-
-//    fun getRefreshToken(): String?
-//    fun saveRefreshToken(token: String)
-//    fun clearRefreshToken()
-
-    fun refreshToken(): String
-
-
-
-
 }

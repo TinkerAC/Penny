@@ -26,7 +26,7 @@ class UserService {
     fun login(credentials: LoginRequest): LoginResponse {
         val userRow = userRepository.findByEmail(credentials.email) ?: return LoginResponse(
             success = false,
-            token = null,
+            accessToken = null,
             userDto = null
         )
         val passwordHash = userRow[Users.passwordHash]
@@ -35,7 +35,7 @@ class UserService {
             val token = JwtConfig.makeToken(userId)
             return LoginResponse(
                 success = true,
-                token = token,
+                accessToken = token,
                 userDto = UserDto(
                     id = userRow[Users.id].value.toLong(),
                     username = userRow[Users.username],
@@ -46,7 +46,7 @@ class UserService {
         } else
             return LoginResponse(
                 success = false,
-                token = null,
+                accessToken = null,
                 userDto = null,
                 message = "Invalid email or password"
             )

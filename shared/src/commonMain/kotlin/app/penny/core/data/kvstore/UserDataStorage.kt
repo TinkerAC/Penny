@@ -5,7 +5,7 @@ import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import kotlin.uuid.ExperimentalUuidApi
 
-class UserDataManager(
+class UserDataStorage(
     private val settings: Settings
 ) {
     fun setString(key: String, value: String) {

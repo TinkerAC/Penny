@@ -1,13 +1,10 @@
 package app.penny.core.domain.usecase
 
-import androidx.compose.ui.platform.LocalHapticFeedback
-import app.penny.core.data.kvstore.SessionManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.network.ApiClient
 import app.penny.servershared.dto.LoginResponse
 import app.penny.servershared.dto.UserDto
-import co.touchlab.kermit.Logger
 
 class LoginUseCase(
     private val apiClient: ApiClient,
@@ -26,7 +23,7 @@ class LoginUseCase(
 
         if (response.success) {
             val userDto: UserDto = response.userDto!!
-            authRepository.saveToken(response.token!!)
+            authRepository.saveToken(response.accessToken!!)
             if (userDto.username != null) {
                 userDataRepository.setUserName(
                     userDto.username

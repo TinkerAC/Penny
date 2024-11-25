@@ -79,7 +79,7 @@ fun Route.syncRoutes(
                         HttpStatusCode.Unauthorized,
                         RegisterResponse(
                             success = false,
-                            message = "No token provided"
+                            message = "No accessToken provided"
                         )
                     )
                 }

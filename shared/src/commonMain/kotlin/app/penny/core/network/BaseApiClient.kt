@@ -47,15 +47,15 @@ abstract class BaseApiClient(
     }
 
     /**
-     * 用于受保护 API 的通用请求方法，自动添加 token 到请求头。
+     * 用于受保护 API 的通用请求方法，自动添加 accessToken 到请求头。
      */
     suspend inline fun <reified T> makeAuthenticatedRequest(
         url: String,
         method: HttpMethod,
         noinline setup: HttpRequestBuilder.() -> Unit = {}
     ): T {
-        val token = authRepository.getToken() ?: throw IllegalStateException("No token found.")
-        Logger.d { "Making authenticated $method request to $url with token: ${token.take(10)}..." }
+        val token = authRepository.getAccessToken() ?: throw IllegalStateException("No accessToken found.")
+        Logger.d { "Making authenticated $method request to $url with accessToken: ${token.take(10)}..." }
         return makeRequest(url, method) {
             header("Authorization", token)
             setup() // 调用者自定义请求

@@ -3,8 +3,8 @@ package app.penny.di
 import app.cash.sqldelight.db.SqlDriver
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.database.TransactionLocalDataSource
-import app.penny.core.data.kvstore.SessionManager
-import app.penny.core.data.kvstore.UserDataManager
+import app.penny.core.data.kvstore.TokenStorage
+import app.penny.core.data.kvstore.UserDataStorage
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
@@ -62,8 +62,8 @@ fun commonModule() = module {
 
 
     //SettingManager
-    single { UserDataManager(get()) }
-    single { SessionManager(get()) }
+    single { UserDataStorage(get()) }
+    single { TokenStorage(get()) }
 
     // 提供 Repository
     single<TransactionRepository> { TransactionRepositoryImpl(get()) }

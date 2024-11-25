@@ -13,7 +13,6 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
-import java.util.logging.Logger
 
 fun Route.userRoutes(userService: UserService, jwtConfig: JwtConfig) {
     route("/user") {
@@ -44,7 +43,7 @@ fun Route.userRoutes(userService: UserService, jwtConfig: JwtConfig) {
                 call.respond(
                     LoginResponse(
                         userDto = response.userDto,
-                        token = response.token,
+                        accessToken = response.accessToken,
                         success = true,
 
                     )
@@ -53,7 +52,7 @@ fun Route.userRoutes(userService: UserService, jwtConfig: JwtConfig) {
                 call.respond(
                     LoginResponse(
                         userDto = null,
-                        token = null,
+                        accessToken = null,
                         success = false,
                         message = response.message
                     )
