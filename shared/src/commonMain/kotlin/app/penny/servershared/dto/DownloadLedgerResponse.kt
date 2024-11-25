@@ -1,12 +1,10 @@
-package app.penny.servershared.dto
-
+import app.penny.servershared.dto.BaseResponseDto
+import app.penny.servershared.dto.LedgerDto
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class DownloadLedgerResponse(
-    val message: String = "",
-    val total: Int,
-    val ledgers: List<LedgerDto>,
-    val lastSyncedAt: Long
-
-)
+    override val success: Boolean,
+    override val message: String,
+    val ledgers: List<LedgerDto>
+) : BaseResponseDto()

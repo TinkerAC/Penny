@@ -46,6 +46,7 @@ ktor = "3.0.0"
 lifecycleViewmodelCompose = "2.7.0"
 material3 = "1.2.0"
 sqlDelight = "2.0.2"
+sqliteXX4Dialect = "2.0.2"
 uuid = "0.8.4"
 voyagerVersion = "1.1.0-beta02"
 logback = "1.5.11"
@@ -143,6 +144,12 @@ multiplatformSettings-coroutines = { module = "com.russhwolf:multiplatform-setti
 #http client
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+
+
+
+
+
+
 
 # Compose 和 Kotlin 插件
 [plugins]

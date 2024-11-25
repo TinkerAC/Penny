@@ -13,6 +13,6 @@ class CheckIsEmailRegisteredUseCase(
 
         Logger.d("CheckIsEmailRegisteredUseCase: $email is registered: $result")
 
-        return result
+        return result.isRegistered
     }
 }

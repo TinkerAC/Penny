@@ -4,6 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CheckIsEmailRegisteredResponse(
-    val message: String = "",
-    val isEmailRegistered: Boolean
-)
+
+    override val success: Boolean,
+    override val message: String,
+    val isRegistered: Boolean,
+
+    ) : BaseResponseDto()

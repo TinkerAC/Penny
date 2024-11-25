@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UploadTransactionResponse(
-    val success: Boolean,
-    val changedLines: Int,
-    val lastSyncedAt: Long
-)
+    override val message: String,
+    override val success: Boolean,
+) : BaseResponseDto()

@@ -1,5 +1,6 @@
 package app.penny.core.data.repository
 
+import DownloadLedgerResponse
 import app.penny.core.domain.model.LedgerModel
 import app.penny.servershared.dto.UploadLedgerResponse
 import kotlinx.datetime.Instant

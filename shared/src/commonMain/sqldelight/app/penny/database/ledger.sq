@@ -28,3 +28,13 @@ DELETE FROM ledgerEntity WHERE id = ?;
 
 getLedgersUpdatedAfter:
 SELECT * FROM ledgerEntity WHERE updated_at > ?;
+
+upsertLedgerByUuid:
+INSERT INTO ledgerEntity (uuid, name, currency_code, cover_name, description, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, strftime('%s','now'), strftime('%s','now'))
+ON CONFLICT(uuid) DO UPDATE SET
+    name = excluded.name,
+    currency_code = excluded.currency_code,
+    cover_name = excluded.cover_name,
+    description = excluded.description,
+    updated_at = strftime('%s','now');

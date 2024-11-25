@@ -6,4 +6,4 @@ import kotlinx.serialization.Serializable
 data class UploadTransactionsRequest(
     val transactions: List<TransactionDto>,
     val lastSynced: Long
-)
+) : BaseRequestDto()

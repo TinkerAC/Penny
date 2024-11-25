@@ -60,6 +60,15 @@ class DashboardScreen : Screen {
         ) {
             Text("Clear User Data(Token, User Name, User Email)")
         }
+        Button(
+            onClick = {
+                dashboardViewModel.handleIntent(DashboardIntent.UploadUpdatedLedgers)
+            }
+        ) {
+            Text("Sync Data")
+        }
+
+
 
         Text("Last Synced At: ${dashboardViewModel.uiState.value.lastSyncedAt ?: "Never"}")
 

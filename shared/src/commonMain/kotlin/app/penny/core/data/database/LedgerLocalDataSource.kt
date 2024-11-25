@@ -45,4 +45,15 @@ class LedgerLocalDataSource(
     }
 
 
+    fun upsertLedgerByUuid(ledgerEntity: LedgerEntity) {
+        ledgerQueries.upsertLedgerByUuid(
+            uuid = ledgerEntity.uuid,
+            name = ledgerEntity.name,
+            currency_code = ledgerEntity.currency_code,
+            cover_name = ledgerEntity.cover_name,
+            description = ledgerEntity.description,
+        )
+    }
+
+
 }

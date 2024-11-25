@@ -7,4 +7,4 @@ data class LoginRequest(
     val email: String,
     val username: String? = null,
     val password: String
-)
+):BaseRequestDto()

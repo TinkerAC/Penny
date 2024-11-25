@@ -4,7 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RefreshTokenResponse(
-    val success: Boolean,
+    override val success: Boolean,
+    override val message: String,
     val accessToken: String? = null,
     val refreshToken: String? = null
-)
+) : BaseResponseDto()

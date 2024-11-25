@@ -169,6 +169,9 @@ sqldelight {
     databases {
         create("PennyDatabase") {
             packageName.set("app.penny.database")
+            dialect("app.cash.sqldelight:sqlite-3-38-dialect:2.0.2")
+
+            // 设置 SQLite 方言
         }
     }
 }

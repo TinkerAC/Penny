@@ -7,4 +7,4 @@ data class UploadLedgerRequest(
     val total: Int,
     val ledgers: List<LedgerDto>,
     val lastSyncedAt: Long
-)
+):BaseRequestDto()

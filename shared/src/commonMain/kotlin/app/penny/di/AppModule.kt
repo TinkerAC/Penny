@@ -108,7 +108,7 @@ fun commonModule() = module {
     }
 
 
-    single { ApiClient(get(), get(), get())}
+    single { ApiClient(get(), get(), get()) }
 
     // 提供 UseCase
     factory { InsertLedgerUseCase(get()) }
@@ -128,10 +128,12 @@ fun commonModule() = module {
     factory { NewTransactionViewModel(get(), get()) }
     factory {
         DashboardViewModel(
-            get(), get(), get(),
-            get()
+            insertRandomTransactionUseCase = get(),
+            uploadUpdatedLedgersUseCase = get(),
+            userDataRepository = get()
         )
     }
+
 
     factory { AnalyticViewModel(get(), get(), get()) }
     factory { TransactionViewModel(get()) }

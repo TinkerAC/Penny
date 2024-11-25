@@ -1,5 +1,6 @@
 package app.penny.core.data.repository.impl
 
+import DownloadLedgerResponse
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.model.toEntity
 import app.penny.core.data.model.toLedgerDto
@@ -7,8 +8,6 @@ import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.network.ApiClient
-import app.penny.database.LedgerEntity
-import app.penny.feature.transactions.GroupBy
 import app.penny.servershared.dto.UploadLedgerResponse
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
@@ -55,12 +54,9 @@ class LedgerRepositoryImpl(
     }
 
     override suspend fun downloadUnsyncedLedgers(lastSyncedAt: Instant): List<LedgerModel> {
-
         val downloadLedgerResponse = apiClient.sync.downloadLedgers(lastSyncedAt.epochSeconds)
-        return downloadLedgerResponse.ledgers.map {
-            it.toModel()
-        }
 
+        return downloadLedgerResponse.ledgers.map { it.toModel() }
     }
 
     override suspend fun uploadUnsyncedLedgers(
