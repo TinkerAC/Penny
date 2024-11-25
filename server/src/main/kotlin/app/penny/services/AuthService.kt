@@ -8,9 +8,9 @@ class AuthService(
     jwtConfig: JwtConfig
 ) {
     // Implement authentication services here if needed
-    fun verifyToken(token: String): Boolean {
+    fun verifyRefreshToken(token: String): Boolean {
         try {
-            JwtConfig.verifier.verify(token)
+            JwtConfig.refreshTokenVerifier.verify(token)
             return true
         } catch (e: JWTVerificationException) {
             return false
@@ -18,6 +18,10 @@ class AuthService(
     }
 
 
+
+    fun getAuthedUserId(token: String): Int {
+        return JwtConfig.getUserIdFromToken(token)
+    }
 
 
 }

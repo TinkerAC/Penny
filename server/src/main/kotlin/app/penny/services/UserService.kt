@@ -32,10 +32,12 @@ class UserService(private val jwtConfig: JwtConfig) {
         val passwordHash = userRow[Users.passwordHash]
         return if (BCrypt.checkpw(credentials.password, passwordHash)) {
             val userId = userRow[Users.id].value
-            val token = jwtConfig.makeAccessToken(userId)
+            val accessToken = jwtConfig.makeAccessToken(userId)
+            val token = jwtConfig.makeRefreshToken(userId)
             LoginResponse(
                 success = true,
                 accessToken = token,
+                refreshToken = token,
                 userDto = UserDto(
                     id = userId.toLong(),
                     username = userRow[Users.username],

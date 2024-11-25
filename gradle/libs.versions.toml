@@ -75,6 +75,7 @@ koin-android-ext = { module = "io.insert-koin:koin-android-ext", version.ref = "
 android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "jdbcDriver" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx_datetime_ext = { module = "com.raedghazal:kotlinx_datetime_ext", version.ref = "kotlinx_datetime_ext" }
+
 ktor-serialization-kotlinx-json-jvm = { module = "io.ktor:ktor-serialization-kotlinx-json-jvm", version.ref = "ktorSerializationKotlinxJsonJvm" }
 ktor-server-auth = { module = "io.ktor:ktor-server-auth" }
 ktor-server-auth-jwt = { module = " io.ktor:ktor-server-auth-jwt" }

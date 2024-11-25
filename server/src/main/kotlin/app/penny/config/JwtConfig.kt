@@ -6,21 +6,40 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
 
 object JwtConfig {
-    private const val SECRET = "secret" //private key
+    private const val ACCESS_TOKEN_SECRET = "secret1"
+
+    private const val REFRESH_TOKEN_SECRET = "secret2"
 
     private const val ISSUER = "ktor.io"
 
     private const val ACCESS_TOKEN_VALIDITY_IN_MS = 60 * 30 * 1000 // 30 分钟
     private const val REFRESH_TOKEN_VALIDITY_IN_MS = 36_000_00 * 24 * 7 // 7 天
-    private val algorithm = Algorithm.HMAC512(SECRET)
+    private val accessTokenAlgorithm = Algorithm.HMAC512(ACCESS_TOKEN_SECRET)
+    private val refreshTokenAlgorithm = Algorithm.HMAC512(REFRESH_TOKEN_SECRET)
 
-    val verifier: JWTVerifier = JWT.require(algorithm)
+    val accessTokenVerifier: JWTVerifier = JWT.require(accessTokenAlgorithm)
         .withIssuer(ISSUER)
         .build()
 
-    fun verifyToken(token: String): Boolean {
+
+    val refreshTokenVerifier: JWTVerifier = JWT.require(refreshTokenAlgorithm)
+        .withIssuer(ISSUER)
+        .build()
+
+
+    fun verifyAccessToken(token: String): Boolean {
         try {
-            verifier.verify(token)
+            accessTokenVerifier.verify(token)
+            return true
+        } catch (e: JWTVerificationException) {
+            return false
+        }
+    }
+
+
+    fun verifyRefreshToken(token: String): Boolean {
+        try {
+            refreshTokenVerifier.verify(token)
             return true
         } catch (e: JWTVerificationException) {
             return false
@@ -32,17 +51,17 @@ object JwtConfig {
         .withIssuer(ISSUER)
         .withClaim("userId", userId)
         .withExpiresAt(getExpiration(ACCESS_TOKEN_VALIDITY_IN_MS))
-        .sign(algorithm)
+        .sign(accessTokenAlgorithm)
 
     fun makeRefreshToken(userId: Int): String = JWT.create()
         .withIssuer(ISSUER)
         .withClaim("userId", userId)
         .withExpiresAt(getExpiration(REFRESH_TOKEN_VALIDITY_IN_MS))
-        .sign(algorithm)
+        .sign(accessTokenAlgorithm)
 
 
     fun getUserIdFromToken(token: String): Int {
-        val jwt = verifier.verify(token)
+        val jwt = accessTokenVerifier.verify(token)
         return jwt.getClaim("userId").asInt() ?: -1
     }
 
