@@ -68,4 +68,9 @@ class LedgerRepositoryImpl(
 
         return uploadUpdatedLedgersResponse
     }
+
+
+    override suspend fun upsertLedger(ledgerModel: LedgerModel) {
+        ledgerLocalDataSource.upsertLedgerByUuid(ledgerModel.toEntity())
+    }
 }

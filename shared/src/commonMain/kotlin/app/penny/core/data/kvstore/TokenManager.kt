@@ -70,7 +70,7 @@ class TokenManager(
             Logger.d { "Access Token refreshed successfully" }
             return accessToken
         }
-        throw IllegalStateException("Access Token not found, and refresh token failed")
+        throw IllegalStateException("Access Token not found, and refresh token failed, user must login again")//TODO: guide user to login again
     }
 
     // 调用 ApiClient 刷新 Token
@@ -79,6 +79,7 @@ class TokenManager(
             ?: throw IllegalStateException("Refresh Token not found")
 
         val response = authApiClient.refreshAccessToken(refreshToken)
+
         if (response.success) {
             val newAccessToken = response.accessToken!!
             val newRefreshToken = response.refreshToken!!

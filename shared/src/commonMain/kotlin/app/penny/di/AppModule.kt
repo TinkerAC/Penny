@@ -16,6 +16,7 @@ import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
 import app.penny.core.domain.usecase.CheckIsEmailRegisteredUseCase
 import app.penny.core.domain.usecase.DeleteLedgerUseCase
+import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
 import app.penny.core.domain.usecase.GetAllTransactionsUseCase
 import app.penny.core.domain.usecase.GetTransactionsByLedgerUseCase
@@ -122,6 +123,7 @@ fun commonModule() = module {
     factory { LoginUseCase(get()) }
     factory { UploadUpdatedLedgersUseCase(get(), get()) }
     factory { RegisterUseCase(get()) }
+    factory { DownloadUnsyncedLedgerUseCase(get(),get())}
 
 
     // 注入 ViewModel
@@ -130,7 +132,8 @@ fun commonModule() = module {
         DashboardViewModel(
             insertRandomTransactionUseCase = get(),
             uploadUpdatedLedgersUseCase = get(),
-            userDataRepository = get()
+            userDataRepository = get(),
+            downloadUnsyncedLedgerUseCase = get()
         )
     }
 

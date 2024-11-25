@@ -4,6 +4,7 @@ package app.penny.feature.dashboard
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import app.penny.feature.myLedger.MyLedgerScreen
 import app.penny.feature.newTransaction.NewTransactionScreen
 import cafe.adriel.voyager.core.screen.Screen
@@ -17,7 +18,7 @@ class DashboardScreen : Screen {
     override fun Content() {
         val dashboardViewModel = koinScreenModel<DashboardViewModel>()
         val navigator = LocalNavigator.currentOrThrow
-
+        val uiState = dashboardViewModel.uiState.collectAsState()
         val rootNavigator = navigator.parent
 
         Button(
@@ -39,7 +40,7 @@ class DashboardScreen : Screen {
 
         Button(
             onClick = {
-                dashboardViewModel.handleIntent(DashboardIntent.InsertRandomTransaction)
+                dashboardViewModel.insertRandomTransaction()
             }
         ) {
             Text("Insert Random Transaction")
@@ -47,7 +48,7 @@ class DashboardScreen : Screen {
 
         Button(
             onClick = {
-                dashboardViewModel.handleIntent(DashboardIntent.UploadUpdatedLedgers)
+                dashboardViewModel.uploadUpdatedLedgers()
             }
         ) {
             Text("Upload Ledgers")
@@ -55,22 +56,25 @@ class DashboardScreen : Screen {
 
         Button(
             onClick = {
-                dashboardViewModel.handleIntent(DashboardIntent.ClearUserData)
+                dashboardViewModel.clearUserData()
             }
         ) {
             Text("Clear User Data(Token, User Name, User Email)")
         }
         Button(
             onClick = {
-                dashboardViewModel.handleIntent(DashboardIntent.UploadUpdatedLedgers)
+                dashboardViewModel.downloadUnsyncedLedgers()
             }
         ) {
-            Text("Sync Data")
+            Text("Download Unsynced Ledgers")
         }
 
 
 
         Text("Last Synced At: ${dashboardViewModel.uiState.value.lastSyncedAt ?: "Never"}")
+
+
+        Text(uiState.value.message ?: "")
 
 
     }

@@ -4,7 +4,7 @@ sealed class DashboardIntent {
     data object InsertRandomTransaction : DashboardIntent()
     data object UploadUpdatedLedgers : DashboardIntent()
     data object ClearUserData : DashboardIntent()
-    data object DownloadLedgers : DashboardIntent()
+    data object DownloadUnsyncedLedgers : DashboardIntent()
 
 
 }
