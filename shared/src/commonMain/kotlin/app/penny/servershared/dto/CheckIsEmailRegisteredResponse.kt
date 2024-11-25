@@ -7,6 +7,6 @@ data class CheckIsEmailRegisteredResponse(
 
     override val success: Boolean,
     override val message: String,
-    val isRegistered: Boolean,
+    val isEmailRegistered: Boolean? = null
 
     ) : BaseResponseDto()

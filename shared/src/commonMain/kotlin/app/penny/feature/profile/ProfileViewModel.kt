@@ -2,7 +2,6 @@ package app.penny.feature.profile
 
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.data.repository.impl.AuthRepositoryImpl
 import app.penny.core.domain.usecase.CheckIsEmailRegisteredUseCase
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
@@ -52,19 +51,24 @@ class ProfileViewModel(
         screenModelScope.launch {
             val isEmailRegistered = checkIsEmailRegisteredUseCase(email)
 
-            if (!isEmailRegistered) {
-                // register and login
-                _uiState.value = _uiState.value.copy(
-                    errorMessage = "Account will be created for you."
-                )
+            var errorMessage: String? = null
 
-            } else {
-                // login
-                _uiState.value = _uiState.value.copy(
-                    errorMessage = "Welcome back!"
-                )
+            when (isEmailRegistered) {
+                null -> {
+                }
+
+                true -> {
+                    errorMessage = "Welcome back $email"
+                }
+
+                false -> {
+                    errorMessage = "Welcome $email"
+                }
             }
 
+            _uiState.value = _uiState.value.copy(
+                errorMessage = errorMessage
+            )
 
         }
     }
@@ -74,6 +78,13 @@ class ProfileViewModel(
             try {
 
                 val isEmailRegistered = checkIsEmailRegisteredUseCase(email)
+
+                if (isEmailRegistered == null) {
+                    _uiState.value = _uiState.value.copy(
+                        errorMessage = null
+                    )
+                    return@launch
+                }
 
                 if (!isEmailRegistered) {
                     // register and login

@@ -59,8 +59,8 @@ fun Route.userRoutes(userService: UserService) {
                 call.respond(
                     HttpStatusCode.BadRequest,
                     CheckIsEmailRegisteredResponse(
-                        isEmailRegistered = false,
-                        message = "Email parameter is missing"
+                        success = false,
+                        message = "Email is required"
                     )
                 )
                 return@get
@@ -69,6 +69,8 @@ fun Route.userRoutes(userService: UserService) {
             val isEmailRegistered = userService.checkIsEmailRegistered(email)
             call.respond(
                 CheckIsEmailRegisteredResponse(
+                    success = true,
+                    message = "Email checked successfully",
                     isEmailRegistered = isEmailRegistered
                 )
             )

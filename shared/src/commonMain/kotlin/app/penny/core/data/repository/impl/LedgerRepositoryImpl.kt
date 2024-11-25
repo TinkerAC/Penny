@@ -1,6 +1,5 @@
 package app.penny.core.data.repository.impl
 
-import DownloadLedgerResponse
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.model.toEntity
 import app.penny.core.data.model.toLedgerDto

@@ -1,6 +1,5 @@
 package app.penny.core.network.clients
 
-import DownloadLedgerResponse
 import app.penny.config.Config.API_URL
 import app.penny.core.data.kvstore.TokenProvider
 import app.penny.core.network.BaseApiClient

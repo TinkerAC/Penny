@@ -6,13 +6,13 @@ import co.touchlab.kermit.Logger
 class CheckIsEmailRegisteredUseCase(
     private val apiClient: ApiClient
 ) {
-    suspend operator fun invoke(email: String): Boolean {
+    suspend operator fun invoke(email: String): Boolean? {
 
 
         val result = apiClient.user.checkIsEmailRegistered(email)
 
         Logger.d("CheckIsEmailRegisteredUseCase: $email is registered: $result")
 
-        return result.isRegistered
+        return result.isEmailRegistered
     }
 }

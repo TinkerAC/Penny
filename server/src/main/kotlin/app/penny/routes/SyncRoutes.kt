@@ -43,6 +43,8 @@ fun Route.syncRoutes(
 
                     call.respond(
                         DownloadLedgerResponse(
+                            success = true,
+                            message = "Ledgers downloaded successfully",
                             total = ledgers.size,
                             ledgers = ledgers,
                             lastSyncedAt = Clock.System.now().epochSeconds
@@ -83,6 +85,7 @@ fun Route.syncRoutes(
                     call.respond(
                         UploadLedgerResponse(
                             success = true,
+                            message = "Ledgers uploaded successfully",
                             changedLines = ledgerDTOs.size,
                             lastSyncedAt = Clock.System.now().epochSeconds
                         )

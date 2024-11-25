@@ -26,14 +26,18 @@ fun Route.authRoutes(
             val refreshToken = jwtConfig.makeRefreshToken(userId)
             call.respond(
                 HttpStatusCode.OK, RefreshTokenResponse(
-                    success = true, accessToken = accessToken, refreshToken = refreshToken
+                    success = true,
+                    message = "Token refreshed",
+                    accessToken = accessToken,
+                    refreshToken = refreshToken
                 )
             )
         } else {
             call.respond(
                 HttpStatusCode.Unauthorized,
                 RefreshTokenResponse(
-                    success = false
+                    success = false,
+                    message = "Invalid token"
                 )
             )
         }
