@@ -9,7 +9,7 @@ class RegisterUseCase(
 
     suspend operator fun invoke(email: String, password: String): RegisterResponse {
         //register user,return the message from the server
-        return apiClient.register(email, password)
+        return apiClient.user.register(email, password)
 
 
     }

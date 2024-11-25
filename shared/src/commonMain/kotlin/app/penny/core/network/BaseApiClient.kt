@@ -1,6 +1,7 @@
+// file: shared/src/commonMain/kotlin/app/penny/core/network/BaseApiClient.kt
 package app.penny.core.network
 
-import app.penny.core.data.repository.AuthRepository
+import app.penny.core.data.kvstore.TokenProvider
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -12,9 +13,7 @@ import io.ktor.http.HttpMethod
 
 abstract class BaseApiClient(
     val httpClient: HttpClient,
-    val authRepository: AuthRepository
 ) {
-
     suspend inline fun <reified T> makeRequest(
         url: String,
         method: HttpMethod,
@@ -22,23 +21,16 @@ abstract class BaseApiClient(
     ): T {
         Logger.d { "Making $method request to $url" }
         return try {
-            // 发送请求并获取响应
             val response: HttpResponse = httpClient.request(url) {
                 this.method = method
                 setup()
             }
-
-            // 读取响应体并缓存
             val responseBody: T = response.body()
-
-            // 记录状态码和响应体
             Logger.d {
                 "Request to $url succeeded with:" +
                         " statusCode: ${response.status.value}," +
                         " body: $responseBody"
             }
-
-            // 返回响应体
             responseBody
         } catch (e: Exception) {
             Logger.e(e) { "Request to $url failed." }
@@ -46,23 +38,37 @@ abstract class BaseApiClient(
         }
     }
 
-    /**
-     * 用于受保护 API 的通用请求方法，自动添加 accessToken 到请求头。
-     */
+}
+
+
+abstract class BaseAuthedApiClient(
+    httpClient: HttpClient,
+    val tokenProvider: TokenProvider
+) : BaseApiClient(httpClient) {
+
     suspend inline fun <reified T> makeAuthenticatedRequest(
         url: String,
         method: HttpMethod,
         noinline setup: HttpRequestBuilder.() -> Unit = {}
     ): T {
-        val token = authRepository.getAccessToken() ?: throw IllegalStateException("No accessToken found.")
-        Logger.d { "Making authenticated $method request to $url with accessToken: ${token.take(10)}..." }
-        return makeRequest(url, method) {
-            header("Authorization", token)
-            setup() // 调用者自定义请求
+        Logger.d { "Making authenticated $method request to $url" }
+        return try {
+            val response: HttpResponse = httpClient.request(url) {
+                this.method = method
+                setup()
+                header("Authorization", "${tokenProvider.getAccessToken()}")
+            }
+            val responseBody: T = response.body()
+            Logger.d {
+                "Authenticated request to $url succeeded with:" +
+                        " statusCode: ${response.status.value}," +
+                        " body: $responseBody"
+            }
+            responseBody
+        } catch (e: Exception) {
+            Logger.e(e) { "Authenticated request to $url failed." }
+            throw e
         }
     }
-
-
-
 
 }

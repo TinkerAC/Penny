@@ -3,8 +3,9 @@ package app.penny.di
 import app.cash.sqldelight.db.SqlDriver
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.database.TransactionLocalDataSource
-import app.penny.core.data.kvstore.TokenStorage
-import app.penny.core.data.kvstore.UserDataStorage
+import app.penny.core.data.kvstore.TokenManager
+import app.penny.core.data.kvstore.TokenProvider
+import app.penny.core.data.kvstore.UserDataManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
@@ -25,6 +26,9 @@ import app.penny.core.domain.usecase.RegisterUseCase
 import app.penny.core.domain.usecase.SearchTransactionsUseCase
 import app.penny.core.domain.usecase.UploadUpdatedLedgersUseCase
 import app.penny.core.network.ApiClient
+import app.penny.core.network.clients.AuthApiClient
+import app.penny.core.network.clients.SyncApiClient
+import app.penny.core.network.clients.UserApiClient
 import app.penny.database.PennyDatabase
 import app.penny.feature.analytics.AnalyticViewModel
 import app.penny.feature.dashboard.DashboardViewModel
@@ -62,17 +66,30 @@ fun commonModule() = module {
 
 
     //SettingManager
-    single { UserDataStorage(get()) }
-    single { TokenStorage(get()) }
+    single { UserDataManager(get()) }
+
+    //TokenProvider(Impl by TokenManager)
+
+
+    //module-apiClient
+    single { AuthApiClient(get()) }
+    single { UserApiClient(get(), get()) }
+    single { SyncApiClient(get(), get()) }
+
+
+
+
+    single<TokenProvider> { TokenManager(get(), get()) }
+    single { TokenManager(get(), get()) }
 
     // 提供 Repository
     single<TransactionRepository> { TransactionRepositoryImpl(get()) }
 
-    single<LedgerRepository> { LedgerRepositoryImpl(get()) }
+    single<LedgerRepository> { LedgerRepositoryImpl(get(), get()) }
 
     single<UserDataRepository> { UserDataRepositoryImpl(get()) }
 
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
 
 
     //注入ApiClient
@@ -91,7 +108,7 @@ fun commonModule() = module {
     }
 
 
-    single { ApiClient(get(), get()) }
+    single { ApiClient(get(), get(), get())}
 
     // 提供 UseCase
     factory { InsertLedgerUseCase(get()) }
@@ -102,9 +119,8 @@ fun commonModule() = module {
     factory { GetAllTransactionsUseCase(get()) }
     factory { SearchTransactionsUseCase(get()) }
     factory { CheckIsEmailRegisteredUseCase(get()) }
-    factory { LoginUseCase(get(), get(), get()) }
-    factory { UploadUpdatedLedgersUseCase(get(), get(), get()) }
-    factory { LoginUseCase(get(), get(), get()) }
+    factory { LoginUseCase(get()) }
+    factory { UploadUpdatedLedgersUseCase(get(), get()) }
     factory { RegisterUseCase(get()) }
 
 

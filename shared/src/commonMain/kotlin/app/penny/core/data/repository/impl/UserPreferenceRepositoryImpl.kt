@@ -1,10 +1,10 @@
 package app.penny.core.data.repository.impl
 
 import app.penny.core.data.repository.UserPreferenceRepository
-import app.penny.core.data.kvstore.UserDataStorage
+import app.penny.core.data.kvstore.UserDataManager
 
 class UserPreferenceRepositoryImpl(
-    private val settingManager: UserDataStorage
+    private val settingManager: UserDataManager
 ) : UserPreferenceRepository {
 //TODO: Implement UserPreferenceRepository
 }

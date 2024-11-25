@@ -40,6 +40,7 @@ kotlin {
             dependencies {
                 // 公共依赖项
 //                implementation(libs.composable.table)
+                implementation(libs.ktor.utils)
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
                 implementation(libs.koin.core)

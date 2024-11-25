@@ -1,73 +1,61 @@
+// file: shared/src/commonMain/kotlin/app/penny/core/data/repository/impl/AuthRepositoryImpl.kt
 package app.penny.core.data.repository.impl
 
-import app.penny.core.data.kvstore.TokenStorage
+import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.network.ApiClient
-import kotlinx.datetime.Instant
+import app.penny.core.network.clients.AuthApiClient
+import app.penny.core.network.clients.UserApiClient
+import app.penny.servershared.dto.LoginResponse
+import co.touchlab.kermit.Logger
 
 class AuthRepositoryImpl(
-    private val tokenStorage: TokenStorage,
-    private val apiClient: ApiClient
+    private val userApiClient: UserApiClient,
+    private val tokenManager: TokenManager
 ) : AuthRepository {
-
-    override suspend fun login(username: String, password: String): Boolean {
-        val response = apiClient.login(username, password)
+    override suspend fun login(username: String, password: String): LoginResponse {
+        val response = userApiClient.login(username, password)
         if (response.success) {
             val accessToken = response.accessToken!!
             val refreshToken = response.refreshToken!!
-
-            tokenStorage.saveAccessToken(accessToken) // 存储 Access Token（内存）
-            tokenStorage.saveRefreshToken(refreshToken) // 存储 Refresh Token（持久化）
-            return true
+            tokenManager.saveAccessToken(accessToken)
+            tokenManager.saveRefreshToken(refreshToken)
+            Logger.d { "User logged in successfully" }
+        } else {
+            Logger.e { "Login failed: ${response.message}" }
         }
-        return false
+        return response
     }
 
-    override suspend fun refreshToken(): Boolean {
-        val refreshToken = tokenStorage.getRefreshToken()
-            ?: throw IllegalStateException("Refresh Token not found")
 
-        val response = apiClient.refreshAccessToken(refreshToken)
-        if (response.success) {
-            val newAccessToken = response.accessToken!!
-            val newRefreshToken = response.refreshToken!!
-            tokenStorage.saveAccessToken(newAccessToken) // 更新 Access Token
-            tokenStorage.saveRefreshToken(newRefreshToken) // 更新 Refresh Token
-
-            return true
-        }
-        return false
-    }
-
-    override fun getAccessToken(): String? {
-        return tokenStorage.getAccessToken()
+    // 始终返回有效的 Access Token，否则抛出异常
+    override suspend fun getAccessToken(): String? {
+        return tokenManager.getAccessToken()
     }
 
     override suspend fun logout() {
-        tokenStorage.clearAccessToken()
-        tokenStorage.clearRefreshToken()
+        tokenManager.clearAllTokens()
+        Logger.d { "User logged out successfully" }
     }
 
     override fun isLoggedIn(): Boolean {
-        return tokenStorage.getAccessToken() != null
+        val accessToken = tokenManager.getAccessTokenFromMemory()
+        val isValid = accessToken != null && !tokenManager.isTokenExpired(accessToken)
+        Logger.d { "Is logged in: $isValid" }
+        return isValid
     }
 
-    private fun getExpirationTime(token: String): Instant {
-        // get the expiration time of the token
 
+    override fun clearToken() {
+        tokenManager.clearAllTokens()
     }
 
 
-    private fun checkIsTokenExpired(): Boolean {
-        if (tokenStorage.getAccessToken() == null) {
-            return true
-        } else {
-            //get the expiration time of the token
+    override fun saveAccessToken(accessToken: String) {
+        tokenManager.saveAccessToken(accessToken)
+    }
 
-            // check if the token is expired
-
-
-
-        }
+    override fun saveRefreshToken(refreshToken: String) {
+        tokenManager.saveRefreshToken(refreshToken)
     }
 }

@@ -9,6 +9,7 @@ import app.penny.core.domain.model.LedgerModel
 import app.penny.core.network.ApiClient
 import app.penny.database.LedgerEntity
 import app.penny.feature.transactions.GroupBy
+import app.penny.servershared.dto.UploadLedgerResponse
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -55,7 +56,7 @@ class LedgerRepositoryImpl(
 
     override suspend fun downloadUnsyncedLedgers(lastSyncedAt: Instant): List<LedgerModel> {
 
-        val downloadLedgerResponse = apiClient.downloadLedgers(lastSyncedAt.epochSeconds)
+        val downloadLedgerResponse = apiClient.sync.downloadLedgers(lastSyncedAt.epochSeconds)
         return downloadLedgerResponse.ledgers.map {
             it.toModel()
         }
@@ -65,11 +66,11 @@ class LedgerRepositoryImpl(
     override suspend fun uploadUnsyncedLedgers(
         ledgers: List<LedgerModel>,
         lastSyncedAt: Instant
-    ): Boolean {
+    ): UploadLedgerResponse {
         val ledgerDtos = ledgers.map { it.toLedgerDto() }
         val uploadUpdatedLedgersResponse =
-            apiClient.uploadLedgers(ledgerDtos, lastSyncedAt.epochSeconds)
+            apiClient.sync.uploadLedgers(ledgerDtos, lastSyncedAt.epochSeconds)
 
-        return uploadUpdatedLedgersResponse.success
+        return uploadUpdatedLedgersResponse
     }
 }
