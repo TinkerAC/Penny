@@ -13,7 +13,7 @@ interface LedgerRepository {
     suspend fun updateLedger(ledgerModel: LedgerModel)
     suspend fun deleteLedger(ledgerId: Long)
     suspend fun findLedgersUpdatedAfter(lastSyncedAt: Instant): List<LedgerModel>
-
+    suspend fun upsertLedger(ledgerModel: LedgerModel)
 
     //remoteDataSources
     suspend fun downloadUnsyncedLedgers(lastSyncedAt: Instant): List<LedgerModel>

@@ -33,7 +33,7 @@ abstract class BaseApiClient(
             }
             responseBody
         } catch (e: Exception) {
-            Logger.e(e) { "Request to $url failed." }
+            Logger.e(e) { "Request to $url failed with exception: $e" }
             throw e
         }
     }
@@ -66,7 +66,7 @@ abstract class BaseAuthedApiClient(
             }
             responseBody
         } catch (e: Exception) {
-            Logger.e(e) { "Authenticated request to $url failed." }
+            Logger.e(e) { "Authenticated request to $url failed with exception: $e" }
             throw e
         }
     }

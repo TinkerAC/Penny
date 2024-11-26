@@ -8,5 +8,6 @@ data class DashboardUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val addTransactionModalVisible: Boolean = false,
-    val lastSyncedAt: Instant? = null
+    val lastSyncedAt: Instant? = null,
+    val message: String? = null
 )

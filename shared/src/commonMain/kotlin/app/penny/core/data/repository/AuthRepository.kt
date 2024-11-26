@@ -4,6 +4,7 @@ import app.penny.servershared.dto.LoginResponse
 
 interface AuthRepository {
     suspend fun login(username: String, password: String): LoginResponse
+
     suspend fun getAccessToken(): String?
     suspend fun logout()
     fun isLoggedIn(): Boolean

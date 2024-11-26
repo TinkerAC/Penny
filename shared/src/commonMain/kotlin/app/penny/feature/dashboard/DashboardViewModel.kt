@@ -1,8 +1,7 @@
 package app.penny.feature.dashboard
 
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.domain.usecase.DownloadLedgerUseCase
-import app.penny.core.domain.usecase.InsertLedgerUseCase
+import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.UploadUpdatedLedgersUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -18,6 +17,7 @@ class DashboardViewModel(
     private val insertRandomTransactionUseCase: InsertRandomTransactionUseCase,
     private val uploadUpdatedLedgersUseCase: UploadUpdatedLedgersUseCase,
     private val userDataRepository: UserDataRepository,
+    private val downloadUnsyncedLedgerUseCase: DownloadUnsyncedLedgerUseCase
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
@@ -51,19 +51,19 @@ class DashboardViewModel(
                 clearUserData()
 
 
-            is DashboardIntent.DownloadLedgers ->
-                downloadLedgers()
+            is DashboardIntent.DownloadUnsyncedLedgers ->
+                downloadUnsyncedLedgers()
         }
     }
 
-    private fun downloadLedgers() {
+    fun downloadUnsyncedLedgers() {
         screenModelScope.launch {
-
+            downloadUnsyncedLedgerUseCase()
         }
         Logger.d("downloaded ledgers")
     }
 
-    private fun insertRandomTransaction(count: Int = 100) {
+    fun insertRandomTransaction(count: Int = 100) {
         screenModelScope.launch {
             insertRandomTransactionUseCase(100)
         }
@@ -71,21 +71,21 @@ class DashboardViewModel(
 
     }
 
-    private fun uploadUpdatedLedgers() {
+    fun uploadUpdatedLedgers() {
         screenModelScope.launch {
             uploadUpdatedLedgersUseCase()
         }
         Logger.d("uploaded updated ledgers")
     }
 
-    private fun fetchUserData() {
+    fun fetchUserData() {
         screenModelScope.launch {
             val lastSyncedAt = userDataRepository.getLastSyncedAt()
             _uiState.value = _uiState.value.copy(lastSyncedAt = lastSyncedAt)
         }
     }
 
-    private fun clearUserData() {
+    fun clearUserData() {
         screenModelScope.launch {
             userDataRepository.clearUserData()
         }
