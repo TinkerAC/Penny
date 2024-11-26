@@ -20,7 +20,7 @@ class AuthService(
 
 
     fun getAuthedUserId(token: String): Int {
-        return JwtConfig.getUserIdFromToken(token)
+        return JwtConfig.getUserIdFromRefreshToken(token)
     }
 
 

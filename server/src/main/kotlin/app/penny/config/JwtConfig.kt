@@ -60,8 +60,8 @@ object JwtConfig {
         .sign(refreshTokenAlgorithm)
 
 
-    fun getUserIdFromToken(token: String): Int {
-        val jwt = accessTokenVerifier.verify(token)
+    fun getUserIdFromRefreshToken(token: String): Int {
+        val jwt = refreshTokenVerifier.verify(token)
         return jwt.getClaim("userId").asInt() ?: -1
     }
 

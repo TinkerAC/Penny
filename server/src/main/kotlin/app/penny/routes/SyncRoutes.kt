@@ -15,6 +15,7 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
+import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import kotlinx.datetime.Clock
 
@@ -24,13 +25,14 @@ fun Route.syncRoutes(
     route("/sync") {
         authenticate("access-jwt") {
             route("/ledger") {
-                post("/download") {
+                get("/download") {
                     val principal = call.principal<JWTPrincipal>()
-                    val userId = principal!!.getClaim("userId", String::class)
+
+                    val userId = principal?.getClaim("userId", String::class)
 
                     if (userId == null) {
                         call.respond(HttpStatusCode.Unauthorized)
-                        return@post
+                        return@get
                     }
 
                     val downloadRequest = call.receive<DownloadLedgerRequest>()

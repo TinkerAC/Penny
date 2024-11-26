@@ -23,9 +23,9 @@ fun Route.authRoutes(
 
 
 
-            val userId = authService.getAuthedUserId(token)
 
             if (isRefreshTokenValid) {
+                val userId = authService.getAuthedUserId(token)
                 val accessToken = jwtConfig.makeAccessToken(userId)
                 val refreshToken = jwtConfig.makeRefreshToken(userId)
                 call.respond(
