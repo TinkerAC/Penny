@@ -31,6 +31,7 @@ class SyncApiClient(
             url = "$API_URL/sync/ledger/download",
             method = HttpMethod.Get
         ) {
+            contentType(ContentType.Application.Json)
             parameter("lastSyncedAt", lastSyncedAt)
         }
     }

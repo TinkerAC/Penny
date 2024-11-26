@@ -13,6 +13,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.UserIdPrincipal
+import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -47,7 +48,7 @@ fun Application.module() {
             validate {
                 val userId = it.payload.getClaim("userId").asInt()
                 if (userId != null) {
-                    UserIdPrincipal(userId.toString())
+                    JWTPrincipal(it.payload)
                 } else null
             }
         }

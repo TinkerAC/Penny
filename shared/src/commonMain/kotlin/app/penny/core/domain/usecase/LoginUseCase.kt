@@ -4,6 +4,7 @@ import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.network.ApiClient
 import app.penny.servershared.dto.LoginResponse
+import co.touchlab.kermit.Logger
 
 class LoginUseCase(
     private val authRepository: AuthRepository,
@@ -16,7 +17,9 @@ class LoginUseCase(
         if (response.success) {
             val accessToken = response.accessToken!!
             val refreshToken = response.refreshToken!!
-
+            Logger.d(
+                response.toString()
+            )
             authRepository.saveAccessToken(accessToken)
             authRepository.saveRefreshToken(refreshToken)
         }

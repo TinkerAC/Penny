@@ -2,7 +2,6 @@ package app.penny
 
 import android.app.Application
 import android.os.Build
-import app.penny.core.data.kvstore.TokenManager
 import app.penny.di.commonModule
 import app.penny.di.platformModule
 import co.touchlab.kermit.Logger
@@ -18,7 +17,7 @@ class AndroidPlatform : Platform {
 actual fun getPlatform(): Platform = AndroidPlatform()
 
 actual class ApplicationInitializer actual constructor(
-    private val application: Any
+    val application: Any?
 ) : KoinComponent {
     private val logger = Logger.withTag("ApplicationInitializer")
 

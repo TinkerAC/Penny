@@ -17,7 +17,7 @@ interface Platform {
 expect fun getPlatform(): Platform
 
 expect class ApplicationInitializer(
-    application: Any
+    application: Any? =null
 ) : KoinComponent {
     // init logic with expect-actual
     fun initKoin(appDeclaration: KoinAppDeclaration = {}): ApplicationInitializer

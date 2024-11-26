@@ -56,7 +56,7 @@ abstract class BaseAuthedApiClient(
             val response: HttpResponse = httpClient.request(url) {
                 this.method = method
                 setup()
-                header("Authorization", "${tokenProvider.getAccessToken()}")
+                header("Authorization", "Bearer ${tokenProvider.getAccessToken()}")
             }
             val responseBody: T = response.body()
             Logger.d {
