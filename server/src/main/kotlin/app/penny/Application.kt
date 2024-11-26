@@ -2,6 +2,7 @@ package app.penny
 
 import app.penny.config.DatabaseFactory
 import app.penny.config.JwtConfig
+import app.penny.routes.authRoutes
 import app.penny.routes.syncRoutes
 import app.penny.routes.userRoutes
 import app.penny.services.AuthService
@@ -63,6 +64,9 @@ fun Application.module() {
         userRoutes(userService)
         syncRoutes(
             ledgerService
+        )
+        authRoutes(
+            authService, JwtConfig
         )
 
 

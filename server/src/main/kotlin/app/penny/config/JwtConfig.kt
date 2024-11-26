@@ -57,7 +57,7 @@ object JwtConfig {
         .withIssuer(ISSUER)
         .withClaim("userId", userId)
         .withExpiresAt(getExpiration(REFRESH_TOKEN_VALIDITY_IN_MS))
-        .sign(accessTokenAlgorithm)
+        .sign(refreshTokenAlgorithm)
 
 
     fun getUserIdFromToken(token: String): Int {
