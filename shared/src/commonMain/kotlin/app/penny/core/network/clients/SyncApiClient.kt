@@ -61,7 +61,7 @@ class SyncApiClient(
 
     suspend fun getRemoteUnsyncedDataCount(lastSyncedAt: Long): RemoteUnsyncedDataCount {
         return makeAuthenticatedRequest(
-            url = "$API_URL/sync/unsynced/count",
+            url = "$API_URL/sync/count",
             method = HttpMethod.Get
         ) {
             parameter("lastSyncedAt", lastSyncedAt)

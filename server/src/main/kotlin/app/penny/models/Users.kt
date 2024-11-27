@@ -12,14 +12,3 @@ object Users : IntIdTable("users") {
     val createdAt = long("created_at")
     val updatedAt = long("updated_at")
 }
-
-class User(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<User>(Users)
-
-    var email by Users.email
-
-    var username by Users.username
-    var passwordHash by Users.passwordHash
-    var createdAt by Users.createdAt
-    var updatedAt by Users.updatedAt
-}

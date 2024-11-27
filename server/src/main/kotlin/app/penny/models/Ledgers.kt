@@ -17,13 +17,3 @@ object Ledgers : IntIdTable("ledgers") {
 }
 
 
-class Ledger(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<Ledger>(Ledgers)
-
-    var userId by Ledgers.userId
-    var uuid by Ledgers.uuid
-    var name by Ledgers.name
-    var currencyCode by Ledgers.currencyCode
-    var createdAt by Ledgers.createdAt
-    var updatedAt by Ledgers.updatedAt
-}

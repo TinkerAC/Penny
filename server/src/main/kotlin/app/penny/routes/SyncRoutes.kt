@@ -3,7 +3,9 @@ package app.penny.routes
 
 import app.penny.servershared.dto.DownloadLedgerRequest
 import app.penny.servershared.dto.DownloadLedgerResponse
+import app.penny.servershared.dto.DownloadTransactionResponse
 import app.penny.servershared.dto.LedgerDto
+import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UploadLedgerRequest
 import app.penny.servershared.dto.UploadLedgerResponse
 import app.penny.services.LedgerService
@@ -21,6 +23,7 @@ import kotlinx.datetime.Clock
 
 fun Route.syncRoutes(
     ledgerService: LedgerService,
+    transactionService: TransactionService
 ) {
     route("/sync") {
         authenticate("access-jwt") {
@@ -92,7 +95,48 @@ fun Route.syncRoutes(
                         )
                     )
                 }
+
             }
+
+
+            route("/transaction"){
+                get("/download"){
+                    val principal = call.principal<JWTPrincipal>()
+
+                    val userId = principal?.getClaim("userId", String::class)
+
+                    if (userId == null) {
+                        call.respond(HttpStatusCode.Unauthorized)
+                        return@get
+                    }
+
+                    val lastSyncedAt = call.parameters["lastSyncedAt"]?.toLong() ?: 0
+
+                    val transactions: List<TransactionDto> = transactionService.getTransactionsByUserIdAfterLastSync(
+                        userId.toInt(),
+                        lastSyncedAt
+                    )
+
+                    call.respond(
+                        DownloadTransactionResponse(
+                            success = true,
+                            message = "Transactions downloaded successfully",
+                            total = transactions.size,
+                            transactions = transactions,
+                            lastSyncedAt = Clock.System.now().epochSeconds
+                        )
+                    )
+                }
+            }
+
+
+
+
+
         }
+
+
+
+
     }
 }
