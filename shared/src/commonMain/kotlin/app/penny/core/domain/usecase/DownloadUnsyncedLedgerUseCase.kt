@@ -19,10 +19,12 @@ class DownloadUnsyncedLedgerUseCase(
 
         //call upsertLedgers for each ledger
 
-
         unsyncedLedgers.forEach {
             ledgerRepository.upsertLedger(it)
         }
+
+
+
 
 
 

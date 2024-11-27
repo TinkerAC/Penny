@@ -95,7 +95,7 @@ class NewTransactionViewModel(
             screenshotUri = "",
         )
         screenModelScope.launch {
-            transactionRepository.insertTransaction(
+            transactionRepository.addTransaction(
                 transaction
             )
         }

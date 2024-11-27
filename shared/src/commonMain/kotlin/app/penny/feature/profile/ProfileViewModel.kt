@@ -62,7 +62,7 @@ class ProfileViewModel(
                 }
 
                 false -> {
-                    errorMessage = "Welcome $email"
+                    errorMessage = "New user? A new account will be created for you."
                 }
             }
 

@@ -48,7 +48,7 @@ class InsertRandomTransactionUseCase(
                 ).random()
             }
 
-            transactionRepository.insertTransaction(
+            transactionRepository.addTransaction(
                 TransactionModel(
                     transactionDate = transactionDate,
                     amount = amount,
@@ -85,7 +85,7 @@ class InsertRandomTransactionUseCase(
                 }
 
 
-                transactionRepository.insertTransaction(
+                transactionRepository.addTransaction(
                     TransactionModel(
                         transactionDate = Instant.fromEpochSeconds(transactionDate),
                         amount = amount,

@@ -66,7 +66,6 @@ class UserDataRepositoryImpl(
 
 
     override suspend fun clearUserData() {
-
         userDataManager.clear()
     }
 }

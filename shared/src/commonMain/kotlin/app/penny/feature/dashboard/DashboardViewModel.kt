@@ -1,9 +1,11 @@
 package app.penny.feature.dashboard
 
+import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
-import app.penny.core.domain.usecase.UploadUpdatedLedgersUseCase
+import app.penny.core.domain.usecase.SyncDataUseCase
+import app.penny.core.domain.usecase.UploadUnsyncedLedgerUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -15,9 +17,11 @@ import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val insertRandomTransactionUseCase: InsertRandomTransactionUseCase,
-    private val uploadUpdatedLedgersUseCase: UploadUpdatedLedgersUseCase,
+    private val uploadUnsyncedLedgerUseCase: UploadUnsyncedLedgerUseCase,
     private val userDataRepository: UserDataRepository,
-    private val downloadUnsyncedLedgerUseCase: DownloadUnsyncedLedgerUseCase
+    private val downloadUnsyncedLedgerUseCase: DownloadUnsyncedLedgerUseCase,
+    private val syncDataUseCase: SyncDataUseCase,
+    private val authRepository: AuthRepository
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
@@ -25,6 +29,7 @@ class DashboardViewModel(
     init {
         fetchUserData()
     }
+
     fun showAddTransactionModal() {
         _uiState.value = _uiState.value.copy(addTransactionModalVisible = true)
     }
@@ -73,7 +78,7 @@ class DashboardViewModel(
 
     fun uploadUpdatedLedgers() {
         screenModelScope.launch {
-            uploadUpdatedLedgersUseCase()
+            uploadUnsyncedLedgerUseCase()
         }
         Logger.d("uploaded updated ledgers")
     }
@@ -88,8 +93,20 @@ class DashboardViewModel(
     fun clearUserData() {
         screenModelScope.launch {
             userDataRepository.clearUserData()
+            authRepository.clearToken()
         }
         Logger.d("cleared user data")
+    }
+
+    fun syncAllData() {
+        screenModelScope.launch {
+            syncDataUseCase()
+        }
+
+        Logger.d("synced all data")
+        _uiState.value = _uiState.value.copy(
+            message = "Synced all data"
+        )
     }
 
 }

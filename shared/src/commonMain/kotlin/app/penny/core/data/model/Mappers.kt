@@ -18,13 +18,12 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import app.penny.servershared.dto.UserDto
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.TransactionDto
 
 
 @OptIn(ExperimentalUuidApi::class)
-fun LedgerEntity.toModel(): LedgerModel {
+fun LedgerEntity.toLedgerModel(): LedgerModel {
     return LedgerModel(
         id = id,
         uuid = Uuid.parse(uuid),
@@ -73,7 +72,7 @@ fun TransactionModel.toEntity(): TransactionEntity {
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun TransactionEntity.toModel(): TransactionModel {
+fun TransactionEntity.toLedgerModel(): TransactionModel {
     return TransactionModel(
         ledgerId = ledger_id,
         amount = BigDecimal.parseString(amount),
@@ -87,7 +86,28 @@ fun TransactionEntity.toModel(): TransactionModel {
 }
 
 
-fun AchievementEntity.toModel(): AchievementModel {
+@OptIn(ExperimentalUuidApi::class)
+fun TransactionModel.toTransactionDto(
+    ledgerUuid: Uuid
+): TransactionDto {
+    return TransactionDto(
+        uuid = uuid.toString(),
+        ledgerUuid = ledgerUuid.toString(),
+        transactionDate = transactionDate.epochSeconds,
+        category = category.name,
+        transactionType = transactionType.name,
+        amount = amount.toPlainString(),
+        currencyCode = currency.currencyCode,
+        remark = remark,
+        createdAt = Clock.System.now().epochSeconds,
+        updatedAt = Clock.System.now().epochSeconds,
+
+
+        )
+}
+
+
+fun AchievementEntity.toLedgerModel(): AchievementModel {
     return AchievementModel(
         id = id,
         name = name,
@@ -97,7 +117,7 @@ fun AchievementEntity.toModel(): AchievementModel {
     )
 }
 
-fun UserAchievementEntity.toModel(): UserAchievementModel {
+fun UserAchievementEntity.toLedgerModel(): UserAchievementModel {
     return UserAchievementModel(
         id = id,
         achievementId = achievement_id,
@@ -122,7 +142,7 @@ fun LedgerModel.toLedgerDto(): LedgerDto {
 
 
 @OptIn(ExperimentalUuidApi::class)
-fun LedgerDto.toModel(): LedgerModel {
+fun LedgerDto.toLedgerModel(): LedgerModel {
     return LedgerModel(
         id = 0,
         uuid = Uuid.parse(uuid),
@@ -134,6 +154,21 @@ fun LedgerDto.toModel(): LedgerModel {
         createdAt = Instant.fromEpochSeconds(createdAt),
         updatedAt = Instant.fromEpochSeconds(updatedAt)
     )
+
 }
 
 
+@OptIn(ExperimentalUuidApi::class)
+fun TransactionDto.toTransactionModel(): TransactionModel {
+    return TransactionModel(
+        ledgerId = 0,
+        transactionDate = Instant.fromEpochSeconds(transactionDate),
+        category = Category.valueOf(category),
+        transactionType = TransactionType.valueOf(transactionType),
+        amount = BigDecimal.parseString(amount),
+        currency = Currency.valueOf(currencyCode),
+        remark = remark,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+}

@@ -70,6 +70,16 @@ class DashboardScreen : Screen {
         }
 
 
+        Button(
+            onClick = {
+                dashboardViewModel.syncAllData()
+            }
+        ) {
+            Text("Sync All Data")
+        }
+
+
+
 
         Text("Last Synced At: ${dashboardViewModel.uiState.value.lastSyncedAt ?: "Never"}")
 

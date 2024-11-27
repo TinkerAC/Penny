@@ -47,3 +47,26 @@ SELECT * FROM transactionEntity WHERE transaction_date >= ? AND transaction_date
 
 getTransactionsCount:
 SELECT COUNT(*) FROM transactionEntity;
+
+
+upsertTransactionByUuid:
+INSERT INTO transactionEntity (uuid, ledger_id, transaction_date, category_name, transaction_type, amount, currency_code, remark, screenshot_uri, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%s','now'), strftime('%s','now'))
+ON CONFLICT(uuid) DO UPDATE SET
+    ledger_id = excluded.ledger_id,
+    transaction_date = excluded.transaction_date,
+    category_name = excluded.category_name,
+    transaction_type = excluded.transaction_type,
+    amount = excluded.amount,
+    currency_code = excluded.currency_code,
+    remark = excluded.remark,
+    screenshot_uri = excluded.screenshot_uri,
+    updated_at = strftime('%s','now');
+
+
+countTransactionsUpdatedAfter:
+SELECT COUNT(*) FROM transactionEntity WHERE updated_at > ?;
+
+
+getTransactionsUpdatedAfter:
+SELECT * FROM transactionEntity WHERE updated_at > ?;

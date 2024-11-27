@@ -38,3 +38,8 @@ ON CONFLICT(uuid) DO UPDATE SET
     cover_name = excluded.cover_name,
     description = excluded.description,
     updated_at = strftime('%s','now');
+
+
+
+countLedgersUpdatedAfter:
+SELECT COUNT(*) FROM ledgerEntity WHERE updated_at > ?;

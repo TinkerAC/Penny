@@ -7,7 +7,7 @@ class GetTransactionsByLedgerUseCase(
     private val transactionRepository: TransactionRepository
 ) {
     suspend operator fun invoke(ledgerId: Long): List<TransactionModel> {
-        return transactionRepository.getTransactionsByLedger(ledgerId)
+        return transactionRepository.findTransactionsByLedger(ledgerId)
     }
 
 }

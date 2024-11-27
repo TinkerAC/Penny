@@ -31,7 +31,6 @@ class SyncApiClient(
             url = "$API_URL/sync/ledger/download",
             method = HttpMethod.Get
         ) {
-            contentType(ContentType.Application.Json)
             parameter("lastSyncedAt", lastSyncedAt)
         }
     }
@@ -48,4 +47,27 @@ class SyncApiClient(
             setBody(UploadTransactionsRequest(transactions, lastSynced))
         }
     }
+
+
+    suspend fun downloadTransactions(lastSyncedAt: Long): DownloadTransactionResponse {
+        return makeAuthenticatedRequest(
+            url = "$API_URL/sync/transaction/download",
+            method = HttpMethod.Get
+        ) {
+            parameter("lastSyncedAt", lastSyncedAt)
+        }
+    }
+
+
+    suspend fun getRemoteUnsyncedDataCount(lastSyncedAt: Long): RemoteUnsyncedDataCount {
+        return makeAuthenticatedRequest(
+            url = "$API_URL/sync/unsynced/count",
+            method = HttpMethod.Get
+        ) {
+            parameter("lastSyncedAt", lastSyncedAt)
+        }
+
+    }
+
+
 }

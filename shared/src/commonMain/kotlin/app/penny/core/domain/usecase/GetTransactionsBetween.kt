@@ -17,7 +17,7 @@ class GetTransactionsBetween(
     private val transactionRepository: TransactionRepository
 ) {
     suspend operator fun invoke(startInstant: Instant, endInstant: Instant) {
-        transactionRepository.getTransactionsBetween(
+        transactionRepository.findTransactionsBetween(
             startInstant = startInstant,
             endInstant = endInstant
         )

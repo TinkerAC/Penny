@@ -64,4 +64,28 @@ class TransactionLocalDataSource(
     }
 
 
+    fun upsertTransactionByUuid(transaction: TransactionEntity) {
+        transactionsQueries.upsertTransactionByUuid(
+            uuid = transaction.uuid,
+            ledger_id = transaction.ledger_id,
+            transaction_date = transaction.transaction_date,
+            category_name = transaction.category_name,
+            transaction_type = transaction.transaction_type,
+            amount = transaction.amount,
+            currency_code = transaction.currency_code,
+            remark = transaction.remark,
+            screenshot_uri = transaction.screenshot_uri,
+        )
+    }
+
+
+
+    fun countTransactionsAfter(timeStamp: Long): Int {
+        return transactionsQueries.countTransactionsUpdatedAfter(timeStamp).executeAsOne().toInt()
+    }
+
+    fun getTransactionsUpdatedAfter(timeStamp: Long): List<TransactionEntity> {
+        return transactionsQueries.getTransactionsUpdatedAfter(timeStamp).executeAsList()
+    }
+
 }

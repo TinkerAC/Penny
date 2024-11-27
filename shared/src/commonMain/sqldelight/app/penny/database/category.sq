@@ -28,3 +28,6 @@ UPDATE categoryEntity SET parent_id = ?, name = ?, icon_uri = ?, updated_at = st
 
 deleteCategory:
 DELETE FROM categoryEntity WHERE id = ?;
+
+
+

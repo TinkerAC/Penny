@@ -1,15 +1,13 @@
 package app.penny.core.domain.usecase
 
-import app.penny.core.data.model.toLedgerDto
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.model.LedgerModel
-import app.penny.core.network.ApiClient
 import app.penny.servershared.dto.UploadLedgerResponse
 import co.touchlab.kermit.Logger
 import kotlinx.datetime.Instant
 
-class UploadUpdatedLedgersUseCase(
+class UploadUnsyncedLedgerUseCase(
     private val userDataRepository: UserDataRepository,
     private val ledgerRepository: LedgerRepository,
 ) {
@@ -29,7 +27,6 @@ class UploadUpdatedLedgersUseCase(
         }
 
         try {
-
             // 上传账本
             val response: UploadLedgerResponse =
                 ledgerRepository.uploadUnsyncedLedgers(

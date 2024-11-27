@@ -17,7 +17,7 @@ class SearchTransactionsUseCase(
         startDate: LocalDate,
         endDate: LocalDate
     ): List<TransactionModel> {
-        val transactionsByLedger = transactionRepository.getTransactionsByLedger(ledgerId)
+        val transactionsByLedger = transactionRepository.findTransactionsByLedger(ledgerId)
 
 
         //the timeStamp of 00:00:00 of the startDate

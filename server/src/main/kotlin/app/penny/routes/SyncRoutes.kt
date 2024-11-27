@@ -35,8 +35,7 @@ fun Route.syncRoutes(
                         return@get
                     }
 
-                    val downloadRequest = call.receive<DownloadLedgerRequest>()
-                    val lastSyncedAt = downloadRequest.lastSyncedAt
+                    val lastSyncedAt = call.parameters["lastSyncedAt"]?.toLong() ?: 0
 
                     val ledgers: List<LedgerDto> = ledgerService.getLedgersByUserIdAfterLastSync(
                         userId.toInt(),

@@ -15,6 +15,7 @@ import app.penny.core.data.repository.impl.LedgerRepositoryImpl
 import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
 import app.penny.core.domain.usecase.CheckIsEmailRegisteredUseCase
+import app.penny.core.domain.usecase.CountUnsyncedDataUseCase
 import app.penny.core.domain.usecase.DeleteLedgerUseCase
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
@@ -25,7 +26,8 @@ import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
 import app.penny.core.domain.usecase.SearchTransactionsUseCase
-import app.penny.core.domain.usecase.UploadUpdatedLedgersUseCase
+import app.penny.core.domain.usecase.SyncDataUseCase
+import app.penny.core.domain.usecase.UploadUnsyncedLedgerUseCase
 import app.penny.core.network.ApiClient
 import app.penny.core.network.clients.AuthApiClient
 import app.penny.core.network.clients.SyncApiClient
@@ -84,7 +86,7 @@ fun commonModule() = module {
     single { TokenManager(get(), get()) }
 
     // 提供 Repository
-    single<TransactionRepository> { TransactionRepositoryImpl(get()) }
+    single<TransactionRepository> { TransactionRepositoryImpl(get(), get(), get()) }
 
     single<LedgerRepository> { LedgerRepositoryImpl(get(), get()) }
 
@@ -121,9 +123,15 @@ fun commonModule() = module {
     factory { SearchTransactionsUseCase(get()) }
     factory { CheckIsEmailRegisteredUseCase(get()) }
     factory { LoginUseCase(get()) }
-    factory { UploadUpdatedLedgersUseCase(get(), get()) }
+    factory { UploadUnsyncedLedgerUseCase(get(), get()) }
     factory { RegisterUseCase(get()) }
-    factory { DownloadUnsyncedLedgerUseCase(get(),get())}
+    factory { DownloadUnsyncedLedgerUseCase(get(), get()) }
+    factory { SyncDataUseCase(get(), get(), get(), get()) }
+    factory {
+        CountUnsyncedDataUseCase(
+            get(), get(), get(), get()
+        )
+    }
 
 
     // 注入 ViewModel
@@ -131,9 +139,11 @@ fun commonModule() = module {
     factory {
         DashboardViewModel(
             insertRandomTransactionUseCase = get(),
-            uploadUpdatedLedgersUseCase = get(),
+            uploadUnsyncedLedgerUseCase = get(),
             userDataRepository = get(),
-            downloadUnsyncedLedgerUseCase = get()
+            downloadUnsyncedLedgerUseCase = get(),
+            get(),
+            get()
         )
     }
 

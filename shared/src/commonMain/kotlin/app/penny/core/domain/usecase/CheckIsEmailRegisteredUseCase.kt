@@ -8,7 +8,6 @@ class CheckIsEmailRegisteredUseCase(
 ) {
     suspend operator fun invoke(email: String): Boolean? {
 
-
         val result = apiClient.user.checkIsEmailRegistered(email)
 
         Logger.d("CheckIsEmailRegisteredUseCase: $email is registered: $result")

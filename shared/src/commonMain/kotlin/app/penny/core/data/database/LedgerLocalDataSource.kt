@@ -56,4 +56,11 @@ class LedgerLocalDataSource(
     }
 
 
+    fun countLedgersAfter(timeStamp: Long): Int {
+        return ledgerQueries.countLedgersUpdatedAfter(timeStamp).executeAsOne().toInt()
+    }
+
+
+
+
 }
