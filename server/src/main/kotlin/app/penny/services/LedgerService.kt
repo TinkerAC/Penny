@@ -23,4 +23,15 @@ class LedgerService(
     ): List<LedgerDto> {
         return ledgerRepository.findByUserIdAndUpdatedAtAfter(userId, lastSyncedAt)
     }
+
+
+
+
+    fun upsertLedgerByUuid(
+        ledger: LedgerDto,
+    ) {
+        ledgerRepository.upsertByUuid(
+            ledger
+        )
+    }
 }

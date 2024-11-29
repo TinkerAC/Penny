@@ -26,4 +26,14 @@ class TransactionService(
         }
         transactionRepository.insert(transactionsWithUserId)
     }
+
+
+
+    fun upsertTransactionByUuid(
+        transaction: TransactionDto,
+    ) {
+        transactionRepository.upsertByUuid(
+            transaction
+        )
+    }
 }

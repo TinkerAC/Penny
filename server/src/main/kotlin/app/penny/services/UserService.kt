@@ -63,7 +63,6 @@ fun UserDto.toUserResponseDto(): UserDto {
         id = id,
         username = username,
         email = email,
-
         )
 }
 

@@ -8,5 +8,5 @@ interface TransactionRepository {
     fun findByUuid(uuid: String): TransactionDto?
     fun insert(transactions: List<TransactionDto>)
     fun countByUserIdUpdatedAfter(userId: Long, timeStamp: Long): Long
-    fun upsert(transaction: TransactionDto)
+    fun upsertByUuid(transaction: TransactionDto)
 }

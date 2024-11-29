@@ -60,10 +60,11 @@ fun Route.syncRoutes(
                     val ledgerDTOs = uploadRequest.ledgers
 
                     try {
-                        ledgerService.insertLedgers(
-                            ledgers = ledgerDTOs,
-                            userId = userId
-                        )
+
+                        ledgerDTOs.forEach {
+                            ledgerService.upsertLedgerByUuid(it)
+                        }
+
                         call.respond(
                             UploadLedgerResponse(
                                 success = true,
@@ -123,10 +124,9 @@ fun Route.syncRoutes(
                     val transactionDTOs = uploadRequest.transactions
 
                     try {
-                        transactionService.insertTransactions(
-                            transactions = transactionDTOs,
-                            userId = userId
-                        )
+                        transactionDTOs.forEach {
+                            transactionService.upsertTransactionByUuid(it)
+                        }
                         call.respond(
                             UploadTransactionResponse(
                                 success = true,
@@ -142,7 +142,8 @@ fun Route.syncRoutes(
                                 success = false,
                                 changedLines = 0,
                                 lastSyncedAt = Clock.System.now().epochSeconds,
-                                message = e.message ?: "An error occurred while uploading transactions"
+                                message = e.message
+                                    ?: "An error occurred while uploading transactions"
                             )
                         )
                     }

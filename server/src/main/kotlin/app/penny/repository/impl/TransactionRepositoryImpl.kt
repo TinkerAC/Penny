@@ -64,7 +64,7 @@ class TransactionRepositoryImpl : TransactionRepository {
     }
 
 
-    override fun upsert(transaction: TransactionDto) {
+    override fun upsertByUuid(transaction: TransactionDto) {
         transaction {
             val insertedCount = Transactions.insertIgnore { row ->
                 row[uuid] = transaction.uuid

@@ -53,11 +53,11 @@ class LedgerRepositoryImpl : LedgerRepository {
         }
     }
 
-    override fun upsert(ledger: LedgerDto) {
+    override fun upsertByUuid(ledger: LedgerDto) {
         transaction {
             // 尝试插入，如果冲突则忽略
             val insertedCount = Ledgers.insertIgnore { row ->
-                row[uuid] = ledger.uuid
+                row[uuid] = ledger.uuid  //check whether the ledger exists by uuid
                 row[name] = ledger.name
                 row[currencyCode] = ledger.currencyCode
                 row[createdAt] = ledger.createdAt
@@ -66,7 +66,6 @@ class LedgerRepositoryImpl : LedgerRepository {
             }.insertedCount
 
             if (insertedCount == 0) {
-                // 如果插入被忽略，执行更新
                 Ledgers.update({ Ledgers.uuid eq ledger.uuid }) { row ->
                     row[name] = ledger.name
                     row[currencyCode] = ledger.currencyCode
