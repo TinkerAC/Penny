@@ -2,34 +2,36 @@ package app.penny.core.data.repository
 
 
 import app.penny.core.domain.model.TransactionModel
-import app.penny.servershared.dto.DownloadLedgerResponse
 import app.penny.servershared.dto.DownloadTransactionResponse
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 interface TransactionRepository {
 
-    suspend fun findTransactionById(transactionId: Long): TransactionModel
-    suspend fun findAllTransactions(): List<TransactionModel>
-    suspend fun addTransaction(transaction: TransactionModel)
-    suspend fun updateTransactionById(transactionId: Long, transaction: TransactionModel)
-    suspend fun deleteTransactionById(transactionId: Long)
-    suspend fun findTransactionsByLedger(ledgerId: Long): List<TransactionModel>
-    suspend fun findTransactionsBetween(
+    suspend fun findByUuid(transactionUuid: Uuid): TransactionModel
+    suspend fun findAll(): List<TransactionModel>
+    suspend fun insert(transaction: TransactionModel)
+    suspend fun updateByUuid(transactionUuid: Uuid, transaction: TransactionModel)
+    suspend fun deleteByUuid(transactionUuid: Uuid)
+    suspend fun findByLedgerUuid(ledgerUuid: Uuid): List<TransactionModel>
+    suspend fun findByUpdatedAtBetween(
         startInstant: Instant,
         endInstant: Instant
     ): List<TransactionModel>
 
 
-    suspend fun findTransactionsUpdatedAfter(timeStamp: Instant): List<TransactionModel>
+    suspend fun findByUpdatedAtAfter(timeStamp: Instant): List<TransactionModel>
 
 
-    suspend fun upsertTransaction(transaction: TransactionModel)
+    suspend fun upsert(transaction: TransactionModel)
 
 
-    suspend fun countTransactionsUpdatedAfter(timeStamp: Instant): Int
+    suspend fun countByUpdatedAtAfter(timeStamp: Instant): Int
 
 
-    suspend fun getTransactionsCount(): Int
+    suspend fun count(): Int
 
 
     suspend fun uploadUnsyncedTransactions(

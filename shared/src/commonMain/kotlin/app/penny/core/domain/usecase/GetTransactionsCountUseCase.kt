@@ -7,7 +7,7 @@ class GetTransactionsCountUseCase(
 ) {
 
     suspend operator fun invoke(): Int {
-        val count = transactionRepository.getTransactionsCount()
+        val count = transactionRepository.count()
         return count
     }
 }

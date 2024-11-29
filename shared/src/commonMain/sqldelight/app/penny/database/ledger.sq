@@ -1,37 +1,43 @@
 CREATE TABLE ledgerEntity (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,   -- 账本ID
-    uuid TEXT NOT NULL,   -- UUID
-    name TEXT NOT NULL,
-    currency_code TEXT NOT NULL,   -- 货币代码
-    cover_name TEXT NOT NULL,   -- 封面名称(Enum.name)
-    description TEXT,   -- 描述
-    created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间（默认当前时间）
-    updated_at INTEGER NOT NULL   DEFAULT (strftime('%s','now'))  -- 修改时间（默认当前时间）
+    uuid TEXT PRIMARY KEY,                      -- 账本UUID，设为主键
+    user_uuid TEXT NOT NULL,                    -- 用户UUID，外键
+    name TEXT NOT NULL,                         -- 账本名称
+    currency_code TEXT NOT NULL,                -- 货币代码
+    cover_name TEXT NOT NULL,                   -- 封面名称（枚举名）
+    description TEXT,                           -- 描述
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),    -- 修改时间
+
+    FOREIGN KEY (user_uuid) REFERENCES userEntity(uuid)
 );
 
-
 insertLedger:
-INSERT INTO ledgerEntity (uuid, name, currency_code, cover_name, description) VALUES (?, ?, ?, ?, ?);
+INSERT INTO ledgerEntity (uuid,user_uuid, name, currency_code, cover_name, description) VALUES (?, ?,?, ?, ?, ?);
 
-getLedgerById:
-SELECT * FROM ledgerEntity WHERE id = ?;
+getLedgerByUuid:
+SELECT * FROM ledgerEntity WHERE uuid = ?;
 
 getAllLedgers:
 SELECT * FROM ledgerEntity;
 
 updateLedger:
-UPDATE ledgerEntity SET name = ?, currency_code = ?, updated_at = strftime('%s','now') WHERE id = ?;
+UPDATE ledgerEntity SET
+    name = ?,
+    currency_code = ?,
+    cover_name = ?,
+    description = ?,
+    updated_at = strftime('%s','now')
+WHERE uuid = ?;
 
 deleteLedger:
-DELETE FROM ledgerEntity WHERE id = ?;
-
+DELETE FROM ledgerEntity WHERE uuid = ?;
 
 getLedgersUpdatedAfter:
 SELECT * FROM ledgerEntity WHERE updated_at > ?;
 
 upsertLedgerByUuid:
-INSERT INTO ledgerEntity (uuid, name, currency_code, cover_name, description, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?, strftime('%s','now'), strftime('%s','now'))
+INSERT INTO ledgerEntity (uuid,user_uuid, name, currency_code, cover_name, description, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, strftime('%s','now'), strftime('%s','now'))
 ON CONFLICT(uuid) DO UPDATE SET
     name = excluded.name,
     currency_code = excluded.currency_code,
@@ -39,12 +45,5 @@ ON CONFLICT(uuid) DO UPDATE SET
     description = excluded.description,
     updated_at = strftime('%s','now');
 
-
-
 countLedgersUpdatedAfter:
 SELECT COUNT(*) FROM ledgerEntity WHERE updated_at > ?;
-
-
-
-getLedgerByUuid:
-SELECT * FROM ledgerEntity WHERE uuid = ?;

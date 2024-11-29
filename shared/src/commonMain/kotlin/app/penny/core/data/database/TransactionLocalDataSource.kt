@@ -11,7 +11,7 @@ class TransactionLocalDataSource(
     fun insertTransaction(transaction: TransactionEntity) {
         transactionsQueries.insertTransaction(
             uuid = transaction.uuid,
-            ledger_id = transaction.ledger_id,
+            ledger_uuid = transaction.ledger_uuid,
             transaction_date = transaction.transaction_date,
             category_name = transaction.category_name,
             transaction_type = transaction.transaction_type,
@@ -20,10 +20,6 @@ class TransactionLocalDataSource(
             remark = transaction.remark,
             screenshot_uri = transaction.screenshot_uri,
         )
-    }
-
-    fun getTransactionById(id: Long): TransactionEntity {
-        return transactionsQueries.getTransactionById(id).executeAsOne()
     }
 
     fun getAllTransactions(): List<TransactionEntity> {
@@ -32,7 +28,7 @@ class TransactionLocalDataSource(
 
     fun updateTransaction(transaction: TransactionEntity) {
         transactionsQueries.updateTransaction(
-            ledger_id = transaction.ledger_id,
+            ledger_uuid = transaction.ledger_uuid,
             transaction_date = transaction.transaction_date,
             category_name = transaction.category_name,
             transaction_type = transaction.transaction_type,
@@ -40,17 +36,21 @@ class TransactionLocalDataSource(
             currency_code = transaction.currency_code,
             remark = transaction.remark,
             screenshot_uri = transaction.screenshot_uri,
-            id = transaction.id
+            uuid = transaction.uuid
         )
     }
 
 
-    fun deleteTransaction(id: Long) {
-        transactionsQueries.deleteTransaction(id)
+    fun deleteTransaction(uuid: String) {
+        transactionsQueries.deleteTransaction(
+            uuid = uuid
+        )
     }
 
-    fun getTransactionsByLedger(ledgerId: Long): List<TransactionEntity> {
-        return transactionsQueries.getTransactionsByLedgerId(ledgerId).executeAsList()
+    fun getTransactionsByLedger(ledgerUuid: String): List<TransactionEntity> {
+        return transactionsQueries.getTransactionByUuid(
+            ledgerUuid
+        ).executeAsList()
     }
 
     fun getTransactionsBetween(startTimeStamp: Long, endTimeStamp: Long): List<TransactionEntity> {
@@ -67,7 +67,7 @@ class TransactionLocalDataSource(
     fun upsertTransactionByUuid(transaction: TransactionEntity) {
         transactionsQueries.upsertTransactionByUuid(
             uuid = transaction.uuid,
-            ledger_id = transaction.ledger_id,
+            ledger_uuid = transaction.ledger_uuid,
             transaction_date = transaction.transaction_date,
             category_name = transaction.category_name,
             transaction_type = transaction.transaction_type,
@@ -77,7 +77,6 @@ class TransactionLocalDataSource(
             screenshot_uri = transaction.screenshot_uri,
         )
     }
-
 
 
     fun countTransactionsAfter(timeStamp: Long): Int {

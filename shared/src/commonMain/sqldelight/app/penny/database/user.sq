@@ -1,0 +1,13 @@
+CREATE TABLE userEntity (
+    uuid TEXT PRIMARY KEY,                      -- 用户UUID，设为主键
+    username TEXT NOT NULL,                     -- 用户名
+    email TEXT NOT NULL UNIQUE,                 -- 邮箱，唯一
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now'))    -- 修改时间
+);
+
+insertUser:
+INSERT INTO userEntity (uuid, username, email) VALUES (?, ?, ?);
+
+getUserByUuid:
+SELECT * FROM userEntity WHERE uuid = ?;

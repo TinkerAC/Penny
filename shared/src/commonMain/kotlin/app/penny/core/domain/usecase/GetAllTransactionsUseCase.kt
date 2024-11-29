@@ -9,7 +9,7 @@ class GetAllTransactionsUseCase(
 ) {
 
     suspend operator fun invoke(): List<TransactionModel> {
-        val result = transactionRepository.findAllTransactions()
+        val result = transactionRepository.findAll()
         Logger.d("Get all transactions: ${result.size}")
         return result
     }

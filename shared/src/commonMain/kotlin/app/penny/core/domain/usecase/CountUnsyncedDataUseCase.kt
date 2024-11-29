@@ -18,12 +18,12 @@ class CountUnsyncedDataUseCase(
 
         val lastSyncedAt: Instant? = userDataRepository.getLastSyncedAt()
 
-        val unsyncedLedgerCount = ledgerRepository.countLedgersAfter(
+        val unsyncedLedgerCount = ledgerRepository.countByUpdatedAtAfter(
             timeStamp = lastSyncedAt ?: Instant.DISTANT_PAST
         )
 
 
-        val unsyncedTransactionCount = transactionRepository.countTransactionsUpdatedAfter(
+        val unsyncedTransactionCount = transactionRepository.countByUpdatedAtAfter(
             timeStamp = lastSyncedAt ?: Instant.DISTANT_PAST
         )
 

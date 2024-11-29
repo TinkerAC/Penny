@@ -24,7 +24,7 @@ class MainViewModel(
     fun fetchLedgers() {
         // 通过协程获取数据
         screenModelScope.launch {
-            _uiState.value = _uiState.value.copy(ledgers = ledgerRepository.fetchAllLedgers())
+            _uiState.value = _uiState.value.copy(ledgers = ledgerRepository.findAll())
         }
     }
 

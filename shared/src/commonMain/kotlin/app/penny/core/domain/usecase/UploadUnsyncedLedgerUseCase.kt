@@ -17,7 +17,7 @@ class UploadUnsyncedLedgerUseCase(
         val lastSyncedAt: Instant? = userDataRepository.getLastSyncedAt()
 
         // 获取在上次同步后更新的所有账本
-        val ledgers: List<LedgerModel> = ledgerRepository.findLedgersUpdatedAfter(
+        val ledgers: List<LedgerModel> = ledgerRepository.findByUpdatedAtAfter(
             lastSyncedAt ?: Instant.DISTANT_PAST
         )
 

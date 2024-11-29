@@ -22,7 +22,7 @@ class InsertRandomTransactionUseCase(
         count: Int,
     ) {
 
-        val ledgers = ledgerRepository.fetchAllLedgers()
+        val ledgers = ledgerRepository.findAll()
         val random = Random.Default
         val transactionTypes = TransactionType.entries.toTypedArray()
 
@@ -48,7 +48,7 @@ class InsertRandomTransactionUseCase(
                 ).random()
             }
 
-            transactionRepository.addTransaction(
+            transactionRepository.insert(
                 TransactionModel(
                     transactionDate = transactionDate,
                     amount = amount,
@@ -85,7 +85,7 @@ class InsertRandomTransactionUseCase(
                 }
 
 
-                transactionRepository.addTransaction(
+                transactionRepository.insert(
                     TransactionModel(
                         transactionDate = Instant.fromEpochSeconds(transactionDate),
                         amount = amount,

@@ -1,59 +1,58 @@
 CREATE TABLE transactionEntity (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    uuid TEXT NOT NULL,                    -- UUID
-    ledger_id INTEGER NOT NULL,            -- 所属账本ID，引用 ledger(ledger_id)
-    transaction_date INTEGER NOT NULL,     -- 交易日期（Unix时间戳）
-    category_name TEXT NOT NULL,          -- 分类ID，引用 category(category_name)
-    transaction_type TEXT NOT NULL,        -- 交易类型（INCOME、EXPENSE、TRANSFER）
-    amount TEXT NOT NULL,               -- 金额
-    currency_code TEXT NOT NULL,           -- 货币代码
-    remark TEXT,                           -- 备注（可为空）
-    screenshot_uri TEXT,                   -- 截图URI（可为空）
-    created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间（默认当前时间）
-    updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),  -- 修改时间（默认当前时间）
+    uuid TEXT PRIMARY KEY,                      -- 交易UUID，设为主键
+    ledger_uuid TEXT NOT NULL,                  -- 账本UUID，外键
+    transaction_date INTEGER NOT NULL,          -- 交易日期（Unix时间戳）
+    category_name TEXT NOT NULL,                -- 分类名称
+    transaction_type TEXT NOT NULL,             -- 交易类型（INCOME、EXPENSE、TRANSFER）
+    amount TEXT NOT NULL,                       -- 金额
+    currency_code TEXT NOT NULL,                -- 货币代码
+    remark TEXT,                                -- 备注（可为空）
+    screenshot_uri TEXT,                        -- 截图URI（可为空）
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间
+    updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 修改时间
 
-    FOREIGN KEY (ledger_id) REFERENCES ledgerEntity(id),
-    FOREIGN KEY (category_name) REFERENCES categoryEntity(id)
+    FOREIGN KEY (ledger_uuid) REFERENCES ledgerEntity(uuid)
 );
 
-
 insertTransaction:
-INSERT INTO transactionEntity (uuid,ledger_id, transaction_date, category_name, transaction_type, amount, currency_code,remark, screenshot_uri) VALUES (?, ?, ?, ?, ?, ?, ?,?, ?);
+INSERT INTO transactionEntity (uuid, ledger_uuid, transaction_date, category_name, transaction_type, amount, currency_code, remark, screenshot_uri) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-
-
-getTransactionById:
-SELECT * FROM transactionEntity WHERE id = ?;
-
+getTransactionByUuid:
+SELECT * FROM transactionEntity WHERE uuid = ?;
 
 getAllTransactions:
 SELECT * FROM transactionEntity;
 
-
 updateTransaction:
-UPDATE transactionEntity SET ledger_id = ?, transaction_date = ?, category_name = ?, transaction_type = ?, amount = ?, currency_code = ?, remark = ?, screenshot_uri = ?, updated_at = strftime('%s','now') WHERE id = ?;
-
+UPDATE transactionEntity SET
+    ledger_uuid = ?,
+    transaction_date = ?,
+    category_name = ?,
+    transaction_type = ?,
+    amount = ?,
+    currency_code = ?,
+    remark = ?,
+    screenshot_uri = ?,
+    updated_at = strftime('%s','now')
+WHERE uuid = ?;
 
 deleteTransaction:
-DELETE FROM transactionEntity WHERE id = ?;
+DELETE FROM transactionEntity WHERE uuid = ?;
 
-
-getTransactionsByLedgerId:
-SELECT * FROM transactionEntity WHERE ledger_id = ?;
+getTransactionsByLedgerUuid:
+SELECT * FROM transactionEntity WHERE ledger_uuid = ?;
 
 getTransactionsBetweenTimeStamps:
 SELECT * FROM transactionEntity WHERE transaction_date >= ? AND transaction_date <= ?;
 
-
 getTransactionsCount:
 SELECT COUNT(*) FROM transactionEntity;
 
-
 upsertTransactionByUuid:
-INSERT INTO transactionEntity (uuid, ledger_id, transaction_date, category_name, transaction_type, amount, currency_code, remark, screenshot_uri, created_at, updated_at)
+INSERT INTO transactionEntity (uuid, ledger_uuid, transaction_date, category_name, transaction_type, amount, currency_code, remark, screenshot_uri, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%s','now'), strftime('%s','now'))
 ON CONFLICT(uuid) DO UPDATE SET
-    ledger_id = excluded.ledger_id,
+    ledger_uuid = excluded.ledger_uuid,
     transaction_date = excluded.transaction_date,
     category_name = excluded.category_name,
     transaction_type = excluded.transaction_type,
@@ -63,14 +62,9 @@ ON CONFLICT(uuid) DO UPDATE SET
     screenshot_uri = excluded.screenshot_uri,
     updated_at = strftime('%s','now');
 
-
 countTransactionsUpdatedAfter:
 SELECT COUNT(*) FROM transactionEntity WHERE updated_at > ?;
-
 
 getTransactionsUpdatedAfter:
 SELECT * FROM transactionEntity WHERE updated_at > ?;
 
-
-getTransactionByUuid:
-SELECT * FROM transactionEntity WHERE uuid = ?;

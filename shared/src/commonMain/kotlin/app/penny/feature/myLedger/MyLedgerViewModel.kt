@@ -1,7 +1,7 @@
 package app.penny.feature.myLedger
 
+import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.LedgerModel
-import app.penny.core.domain.usecase.DeleteLedgerUseCase
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
 
-
+@OptIn(ExperimentalUuidApi::class)
 class MyLedgerViewModel(
-    private val deleteLedgerUseCase: DeleteLedgerUseCase,
     private val getAllLedgerUseCase: GetAllLedgerUseCase,
-
+    private val ledgerRepository: LedgerRepository
     ) : ScreenModel {
 
 
@@ -45,7 +45,7 @@ class MyLedgerViewModel(
 
     fun deleteLedger(ledgerModel: LedgerModel) {
         screenModelScope.launch {
-            deleteLedgerUseCase(ledgerModel.id)
+            ledgerRepository.deleteByUuid(ledgerModel.uuid)
         }
     }
 

@@ -8,16 +8,19 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class SearchTransactionsUseCase(
     private val transactionRepository: TransactionRepository
 ) {
     suspend operator fun invoke(
-        ledgerId: Long,
+        ledgerUuid:Uuid,
         startDate: LocalDate,
         endDate: LocalDate
     ): List<TransactionModel> {
-        val transactionsByLedger = transactionRepository.findTransactionsByLedger(ledgerId)
+        val transactionsByLedger = transactionRepository.findByLedgerUuid(ledgerUuid)
 
 
         //the timeStamp of 00:00:00 of the startDate
@@ -31,7 +34,7 @@ class SearchTransactionsUseCase(
         val result = transactionsByLedger.filter {
             it.transactionDate.epochSeconds in startTimeStamp..endTimeStamp
         }
-        Logger.d("Get transactions by ledger $ledgerId between $startDate and $endDate: ${result.size}")
+        Logger.d("Get transactions by ledger $ledgerUuid between $startDate and $endDate: ${result.size}")
         return result
     }
 }

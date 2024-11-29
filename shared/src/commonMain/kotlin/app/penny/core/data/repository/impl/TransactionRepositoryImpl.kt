@@ -22,11 +22,14 @@ class TransactionRepositoryImpl(
     private val apiClient: ApiClient
 
 ) : TransactionRepository {
-    override suspend fun findTransactionById(transactionId: Long): TransactionModel {
-        return transactionLocalDataSource.getTransactionById(transactionId).toLedgerModel()
+    override suspend fun findByUuid(transactionUuid: Uuid): TransactionModel {
+
+        return transactionLocalDataSource.getTransactionByUuid(
+            transactionUuid.toString()
+        ).toLedgerModel()
     }
 
-    override suspend fun findTransactionsBetween(
+    override suspend fun findByUpdatedAtBetween(
         startInstant: Instant, endInstant: Instant
     ): List<TransactionModel> {
 
@@ -35,11 +38,11 @@ class TransactionRepositoryImpl(
         ).map { it.toLedgerModel() }
     }
 
-    override suspend fun findAllTransactions(): List<TransactionModel> {
+    override suspend fun findAll(): List<TransactionModel> {
         return transactionLocalDataSource.getAllTransactions().map { it.toLedgerModel() }
     }
 
-    override suspend fun addTransaction(transaction: TransactionModel) {
+    override suspend fun insert(transaction: TransactionModel) {
 
         transaction.uuid = Uuid.random()
 
@@ -48,34 +51,34 @@ class TransactionRepositoryImpl(
         )
     }
 
-    override suspend fun updateTransactionById(transactionId: Long, transaction: TransactionModel) {
+    override suspend fun updateByUuid(transactionUuid: Uuid, transaction: TransactionModel) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteTransactionById(transactionId: Long) {
+    override suspend fun deleteByUuid(transactionUuid: Uuid) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun findTransactionsByLedger(ledgerId: Long): List<TransactionModel> {
-        return transactionLocalDataSource.getTransactionsByLedger(ledgerId)
+    override suspend fun findByLedgerUuid(ledgerUuid: Uuid): List<TransactionModel> {
+        return transactionLocalDataSource.getTransactionsByLedger(ledgerUuid.toString())
             .map { it.toLedgerModel() }
     }
 
-    override suspend fun getTransactionsCount(): Int {
+    override suspend fun count(): Int {
         return transactionLocalDataSource.getTransactionsCount()
 
 
     }
 
-    override suspend fun upsertTransaction(transaction: TransactionModel) {
+    override suspend fun upsert(transaction: TransactionModel) {
         transactionLocalDataSource.upsertTransactionByUuid(transaction.toEntity())
     }
 
-    override suspend fun countTransactionsUpdatedAfter(timeStamp: Instant): Int {
+    override suspend fun countByUpdatedAtAfter(timeStamp: Instant): Int {
         return transactionLocalDataSource.countTransactionsAfter(timeStamp.epochSeconds)
     }
 
-    override suspend fun findTransactionsUpdatedAfter(timeStamp: Instant): List<TransactionModel> {
+    override suspend fun findByUpdatedAtAfter(timeStamp: Instant): List<TransactionModel> {
         return transactionLocalDataSource.getTransactionsUpdatedAfter(timeStamp.epochSeconds)
             .map { it.toLedgerModel() }
     }
@@ -90,7 +93,9 @@ class TransactionRepositoryImpl(
                 it.toTransactionDto(
                     //find uuid of ledger
                     ledgerUuid = Uuid.parse(
-                        ledgerLocalDataSource.getLedgerById(it.ledgerId)!!.uuid
+                        ledgerLocalDataSource.getLedgerByUuid(
+                            it.ledgerUuid.toString()
+                        )!!.uuid
                     )
 
                 )

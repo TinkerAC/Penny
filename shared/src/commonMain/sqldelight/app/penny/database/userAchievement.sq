@@ -1,4 +1,5 @@
 
+
 CREATE TABLE userAchievementEntity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,  -- 用户成就ID
     achievement_id INTEGER NOT NULL,      -- 成就ID，引用 achievementEntity(achievement_id)

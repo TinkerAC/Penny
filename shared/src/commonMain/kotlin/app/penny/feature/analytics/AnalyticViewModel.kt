@@ -27,6 +27,7 @@ import kotlinx.datetime.daysUntil
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.random.Random
+import kotlin.uuid.ExperimentalUuidApi
 
 
 class AnalyticViewModel(
@@ -175,6 +176,7 @@ class AnalyticViewModel(
 
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     private fun performFilter() {
         //从数据库获取对应的ledgerId和StartDate和EndDate之间的交易记录，赋值给_uiState的filteredTransactions
         if (_uiState.value.selectedLedger != null) {
@@ -182,7 +184,7 @@ class AnalyticViewModel(
             screenModelScope.launch {
 
                 val transactions = searchTransactionsUseCase(
-                    ledgerId = _uiState.value.selectedLedger!!.id,
+                    ledgerUuid = _uiState.value.selectedLedger!!.uuid,
                     startDate = _uiState.value.startDate,
                     endDate = _uiState.value.endDate
                 )

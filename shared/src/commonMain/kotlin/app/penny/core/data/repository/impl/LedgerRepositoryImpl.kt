@@ -19,7 +19,7 @@ class LedgerRepositoryImpl(
     private val ledgerLocalDataSource: LedgerLocalDataSource
 ) : LedgerRepository {
 
-    override suspend fun addLedger(ledgerModel: LedgerModel) {
+    override suspend fun insert(ledgerModel: LedgerModel) {
         ledgerModel.uuid = Uuid.random()
 
         val ledgerEntity = ledgerModel.toEntity()
@@ -27,24 +27,26 @@ class LedgerRepositoryImpl(
         ledgerLocalDataSource.insertLedger(ledgerEntity)
     }
 
-    override suspend fun findLedgerById(ledgerId: Long): LedgerModel? {
-        return ledgerLocalDataSource.getLedgerById(ledgerId)?.toLedgerModel()
+    override suspend fun findByUuid(ledgerUuid: Uuid): LedgerModel? {
+        return ledgerLocalDataSource.getLedgerByUuid(
+            ledgerUuid.toString()
+        )?.toLedgerModel()
     }
 
-    override suspend fun fetchAllLedgers(): List<LedgerModel> {
+    override suspend fun findAll(): List<LedgerModel> {
         return ledgerLocalDataSource.getAllLedgers().map { it.toLedgerModel() }
     }
 
-    override suspend fun updateLedger(ledgerModel: LedgerModel) {
+    override suspend fun update(ledgerModel: LedgerModel) {
         ledgerLocalDataSource.updateLedger(ledgerModel.toEntity())
     }
 
 
-    override suspend fun deleteLedger(ledgerId: Long) {
-        ledgerLocalDataSource.deleteLedger(ledgerId)
+    override suspend fun deleteByUuid(ledgerUuid: Uuid) {
+        ledgerLocalDataSource.deleteLedger(ledgerUuid.toString())
     }
 
-    override suspend fun findLedgersUpdatedAfter(timeStamp: Instant): List<LedgerModel> {
+    override suspend fun findByUpdatedAtAfter(timeStamp: Instant): List<LedgerModel> {
         return ledgerLocalDataSource.getLedgersUpdatedAfter(
             timeStamp.epochSeconds
         ).map {
@@ -70,7 +72,7 @@ class LedgerRepositoryImpl(
     }
 
 
-    override suspend fun upsertLedger(ledgerModel: LedgerModel): Boolean {
+    override suspend fun upsert(ledgerModel: LedgerModel): Boolean {
         var insertedNewLedger: Boolean = false
         // 尝试查询是否存在目标记录
         val existingLedger = ledgerLocalDataSource.getLedgerByUuid(ledgerModel.uuid.toString())
@@ -87,7 +89,7 @@ class LedgerRepositoryImpl(
     }
 
 
-    override suspend fun countLedgersAfter(timeStamp: Instant): Int {
+    override suspend fun countByUpdatedAtAfter(timeStamp: Instant): Int {
         return ledgerLocalDataSource.countLedgersAfter(timeStamp.epochSeconds)
     }
 

@@ -17,12 +17,12 @@ class InsertLedgerUseCase(
         description: String,
         cover: LedgerCover
     ) {
-        ledgerRepository.addLedger(
+        ledgerRepository.insert(
             LedgerModel(
                 name = name,
                 currency = currency,
-                description = description,
-                cover = cover
+                cover = cover,
+                description = description
             )
         )
     }

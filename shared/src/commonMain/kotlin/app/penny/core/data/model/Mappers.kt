@@ -25,7 +25,6 @@ import app.penny.servershared.dto.TransactionDto
 @OptIn(ExperimentalUuidApi::class)
 fun LedgerEntity.toLedgerModel(): LedgerModel {
     return LedgerModel(
-        id = id,
         uuid = Uuid.parse(uuid),
         name = name,
         currency = Currency.valueOf(currency_code),
@@ -41,14 +40,14 @@ fun LedgerEntity.toLedgerModel(): LedgerModel {
 @OptIn(ExperimentalUuidApi::class)
 fun LedgerModel.toEntity(): LedgerEntity {
     return LedgerEntity(
-        id = id,
         uuid = uuid.toString(),
         name = name,
         currency_code = currency.currencyCode,
         cover_name = cover.name,
         description = "",
         created_at = 0,
-        updated_at = 0
+        updated_at = 0,
+        user_uuid = userUuid.toString()
     )
 }
 
@@ -56,9 +55,8 @@ fun LedgerModel.toEntity(): LedgerEntity {
 @OptIn(ExperimentalUuidApi::class)
 fun TransactionModel.toEntity(): TransactionEntity {
     return TransactionEntity(
-        id = 0,
         uuid = Uuid.toString(),
-        ledger_id = ledgerId,
+        ledger_uuid = ledgerUuid.toString(),
         transaction_date = transactionDate.epochSeconds,
         category_name = category.name,
         transaction_type = transactionType.name,
@@ -74,7 +72,7 @@ fun TransactionModel.toEntity(): TransactionEntity {
 @OptIn(ExperimentalUuidApi::class)
 fun TransactionEntity.toLedgerModel(): TransactionModel {
     return TransactionModel(
-        ledgerId = ledger_id,
+        ledgerUuid = Uuid.parse(ledger_uuid),
         amount = BigDecimal.parseString(amount),
         currency = Currency.valueOf(currency_code),
         remark = remark,

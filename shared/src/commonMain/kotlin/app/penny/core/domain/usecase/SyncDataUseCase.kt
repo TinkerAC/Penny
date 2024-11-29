@@ -28,12 +28,12 @@ class SyncDataUseCase(
 
                 //1.Prepare local changes
                 val ledgerLocalChanges: List<LedgerModel> =
-                    ledgerRepository.findLedgersUpdatedAfter(
+                    ledgerRepository.findByUpdatedAtAfter(
                         timeStamp = lastSyncedAt
                     )
 
                 val transactionLocalChanges: List<TransactionModel> =
-                    transactionRepository.findTransactionsUpdatedAfter(
+                    transactionRepository.findByUpdatedAtAfter(
                         timeStamp = lastSyncedAt
                     )
 
@@ -72,7 +72,7 @@ class SyncDataUseCase(
 
                     // insert or update remote ledgers
                     remoteLedgers.forEach {
-                        val insertedNewLedger = ledgerRepository.upsertLedger(it)
+                        val insertedNewLedger = ledgerRepository.upsert(it)
                         if (insertedNewLedger) {
                             updatedLedgers++
                         } else {
@@ -99,7 +99,7 @@ class SyncDataUseCase(
 
                     // insert or update remote transactions
                     response.transactions.forEach {
-                        transactionRepository.upsertTransaction(it.toTransactionModel())
+                        transactionRepository.upsert(it.toTransactionModel())
                     }
 
                 } catch (e: Exception) {
