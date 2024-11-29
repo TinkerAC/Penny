@@ -43,3 +43,8 @@ ON CONFLICT(uuid) DO UPDATE SET
 
 countLedgersUpdatedAfter:
 SELECT COUNT(*) FROM ledgerEntity WHERE updated_at > ?;
+
+
+
+getLedgerByUuid:
+SELECT * FROM ledgerEntity WHERE uuid = ?;

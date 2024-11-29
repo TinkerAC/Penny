@@ -27,8 +27,8 @@ class CountUnsyncedDataUseCase(
             timeStamp = lastSyncedAt ?: Instant.DISTANT_PAST
         )
 
-        var unsyncedRemoteLedgerCount: Int
-        var unsyncedRemoteTransactionCount: Int
+        var unsyncedRemoteLedgerCount: Long
+        var unsyncedRemoteTransactionCount: Long
 
         try {
             val unsyncedRemoteChangeCount = apiClient.sync.getRemoteUnsyncedDataCount(
@@ -46,8 +46,8 @@ class CountUnsyncedDataUseCase(
         }
 
         return CountUnsyncedDataResult(
-            unsyncedLocalLedgerCount = unsyncedLedgerCount,
-            unsyncedLocalTransactionCount = unsyncedTransactionCount,
+            unsyncedLocalLedgerCount = unsyncedLedgerCount.toLong(),
+            unsyncedLocalTransactionCount = unsyncedTransactionCount.toLong(),
             unsyncedRemoteLedgerCount = unsyncedRemoteLedgerCount,
             unsyncedRemoteTransactionCount = unsyncedRemoteTransactionCount
         )
@@ -58,10 +58,10 @@ class CountUnsyncedDataUseCase(
 
 
 data class CountUnsyncedDataResult(
-    val unsyncedLocalLedgerCount: Int,
-    val unsyncedLocalTransactionCount: Int,
-    val unsyncedRemoteLedgerCount: Int = 0,
-    val unsyncedRemoteTransactionCount: Int = 0
+    val unsyncedLocalLedgerCount: Long,
+    val unsyncedLocalTransactionCount: Long,
+    val unsyncedRemoteLedgerCount: Long = 0L,
+    val unsyncedRemoteTransactionCount: Long = 0L
 
 ) {
     val hasUnsyncedData: Boolean

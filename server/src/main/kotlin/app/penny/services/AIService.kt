@@ -1,4 +1,4 @@
-// file: server/src/main/kotlin/app/penny/services/AIService.kt
+// 文件：server/src/main/kotlin/app/penny/services/AIService.kt
 package app.penny.services
 
 class AIService {

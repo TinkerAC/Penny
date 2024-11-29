@@ -1,10 +1,8 @@
-// file: server/src/main/kotlin/app/penny/routes/UserRoutes.kt
+// 文件：server/src/main/kotlin/app/penny/routes/UserRoutes.kt
 package app.penny.routes
 
-import app.penny.config.JwtConfig
 import app.penny.servershared.dto.CheckIsEmailRegisteredResponse
 import app.penny.servershared.dto.LoginRequest
-import app.penny.servershared.dto.LoginResponse
 import app.penny.servershared.dto.RegisterRequest
 import app.penny.servershared.dto.RegisterResponse
 import app.penny.services.UserService

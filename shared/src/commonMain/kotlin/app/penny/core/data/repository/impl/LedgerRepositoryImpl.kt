@@ -27,8 +27,8 @@ class LedgerRepositoryImpl(
         ledgerLocalDataSource.insertLedger(ledgerEntity)
     }
 
-    override suspend fun findLedgerById(ledgerId: Long): LedgerModel {
-        return ledgerLocalDataSource.getLedgerById(ledgerId).toLedgerModel()
+    override suspend fun findLedgerById(ledgerId: Long): LedgerModel? {
+        return ledgerLocalDataSource.getLedgerById(ledgerId)?.toLedgerModel()
     }
 
     override suspend fun fetchAllLedgers(): List<LedgerModel> {
@@ -70,16 +70,26 @@ class LedgerRepositoryImpl(
     }
 
 
-    override suspend fun upsertLedger(ledgerModel: LedgerModel) {
-        ledgerLocalDataSource.upsertLedgerByUuid(ledgerModel.toEntity())
+    override suspend fun upsertLedger(ledgerModel: LedgerModel): Boolean {
+        var insertedNewLedger: Boolean = false
+        // 尝试查询是否存在目标记录
+        val existingLedger = ledgerLocalDataSource.getLedgerByUuid(ledgerModel.uuid.toString())
+
+        if (existingLedger != null) {
+            // 执行更新
+            ledgerLocalDataSource.updateLedger(ledgerModel.toEntity())
+        } else {
+            insertedNewLedger = true
+            // 执行插入
+            ledgerLocalDataSource.insertLedger(ledgerModel.toEntity())
+        }
+        return insertedNewLedger
     }
 
 
     override suspend fun countLedgersAfter(timeStamp: Instant): Int {
         return ledgerLocalDataSource.countLedgersAfter(timeStamp.epochSeconds)
     }
-
-
 
 
 }

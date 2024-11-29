@@ -1,24 +1,29 @@
+// 文件：server/src/main/kotlin/app/penny/services/TransactionService.kt
 package app.penny.services
 
 import app.penny.repository.TransactionRepository
 import app.penny.servershared.dto.TransactionDto
-import kotlinx.datetime.Instant
-import app.penny.models.toTransactionDto
 
 class TransactionService(
-    val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository
 ) {
     fun findUnsyncedTransactions(
         userId: Long,
         lastSyncedAt: Long
-
-        ): List<TransactionDto> {
-        return transactionRepository.findTransactionByUserIdUpdatedAfter(
+    ): List<TransactionDto> {
+        return transactionRepository.findByUserIdAndUpdatedAfter(
             userId = userId,
             timeStamp = lastSyncedAt
-        ).map {
-            it.toTransactionDto()
-        }
+        )
+    }
 
+    fun insertTransactions(
+        transactions: List<TransactionDto>,
+        userId: Long
+    ) {
+        val transactionsWithUserId = transactions.map { transaction ->
+            transaction.copy(userId = userId)
+        }
+        transactionRepository.insert(transactionsWithUserId)
     }
 }

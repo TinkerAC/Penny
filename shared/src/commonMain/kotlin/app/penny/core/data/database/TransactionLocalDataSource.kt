@@ -88,4 +88,7 @@ class TransactionLocalDataSource(
         return transactionsQueries.getTransactionsUpdatedAfter(timeStamp).executeAsList()
     }
 
+    fun getTransactionByUuid(uuid: String): TransactionEntity {
+        return transactionsQueries.getTransactionByUuid(uuid).executeAsOne()
+    }
 }

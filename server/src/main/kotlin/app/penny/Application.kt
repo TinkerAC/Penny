@@ -1,54 +1,26 @@
+// 文件：server/src/main/kotlin/app/penny/Application.kt
 package app.penny
 
-import app.penny.config.DatabaseFactory
+import app.penny.repository.*
+import app.penny.repository.impl.*
+import app.penny.routes.*
+import app.penny.services.*
+import io.ktor.server.application.*
+import io.ktor.server.routing.*
 import app.penny.config.JwtConfig
-import app.penny.repository.TransactionRepository
-import app.penny.routes.authRoutes
-import app.penny.routes.syncRoutes
-import app.penny.routes.userRoutes
-import app.penny.services.AuthService
-import app.penny.services.LedgerService
-import app.penny.services.TransactionService
-import app.penny.services.UserService
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.Application
-import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
-import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.response.respondText
-import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
-import app.penny.repository.LedgerRepository
-fun main() {
-    embeddedServer(Netty, port = 8080) {
-        module()
-    }.start(wait = true)
-}
+
+fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 fun Application.module() {
-    DatabaseFactory.init()
-    val userService = UserService(
-        jwtConfig = JwtConfig
-    )
-    val ledgerService = LedgerService(
-        ledgerRepository = LedgerRepository()
-    )
-    val authService = AuthService(
-        jwtConfig = JwtConfig
-    )
-    val transactionService = TransactionService(
-        transactionRepository = TransactionRepository()
-    )
-
+    //install plugin
     install(ContentNegotiation) {
         json()
     }
-
     install(Authentication) {
         jwt("access-jwt") {
             verifier(JwtConfig.accessTokenVerifier)
@@ -61,23 +33,26 @@ fun Application.module() {
         }
     }
 
+
+    // 初始化配置
+    val jwtConfig = JwtConfig
+
+    // 创建仓库实例
+    val userRepository: UserRepository = UserRepositoryImpl()
+    val ledgerRepository: LedgerRepository = LedgerRepositoryImpl()
+    val transactionRepository: TransactionRepository = TransactionRepositoryImpl()
+
+    // 创建服务实例
+    val userService = UserService(userRepository, jwtConfig)
+    val ledgerService = LedgerService(ledgerRepository)
+    val transactionService = TransactionService(transactionRepository)
+    val statisticsService = StatisticsService(ledgerRepository, transactionRepository)
+    val authService = AuthService(jwtConfig)
+
+    // 设置路由
     routing {
-        //greeting route
-        get("/") {
-            call.respondText("Welcome to Ktor!")
-        }
-
-
-        //functional routes
+        authRoutes(authService)
         userRoutes(userService)
-        syncRoutes(
-            ledgerService = ledgerService,
-            transactionService = transactionService
-        )
-        authRoutes(
-            authService, JwtConfig
-        )
-
-
+        syncRoutes(ledgerService, transactionService, statisticsService)
     }
 }

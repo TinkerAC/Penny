@@ -2,7 +2,6 @@ package app.penny.core.network.clients
 
 import app.penny.config.Config.API_URL
 import app.penny.core.data.kvstore.TokenProvider
-import app.penny.core.network.BaseApiClient
 import app.penny.core.network.BaseAuthedApiClient
 import app.penny.servershared.dto.*
 import io.ktor.client.HttpClient
@@ -44,7 +43,7 @@ class SyncApiClient(
             method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
-            setBody(UploadTransactionsRequest(transactions, lastSynced))
+            setBody(UploadTransactionRequest(transactions, lastSynced))
         }
     }
 
@@ -59,7 +58,7 @@ class SyncApiClient(
     }
 
 
-    suspend fun getRemoteUnsyncedDataCount(lastSyncedAt: Long): RemoteUnsyncedDataCount {
+    suspend fun getRemoteUnsyncedDataCount(lastSyncedAt: Long): RemoteUnsyncedDataCountResponse {
         return makeAuthenticatedRequest(
             url = "$API_URL/sync/count",
             method = HttpMethod.Get

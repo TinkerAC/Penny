@@ -91,19 +91,18 @@ fun TransactionModel.toTransactionDto(
     ledgerUuid: Uuid
 ): TransactionDto {
     return TransactionDto(
+        userId = 0,
         uuid = uuid.toString(),
         ledgerUuid = ledgerUuid.toString(),
-        transactionDate = transactionDate.epochSeconds,
-        category = category.name,
         transactionType = transactionType.name,
-        amount = amount.toPlainString(),
+        transactionDate = transactionDate.epochSeconds,
+        categoryName = category.name,
         currencyCode = currency.currencyCode,
+        amount = amount.toPlainString(),
         remark = remark,
         createdAt = Clock.System.now().epochSeconds,
         updatedAt = Clock.System.now().epochSeconds,
-
-
-        )
+    )
 }
 
 
@@ -131,12 +130,14 @@ fun UserAchievementEntity.toLedgerModel(): UserAchievementModel {
 @OptIn(ExperimentalUuidApi::class)
 fun LedgerModel.toLedgerDto(): LedgerDto {
     return LedgerDto(
+        userId = 0,
         uuid = uuid.toString(),
         name = name,
+        coverUri = "not implemented",
         currencyCode = currency.currencyCode,
-        updatedAt = updatedAt.epochSeconds,
         createdAt = createdAt.epochSeconds,
-        coverUri = "not implemented"
+        updatedAt = updatedAt.epochSeconds
+
     )
 }
 
@@ -163,7 +164,7 @@ fun TransactionDto.toTransactionModel(): TransactionModel {
     return TransactionModel(
         ledgerId = 0,
         transactionDate = Instant.fromEpochSeconds(transactionDate),
-        category = Category.valueOf(category),
+        category = Category.valueOf(categoryName),
         transactionType = TransactionType.valueOf(transactionType),
         amount = BigDecimal.parseString(amount),
         currency = Currency.valueOf(currencyCode),

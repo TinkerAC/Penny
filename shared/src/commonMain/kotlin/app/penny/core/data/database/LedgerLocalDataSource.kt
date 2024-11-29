@@ -18,8 +18,8 @@ class LedgerLocalDataSource(
         )
     }
 
-    fun getLedgerById(id: Long): LedgerEntity {
-        return ledgerQueries.getLedgerById(id).executeAsOne()
+    fun getLedgerById(id: Long): LedgerEntity? {
+        return ledgerQueries.getLedgerById(id).executeAsOneOrNull()
     }
 
     fun getAllLedgers(): List<LedgerEntity> {
@@ -45,7 +45,7 @@ class LedgerLocalDataSource(
     }
 
 
-    fun upsertLedgerByUuid(ledgerEntity: LedgerEntity) {
+    fun upsertLedgerByUuid(ledgerEntity: LedgerEntity): Unit {
         ledgerQueries.upsertLedgerByUuid(
             uuid = ledgerEntity.uuid,
             name = ledgerEntity.name,
@@ -60,7 +60,9 @@ class LedgerLocalDataSource(
         return ledgerQueries.countLedgersUpdatedAfter(timeStamp).executeAsOne().toInt()
     }
 
-
+    fun getLedgerByUuid(uuid: String): LedgerEntity? {
+        return ledgerQueries.getLedgerByUuid(uuid).executeAsOneOrNull()
+    }
 
 
 }

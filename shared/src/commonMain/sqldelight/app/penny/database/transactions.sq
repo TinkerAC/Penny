@@ -70,3 +70,7 @@ SELECT COUNT(*) FROM transactionEntity WHERE updated_at > ?;
 
 getTransactionsUpdatedAfter:
 SELECT * FROM transactionEntity WHERE updated_at > ?;
+
+
+getTransactionByUuid:
+SELECT * FROM transactionEntity WHERE uuid = ?;

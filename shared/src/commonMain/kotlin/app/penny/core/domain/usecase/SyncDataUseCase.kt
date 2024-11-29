@@ -6,7 +6,7 @@ import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
-import kotlinx.datetime.Clock
+import co.touchlab.kermit.Logger
 import kotlinx.datetime.Instant
 
 class SyncDataUseCase(
@@ -67,10 +67,22 @@ class SyncDataUseCase(
                         lastSyncedAt = lastSyncedAt
                     )
 
+                    var updatedLedgers = 0;
+                    var insertedLedgers = 0;
+
                     // insert or update remote ledgers
                     remoteLedgers.forEach {
-                        ledgerRepository.upsertLedger(it)
+                        val insertedNewLedger = ledgerRepository.upsertLedger(it)
+                        if (insertedNewLedger) {
+                            updatedLedgers++
+                        } else {
+                            insertedLedgers++
+                        }
                     }
+
+                    Logger.d("Updated ledgers: $updatedLedgers, Inserted ledgers: $insertedLedgers")
+                    
+
                 } catch (e: Exception) {
                     // Handle error
                 }

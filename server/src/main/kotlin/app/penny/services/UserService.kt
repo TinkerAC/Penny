@@ -1,8 +1,7 @@
-// file: server/src/main/kotlin/app/penny/services/UserService.kt
+// 文件：server/src/main/kotlin/app/penny/services/UserService.kt
 package app.penny.services
 
 import app.penny.config.JwtConfig
-import app.penny.models.Users
 import app.penny.repository.UserRepository
 import app.penny.servershared.dto.LoginRequest
 import app.penny.servershared.dto.LoginResponse
@@ -10,9 +9,10 @@ import app.penny.servershared.dto.RegisterRequest
 import app.penny.servershared.dto.UserDto
 import org.mindrot.jbcrypt.BCrypt
 
-class UserService(private val jwtConfig: JwtConfig) {
-    private val userRepository = UserRepository()
-
+class UserService(
+    private val userRepository: UserRepository,
+    private val jwtConfig: JwtConfig
+) {
     fun register(credentials: RegisterRequest): Boolean {
         if (userRepository.findByEmail(credentials.email) != null) {
             return false
@@ -24,14 +24,15 @@ class UserService(private val jwtConfig: JwtConfig) {
     }
 
     fun login(credentials: LoginRequest): LoginResponse {
-        val userRow = userRepository.findByEmail(credentials.email) ?: return LoginResponse(
-            success = false,
-            userDto = null,
-            message = "Invalid email or password"
-        )
-        val passwordHash = userRow[Users.passwordHash]
-        return if (BCrypt.checkpw(credentials.password, passwordHash)) {
-            val userId = userRow[Users.id].value
+        val userEntity = userRepository.findByEmail(credentials.email)
+            ?: return LoginResponse(
+                success = false,
+                userDto = null,
+                message = "Invalid email or password"
+            )
+
+        return if (BCrypt.checkpw(credentials.password, userEntity.passwordHash)) {
+            val userId = userEntity.id
             val accessToken = jwtConfig.makeAccessToken(userId)
             val refreshToken = jwtConfig.makeRefreshToken(userId)
             LoginResponse(
@@ -39,11 +40,7 @@ class UserService(private val jwtConfig: JwtConfig) {
                 message = "Login successful",
                 accessToken = accessToken,
                 refreshToken = refreshToken,
-                userDto = UserDto(
-                    id = userId,
-                    username = userRow[Users.username],
-                    email = userRow[Users.email]
-                )
+                userDto = userEntity.toUserResponseDto()
             )
         } else {
             LoginResponse(
@@ -59,3 +56,14 @@ class UserService(private val jwtConfig: JwtConfig) {
         return userRepository.findByEmail(email) != null
     }
 }
+
+// 扩展函数，用于转换 UserEntity 到 UserResponseDto
+fun UserDto.toUserResponseDto(): UserDto {
+    return UserDto(
+        id = id,
+        username = username,
+        email = email,
+
+        )
+}
+

@@ -1,26 +1,12 @@
+// 文件：server/src/main/kotlin/app/penny/repository/TransactionRepository.kt
 package app.penny.repository
 
-import app.penny.models.Transactions
-import kotlinx.datetime.Instant
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
+import app.penny.servershared.dto.TransactionDto
 
-class TransactionRepository {
-
-
-    fun findTransactionByUserIdUpdatedAfter(
-        userId: Long,
-        timeStamp: Long
-    ): List<ResultRow> {
-        return transaction {
-            // 查询所有 updatedAt > timeStamp 的 Transaction 实体
-            Transactions
-                .selectAll()
-                .where{ (Transactions.userId eq userId) and (Transactions.updatedAt greater timeStamp) }
-                .toList()
-        }
-    }
-
+interface TransactionRepository {
+    fun findByUserIdAndUpdatedAfter(userId: Long, timeStamp: Long): List<TransactionDto>
+    fun findByUuid(uuid: String): TransactionDto?
+    fun insert(transactions: List<TransactionDto>)
+    fun countByUserIdUpdatedAfter(userId: Long, timeStamp: Long): Long
+    fun upsert(transaction: TransactionDto)
 }

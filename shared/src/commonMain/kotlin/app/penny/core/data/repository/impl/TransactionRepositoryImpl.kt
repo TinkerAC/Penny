@@ -90,7 +90,7 @@ class TransactionRepositoryImpl(
                 it.toTransactionDto(
                     //find uuid of ledger
                     ledgerUuid = Uuid.parse(
-                        ledgerLocalDataSource.getLedgerById(it.ledgerId).uuid
+                        ledgerLocalDataSource.getLedgerById(it.ledgerId)!!.uuid
                     )
 
                 )
