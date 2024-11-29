@@ -3,9 +3,9 @@ package app.penny.models
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.dao.id.LongIdTable
 
-object Users : IntIdTable("users") {
+object Users : LongIdTable("users") {
     val email = varchar("email", 50).uniqueIndex()
     val username = varchar("username", 50).uniqueIndex()
     val passwordHash = varchar("password_hash", 64)

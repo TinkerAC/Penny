@@ -2,11 +2,13 @@ package app.penny
 
 import app.penny.config.DatabaseFactory
 import app.penny.config.JwtConfig
+import app.penny.repository.TransactionRepository
 import app.penny.routes.authRoutes
 import app.penny.routes.syncRoutes
 import app.penny.routes.userRoutes
 import app.penny.services.AuthService
 import app.penny.services.LedgerService
+import app.penny.services.TransactionService
 import app.penny.services.UserService
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -21,7 +23,7 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
-
+import app.penny.repository.LedgerRepository
 fun main() {
     embeddedServer(Netty, port = 8080) {
         module()
@@ -33,9 +35,14 @@ fun Application.module() {
     val userService = UserService(
         jwtConfig = JwtConfig
     )
-    val ledgerService = LedgerService()
+    val ledgerService = LedgerService(
+        ledgerRepository = LedgerRepository()
+    )
     val authService = AuthService(
         jwtConfig = JwtConfig
+    )
+    val transactionService = TransactionService(
+        transactionRepository = TransactionRepository()
     )
 
     install(ContentNegotiation) {
@@ -64,7 +71,8 @@ fun Application.module() {
         //functional routes
         userRoutes(userService)
         syncRoutes(
-            ledgerService
+            ledgerService = ledgerService,
+            transactionService = transactionService
         )
         authRoutes(
             authService, JwtConfig

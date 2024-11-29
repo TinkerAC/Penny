@@ -47,22 +47,22 @@ object JwtConfig {
     }
 
 
-    fun makeAccessToken(userId: Int): String = JWT.create()
+    fun makeAccessToken(userId: Long): String = JWT.create()
         .withIssuer(ISSUER)
         .withClaim("userId", userId)
         .withExpiresAt(getExpiration(ACCESS_TOKEN_VALIDITY_IN_MS))
         .sign(accessTokenAlgorithm)
 
-    fun makeRefreshToken(userId: Int): String = JWT.create()
+    fun makeRefreshToken(userId: Long): String = JWT.create()
         .withIssuer(ISSUER)
         .withClaim("userId", userId)
         .withExpiresAt(getExpiration(REFRESH_TOKEN_VALIDITY_IN_MS))
         .sign(refreshTokenAlgorithm)
 
 
-    fun getUserIdFromRefreshToken(token: String): Int {
+    fun getUserIdFromRefreshToken(token: String): Long {
         val jwt = refreshTokenVerifier.verify(token)
-        return jwt.getClaim("userId").asInt() ?: -1
+        return jwt.getClaim("userId").asLong()
     }
 
 

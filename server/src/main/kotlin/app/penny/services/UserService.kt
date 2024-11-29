@@ -40,7 +40,7 @@ class UserService(private val jwtConfig: JwtConfig) {
                 accessToken = accessToken,
                 refreshToken = refreshToken,
                 userDto = UserDto(
-                    id = userId.toLong(),
+                    id = userId,
                     username = userRow[Users.username],
                     email = userRow[Users.email]
                 )

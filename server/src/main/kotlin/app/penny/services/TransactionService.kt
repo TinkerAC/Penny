@@ -3,23 +3,22 @@ package app.penny.services
 import app.penny.repository.TransactionRepository
 import app.penny.servershared.dto.TransactionDto
 import kotlinx.datetime.Instant
-import app.penny.models.Transaction
+import app.penny.models.toTransactionDto
 
 class TransactionService(
     val transactionRepository: TransactionRepository
 ) {
-    fun findUnsyncedTransactions(lastSyncedAt: Instant): List<TransactionDto> {
-        return transactionRepository.findTransactionByUserIdUpdatedAfter(lastSyncedAt)
-            .map {
-                TransactionDto(
-                    uuid = it[app.penny.models.Transactions.uuid],
-                    ledgerUuid = it[app.penny.models.Transactions.ledgerUuid],
-                    amount = it[app.penny.models.Transactions.amount],
-                    currencyCode = it[app.penny.models.Transactions.currencyCode],
-                    createdAt = it[app.penny.models.Transactions.createdAt],
-                    updatedAt = it[app.penny.models.Transactions.updatedAt]
-                )
-            }
+    fun findUnsyncedTransactions(
+        userId: Long,
+        lastSyncedAt: Long
+
+        ): List<TransactionDto> {
+        return transactionRepository.findTransactionByUserIdUpdatedAfter(
+            userId = userId,
+            timeStamp = lastSyncedAt
+        ).map {
+            it.toTransactionDto()
+        }
 
     }
 }

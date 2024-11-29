@@ -2,6 +2,7 @@
 package app.penny.services
 
 import app.penny.models.Ledgers
+import app.penny.repository.LedgerRepository
 import app.penny.servershared.dto.LedgerDto
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder
@@ -13,14 +14,15 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class LedgerService {
+class LedgerService (
+    private val ledgerRepository: LedgerRepository
+){
     fun insertLedgers(
         ledgers: List<LedgerDto>,
         userId: Int
     ) {
         transaction {
             Ledgers.batchInsert(ledgers) { ledger ->
-                this[Ledgers.userId] = userId
                 this[Ledgers.uuid] = ledger.uuid
                 this[Ledgers.name] = ledger.name
                 this[Ledgers.currencyCode] = ledger.currencyCode
@@ -31,20 +33,9 @@ class LedgerService {
     }
 
     fun getLedgersByUserIdAfterLastSync(
-        userId: Int,
+        userId: Long,
         lastSyncedAt: Long
     ): List<LedgerDto> {
-        return transaction {
-            Ledgers.selectAll()
-                .where { (Ledgers.userId eq userId) and (Ledgers.updatedAt greater lastSyncedAt) }.map {
-                LedgerDto(
-                    uuid = it[Ledgers.uuid],
-                    name = it[Ledgers.name],
-                    currencyCode = it[Ledgers.currencyCode],
-                    createdAt = it[Ledgers.createdAt],
-                    updatedAt = it[Ledgers.updatedAt]
-                )
-            }
-        }
+       return ledgerRepository.findByUserIdAndUpdatedAtAfter(userId, lastSyncedAt)
     }
 }

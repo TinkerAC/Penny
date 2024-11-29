@@ -9,7 +9,7 @@ import kotlin.concurrent.thread
 
 fun ResultRow.toUserDto(): UserDto {
     return UserDto(
-        id = this[Users.id].value.toLong(),
+        id = this[Users.id].value,
         email = this[Users.email],
         username = this[Users.username],
         createdAt = this[Users.createdAt],

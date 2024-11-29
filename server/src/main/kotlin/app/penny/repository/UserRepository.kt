@@ -7,11 +7,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class UserRepository {
     fun findByEmail(email: String): ResultRow? {
         return transaction {
-            Users.selectAll().where{Users.email eq email}.singleOrNull()
+            Users.selectAll().where { Users.email eq email }.singleOrNull()
         }
     }
 
-    fun insert(username: String, passwordHash: String): Int {
+    fun insert(username: String, passwordHash: String): Long {
         return transaction {
             Users.insert {
                 it[Users.email] = username

@@ -9,6 +9,7 @@ import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UploadLedgerRequest
 import app.penny.servershared.dto.UploadLedgerResponse
 import app.penny.services.LedgerService
+import app.penny.services.TransactionService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
@@ -20,6 +21,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import kotlinx.datetime.Clock
+
 
 fun Route.syncRoutes(
     ledgerService: LedgerService,
@@ -41,7 +43,7 @@ fun Route.syncRoutes(
                     val lastSyncedAt = call.parameters["lastSyncedAt"]?.toLong() ?: 0
 
                     val ledgers: List<LedgerDto> = ledgerService.getLedgersByUserIdAfterLastSync(
-                        userId.toInt(),
+                        userId.toLong(),
                         lastSyncedAt
                     )
 
@@ -99,8 +101,8 @@ fun Route.syncRoutes(
             }
 
 
-            route("/transaction"){
-                get("/download"){
+            route("/transaction") {
+                get("/download") {
                     val principal = call.principal<JWTPrincipal>()
 
                     val userId = principal?.getClaim("userId", String::class)
@@ -112,10 +114,11 @@ fun Route.syncRoutes(
 
                     val lastSyncedAt = call.parameters["lastSyncedAt"]?.toLong() ?: 0
 
-                    val transactions: List<TransactionDto> = transactionService.getTransactionsByUserIdAfterLastSync(
-                        userId.toInt(),
-                        lastSyncedAt
-                    )
+                    val transactions: List<TransactionDto> =
+                        transactionService.findUnsyncedTransactions(
+                            userId = userId.toLong(),
+                            lastSyncedAt = lastSyncedAt
+                        )
 
                     call.respond(
                         DownloadTransactionResponse(
@@ -130,12 +133,7 @@ fun Route.syncRoutes(
             }
 
 
-
-
-
         }
-
-
 
 
     }

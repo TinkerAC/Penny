@@ -3,10 +3,10 @@ package app.penny.models
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.dao.id.LongIdTable
 
-object Transactions : IntIdTable("transactions") {
-    val userId = integer("user_id").references(Users.id)
+object Transactions : LongIdTable("transactions") {
+    val userId = reference("user_id", Users.id)
     val uuid = varchar("uuid", 255)
     val ledgerUuid = varchar("ledger_uuid", 255)
     val transactionDate = long("transaction_date")
