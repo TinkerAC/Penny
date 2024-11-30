@@ -9,11 +9,11 @@ class Database(
 ) {
     private val database = PennyDatabase(driver)
 
-
     val transactionQueries = database.transactionsQueries
     val ledgerQueries = database.ledgerQueries
     val categoryQueries = database.categoryQueries
     val achievementQueries = database.achievementQueries
     val userAchievementQueries = database.userAchievementQueries
+    val chatMessageQueries = database.chatMessageQueries
 
 }

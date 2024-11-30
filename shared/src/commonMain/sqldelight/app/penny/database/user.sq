@@ -15,3 +15,7 @@ SELECT * FROM userEntity WHERE uuid = ?;
 
 count:
 SELECT COUNT(*) FROM userEntity;
+
+
+findAll:
+SELECT * FROM userEntity;

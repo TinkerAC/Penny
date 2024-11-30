@@ -30,4 +30,8 @@ class UserLocalDataSourceImpl(
     override fun count(): Long {
         return userQueries.count().executeAsOne()
     }
+
+    override fun findAll(): List<UserEntity> {
+        return userQueries.findAll().executeAsList()
+    }
 }

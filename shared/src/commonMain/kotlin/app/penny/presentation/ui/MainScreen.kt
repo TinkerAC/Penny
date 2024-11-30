@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.penny.feature.aiChat.AIChatScreen
 import app.penny.feature.transactions.TransactionScreen
 import app.penny.presentation.ui.screens.BottomNavItem
 import app.penny.presentation.viewmodel.MainViewModel
@@ -62,8 +63,7 @@ class MainScreen : Screen {
                             }
                         },
                         onFabClick = {
-                            // Navigate to the new screen or perform action
-                            rootNavigator.push(TransactionScreen())
+                            rootNavigator.push(AIChatScreen())
                         }
                     )
                 },
@@ -116,7 +116,6 @@ fun BottomAppBarWithFAB(
                             contentDescription = item.title
                         )
                     },
-                    label = { Text(item.title) },
                     selected = selectedItem == index,
                     onClick = {
                         onItemSelected(index, item)

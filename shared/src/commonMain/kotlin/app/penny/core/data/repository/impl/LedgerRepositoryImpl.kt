@@ -3,7 +3,7 @@ package app.penny.core.data.repository.impl
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.model.toEntity
 import app.penny.core.data.model.toLedgerDto
-import app.penny.core.data.model.toLedgerModel
+import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.network.ApiClient
@@ -26,11 +26,11 @@ class LedgerRepositoryImpl(
     override suspend fun findByUuid(ledgerUuid: Uuid): LedgerModel? {
         return ledgerLocalDataSource.findByUuid(
             ledgerUuid.toString()
-        )?.toLedgerModel()
+        )?.toModel()
     }
 
     override suspend fun findAll(): List<LedgerModel> {
-        return ledgerLocalDataSource.findAll().map { it.toLedgerModel() }
+        return ledgerLocalDataSource.findAll().map { it.toModel() }
     }
 
     override suspend fun update(ledgerModel: LedgerModel) {
@@ -47,7 +47,7 @@ class LedgerRepositoryImpl(
     override suspend fun downloadUnsyncedLedgersByUserUuid(lastSyncedAt: Instant): List<LedgerModel> {
         val downloadLedgerResponse = apiClient.sync.downloadLedgers(lastSyncedAt.epochSeconds)
 
-        return downloadLedgerResponse.ledgers.map { it.toLedgerModel() }
+        return downloadLedgerResponse.ledgers.map { it.toModel() }
     }
 
     override suspend fun uploadUnsyncedLedgersByUserUuid(
@@ -90,7 +90,7 @@ class LedgerRepositoryImpl(
     }
 
     override suspend fun findByUserUuid(userUuid: Uuid): List<LedgerModel> {
-        return ledgerLocalDataSource.findByUserUuid(userUuid.toString()).map { it.toLedgerModel() }
+        return ledgerLocalDataSource.findByUserUuid(userUuid.toString()).map { it.toModel() }
     }
 
     override suspend fun countByUserUuid(userUuid: Uuid): Long {
@@ -104,6 +104,6 @@ class LedgerRepositoryImpl(
         return ledgerLocalDataSource.findByUserUuidAndUpdatedAtAfter(
             userUuid.toString(),
             timeStamp.epochSeconds
-        ).map { it.toLedgerModel() }
+        ).map { it.toModel() }
     }
 }

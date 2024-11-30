@@ -1,21 +1,25 @@
 package app.penny.di
 
 import app.cash.sqldelight.db.SqlDriver
+import app.penny.core.data.database.ChatMessageLocalDataSource
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.database.LedgerLocalDataSourceImpl
 import app.penny.core.data.database.TransactionLocalDataSource
 import app.penny.core.data.database.UserLocalDataSource
 import app.penny.core.data.database.UserLocalDataSourceImpl
+import app.penny.core.data.database.dataSourceImpl.ChatMessageLocalDataSourceImpl
 import app.penny.core.data.database.dataSourceImpl.TransactionLocalDataSourceImpl
 import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.kvstore.TokenProvider
 import app.penny.core.data.kvstore.UserDataManager
 import app.penny.core.data.repository.AuthRepository
+import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.data.repository.impl.AuthRepositoryImpl
+import app.penny.core.data.repository.impl.ChatRepositoryImpl
 import app.penny.core.data.repository.impl.LedgerRepositoryImpl
 import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
@@ -36,6 +40,7 @@ import app.penny.core.network.clients.AuthApiClient
 import app.penny.core.network.clients.SyncApiClient
 import app.penny.core.network.clients.UserApiClient
 import app.penny.database.PennyDatabase
+import app.penny.feature.aiChat.AIChatViewModel
 import app.penny.feature.analytics.AnalyticViewModel
 import app.penny.feature.dashboard.DashboardViewModel
 import app.penny.feature.myLedger.MyLedgerViewModel
@@ -68,6 +73,7 @@ fun commonModule() = module {
 
 
     single { get<PennyDatabase>().userQueries }
+    single { get<PennyDatabase>().chatMessageQueries }
 
     // 提供 DataSource
     single<TransactionLocalDataSource> { TransactionLocalDataSourceImpl(get()) }
@@ -75,6 +81,9 @@ fun commonModule() = module {
     single<LedgerLocalDataSource> { LedgerLocalDataSourceImpl(get()) }
 
     single<UserLocalDataSource> { UserLocalDataSourceImpl(get()) }
+
+    single<ChatMessageLocalDataSource> { ChatMessageLocalDataSourceImpl(get()) }
+
 
     //SettingManager
     single { UserDataManager(get()) }
@@ -103,6 +112,10 @@ fun commonModule() = module {
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
 
     single<UserRepository> { UserRepositoryImpl(get()) }
+
+    single<ChatRepository> { ChatRepositoryImpl(get(),get()) }
+
+
 
     //注入ApiClient
     // Koin 模块定义
@@ -140,6 +153,8 @@ fun commonModule() = module {
         )
     }
 
+    factory { AIChatViewModel(get(), get(), get()) }
+
 
     // 注入 ViewModel
     factory { NewTransactionViewModel(get(), get()) }
@@ -165,6 +180,8 @@ fun commonModule() = module {
     factory { MyLedgerViewModel(get(), get()) }
 
     factory { NewLedgerViewModel(get(), get()) }
+
+    factory { AIChatViewModel(get(), get(), get()) }
 
 
 }

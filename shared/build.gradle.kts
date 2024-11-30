@@ -81,6 +81,11 @@ kotlin {
                 implementation(libs.ktor.client.cio)
 
 
+                //image loader
+                implementation(libs.coil.compose)
+//                implementation(libs.coil.network.okhttp)
+
+
 
 
             }

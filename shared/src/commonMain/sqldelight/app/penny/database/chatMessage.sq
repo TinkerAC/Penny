@@ -1,0 +1,27 @@
+CREATE TABLE ChatMessageEntity (
+    uuid TEXT PRIMARY KEY,
+    user_uuid TEXT NOT NULL REFERENCES userEntity(uuid) ON DELETE CASCADE,
+    sender_uuid TEXT NOT NULL REFERENCES userEntity(uuid) ON DELETE CASCADE,
+    type TEXT NOT NULL CHECK(type IN ('text', 'audio')),
+    content TEXT,
+    audio_file_path TEXT,
+    duration INTEGER,
+    timestamp INTEGER NOT NULL
+);
+
+
+insert:
+INSERT INTO ChatMessageEntity (uuid, user_uuid, sender_uuid, type, content, audio_file_path, duration, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+
+findByUuid:
+SELECT * FROM ChatMessageEntity WHERE uuid = ?;
+
+
+findBySenderUuid:
+SELECT * FROM ChatMessageEntity WHERE sender_uuid = ?;
+
+findByUserUuid:
+SELECT * FROM ChatMessageEntity WHERE user_uuid = ?;
+
+

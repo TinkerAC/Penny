@@ -3,6 +3,8 @@ agp = "8.2.2"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
+coilCompose = "3.0.4"
+coilNetworkOkhttp = "3.0.4"
 compose-multiplatform = "1.7.0"
 
 androidx-activityCompose = "1.9.2"
@@ -54,6 +56,8 @@ logback = "1.5.11"
 # Koin 依赖，版本统一为 3
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 composable-table = { module = "io.github.sunny-chung:composable-table", version.ref = "composableTable" }
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedVersion" }
 exposed-crypt = { module = "org.jetbrains.exposed:exposed-crypt", version.ref = "exposedVersion" }

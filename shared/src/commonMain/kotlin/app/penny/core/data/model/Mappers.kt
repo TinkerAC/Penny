@@ -6,14 +6,14 @@ import app.penny.core.domain.enum.Currency
 import app.penny.core.domain.enum.LedgerCover
 import app.penny.core.domain.enum.TransactionType
 import app.penny.core.domain.model.AchievementModel
+import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
-import app.penny.core.domain.model.UserAchievementModel
 import app.penny.core.domain.model.UserModel
 import app.penny.database.AchievementEntity
+import app.penny.database.ChatMessageEntity
 import app.penny.database.LedgerEntity
 import app.penny.database.TransactionEntity
-import app.penny.database.UserAchievementEntity
 import app.penny.database.UserEntity
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
@@ -25,7 +25,7 @@ import app.penny.servershared.dto.TransactionDto
 
 
 @OptIn(ExperimentalUuidApi::class)
-fun LedgerEntity.toLedgerModel(): LedgerModel {
+fun LedgerEntity.toModel(): LedgerModel {
     return LedgerModel(
         uuid = Uuid.parse(uuid),
         name = name,
@@ -72,7 +72,7 @@ fun TransactionModel.toEntity(): TransactionEntity {
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun TransactionEntity.toLedgerModel(): TransactionModel {
+fun TransactionEntity.toModel(): TransactionModel {
     return TransactionModel(
         ledgerUuid = Uuid.parse(ledger_uuid),
         transactionDate = Instant.fromEpochSeconds(transaction_date),
@@ -87,7 +87,7 @@ fun TransactionEntity.toLedgerModel(): TransactionModel {
 
 
 @OptIn(ExperimentalUuidApi::class)
-fun TransactionModel.toTransactionDto(
+fun TransactionModel.toDto(
     ledgerUuid: Uuid
 ): TransactionDto {
     return TransactionDto(
@@ -106,7 +106,7 @@ fun TransactionModel.toTransactionDto(
 }
 
 
-fun AchievementEntity.toLedgerModel(): AchievementModel {
+fun AchievementEntity.toModel(): AchievementModel {
     return AchievementModel(
         id = id,
         name = name,
@@ -115,8 +115,6 @@ fun AchievementEntity.toLedgerModel(): AchievementModel {
         goal = goal
     )
 }
-
-
 
 
 @OptIn(ExperimentalUuidApi::class)
@@ -135,7 +133,7 @@ fun LedgerModel.toLedgerDto(): LedgerDto {
 
 
 @OptIn(ExperimentalUuidApi::class)
-fun LedgerDto.toLedgerModel(): LedgerModel {
+fun LedgerDto.toModel(): LedgerModel {
     return LedgerModel(
         uuid = Uuid.parse(uuid),
         name = name,
@@ -151,7 +149,7 @@ fun LedgerDto.toLedgerModel(): LedgerModel {
 
 
 @OptIn(ExperimentalUuidApi::class)
-fun TransactionDto.toTransactionModel(): TransactionModel {
+fun TransactionDto.toModel(): TransactionModel {
     return TransactionModel(
         transactionDate = Instant.fromEpochSeconds(transactionDate),
         category = Category.valueOf(categoryName),
@@ -166,7 +164,7 @@ fun TransactionDto.toTransactionModel(): TransactionModel {
 
 
 @OptIn(ExperimentalUuidApi::class)
-fun UserModel.toUserEntity(): UserEntity {
+fun UserModel.toEntity(): UserEntity {
     return UserEntity(
         uuid = uuid.toString(),
         username = username,
@@ -178,7 +176,7 @@ fun UserModel.toUserEntity(): UserEntity {
 
 
 @OptIn(ExperimentalUuidApi::class)
-fun UserEntity.toUserModel(): UserModel {
+fun UserEntity.toModel(): UserModel {
     return UserModel(
         uuid = Uuid.parse(uuid),
         username = username,
@@ -186,4 +184,55 @@ fun UserEntity.toUserModel(): UserModel {
         createdAt = Instant.fromEpochSeconds(created_at),
         updatedAt = Instant.fromEpochSeconds(updated_at)
     )
+}
+
+
+@OptIn(ExperimentalUuidApi::class)
+fun ChatMessage.toEntity(): ChatMessageEntity {
+    return when (this) {
+        is ChatMessage.TextMessage -> ChatMessageEntity(
+            uuid = uuid.toString(),
+            user_uuid = user.uuid.toString(),
+            sender_uuid = sender.uuid.toString(),
+            type = MESSAGE_TYPE.TEXT.value,
+            content = content,
+            timestamp = timestamp,
+            audio_file_path = null,
+            duration = null
+        )
+        is ChatMessage.AudioMessage -> ChatMessageEntity(
+            uuid = uuid.toString(),
+            user_uuid = user.uuid.toString(),
+            sender_uuid = sender.uuid.toString(),
+            type = MESSAGE_TYPE.AUDIO.value,
+            audio_file_path = audioFilePath,
+            duration = duration,
+            timestamp = timestamp,
+            content = null
+        )
+    }
+
+}
+
+
+@OptIn(ExperimentalUuidApi::class)
+fun ChatMessageEntity.toModel(): ChatMessage {
+    return when (type) {
+        MESSAGE_TYPE.TEXT.value -> ChatMessage.TextMessage(
+            uuid = Uuid.parse(uuid),
+            user = UserModel(Uuid.parse(user_uuid), "", ""),
+            sender = UserModel(Uuid.parse(sender_uuid), "", ""),
+            content = content!!,
+            timestamp = timestamp
+        )
+        MESSAGE_TYPE.AUDIO.value -> ChatMessage.AudioMessage(
+            uuid = Uuid.parse(uuid),
+            user = UserModel(Uuid.parse(user_uuid), "", ""),
+            sender = UserModel(Uuid.parse(sender_uuid), "", ""),
+            audioFilePath = audio_file_path!!,
+            duration = duration!!,
+            timestamp = timestamp
+        )
+        else -> throw IllegalArgumentException("Unknown message type: $type")
+    }
 }

@@ -3,8 +3,8 @@ package app.penny.core.data.repository.impl
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.database.TransactionLocalDataSource
 import app.penny.core.data.model.toEntity
-import app.penny.core.data.model.toLedgerModel
-import app.penny.core.data.model.toTransactionDto
+import app.penny.core.data.model.toModel
+import app.penny.core.data.model.toDto
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.network.ApiClient
@@ -21,7 +21,7 @@ class TransactionRepositoryImpl(
     private val apiClient: ApiClient
 ) : TransactionRepository {
     override suspend fun findByUuid(transactionUuid: Uuid): TransactionModel? {
-        return transactionLocalDataSource.findByUuid(transactionUuid.toString())?.toLedgerModel()
+        return transactionLocalDataSource.findByUuid(transactionUuid.toString())?.toModel()
     }
 
     override suspend fun findByLedgerUuidAndUpdatedAtBetween(
@@ -30,13 +30,13 @@ class TransactionRepositoryImpl(
 
         return transactionLocalDataSource.findByLedgerUuidAndTransactionDateBetween(
             ledgerUuid.toString(), startInstant.epochSeconds, endInstant.epochSeconds
-        ).map { it.toLedgerModel() }
+        ).map { it.toModel() }
 
 
     }
 
     override suspend fun findAll(): List<TransactionModel> {
-        return transactionLocalDataSource.findAll().map { it.toLedgerModel() }
+        return transactionLocalDataSource.findAll().map { it.toModel() }
     }
 
     override suspend fun insert(transaction: TransactionModel) {
@@ -59,7 +59,7 @@ class TransactionRepositoryImpl(
 
     override suspend fun findByLedgerUuid(ledgerUuid: Uuid): List<TransactionModel> {
         return transactionLocalDataSource.findByLedgerUuid(ledgerUuid.toString())
-            .map { it.toLedgerModel() }
+            .map { it.toModel() }
     }
 
     override suspend fun count(): Long {
@@ -80,7 +80,7 @@ class TransactionRepositoryImpl(
             userUuid = userUuid.toString(),
             timestamp = timeStamp.epochSeconds
         )
-            .map { it.toLedgerModel() }
+            .map { it.toModel() }
     }
 
 
@@ -90,7 +90,7 @@ class TransactionRepositoryImpl(
 
         apiClient.sync.uploadTransactions(
             transactions = transactions.map {
-                it.toTransactionDto(
+                it.toDto(
                     //find uuid of ledger
                     ledgerUuid = Uuid.parse(
                         ledgerLocalDataSource.findByUuid(

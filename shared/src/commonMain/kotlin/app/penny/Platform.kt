@@ -71,6 +71,8 @@ fun ApplicationInitializer.initUser(): ApplicationInitializer {
                 )
             userRepository.insert(user)
             userDataRepository.setUserUuid(user.uuid.toString())
+        }else{
+            Logger.i("Current user : ${userDataRepository.getUserUuid()}")
         }
 
     }

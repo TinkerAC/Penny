@@ -1,6 +1,6 @@
 package app.penny.core.domain.usecase
 
-import app.penny.core.data.model.toTransactionModel
+import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
@@ -106,7 +106,7 @@ class SyncDataUseCase(
 
                     // insert or update remote transactions
                     response.transactions.forEach {
-                        transactionRepository.upsert(it.toTransactionModel())
+                        transactionRepository.upsert(it.toModel())
                     }
 
                 } catch (e: Exception) {

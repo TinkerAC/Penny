@@ -11,4 +11,7 @@ interface UserLocalDataSource {
     fun findByUuid(uuid: String): UserEntity?
 
     fun count(): Long
+
+
+    fun findAll(): List<UserEntity>
 }
