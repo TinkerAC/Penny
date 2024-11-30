@@ -13,7 +13,7 @@ class DownloadUnsyncedLedgerUseCase(
 
         val lastSyncedAt :Instant? = userDataRepository.getLastSyncedAt()
 
-        val unsyncedLedgers = ledgerRepository.downloadUnsyncedLedgers(
+        val unsyncedLedgers = ledgerRepository.downloadUnsyncedLedgersByUserUuid(
              lastSyncedAt = lastSyncedAt?: Instant.DISTANT_PAST
         )
 

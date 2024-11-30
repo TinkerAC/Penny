@@ -9,10 +9,12 @@ import app.penny.core.domain.model.AchievementModel
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.UserAchievementModel
+import app.penny.core.domain.model.UserModel
 import app.penny.database.AchievementEntity
 import app.penny.database.LedgerEntity
 import app.penny.database.TransactionEntity
 import app.penny.database.UserAchievementEntity
+import app.penny.database.UserEntity
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -55,7 +57,7 @@ fun LedgerModel.toEntity(): LedgerEntity {
 @OptIn(ExperimentalUuidApi::class)
 fun TransactionModel.toEntity(): TransactionEntity {
     return TransactionEntity(
-        uuid = Uuid.toString(),
+        uuid = uuid.toString(),
         ledger_uuid = ledgerUuid.toString(),
         transaction_date = transactionDate.epochSeconds,
         category_name = category.name,
@@ -73,13 +75,13 @@ fun TransactionModel.toEntity(): TransactionEntity {
 fun TransactionEntity.toLedgerModel(): TransactionModel {
     return TransactionModel(
         ledgerUuid = Uuid.parse(ledger_uuid),
-        amount = BigDecimal.parseString(amount),
-        currency = Currency.valueOf(currency_code),
-        remark = remark,
-        transactionType = TransactionType.valueOf(transaction_type),
-        screenshotUri = screenshot_uri,
         transactionDate = Instant.fromEpochSeconds(transaction_date),
         category = Category.valueOf(category_name),
+        transactionType = TransactionType.valueOf(transaction_type),
+        amount = BigDecimal.parseString(amount),
+        currency = Currency.valueOf(currency_code),
+        screenshotUri = screenshot_uri,
+        remark = remark,
     )
 }
 
@@ -114,15 +116,7 @@ fun AchievementEntity.toLedgerModel(): AchievementModel {
     )
 }
 
-fun UserAchievementEntity.toLedgerModel(): UserAchievementModel {
-    return UserAchievementModel(
-        id = id,
-        achievementId = achievement_id,
-        progress = progress,
-        completedAt = completed_at,
 
-        )
-}
 
 
 @OptIn(ExperimentalUuidApi::class)
@@ -143,7 +137,6 @@ fun LedgerModel.toLedgerDto(): LedgerDto {
 @OptIn(ExperimentalUuidApi::class)
 fun LedgerDto.toLedgerModel(): LedgerModel {
     return LedgerModel(
-        id = 0,
         uuid = Uuid.parse(uuid),
         name = name,
         currency = Currency.valueOf(currencyCode),
@@ -160,7 +153,6 @@ fun LedgerDto.toLedgerModel(): LedgerModel {
 @OptIn(ExperimentalUuidApi::class)
 fun TransactionDto.toTransactionModel(): TransactionModel {
     return TransactionModel(
-        ledgerId = 0,
         transactionDate = Instant.fromEpochSeconds(transactionDate),
         category = Category.valueOf(categoryName),
         transactionType = TransactionType.valueOf(transactionType),
@@ -169,5 +161,29 @@ fun TransactionDto.toTransactionModel(): TransactionModel {
         remark = remark,
         createdAt = createdAt,
         updatedAt = updatedAt
+    )
+}
+
+
+@OptIn(ExperimentalUuidApi::class)
+fun UserModel.toUserEntity(): UserEntity {
+    return UserEntity(
+        uuid = uuid.toString(),
+        username = username,
+        email = email,
+        created_at = createdAt.epochSeconds,
+        updated_at = updatedAt.epochSeconds
+    )
+}
+
+
+@OptIn(ExperimentalUuidApi::class)
+fun UserEntity.toUserModel(): UserModel {
+    return UserModel(
+        uuid = Uuid.parse(uuid),
+        username = username,
+        email = email,
+        createdAt = Instant.fromEpochSeconds(created_at),
+        updatedAt = Instant.fromEpochSeconds(updated_at)
     )
 }

@@ -1,6 +1,7 @@
 package app.penny.feature.analytics
 
 import androidx.compose.ui.graphics.Color
+import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.enum.TransactionType
 import app.penny.core.domain.model.LedgerModel
@@ -30,9 +31,10 @@ import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 
 
+@OptIn(ExperimentalUuidApi::class)
 class AnalyticViewModel(
     private val userDataRepository: UserDataRepository,
-    private val getAllLedgerUseCase: GetAllLedgerUseCase,
+    private val ledgerRepository: LedgerRepository,
     private val searchTransactionsUseCase: SearchTransactionsUseCase
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(AnalyticUiState())
@@ -44,10 +46,10 @@ class AnalyticViewModel(
             fetchAllLedgers()
             _uiState.value = _uiState.value.copy(isLoading = false)
             Logger.d("ledgers: ${_uiState.value.ledgers}")
-            val recentLedgerId = userDataRepository.getRecentLedgerIdOrNull()
+            val recentLedgerId = userDataRepository.getRecentLedgerUuidOrNull()
 
-            if (recentLedgerId != -1L) {
-                val recentLedger = _uiState.value.ledgers.find { it.id == recentLedgerId }
+            if (recentLedgerId != null) {
+                val recentLedger = _uiState.value.ledgers.find { it.uuid == recentLedgerId }
                 Logger.d("get recentLedger $recentLedger")
 
                 if (recentLedger != null) {
@@ -209,7 +211,7 @@ class AnalyticViewModel(
 
 
     private suspend fun fetchAllLedgers() {
-        val ledgers = getAllLedgerUseCase()
+        val ledgers = ledgerRepository.findByUserUuid(userDataRepository.getUserUuid())
         _uiState.value = _uiState.value.copy(ledgers = ledgers)
     }
 
@@ -217,8 +219,8 @@ class AnalyticViewModel(
         Logger.d("Now Using Ledger: $ledger")
         _uiState.value = _uiState.value.copy(selectedLedger = ledger)
         screenModelScope.launch {
-            userDataRepository.setRecentLedgerId(ledger.id)
-            Logger.d("Save recentLedgerId ${ledger.id}")
+            userDataRepository.setRecentLedgerUuid(ledger.uuid)
+            Logger.d("Save recentLedgerUuid: ${ledger.uuid}")
             dismissLedgerSelectionDialog()
         }
         //redo selectTab

@@ -1,9 +1,11 @@
 // NewLedgerViewModel.kt
 package app.penny.feature.newLedger
 
+import app.penny.core.data.repository.LedgerRepository
+import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.enum.Currency
 import app.penny.core.domain.enum.LedgerCover
-import app.penny.core.domain.usecase.InsertLedgerUseCase
+import app.penny.core.domain.model.LedgerModel
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -12,9 +14,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+
+@OptIn(ExperimentalUuidApi::class)
 class NewLedgerViewModel(
-    private val insertLedgerUseCase: InsertLedgerUseCase
+    private val ledgerRepository: LedgerRepository,
+    private val userDataRepository: UserDataRepository
 ) : ScreenModel {
 
     // 管理 UI 状态的 StateFlow
@@ -62,13 +69,19 @@ class NewLedgerViewModel(
             // 设置加载状态
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                // 调用用例插入账本
-                insertLedgerUseCase(
-                    name = _uiState.value.ledgerName,
-                    currency = _uiState.value.currency,
-                    description = _uiState.value.ledgerDescription,
-                    cover = _uiState.value.ledgerCover
+                // 调用 LedgerRepository 插入账本
+
+                ledgerRepository.insert(
+                    LedgerModel(
+                        uuid = Uuid.random(),
+                        userUuid = userDataRepository.getUserUuid(),
+                        name = _uiState.value.ledgerName,
+                        currency = _uiState.value.currency,
+                        cover = _uiState.value.ledgerCover,
+                        description = ""
+                    )
                 )
+
                 // 设置加载完成状态
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 // 发射成功事件

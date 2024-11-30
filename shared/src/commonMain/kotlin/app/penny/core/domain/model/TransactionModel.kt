@@ -12,7 +12,6 @@ import kotlin.uuid.Uuid
 data class TransactionModel(
     var uuid: Uuid = Uuid.parse("00000000-0000-0000-0000-000000000000"),
     var ledgerUuid: Uuid = Uuid.parse("00000000-0000-0000-0000-000000000000"),
-    val ledgerId: Long = 0,
     val transactionDate: Instant,
     val category: Category = Category.MISCELLANEOUS,
     val transactionType: TransactionType = TransactionType.EXPENSE,
@@ -26,7 +25,7 @@ data class TransactionModel(
 
     ) {
     override fun toString(): String {
-        return "TransactionModel(ledgerId=$ledgerId, transactionDate=$transactionDate, category=$category, transactionType=$transactionType, amount=${amount.toPlainString()}, currency=$currency, screenshotUri=$screenshotUri, remark=$remark, createdAt=$createdAt, updatedAt=$updatedAt)"
+        return "TransactionModel(ledgerUuid =$ledgerUuid, transactionDate=$transactionDate, category=$category, transactionType=$transactionType, amount=${amount.toPlainString()}, currency=$currency, screenshotUri=$screenshotUri, remark=$remark, createdAt=$createdAt, updatedAt=$updatedAt)"
     }
 }
 

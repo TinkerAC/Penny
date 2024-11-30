@@ -1,15 +1,20 @@
 package app.penny.core.data.repository
 
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+
+@OptIn(ExperimentalUuidApi::class)
 interface UserDataRepository {
-    suspend fun setRecentLedgerId(ledgerId: Long)
-    suspend fun getRecentLedgerIdOrNull(): Long?
+
+    suspend fun setRecentLedgerUuid(ledgerUuid: Uuid)
+    suspend fun getRecentLedgerUuidOrNull(): Uuid?
 
     suspend fun setContinuousCheckInDays(days: Int)
     suspend fun getContinuousCheckInDays(): Int
 
-    suspend fun getUserUuid(): String
+    suspend fun getUserUuid(): Uuid
     suspend fun setUserUuid(uuid: String)
 
     suspend fun getLastSyncedAt():Instant?
@@ -24,5 +29,8 @@ interface UserDataRepository {
 
     suspend fun getUserEmailOrNull(): String?
     suspend fun setUserEmail(userEmail: String)
+
+
+
 
 }

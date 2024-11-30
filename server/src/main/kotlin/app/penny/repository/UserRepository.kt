@@ -1,4 +1,4 @@
-// 文件：server/src/main/kotlin/app/penny/repository/UserRepository.kt
+// 文件：server/src/main/kotlin/app/penny/repository/UserRepositoryImpl.kt
 package app.penny.repository
 
 import app.penny.servershared.dto.UserDto

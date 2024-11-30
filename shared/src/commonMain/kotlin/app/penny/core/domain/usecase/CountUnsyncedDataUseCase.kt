@@ -6,7 +6,9 @@ import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.network.ApiClient
 import co.touchlab.kermit.Logger
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class CountUnsyncedDataUseCase(
     private val ledgerRepository: LedgerRepository,
     private val transactionRepository: TransactionRepository,
@@ -15,15 +17,18 @@ class CountUnsyncedDataUseCase(
 ) {
     suspend operator fun invoke(): CountUnsyncedDataResult {
 
+        val userUuid = userDataRepository.getUserUuid()
 
         val lastSyncedAt: Instant? = userDataRepository.getLastSyncedAt()
 
-        val unsyncedLedgerCount = ledgerRepository.countByUpdatedAtAfter(
+        val unsyncedLedgerCount = ledgerRepository.countByUserUuidAndUpdatedAtAfter(
+            userUuid = userUuid,
             timeStamp = lastSyncedAt ?: Instant.DISTANT_PAST
         )
 
 
-        val unsyncedTransactionCount = transactionRepository.countByUpdatedAtAfter(
+        val unsyncedTransactionCount = transactionRepository.countByUserUuidAndUpdatedAtAfter(
+            userUuid = userUuid,
             timeStamp = lastSyncedAt ?: Instant.DISTANT_PAST
         )
 

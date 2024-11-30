@@ -16,37 +16,35 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class TransactionRepositoryImpl(
-
     private val transactionLocalDataSource: TransactionLocalDataSource,
     private val ledgerLocalDataSource: LedgerLocalDataSource,
     private val apiClient: ApiClient
-
 ) : TransactionRepository {
-    override suspend fun findByUuid(transactionUuid: Uuid): TransactionModel {
-
-        return transactionLocalDataSource.getTransactionByUuid(
-            transactionUuid.toString()
-        ).toLedgerModel()
+    override suspend fun findByUuid(transactionUuid: Uuid): TransactionModel? {
+        return transactionLocalDataSource.findByUuid(transactionUuid.toString())?.toLedgerModel()
     }
 
-    override suspend fun findByUpdatedAtBetween(
-        startInstant: Instant, endInstant: Instant
+    override suspend fun findByLedgerUuidAndUpdatedAtBetween(
+        ledgerUuid: Uuid, startInstant: Instant, endInstant: Instant
     ): List<TransactionModel> {
 
-        return transactionLocalDataSource.getTransactionsBetween(
-            startInstant.epochSeconds, endInstant.epochSeconds
+        return transactionLocalDataSource.findByLedgerUuidAndTransactionDateBetween(
+            ledgerUuid.toString(), startInstant.epochSeconds, endInstant.epochSeconds
         ).map { it.toLedgerModel() }
+
+
     }
 
     override suspend fun findAll(): List<TransactionModel> {
-        return transactionLocalDataSource.getAllTransactions().map { it.toLedgerModel() }
+        return transactionLocalDataSource.findAll().map { it.toLedgerModel() }
     }
 
     override suspend fun insert(transaction: TransactionModel) {
 
         transaction.uuid = Uuid.random()
 
-        transactionLocalDataSource.insertTransaction(
+
+        transactionLocalDataSource.insert(
             transaction.toEntity()
         )
     }
@@ -60,26 +58,28 @@ class TransactionRepositoryImpl(
     }
 
     override suspend fun findByLedgerUuid(ledgerUuid: Uuid): List<TransactionModel> {
-        return transactionLocalDataSource.getTransactionsByLedger(ledgerUuid.toString())
+        return transactionLocalDataSource.findByLedgerUuid(ledgerUuid.toString())
             .map { it.toLedgerModel() }
     }
 
-    override suspend fun count(): Int {
-        return transactionLocalDataSource.getTransactionsCount()
-
+    override suspend fun count(): Long {
+        return transactionLocalDataSource.count()
 
     }
 
     override suspend fun upsert(transaction: TransactionModel) {
-        transactionLocalDataSource.upsertTransactionByUuid(transaction.toEntity())
+        transactionLocalDataSource.upsertByUuid(transaction.toEntity())
     }
 
-    override suspend fun countByUpdatedAtAfter(timeStamp: Instant): Int {
-        return transactionLocalDataSource.countTransactionsAfter(timeStamp.epochSeconds)
-    }
 
-    override suspend fun findByUpdatedAtAfter(timeStamp: Instant): List<TransactionModel> {
-        return transactionLocalDataSource.getTransactionsUpdatedAfter(timeStamp.epochSeconds)
+    override suspend fun findByUserUuidAndUpdatedAtAfter(
+        userUuid: Uuid,
+        timeStamp: Instant
+    ): List<TransactionModel> {
+        return transactionLocalDataSource.findByUserUuidAndUpdatedAtAfter(
+            userUuid = userUuid.toString(),
+            timestamp = timeStamp.epochSeconds
+        )
             .map { it.toLedgerModel() }
     }
 
@@ -93,7 +93,7 @@ class TransactionRepositoryImpl(
                 it.toTransactionDto(
                     //find uuid of ledger
                     ledgerUuid = Uuid.parse(
-                        ledgerLocalDataSource.getLedgerByUuid(
+                        ledgerLocalDataSource.findByUuid(
                             it.ledgerUuid.toString()
                         )!!.uuid
                     )
@@ -110,5 +110,19 @@ class TransactionRepositoryImpl(
         return response
 
 
+    }
+
+    override suspend fun countByLedgerUuid(ledgerUuid: Uuid): Long {
+        return transactionLocalDataSource.countByLedgerUuid(ledgerUuid.toString())
+    }
+
+    override suspend fun countByUserUuidAndUpdatedAtAfter(
+        userUuid: Uuid,
+        timeStamp: Instant
+    ): Long {
+        return transactionLocalDataSource.countByUserUuidAndUpdatedAtAfter(
+            userUuid = userUuid.toString(),
+            timestamp = timeStamp.epochSeconds
+        )
     }
 }

@@ -8,7 +8,7 @@ import kotlin.uuid.ExperimentalUuidApi
 class UserDataManager(
     private val settings: Settings
 ) {
-    fun setString(key: String, value: String) {
+    fun putString(key: String, value: String) {
         settings.set(key = key, value = value)
     }
 
@@ -37,7 +37,7 @@ class UserDataManager(
 
 
     companion object {
-        const val RECENT_LEDGER_ID = "recent_ledger_id"
+        const val RECENT_LEDGER_UUID = "recent_ledger_uuid"
         const val CONTINUOUS_CHECK_IN_DAYS = "continuous_check_in_days"
         const val USER_UUID = "user_uuid"
         const val LAST_SYNCED_AT = "last_synced_at"

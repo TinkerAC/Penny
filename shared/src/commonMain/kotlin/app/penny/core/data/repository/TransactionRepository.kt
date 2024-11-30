@@ -10,28 +10,32 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 interface TransactionRepository {
 
-    suspend fun findByUuid(transactionUuid: Uuid): TransactionModel
+    suspend fun findByUuid(transactionUuid: Uuid): TransactionModel?
     suspend fun findAll(): List<TransactionModel>
     suspend fun insert(transaction: TransactionModel)
     suspend fun updateByUuid(transactionUuid: Uuid, transaction: TransactionModel)
     suspend fun deleteByUuid(transactionUuid: Uuid)
     suspend fun findByLedgerUuid(ledgerUuid: Uuid): List<TransactionModel>
-    suspend fun findByUpdatedAtBetween(
+    suspend fun findByLedgerUuidAndUpdatedAtBetween(
+        ledgerUuid: Uuid,
         startInstant: Instant,
         endInstant: Instant
     ): List<TransactionModel>
 
 
-    suspend fun findByUpdatedAtAfter(timeStamp: Instant): List<TransactionModel>
-
+    suspend fun findByUserUuidAndUpdatedAtAfter(
+        userUuid: Uuid,
+        timeStamp: Instant
+    ): List<TransactionModel>
 
     suspend fun upsert(transaction: TransactionModel)
 
 
-    suspend fun countByUpdatedAtAfter(timeStamp: Instant): Int
+    suspend fun count(): Long
 
 
-    suspend fun count(): Int
+    suspend fun countByLedgerUuid(ledgerUuid: Uuid): Long
+    suspend fun countByUserUuidAndUpdatedAtAfter(userUuid: Uuid, timeStamp: Instant): Long
 
 
     suspend fun uploadUnsyncedTransactions(

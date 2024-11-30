@@ -11,16 +11,16 @@ CREATE TABLE ledgerEntity (
     FOREIGN KEY (user_uuid) REFERENCES userEntity(uuid)
 );
 
-insertLedger:
+insert:
 INSERT INTO ledgerEntity (uuid,user_uuid, name, currency_code, cover_name, description) VALUES (?, ?,?, ?, ?, ?);
 
-getLedgerByUuid:
+findByUuid:
 SELECT * FROM ledgerEntity WHERE uuid = ?;
 
-getAllLedgers:
+findAll:
 SELECT * FROM ledgerEntity;
 
-updateLedger:
+update:
 UPDATE ledgerEntity SET
     name = ?,
     currency_code = ?,
@@ -29,13 +29,11 @@ UPDATE ledgerEntity SET
     updated_at = strftime('%s','now')
 WHERE uuid = ?;
 
-deleteLedger:
+deleteByUuid:
 DELETE FROM ledgerEntity WHERE uuid = ?;
 
-getLedgersUpdatedAfter:
-SELECT * FROM ledgerEntity WHERE updated_at > ?;
 
-upsertLedgerByUuid:
+upsertByUuid:
 INSERT INTO ledgerEntity (uuid,user_uuid, name, currency_code, cover_name, description, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, strftime('%s','now'), strftime('%s','now'))
 ON CONFLICT(uuid) DO UPDATE SET
@@ -45,5 +43,23 @@ ON CONFLICT(uuid) DO UPDATE SET
     description = excluded.description,
     updated_at = strftime('%s','now');
 
-countLedgersUpdatedAfter:
+
+
+findByUserUuid:
+SELECT * FROM ledgerEntity WHERE user_uuid = ?;
+
+
+countByUserUuid:
+SELECT COUNT(*) FROM ledgerEntity WHERE user_uuid = ?;
+
+
+
+countByUpdatedAtAfter:
 SELECT COUNT(*) FROM ledgerEntity WHERE updated_at > ?;
+
+findByUserUuidAndUpdatedAtAfter:
+SELECT * FROM ledgerEntity WHERE user_uuid = ? AND updated_at > ?;
+
+
+countByUserUuidAndUpdatedAtAfter:
+SELECT COUNT(*) FROM ledgerEntity WHERE user_uuid = ? AND updated_at > ?;

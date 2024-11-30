@@ -8,7 +8,9 @@ import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import co.touchlab.kermit.Logger
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class SyncDataUseCase(
     private val countUnsyncedDataUseCase: CountUnsyncedDataUseCase,
     private val userDataRepository: UserDataRepository,
@@ -17,6 +19,8 @@ class SyncDataUseCase(
 ) {
 
     suspend operator fun invoke() {
+
+        val userUuid = userDataRepository.getUserUuid()
 
         val countUnsyncedDataResult = countUnsyncedDataUseCase()
 
@@ -28,12 +32,15 @@ class SyncDataUseCase(
 
                 //1.Prepare local changes
                 val ledgerLocalChanges: List<LedgerModel> =
-                    ledgerRepository.findByUpdatedAtAfter(
+                    ledgerRepository.findByUserUuidAndUpdatedAtAfter(
+                        userUuid = userUuid,
                         timeStamp = lastSyncedAt
+
                     )
 
                 val transactionLocalChanges: List<TransactionModel> =
-                    transactionRepository.findByUpdatedAtAfter(
+                    transactionRepository.findByUserUuidAndUpdatedAtAfter(
+                        userUuid = userUuid,
                         timeStamp = lastSyncedAt
                     )
 
@@ -41,7 +48,7 @@ class SyncDataUseCase(
                 //2. Upload local changes
 
                 try {
-                    ledgerRepository.uploadUnsyncedLedgers(
+                    ledgerRepository.uploadUnsyncedLedgersByUserUuid(
                         ledgers = ledgerLocalChanges,
                         lastSyncedAt = lastSyncedAt
                     )
@@ -63,7 +70,7 @@ class SyncDataUseCase(
 
 
                 try {
-                    val remoteLedgers = ledgerRepository.downloadUnsyncedLedgers(
+                    val remoteLedgers = ledgerRepository.downloadUnsyncedLedgersByUserUuid(
                         lastSyncedAt = lastSyncedAt
                     )
 
@@ -81,7 +88,7 @@ class SyncDataUseCase(
                     }
 
                     Logger.d("Updated ledgers: $updatedLedgers, Inserted ledgers: $insertedLedgers")
-                    
+
 
                 } catch (e: Exception) {
                     // Handle error

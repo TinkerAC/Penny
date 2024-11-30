@@ -14,16 +14,16 @@ CREATE TABLE transactionEntity (
     FOREIGN KEY (ledger_uuid) REFERENCES ledgerEntity(uuid)
 );
 
-insertTransaction:
+insert:
 INSERT INTO transactionEntity (uuid, ledger_uuid, transaction_date, category_name, transaction_type, amount, currency_code, remark, screenshot_uri) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-getTransactionByUuid:
+findByUuid:
 SELECT * FROM transactionEntity WHERE uuid = ?;
 
-getAllTransactions:
+findAll:
 SELECT * FROM transactionEntity;
 
-updateTransaction:
+update:
 UPDATE transactionEntity SET
     ledger_uuid = ?,
     transaction_date = ?,
@@ -36,19 +36,20 @@ UPDATE transactionEntity SET
     updated_at = strftime('%s','now')
 WHERE uuid = ?;
 
-deleteTransaction:
+deleteByUuid:
 DELETE FROM transactionEntity WHERE uuid = ?;
 
-getTransactionsByLedgerUuid:
+findByLedgerUuid:
 SELECT * FROM transactionEntity WHERE ledger_uuid = ?;
 
-getTransactionsBetweenTimeStamps:
-SELECT * FROM transactionEntity WHERE transaction_date >= ? AND transaction_date <= ?;
+findByLedgerUuidAndTransactionDateBetween:
+SELECT * FROM transactionEntity WHERE ledger_uuid = ? AND transaction_date BETWEEN ? AND ?;
 
-getTransactionsCount:
+count:
 SELECT COUNT(*) FROM transactionEntity;
 
-upsertTransactionByUuid:
+
+upsertByUuid:
 INSERT INTO transactionEntity (uuid, ledger_uuid, transaction_date, category_name, transaction_type, amount, currency_code, remark, screenshot_uri, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%s','now'), strftime('%s','now'))
 ON CONFLICT(uuid) DO UPDATE SET
@@ -62,9 +63,23 @@ ON CONFLICT(uuid) DO UPDATE SET
     screenshot_uri = excluded.screenshot_uri,
     updated_at = strftime('%s','now');
 
-countTransactionsUpdatedAfter:
-SELECT COUNT(*) FROM transactionEntity WHERE updated_at > ?;
 
-getTransactionsUpdatedAfter:
-SELECT * FROM transactionEntity WHERE updated_at > ?;
+countByUserUuidAndUpdatedAtAfter:
+SELECT COUNT(*) FROM transactionEntity
+JOIN ledgerEntity ON transactionEntity.ledger_uuid = ledgerEntity.uuid
+WHERE ledgerEntity.user_uuid = ? AND transactionEntity.updated_at > ?;
 
+
+findByUserUuidAndUpdatedAtAfter:
+SELECT transactionEntity.* FROM transactionEntity
+JOIN ledgerEntity ON transactionEntity.ledger_uuid = ledgerEntity.uuid
+WHERE ledgerEntity.user_uuid = ? AND transactionEntity.updated_at > ?;
+
+findByUserUuid:
+SELECT transactionEntity.* FROM transactionEntity
+JOIN ledgerEntity ON transactionEntity.ledger_uuid = ledgerEntity.uuid
+WHERE ledgerEntity.user_uuid = ?;
+
+
+countByLedgerUuid:
+SELECT COUNT(*) FROM transactionEntity WHERE ledger_uuid = ?;

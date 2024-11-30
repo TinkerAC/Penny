@@ -2,19 +2,24 @@ package app.penny.core.data.repository.impl
 
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.kvstore.UserDataManager
-import co.touchlab.kermit.Logger
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class UserDataRepositoryImpl(
     private val userDataManager: UserDataManager
 ) : UserDataRepository {
-    override suspend fun getRecentLedgerIdOrNull(): Long? {
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun getRecentLedgerUuidOrNull(): Uuid? {
+        return userDataManager.getStringOrNull(UserDataManager.RECENT_LEDGER_UUID)?.let {
+            Uuid.parse(it)
+        }
 
-        return userDataManager.getLongOrNull(UserDataManager.RECENT_LEDGER_ID)
     }
 
-    override suspend fun setRecentLedgerId(ledgerId: Long) {
-        userDataManager.putLong(UserDataManager.RECENT_LEDGER_ID, ledgerId)
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun setRecentLedgerUuid(ledgerUuid: Uuid) {
+        userDataManager.putString(UserDataManager.RECENT_LEDGER_UUID, ledgerUuid.toString())
     }
 
 
@@ -26,16 +31,16 @@ class UserDataRepositoryImpl(
         return userDataManager.getInt(UserDataManager.CONTINUOUS_CHECK_IN_DAYS)
     }
 
-    override suspend fun getUserUuid(): String {
-        if (userDataManager.getNonFlowString(UserDataManager.USER_UUID).isEmpty()) {
-            Logger.d("No user uuid found, generating new one")
-            userDataManager.setString(UserDataManager.USER_UUID, userDataManager.generateUserUuid())
-        }
-        return userDataManager.getNonFlowString(UserDataManager.USER_UUID)
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun getUserUuid(): Uuid {
+        val userUuid = userDataManager.getStringOrNull(UserDataManager.USER_UUID)
+        return userUuid?.let {
+            Uuid.parse(it)
+        } ?: throw IllegalStateException("User UUID is not set.")
     }
 
     override suspend fun setUserUuid(uuid: String) {
-        userDataManager.setString(UserDataManager.USER_UUID, uuid)
+        userDataManager.putString(UserDataManager.USER_UUID, uuid)
     }
 
     override suspend fun getLastSyncedAt(): Instant? {
@@ -53,7 +58,7 @@ class UserDataRepositoryImpl(
     }
 
     override suspend fun setUserName(userName: String) {
-        userDataManager.setString(UserDataManager.USER_NAME, userName)
+        userDataManager.putString(UserDataManager.USER_NAME, userName)
     }
 
     override suspend fun getUserEmailOrNull(): String? {
@@ -61,11 +66,13 @@ class UserDataRepositoryImpl(
     }
 
     override suspend fun setUserEmail(userEmail: String) {
-        userDataManager.setString(UserDataManager.USER_EMAIL, userEmail)
+        userDataManager.putString(UserDataManager.USER_EMAIL, userEmail)
     }
 
 
     override suspend fun clearUserData() {
         userDataManager.clear()
     }
+
+
 }

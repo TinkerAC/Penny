@@ -50,12 +50,12 @@ class InsertRandomTransactionUseCase(
 
             transactionRepository.insert(
                 TransactionModel(
+                    ledgerUuid = ledger.uuid,
                     transactionDate = transactionDate,
-                    amount = amount,
                     category = category,
-                    ledgerId = ledger.id,
-                    currency = ledger.currency,
-                    transactionType = transactionType
+                    transactionType = transactionType,
+                    amount = amount,
+                    currency = ledger.currency
 
                 )
             )
@@ -88,11 +88,10 @@ class InsertRandomTransactionUseCase(
                 transactionRepository.insert(
                     TransactionModel(
                         transactionDate = Instant.fromEpochSeconds(transactionDate),
-                        amount = amount,
                         category = category,
-                        ledgerId = ledger.id,
-                        currency = ledger.currency,
-                        transactionType = transactionType
+                        transactionType = transactionType,
+                        amount = amount,
+                        currency = ledger.currency
 
                     )
                 )

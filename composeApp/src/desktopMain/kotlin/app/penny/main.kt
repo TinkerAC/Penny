@@ -8,9 +8,9 @@ import androidx.compose.ui.window.rememberWindowState
 fun main() = application {
 
     ApplicationInitializer(
-        application = this)
-        .initKoin()
-        .initSession()
+        application = this
+    )
+        .initialize()
 
 
     Window(

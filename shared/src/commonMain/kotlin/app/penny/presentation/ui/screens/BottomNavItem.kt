@@ -26,6 +26,9 @@ sealed class BottomNavItem(
 
     data object Profile : BottomNavItem("profile", Icons.Filled.Person, "Profile", ProfileScreen())
 
+    data object Transactions :
+        BottomNavItem("transactions", Icons.Filled.Person, "Transactions", ProfileScreen())
+
     companion object {
         val items = listOf(Dashboard, Analytics, Profile)
     }

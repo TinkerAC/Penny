@@ -20,47 +20,37 @@ class LedgerRepositoryImpl(
 ) : LedgerRepository {
 
     override suspend fun insert(ledgerModel: LedgerModel) {
-        ledgerModel.uuid = Uuid.random()
-
-        val ledgerEntity = ledgerModel.toEntity()
-
-        ledgerLocalDataSource.insertLedger(ledgerEntity)
+        ledgerLocalDataSource.insert(ledgerModel.toEntity())
     }
 
     override suspend fun findByUuid(ledgerUuid: Uuid): LedgerModel? {
-        return ledgerLocalDataSource.getLedgerByUuid(
+        return ledgerLocalDataSource.findByUuid(
             ledgerUuid.toString()
         )?.toLedgerModel()
     }
 
     override suspend fun findAll(): List<LedgerModel> {
-        return ledgerLocalDataSource.getAllLedgers().map { it.toLedgerModel() }
+        return ledgerLocalDataSource.findAll().map { it.toLedgerModel() }
     }
 
     override suspend fun update(ledgerModel: LedgerModel) {
-        ledgerLocalDataSource.updateLedger(ledgerModel.toEntity())
+        ledgerLocalDataSource.updateByUuid(ledgerModel.toEntity())
     }
 
 
     override suspend fun deleteByUuid(ledgerUuid: Uuid) {
-        ledgerLocalDataSource.deleteLedger(ledgerUuid.toString())
+        ledgerLocalDataSource.deleteByUuid(ledgerUuid.toString())
     }
 
-    override suspend fun findByUpdatedAtAfter(timeStamp: Instant): List<LedgerModel> {
-        return ledgerLocalDataSource.getLedgersUpdatedAfter(
-            timeStamp.epochSeconds
-        ).map {
-            it.toLedgerModel()
-        }
-    }
 
-    override suspend fun downloadUnsyncedLedgers(lastSyncedAt: Instant): List<LedgerModel> {
+
+    override suspend fun downloadUnsyncedLedgersByUserUuid(lastSyncedAt: Instant): List<LedgerModel> {
         val downloadLedgerResponse = apiClient.sync.downloadLedgers(lastSyncedAt.epochSeconds)
 
         return downloadLedgerResponse.ledgers.map { it.toLedgerModel() }
     }
 
-    override suspend fun uploadUnsyncedLedgers(
+    override suspend fun uploadUnsyncedLedgersByUserUuid(
         ledgers: List<LedgerModel>,
         lastSyncedAt: Instant
     ): UploadLedgerResponse {
@@ -75,23 +65,45 @@ class LedgerRepositoryImpl(
     override suspend fun upsert(ledgerModel: LedgerModel): Boolean {
         var insertedNewLedger: Boolean = false
         // 尝试查询是否存在目标记录
-        val existingLedger = ledgerLocalDataSource.getLedgerByUuid(ledgerModel.uuid.toString())
+        val existingLedger = ledgerLocalDataSource.findByUuid(ledgerModel.uuid.toString())
 
         if (existingLedger != null) {
             // 执行更新
-            ledgerLocalDataSource.updateLedger(ledgerModel.toEntity())
+            ledgerLocalDataSource.updateByUuid(ledgerModel.toEntity())
         } else {
             insertedNewLedger = true
             // 执行插入
-            ledgerLocalDataSource.insertLedger(ledgerModel.toEntity())
+            ledgerLocalDataSource.insert(ledgerModel.toEntity())
         }
         return insertedNewLedger
     }
 
 
-    override suspend fun countByUpdatedAtAfter(timeStamp: Instant): Int {
-        return ledgerLocalDataSource.countLedgersAfter(timeStamp.epochSeconds)
+    override suspend fun countByUserUuidAndUpdatedAtAfter(
+        userUuid: Uuid,
+        timeStamp: Instant
+    ): Long {
+        return ledgerLocalDataSource.countByUserUuidAndUpdatedAtAfter(
+            userUuid.toString(),
+            timeStamp.epochSeconds
+        )
     }
 
+    override suspend fun findByUserUuid(userUuid: Uuid): List<LedgerModel> {
+        return ledgerLocalDataSource.findByUserUuid(userUuid.toString()).map { it.toLedgerModel() }
+    }
 
+    override suspend fun countByUserUuid(userUuid: Uuid): Long {
+        return ledgerLocalDataSource.countByUserUuid(userUuid.toString())
+    }
+
+    override suspend fun findByUserUuidAndUpdatedAtAfter(
+        userUuid: Uuid,
+        timeStamp: Instant
+    ): List<LedgerModel> {
+        return ledgerLocalDataSource.findByUserUuidAndUpdatedAtAfter(
+            userUuid.toString(),
+            timeStamp.epochSeconds
+        ).map { it.toLedgerModel() }
+    }
 }

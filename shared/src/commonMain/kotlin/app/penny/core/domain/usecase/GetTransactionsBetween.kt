@@ -2,6 +2,8 @@ package app.penny.core.domain.usecase
 
 import app.penny.core.data.repository.TransactionRepository
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  *  GetTransactionsBetween
@@ -12,12 +14,13 @@ import kotlinx.datetime.Instant
  *
  */
 
-
+@OptIn(ExperimentalUuidApi::class)
 class GetTransactionsBetween(
     private val transactionRepository: TransactionRepository
 ) {
-    suspend operator fun invoke(startInstant: Instant, endInstant: Instant) {
-        transactionRepository.findByUpdatedAtBetween(
+    suspend operator fun invoke(ledgerUuid: Uuid, startInstant: Instant, endInstant: Instant) {
+        transactionRepository.findByLedgerUuidAndUpdatedAtBetween(
+            ledgerUuid = ledgerUuid,
             startInstant = startInstant,
             endInstant = endInstant
         )

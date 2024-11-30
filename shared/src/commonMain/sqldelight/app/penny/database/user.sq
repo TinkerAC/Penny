@@ -6,8 +6,12 @@ CREATE TABLE userEntity (
     updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now'))    -- 修改时间
 );
 
-insertUser:
+insert:
 INSERT INTO userEntity (uuid, username, email) VALUES (?, ?, ?);
 
-getUserByUuid:
+findByUuid:
 SELECT * FROM userEntity WHERE uuid = ?;
+
+
+count:
+SELECT COUNT(*) FROM userEntity;

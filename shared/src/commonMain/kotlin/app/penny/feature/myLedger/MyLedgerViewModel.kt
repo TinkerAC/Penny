@@ -1,6 +1,7 @@
 package app.penny.feature.myLedger
 
 import app.penny.core.data.repository.LedgerRepository
+import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -13,9 +14,9 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 class MyLedgerViewModel(
-    private val getAllLedgerUseCase: GetAllLedgerUseCase,
-    private val ledgerRepository: LedgerRepository
-    ) : ScreenModel {
+    private val ledgerRepository: LedgerRepository,
+    private val userDataRepository: UserDataRepository
+) : ScreenModel {
 
 
     private val _uiState = MutableStateFlow(MyLedgerUiState())
@@ -38,7 +39,9 @@ class MyLedgerViewModel(
         // 通过协程获取数据
         screenModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            val ledgers = getAllLedgerUseCase()
+            val ledgers = ledgerRepository.findByUserUuid(
+                userUuid = userDataRepository.getUserUuid()
+            )
             _uiState.value = _uiState.value.copy(ledgers = ledgers, isLoading = false)
         }
     }

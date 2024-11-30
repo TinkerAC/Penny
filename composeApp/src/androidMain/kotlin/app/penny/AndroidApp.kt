@@ -8,8 +8,7 @@ class AndroidApp : Application() {
 
         ApplicationInitializer(
             application = this)
-            .initKoin()
-            .initSession()
+            .initialize()
 
 
     }

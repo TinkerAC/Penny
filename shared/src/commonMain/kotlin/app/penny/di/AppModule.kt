@@ -2,7 +2,11 @@ package app.penny.di
 
 import app.cash.sqldelight.db.SqlDriver
 import app.penny.core.data.database.LedgerLocalDataSource
+import app.penny.core.data.database.LedgerLocalDataSourceImpl
 import app.penny.core.data.database.TransactionLocalDataSource
+import app.penny.core.data.database.UserLocalDataSource
+import app.penny.core.data.database.UserLocalDataSourceImpl
+import app.penny.core.data.database.dataSourceImpl.TransactionLocalDataSourceImpl
 import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.kvstore.TokenProvider
 import app.penny.core.data.kvstore.UserDataManager
@@ -10,16 +14,17 @@ import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.data.repository.UserRepository
 import app.penny.core.data.repository.impl.AuthRepositoryImpl
 import app.penny.core.data.repository.impl.LedgerRepositoryImpl
 import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
+import app.penny.core.data.repository.impl.UserRepositoryImpl
 import app.penny.core.domain.usecase.CheckIsEmailRegisteredUseCase
 import app.penny.core.domain.usecase.CountUnsyncedDataUseCase
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
 import app.penny.core.domain.usecase.GetAllTransactionsUseCase
-import app.penny.core.domain.usecase.InsertLedgerUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
@@ -61,10 +66,15 @@ fun commonModule() = module {
 
     single { get<PennyDatabase>().ledgerQueries }
 
-    // 提供 DataSource
-    single { TransactionLocalDataSource(get()) }
-    single { LedgerLocalDataSource(get()) }
 
+    single { get<PennyDatabase>().userQueries }
+
+    // 提供 DataSource
+    single<TransactionLocalDataSource> { TransactionLocalDataSourceImpl(get()) }
+
+    single<LedgerLocalDataSource> { LedgerLocalDataSourceImpl(get()) }
+
+    single<UserLocalDataSource> { UserLocalDataSourceImpl(get()) }
 
     //SettingManager
     single { UserDataManager(get()) }
@@ -92,6 +102,7 @@ fun commonModule() = module {
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
 
+    single<UserRepository> { UserRepositoryImpl(get()) }
 
     //注入ApiClient
     // Koin 模块定义
@@ -112,7 +123,6 @@ fun commonModule() = module {
     single { ApiClient(get(), get(), get()) }
 
     // 提供 UseCase
-    factory { InsertLedgerUseCase(get()) }
     factory { GetAllLedgerUseCase(get()) }
     factory { InsertRandomTransactionUseCase(get(), get()) }
 
@@ -149,12 +159,12 @@ fun commonModule() = module {
     factory { TransactionViewModel(get()) }
     factory { MainViewModel(get(), get()) }
     factory { MyLedgerViewModel(get(), get()) }
-    factory { NewLedgerViewModel(get()) }
+    factory { NewLedgerViewModel(get(), get()) }
     factory { ProfileViewModel(get(), get(), get(), get(), get()) }
 
     factory { MyLedgerViewModel(get(), get()) }
 
-    factory { NewLedgerViewModel(get()) }
+    factory { NewLedgerViewModel(get(), get()) }
 
 
 }

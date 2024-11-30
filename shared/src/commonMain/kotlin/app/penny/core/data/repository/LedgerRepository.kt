@@ -15,15 +15,31 @@ interface LedgerRepository {
     suspend fun findAll(): List<LedgerModel>
     suspend fun update(ledgerModel: LedgerModel)
     suspend fun deleteByUuid(ledgerUuid: Uuid)
-    suspend fun findByUpdatedAtAfter(timeStamp: Instant): List<LedgerModel>
     suspend fun upsert(ledgerModel: LedgerModel): Boolean
 
-    suspend fun countByUpdatedAtAfter(timeStamp: Instant): Int
+    suspend fun findByUserUuid(userUuid: Uuid): List<LedgerModel>
+
+
+
+
+    suspend fun countByUserUuid(userUuid: Uuid): Long
+
+    suspend fun countByUserUuidAndUpdatedAtAfter(
+        userUuid: Uuid,
+        timeStamp: Instant
+    ): Long
+
+
+    suspend fun findByUserUuidAndUpdatedAtAfter(
+        userUuid: Uuid,
+        timeStamp: Instant
+    ): List<LedgerModel>
+
 
     //remoteDataSources
-    suspend fun downloadUnsyncedLedgers(lastSyncedAt: Instant): List<LedgerModel>
+    suspend fun downloadUnsyncedLedgersByUserUuid(lastSyncedAt: Instant): List<LedgerModel>
 
-    suspend fun uploadUnsyncedLedgers(
+    suspend fun uploadUnsyncedLedgersByUserUuid(
         ledgers: List<LedgerModel>,
         lastSyncedAt: Instant
     ): UploadLedgerResponse

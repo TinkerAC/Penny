@@ -83,16 +83,15 @@ class NewTransactionViewModel(
 
 
     private fun insertTransaction() {
-
-        val transaction: TransactionModel = TransactionModel(
-            ledgerId = _uiState.value.selectedLedger?.id ?: 0,
+        val transaction = TransactionModel(
+            ledgerUuid = _uiState.value.selectedLedger!!.uuid,
             transactionDate = Clock.System.now(),
             category = _uiState.value.selectedSubCategory ?: Category.MISCELLANEOUS,
             transactionType = _uiState.value.selectedTransactionType,
             amount = BigDecimal.parseString(_uiState.value.amountText),
             currency = _uiState.value.selectedLedger?.currency ?: Currency.USD,
-            remark = _uiState.value.remark,
             screenshotUri = "",
+            remark = _uiState.value.remark,
         )
         screenModelScope.launch {
             transactionRepository.insert(

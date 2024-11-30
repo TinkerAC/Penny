@@ -143,9 +143,7 @@ class ProfileViewModel(
     private suspend fun fetchProfileStatistics() {
         _uiState.value = _uiState.value.copy(isLoading = true)
         _uiState.value = _uiState.value.copy(
-            userUuid = Uuid.parse(
-                userDataRepository.getUserUuid()
-            ),
+            userUuid = userDataRepository.getUserUuid(),
             email = userDataRepository.getUserEmailOrNull(),
             username = userDataRepository.getUserNameOrNull(),
         )

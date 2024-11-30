@@ -23,12 +23,14 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.jetbrains.compose.resources.painterResource
+import kotlin.uuid.ExperimentalUuidApi
 
 class LedgerDetailScreen(
     private val ledgerModel: LedgerModel
 ) : Screen {
 
-    override val key: ScreenKey = "ledger_detail_${ledgerModel.id}"
+    @OptIn(ExperimentalUuidApi::class)
+    override val key: ScreenKey = "ledger_detail_${ledgerModel.uuid}"
 
     @Composable
     override fun Content() {

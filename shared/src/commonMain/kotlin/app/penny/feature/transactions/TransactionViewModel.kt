@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.uuid.ExperimentalUuidApi
 
 class TransactionViewModel(
     private val getAllTransactionsUseCase: GetAllTransactionsUseCase
@@ -180,10 +181,11 @@ class TransactionViewModel(
     /**
      * 按账本分组交易
      */
+    @OptIn(ExperimentalUuidApi::class)
     private fun groupByLedger(): List<GroupedTransaction> {
         val transactions = _uiState.value.transactions
         val groupedMap = transactions.groupBy { transaction ->
-            transaction.ledgerId.toString()
+            transaction.ledgerUuid.toString()
         }
         // 按字母顺序排列分组
         val sortedGroups = groupedMap.entries

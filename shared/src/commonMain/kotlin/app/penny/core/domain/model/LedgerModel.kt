@@ -8,7 +8,6 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 data class LedgerModel @OptIn(ExperimentalUuidApi::class) constructor(
-    val id: Long = 0,
     val userUuid: Uuid = Uuid.fromLongs(0, 0),
     var uuid: Uuid = Uuid.fromLongs(0, 0),
     val name: String = "",

@@ -1,10 +1,8 @@
-package app.penny.core.data.repository.impl
+package app.penny.core.data.repository
 
 import app.penny.core.domain.model.UserModel
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
-
 
 
 @OptIn(ExperimentalUuidApi::class)
@@ -14,6 +12,8 @@ interface UserRepository {
     suspend fun findAll(): List<UserModel>
     suspend fun update(userModel: UserModel)
     suspend fun deleteByUuid(userUuid: Uuid)
+
+    suspend fun count(): Long
 
 
 }
