@@ -36,6 +36,7 @@ import app.penny.core.domain.usecase.SearchTransactionsUseCase
 import app.penny.core.domain.usecase.SyncDataUseCase
 import app.penny.core.domain.usecase.UploadUnsyncedLedgerUseCase
 import app.penny.core.network.ApiClient
+import app.penny.core.network.clients.AiApiClient
 import app.penny.core.network.clients.AuthApiClient
 import app.penny.core.network.clients.SyncApiClient
 import app.penny.core.network.clients.UserApiClient
@@ -95,6 +96,7 @@ fun commonModule() = module {
     single { AuthApiClient(get()) }
     single { UserApiClient(get(), get()) }
     single { SyncApiClient(get(), get()) }
+    single { AiApiClient(get(), get()) }
 
 
 
@@ -113,11 +115,13 @@ fun commonModule() = module {
 
     single<UserRepository> { UserRepositoryImpl(get()) }
 
-    single<ChatRepository> { ChatRepositoryImpl(get(),get()) }
+    single<ChatRepository> { ChatRepositoryImpl(get(),get(),get()) }
 
 
 
     //注入ApiClient
+
+
     // Koin 模块定义
     single {
         HttpClient(CIO) {
@@ -133,7 +137,7 @@ fun commonModule() = module {
     }
 
 
-    single { ApiClient(get(), get(), get()) }
+    single { ApiClient(get(), get(), get(),get())}
 
     // 提供 UseCase
     factory { GetAllLedgerUseCase(get()) }

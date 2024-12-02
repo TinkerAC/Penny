@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
     alias(libs.plugins.kotlinxSerialization)
+
     application
 
     //serialization plugin （libs）
@@ -22,6 +23,9 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.client.content.negotiation)
+    runtimeOnly(libs.ktor.ktor.client.okhttp)
+
 //    testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
 
@@ -53,6 +57,7 @@ dependencies {
 
     //mysql
     implementation(libs.mysql.connector.java)
+    implementation (libs.openai.client)
 
 
 

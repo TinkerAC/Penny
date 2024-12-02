@@ -39,6 +39,8 @@ koin-core-ext = "3.0.2"
 koin-android-ext = "3.0.2"
 
 
+ktor-server = "2.3.13"
+
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
 mysqlConnectorJava = "8.0.33"
@@ -47,6 +49,7 @@ dateTimeVersion = "0.6.0"
 ktor = "3.0.0"
 lifecycleViewmodelCompose = "2.7.0"
 material3 = "1.2.0"
+openaiClient = "4.0.0-beta01"
 sqlDelight = "2.0.2"
 sqliteXX4Dialect = "2.0.2"
 uuid = "0.8.4"
@@ -81,6 +84,7 @@ android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx_datetime_ext = { module = "com.raedghazal:kotlinx_datetime_ext", version.ref = "kotlinx_datetime_ext" }
 
+ktor-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
 ktor-serialization-kotlinx-json-jvm = { module = "io.ktor:ktor-serialization-kotlinx-json-jvm", version.ref = "ktorSerializationKotlinxJsonJvm" }
 ktor-server-auth = { module = "io.ktor:ktor-server-auth" }
 ktor-server-auth-jwt = { module = " io.ktor:ktor-server-auth-jwt" }
@@ -88,6 +92,7 @@ ktor-server-content-negotiation-jvm = { module = "io.ktor:ktor-server-content-ne
 ktor-utils = { module = "io.ktor:ktor-utils", version.ref = "ktorUtils" }
 mysql-connector-java = { module = "mysql:mysql-connector-java", version.ref = "mysqlConnectorJava" }
 native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "jdbcDriver" }
+openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openaiClient" }
 sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "jdbcDriver" }
 jdbc-driver = { module = "app.cash.sqldelight:jdbc-driver", version.ref = "jdbcDriver" }
 runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqlDelight" }
