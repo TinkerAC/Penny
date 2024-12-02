@@ -20,7 +20,9 @@ fun Route.aiRoutes(
 ) {
 
     route("/ai") {
-        authenticate {
+        authenticate(
+            "access-jwt"
+        ) {
             post("/get-action") {
                 val request = call.receive<GetActionRequest>()
                 val action: String? = aiService.getAction(request.text)

@@ -31,16 +31,18 @@ class AiService(
             - analyzeSpending (analyze spending habits)
             - setReminder (set financial reminders)
             - clearData (remove all financial records)
-
+            - none (no action required)
+            
             Examples:
             - "I spent $50 at a supermarket today" => insertRecord
             - "Show me the spending records for November" => queryRecords
             - "Export my financial records from last month" => exportRecords
+            - "How is the whether today?" => none
             """
 
 
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("text-davinci-003"),
+            model = ModelId("gpt-4o-mini"),
             messages = listOf(
                 ChatMessage(
                     role = ChatRole.System,
@@ -56,6 +58,14 @@ class AiService(
 
         return completion.choices.first().message.content
     }
+
+
+
+
+
+
+
+
 
 
 }

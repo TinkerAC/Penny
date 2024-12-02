@@ -57,7 +57,8 @@ fun Application.module() {
     // 创建OpenAI客户端
     val openAiClient = OpenAI(
         token = config.getString("openai.apiKey"),
-        host = OpenAIHost.OpenAI
+        host = OpenAIHost(config.getString("openai.host"))
+
         // additional configurations...
     )
 
@@ -76,5 +77,6 @@ fun Application.module() {
         authRoutes(authService)
         userRoutes(userService)
         syncRoutes(ledgerService, transactionService, statisticsService)
+        aiRoutes(aiService)
     }
 }
