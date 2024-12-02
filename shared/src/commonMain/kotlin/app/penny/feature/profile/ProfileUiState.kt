@@ -11,7 +11,6 @@ data class ProfileUiState @OptIn(ExperimentalUuidApi::class) constructor(
     val profileImage: String = "",
     val userUuid: Uuid = Uuid.fromLongs(0, 0),
 
-
     val isLoggedIn: Boolean = false,
 
     val isEmailRegistered: Boolean = false,

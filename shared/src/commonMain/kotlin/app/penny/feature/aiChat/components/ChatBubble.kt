@@ -2,6 +2,7 @@
 package app.penny.feature.aiChat.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Card
@@ -11,13 +12,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.ChatMessage
+import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
+import org.jetbrains.compose.resources.painterResource
+import penny.shared.generated.resources.Res
+import penny.shared.generated.resources.avatar_boy
+import penny.shared.generated.resources.avatar_girl
+import penny.shared.generated.resources.avatar_penny
+
+import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import androidx.compose.foundation.shape.CircleShape
 
 @OptIn(ExperimentalUuidApi::class)
+
 @Composable
 fun ChatBubble(message: ChatMessage) {
     val isUser = message.sender.uuid != Uuid.fromLongs(0, 0)
@@ -28,16 +41,14 @@ fun ChatBubble(message: ChatMessage) {
         if (!isUser) {
             // AI Avatar
             Image(
-                painter = rememberAsyncImagePainter(
-//                    message.sender.avatarUrl
-                    //placeholder url
-                    "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd"
-
+                painter = painterResource(
+                    Res.drawable.avatar_penny
                 ),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(40.dp)
-                    .clip(MaterialTheme.shapes.small)
+                    .size(40.dp) // 控制头像大小
+                    .clip(CircleShape) // 将图像裁剪为圆形
+                    .border(1.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape) // 设置圆形边框
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
@@ -64,6 +75,7 @@ fun ChatBubble(message: ChatMessage) {
                         modifier = Modifier.padding(8.dp)
                     )
                 }
+
                 is ChatMessage.AudioMessage -> {
                     // Display audio message with duration
                     Text(
@@ -76,7 +88,18 @@ fun ChatBubble(message: ChatMessage) {
         }
         if (isUser) {
             Spacer(modifier = Modifier.width(8.dp))
-            // User Avatar (optional)
+
+            // User Avatar
+            Image(
+                painter = painterResource(
+                    if (Random.nextBoolean()) Res.drawable.avatar_girl else Res.drawable.avatar_boy // TODO: 传入用户头像uri，用于显示用户头像
+                ),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(40.dp) // 控制头像大小
+                    .clip(CircleShape) // 将图像裁剪为圆形
+                    .border(1.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape) // 设置圆形边框
+            )
         }
     }
 }

@@ -44,6 +44,13 @@ class ProfileViewModel(
             is ProfileIntent.Login -> login(intent.username, intent.password)
             is ProfileIntent.UnfocusEmail -> unfocusUsername(intent.username)
             ProfileIntent.DismissLoginModal -> dismissLoginModal()
+            ProfileIntent.NavigateToSettings -> navigateToSettings()
+            ProfileIntent.NavigateToNotifications -> navigateToNotifications()
+            ProfileIntent.NavigateToBadges -> navigateToBadges()
+            ProfileIntent.NavigateToPennyBox -> navigateToPennyBox()
+            ProfileIntent.NavigateToHelp -> navigateToHelp()
+            ProfileIntent.NavigateToFeedback -> navigateToFeedback()
+            ProfileIntent.NavigateToAboutUs -> navigateToAboutUs()
         }
     }
 
@@ -146,9 +153,11 @@ class ProfileViewModel(
             userUuid = userDataRepository.getUserUuid(),
             email = userDataRepository.getUserEmailOrNull(),
             username = userDataRepository.getUserNameOrNull(),
+            // 假设这里获取统计数据
+            continuousCheckInDays = 5,
+            totalTransactionDays = 30,
+            totalTransactionCount = 100
         )
-
-
     }
 
     private fun tryLogin() {
@@ -162,5 +171,34 @@ class ProfileViewModel(
             loggingModalVisible = false,
             errorMessage = null
         )
+    }
+
+    // 导航函数示例
+    private fun navigateToSettings() {
+        // 执行导航到设置页面的逻辑
+    }
+
+    private fun navigateToNotifications() {
+        // 执行导航到通知页面的逻辑
+    }
+
+    private fun navigateToBadges() {
+        // 执行导航到徽章页面的逻辑
+    }
+
+    private fun navigateToPennyBox() {
+        // 执行导航到 Penny's Box 的逻辑
+    }
+
+    private fun navigateToHelp() {
+        // 执行导航到使用帮助页面的逻辑
+    }
+
+    private fun navigateToFeedback() {
+        // 执行导航到意见反馈页面的逻辑
+    }
+
+    private fun navigateToAboutUs() {
+        // 执行导航到关于我们页面的逻辑
     }
 }
