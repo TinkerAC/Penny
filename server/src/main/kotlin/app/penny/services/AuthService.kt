@@ -2,7 +2,7 @@
 package app.penny.services
 
 import app.penny.config.JwtConfig
-import app.penny.servershared.dto.RefreshTokenResponse
+import app.penny.servershared.dto.responseDto.RefreshTokenResponse
 import com.auth0.jwt.exceptions.JWTVerificationException
 
 class AuthService(

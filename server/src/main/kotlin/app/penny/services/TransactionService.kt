@@ -2,7 +2,7 @@
 package app.penny.services
 
 import app.penny.repository.TransactionRepository
-import app.penny.servershared.dto.TransactionDto
+import app.penny.servershared.dto.entityDto.TransactionDto
 
 class TransactionService(
     private val transactionRepository: TransactionRepository

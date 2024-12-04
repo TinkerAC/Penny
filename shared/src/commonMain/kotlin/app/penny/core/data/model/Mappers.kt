@@ -20,8 +20,8 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import app.penny.servershared.dto.LedgerDto
-import app.penny.servershared.dto.TransactionDto
+import app.penny.servershared.dto.entityDto.LedgerDto
+import app.penny.servershared.dto.entityDto.TransactionDto
 
 
 @OptIn(ExperimentalUuidApi::class)

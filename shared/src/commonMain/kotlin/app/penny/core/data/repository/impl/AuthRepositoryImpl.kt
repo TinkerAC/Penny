@@ -3,10 +3,8 @@ package app.penny.core.data.repository.impl
 
 import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.repository.AuthRepository
-import app.penny.core.network.ApiClient
-import app.penny.core.network.clients.AuthApiClient
 import app.penny.core.network.clients.UserApiClient
-import app.penny.servershared.dto.LoginResponse
+import app.penny.servershared.dto.responseDto.LoginResponse
 import co.touchlab.kermit.Logger
 
 class AuthRepositoryImpl(

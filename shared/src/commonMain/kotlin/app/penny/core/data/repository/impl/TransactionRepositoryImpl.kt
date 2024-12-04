@@ -8,7 +8,7 @@ import app.penny.core.data.model.toDto
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.network.ApiClient
-import app.penny.servershared.dto.DownloadTransactionResponse
+import app.penny.servershared.dto.responseDto.DownloadTransactionResponse
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

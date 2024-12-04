@@ -43,6 +43,7 @@ class UserDataManager(
         const val LAST_SYNCED_AT = "last_synced_at"
         const val USER_NAME = "user_name"
         const val USER_EMAIL = "user_email"
+        const val IS_FIRST_TIME = "is_first_time"
     }
 
 
@@ -54,5 +55,18 @@ class UserDataManager(
 
     fun clear() {
         settings.clear()
+    }
+
+
+    fun getBooleanOrNull(key: String): Boolean? {
+        return settings.getBooleanOrNull(key)
+    }
+    fun getBoolean(key: String): Boolean {
+        return settings.getBoolean(key = key, defaultValue = false)
+    }
+
+
+    fun putBoolean(key: String, value: Boolean) {
+        settings.set(key = key, value = value)
     }
 }

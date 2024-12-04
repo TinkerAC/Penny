@@ -75,4 +75,11 @@ class UserDataRepositoryImpl(
     }
 
 
+    override suspend fun getIsFirstTime(): Boolean {
+        return userDataManager.getBooleanOrNull(UserDataManager.IS_FIRST_TIME) ?: true
+    }
+
+    override suspend fun setIsFirstTime(isFirstTime: Boolean) {
+        userDataManager.putBoolean(UserDataManager.IS_FIRST_TIME, isFirstTime)
+    }
 }

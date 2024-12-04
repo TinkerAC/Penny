@@ -1,13 +1,12 @@
 // 文件：server/src/main/kotlin/app/penny/routes/UserRoutes.kt
 package app.penny.routes
 
-import app.penny.servershared.dto.CheckIsEmailRegisteredResponse
-import app.penny.servershared.dto.LoginRequest
-import app.penny.servershared.dto.RegisterRequest
-import app.penny.servershared.dto.RegisterResponse
+import app.penny.servershared.dto.responseDto.CheckIsEmailRegisteredResponse
+import app.penny.servershared.dto.requestDto.LoginRequest
+import app.penny.servershared.dto.requestDto.RegisterRequest
+import app.penny.servershared.dto.responseDto.RegisterResponse
 import app.penny.services.UserService
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route

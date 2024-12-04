@@ -1,7 +1,7 @@
 package app.penny.core.domain.usecase
 
 import app.penny.core.network.ApiClient
-import app.penny.servershared.dto.RegisterResponse
+import app.penny.servershared.dto.responseDto.RegisterResponse
 
 class RegisterUseCase(
     private val apiClient: ApiClient

@@ -3,7 +3,7 @@ package app.penny.core.domain.usecase
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.model.LedgerModel
-import app.penny.servershared.dto.UploadLedgerResponse
+import app.penny.servershared.dto.responseDto.UploadLedgerResponse
 import co.touchlab.kermit.Logger
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi

@@ -1,9 +1,7 @@
 package app.penny.core.domain.usecase
 
 import app.penny.core.data.repository.AuthRepository
-import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.network.ApiClient
-import app.penny.servershared.dto.LoginResponse
+import app.penny.servershared.dto.responseDto.LoginResponse
 import co.touchlab.kermit.Logger
 
 class LoginUseCase(

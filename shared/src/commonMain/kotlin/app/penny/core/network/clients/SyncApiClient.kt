@@ -3,7 +3,15 @@ package app.penny.core.network.clients
 import app.penny.config.Config.API_URL
 import app.penny.core.data.kvstore.TokenProvider
 import app.penny.core.network.BaseAuthedApiClient
-import app.penny.servershared.dto.*
+import app.penny.servershared.dto.entityDto.LedgerDto
+import app.penny.servershared.dto.entityDto.TransactionDto
+import app.penny.servershared.dto.requestDto.UploadLedgerRequest
+import app.penny.servershared.dto.requestDto.UploadTransactionRequest
+import app.penny.servershared.dto.responseDto.DownloadLedgerResponse
+import app.penny.servershared.dto.responseDto.DownloadTransactionResponse
+import app.penny.servershared.dto.responseDto.RemoteUnsyncedDataCountResponse
+import app.penny.servershared.dto.responseDto.UploadLedgerResponse
+import app.penny.servershared.dto.responseDto.UploadTransactionResponse
 import io.ktor.client.HttpClient
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod

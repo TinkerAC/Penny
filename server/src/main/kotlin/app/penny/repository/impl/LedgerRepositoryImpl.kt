@@ -4,7 +4,7 @@ package app.penny.repository.impl
 import app.penny.models.Ledgers
 import app.penny.models.toLedgerDto
 import app.penny.repository.LedgerRepository
-import app.penny.servershared.dto.LedgerDto
+import app.penny.servershared.dto.entityDto.LedgerDto
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.batchInsert

@@ -46,8 +46,6 @@ class DashboardViewModel(
 
     fun handleIntent(intent: DashboardIntent) {
         when (intent) {
-            is DashboardIntent.InsertRandomTransaction ->
-                insertRandomTransaction()
 
             is DashboardIntent.UploadUpdatedLedgers ->
                 uploadUpdatedLedgers()
@@ -58,6 +56,9 @@ class DashboardViewModel(
 
             is DashboardIntent.DownloadUnsyncedLedgers ->
                 downloadUnsyncedLedgers()
+
+            else -> {
+            }
         }
     }
 
@@ -68,9 +69,12 @@ class DashboardViewModel(
         Logger.d("downloaded ledgers")
     }
 
-    fun insertRandomTransaction(count: Int = 100) {
+    fun insertRandomTransaction(count: Int, tier: Int) {
         screenModelScope.launch {
-            insertRandomTransactionUseCase(100)
+            insertRandomTransactionUseCase(
+                count = count,
+                tier = tier
+            )
         }
         Logger.d("inserted Random Transactions ,count $count")
 

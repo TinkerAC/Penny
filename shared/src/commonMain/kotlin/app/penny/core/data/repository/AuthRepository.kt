@@ -1,6 +1,6 @@
 package app.penny.core.data.repository
 
-import app.penny.servershared.dto.LoginResponse
+import app.penny.servershared.dto.responseDto.LoginResponse
 
 interface AuthRepository {
     suspend fun login(username: String, password: String): LoginResponse

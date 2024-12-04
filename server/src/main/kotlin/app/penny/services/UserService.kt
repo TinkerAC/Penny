@@ -3,10 +3,10 @@ package app.penny.services
 
 import app.penny.config.JwtConfig
 import app.penny.repository.UserRepository
-import app.penny.servershared.dto.LoginRequest
-import app.penny.servershared.dto.LoginResponse
-import app.penny.servershared.dto.RegisterRequest
-import app.penny.servershared.dto.UserDto
+import app.penny.servershared.dto.requestDto.LoginRequest
+import app.penny.servershared.dto.responseDto.LoginResponse
+import app.penny.servershared.dto.requestDto.RegisterRequest
+import app.penny.servershared.dto.entityDto.UserDto
 import org.mindrot.jbcrypt.BCrypt
 
 class UserService(

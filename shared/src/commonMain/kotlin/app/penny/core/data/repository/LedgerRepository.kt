@@ -1,7 +1,7 @@
 package app.penny.core.data.repository
 
 import app.penny.core.domain.model.LedgerModel
-import app.penny.servershared.dto.UploadLedgerResponse
+import app.penny.servershared.dto.responseDto.UploadLedgerResponse
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

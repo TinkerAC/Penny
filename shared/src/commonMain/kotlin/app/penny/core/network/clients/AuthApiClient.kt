@@ -2,7 +2,8 @@ package app.penny.core.network.clients
 
 import app.penny.config.Config.API_URL
 import app.penny.core.network.BaseApiClient
-import app.penny.servershared.dto.*
+import app.penny.servershared.dto.requestDto.RefreshTokenRequest
+import app.penny.servershared.dto.responseDto.RefreshTokenResponse
 import io.ktor.client.HttpClient
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod

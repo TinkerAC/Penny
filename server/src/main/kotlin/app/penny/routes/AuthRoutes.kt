@@ -1,10 +1,9 @@
 // 文件：server/src/main/kotlin/app/penny/routes/AuthRoutes.kt
 package app.penny.routes
 
-import app.penny.servershared.dto.RefreshTokenRequest
+import app.penny.servershared.dto.requestDto.RefreshTokenRequest
 import app.penny.services.AuthService
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route

@@ -1,7 +1,13 @@
 // 文件：server/src/main/kotlin/app/penny/routes/SyncRoutes.kt
 package app.penny.routes
 
-import app.penny.servershared.dto.*
+import app.penny.servershared.dto.requestDto.UploadLedgerRequest
+import app.penny.servershared.dto.requestDto.UploadTransactionRequest
+import app.penny.servershared.dto.responseDto.DownloadLedgerResponse
+import app.penny.servershared.dto.responseDto.DownloadTransactionResponse
+import app.penny.servershared.dto.responseDto.RemoteUnsyncedDataCountResponse
+import app.penny.servershared.dto.responseDto.UploadLedgerResponse
+import app.penny.servershared.dto.responseDto.UploadTransactionResponse
 import app.penny.services.LedgerService
 import app.penny.services.StatisticsService
 import app.penny.services.TransactionService

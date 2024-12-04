@@ -1,14 +1,12 @@
 package app.penny.routes
 
-import app.penny.servershared.dto.GetActionRequest
-import app.penny.servershared.dto.GetActionResponse
+import app.penny.servershared.dto.requestDto.GetActionDetailRequest
+import app.penny.servershared.dto.requestDto.GetActionRequest
+import app.penny.servershared.dto.responseDto.GetActionResponse
 import app.penny.services.AiService
 import io.ktor.server.routing.Route
 
-import app.penny.servershared.dto.RefreshTokenRequest
-import app.penny.services.AuthService
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -47,8 +45,14 @@ fun Route.aiRoutes(
                     )
                 }
             }
+
+            post("/get-action-detail") {
+                val request: GetActionDetailRequest = call.receive<GetActionDetailRequest>()
+
+
+            }
+
         }
 
     }
-
 }

@@ -3,7 +3,11 @@ package app.penny.core.network.clients
 import app.penny.config.Config.API_URL
 import app.penny.core.data.kvstore.TokenProvider
 import app.penny.core.network.BaseApiClient
-import app.penny.servershared.dto.*
+import app.penny.servershared.dto.requestDto.LoginRequest
+import app.penny.servershared.dto.requestDto.RegisterRequest
+import app.penny.servershared.dto.responseDto.CheckIsEmailRegisteredResponse
+import app.penny.servershared.dto.responseDto.LoginResponse
+import app.penny.servershared.dto.responseDto.RegisterResponse
 import io.ktor.client.HttpClient
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod

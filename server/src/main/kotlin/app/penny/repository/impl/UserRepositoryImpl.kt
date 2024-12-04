@@ -1,14 +1,12 @@
 // 文件：server/src/main/kotlin/app/penny/repository/UserRepositoryImpl.kt
 package app.penny.repository.impl
 
-import app.penny.models.Transactions
 import app.penny.models.Users
 import app.penny.models.toUserDto
 import app.penny.repository.UserRepository
-import app.penny.servershared.dto.UserDto
+import app.penny.servershared.dto.entityDto.UserDto
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 

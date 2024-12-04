@@ -21,7 +21,6 @@ import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.*
 
-@OptIn(ExperimentalVoyagerApi::class)
 class MainScreen : Screen {
 
     @Composable
@@ -81,6 +80,8 @@ class MainScreen : Screen {
     }
 
 }
+
+
 
 @Composable
 fun BottomAppBarWithFAB(
