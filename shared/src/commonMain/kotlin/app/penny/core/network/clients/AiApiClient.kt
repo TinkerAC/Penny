@@ -4,6 +4,7 @@ import app.penny.config.Config.API_URL
 import app.penny.core.data.kvstore.TokenProvider
 import app.penny.core.network.BaseAuthedApiClient
 import app.penny.servershared.dto.requestDto.GetActionRequest
+import app.penny.servershared.dto.requestDto.GetAiReplyResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -12,16 +13,14 @@ import io.ktor.http.contentType
 
 
 class AiApiClient(
-    httpClient: HttpClient,
-    tokenProvider: TokenProvider
+    httpClient: HttpClient, tokenProvider: TokenProvider
 ) : BaseAuthedApiClient(httpClient, tokenProvider) {
 
     suspend fun getAction(
         text: String
-    ): String {
+    ): GetAiReplyResponse {
         return makeAuthenticatedRequest(
-            url = "$API_URL/ai/get-action",
-            method = HttpMethod.Post
+            url = "$API_URL/ai/get-reply", method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
             setBody(
@@ -29,9 +28,8 @@ class AiApiClient(
                     text = text
                 )
             )
-
         }
+
+
     }
-
-
 }

@@ -15,6 +15,7 @@ class ChatMessageLocalDataSourceImpl(
             chatMessageEntity.sender_uuid,
             chatMessageEntity.type,
             chatMessageEntity.content,
+            chatMessageEntity.action,
             chatMessageEntity.audio_file_path,
             chatMessageEntity.duration,
             chatMessageEntity.timestamp

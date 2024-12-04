@@ -22,6 +22,8 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import app.penny.servershared.dto.entityDto.LedgerDto
 import app.penny.servershared.dto.entityDto.TransactionDto
+import app.penny.servershared.enumerate.Action
+import kotlinx.serialization.json.Json
 
 
 @OptIn(ExperimentalUuidApi::class)
@@ -120,7 +122,7 @@ fun AchievementEntity.toModel(): AchievementModel {
 @OptIn(ExperimentalUuidApi::class)
 fun LedgerModel.toLedgerDto(): LedgerDto {
     return LedgerDto(
-        userId = 0,
+        userUuid = userUuid.toString(),
         uuid = uuid.toString(),
         name = name,
         coverUri = "not implemented",
@@ -136,8 +138,9 @@ fun LedgerModel.toLedgerDto(): LedgerDto {
 fun LedgerDto.toModel(): LedgerModel {
     return LedgerModel(
         uuid = Uuid.parse(uuid),
-        name = name,
-        currency = Currency.valueOf(currencyCode),
+        name = name ?: "",
+        currency = currencyCode?.let { Currency.valueOf(it) }
+            ?: throw IllegalArgumentException("Currency code is required"),
         description = "",
         count = 0,
         balance = BigDecimal.ZERO,
@@ -198,18 +201,11 @@ fun ChatMessage.toEntity(): ChatMessageEntity {
             content = content,
             timestamp = timestamp,
             audio_file_path = null,
-            duration = null
+            duration = null,
+            //json encode action
+            action = action?.let { Json.encodeToString(Action.serializer(), it) }
         )
-        is ChatMessage.AudioMessage -> ChatMessageEntity(
-            uuid = uuid.toString(),
-            user_uuid = user.uuid.toString(),
-            sender_uuid = sender.uuid.toString(),
-            type = MESSAGE_TYPE.AUDIO.value,
-            audio_file_path = audioFilePath,
-            duration = duration,
-            timestamp = timestamp,
-            content = null
-        )
+
     }
 
 }
@@ -222,17 +218,11 @@ fun ChatMessageEntity.toModel(): ChatMessage {
             uuid = Uuid.parse(uuid),
             user = UserModel(Uuid.parse(user_uuid), "", ""),
             sender = UserModel(Uuid.parse(sender_uuid), "", ""),
+            timestamp = timestamp,
             content = content!!,
-            timestamp = timestamp
+            action = action?.let { Json.decodeFromString(Action.serializer(), it) }
         )
-        MESSAGE_TYPE.AUDIO.value -> ChatMessage.AudioMessage(
-            uuid = Uuid.parse(uuid),
-            user = UserModel(Uuid.parse(user_uuid), "", ""),
-            sender = UserModel(Uuid.parse(sender_uuid), "", ""),
-            audioFilePath = audio_file_path!!,
-            duration = duration!!,
-            timestamp = timestamp
-        )
+
         else -> throw IllegalArgumentException("Unknown message type: $type")
     }
 }

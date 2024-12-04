@@ -12,12 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.ChatMessage
-import coil3.compose.AsyncImage
-import coil3.compose.AsyncImagePainter
-import coil3.compose.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.painterResource
 import penny.shared.generated.resources.Res
 import penny.shared.generated.resources.avatar_boy
@@ -76,14 +72,14 @@ fun ChatBubble(message: ChatMessage) {
                     )
                 }
 
-                is ChatMessage.AudioMessage -> {
-                    // Display audio message with duration
-                    Text(
-                        text = "Audio Message (${message.duration} sec)",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
+//                is ChatMessage.AudioMessage -> {
+//                    // Display audio message with duration
+//                    Text(
+//                        text = "Audio Message (${message.duration} sec)",
+//                        style = MaterialTheme.typography.bodyMedium,
+//                        modifier = Modifier.padding(8.dp)
+//                    )
+//                }
             }
         }
         if (isUser) {

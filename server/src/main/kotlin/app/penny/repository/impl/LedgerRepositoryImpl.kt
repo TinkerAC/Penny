@@ -2,6 +2,7 @@
 package app.penny.repository.impl
 
 import app.penny.models.Ledgers
+import app.penny.models.Users
 import app.penny.models.toLedgerDto
 import app.penny.repository.LedgerRepository
 import app.penny.servershared.dto.entityDto.LedgerDto
@@ -14,15 +15,7 @@ import org.jetbrains.exposed.sql.update
 
 class LedgerRepositoryImpl : LedgerRepository {
 
-    override fun findUpdatedAfter(lastUpdatedAt: Long): List<LedgerDto> {
-        return transaction {
-            Ledgers
-                .selectAll().where { Ledgers.updatedAt greater lastUpdatedAt }
-                .map { it.toLedgerDto() }
-        }
-    }
-
-    override fun insert(ledgers: List<LedgerDto>) {
+    override fun insert(userId: Long,ledgers: List<LedgerDto>) {
         transaction {
             Ledgers.batchInsert(ledgers) { ledger ->
                 this[Ledgers.uuid] = ledger.uuid
@@ -30,19 +23,31 @@ class LedgerRepositoryImpl : LedgerRepository {
                 this[Ledgers.currencyCode] = ledger.currencyCode
                 this[Ledgers.createdAt] = ledger.createdAt
                 this[Ledgers.updatedAt] = ledger.updatedAt
-                this[Ledgers.userId] = ledger.userId
+                this[Ledgers.userId] = userId
             }
         }
     }
 
     override fun findByUserIdAndUpdatedAtAfter(userId: Long, lastSyncedAt: Long): List<LedgerDto> {
         return transaction {
-            Ledgers
-                .selectAll()
-                .where { (Ledgers.updatedAt greater lastSyncedAt) and (Ledgers.userId eq userId) }
-                .map { it.toLedgerDto() }
+            // 使用 Exposed 的 DSL 构建查询
+            (Ledgers innerJoin Users)
+                .selectAll().where {
+                    (Ledgers.userId eq userId) and (Ledgers.updatedAt greater lastSyncedAt)
+                }
+                .map { row ->
+                    LedgerDto(
+                        userUuid = row[Users.uuid],
+                        uuid = row[Ledgers.uuid],
+                        name = row[Ledgers.name],
+                        currencyCode = row[Ledgers.currencyCode],
+                        createdAt = row[Ledgers.createdAt],
+                        updatedAt = row[Ledgers.updatedAt]
+                    )
+                }
         }
     }
+
 
     override fun countByUserIdAndUpdatedAfter(userId: Long, timeStamp: Long): Long {
         return transaction {
@@ -62,7 +67,6 @@ class LedgerRepositoryImpl : LedgerRepository {
                 row[currencyCode] = ledger.currencyCode
                 row[createdAt] = ledger.createdAt
                 row[updatedAt] = ledger.updatedAt
-                row[userId] = ledger.userId
             }.insertedCount
 
             if (insertedCount == 0) {
@@ -71,7 +75,6 @@ class LedgerRepositoryImpl : LedgerRepository {
                     row[currencyCode] = ledger.currencyCode
                     row[createdAt] = ledger.createdAt
                     row[updatedAt] = ledger.updatedAt
-                    row[userId] = ledger.userId
                 }
             }
         }

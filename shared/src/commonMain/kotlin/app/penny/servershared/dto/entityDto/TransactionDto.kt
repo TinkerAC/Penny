@@ -13,9 +13,9 @@ data class TransactionDto(
     val categoryName: String,
     val currencyCode: String,
     val amount: String,
-    val remark: String? = null,
+    val remark: String?,
     val createdAt: Long,
-    val updatedAt: Long
+    val updatedAt: Long,
 ): BaseEntityDto()
 
 

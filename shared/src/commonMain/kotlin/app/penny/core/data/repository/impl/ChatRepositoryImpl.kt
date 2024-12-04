@@ -8,6 +8,7 @@ import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.UserModel
 import app.penny.core.network.ApiClient
+import app.penny.servershared.dto.requestDto.GetAiReplyResponse
 import kotlinx.datetime.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -19,22 +20,14 @@ class ChatRepositoryImpl(
     private val userRepository: UserRepository,
     private val apiClient: ApiClient
 ) : ChatRepository {
-    override suspend fun sendMessage(message: String): ChatMessage.TextMessage {
+    override suspend fun sendMessage(message: String): GetAiReplyResponse {
         //TODO: Implement this with apiClient
 
-        val action = apiClient.ai.getAction(message)
+        val response = apiClient.ai.getAction(message)
 
-        return ChatMessage.TextMessage(
-            uuid = Uuid.random(),
-            user = userRepository.findAll().first(),
-            sender = UserModel(
-                uuid = Uuid.fromLongs(0, 0),
-                username = "AI",
-                email = ""
-            ),
-            content = "User wants to $action",
-            timestamp = Clock.System.now().epochSeconds
-        )
+        return response
+
+
     }
 
     override suspend fun sendAudio(audioFilePath: String, duration: Long) {

@@ -1,11 +1,14 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/aiChat/AIChatViewModel.kt
 package app.penny.feature.aiChat
 
+import app.penny.core.data.model.toModel
 import app.penny.core.domain.model.UserModel
 import app.penny.core.data.repository.ChatRepository
+import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.ChatMessage
+import app.penny.servershared.enumerate.Action
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +23,8 @@ import kotlin.uuid.Uuid
 class AIChatViewModel(
     private val chatRepository: ChatRepository,
     private val userDataRepository: UserDataRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val ledgerRepository: LedgerRepository
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(AIChatUiState())
@@ -61,8 +65,8 @@ class AIChatViewModel(
                 uuid = Uuid.random(),
                 user = currentUser,
                 sender = currentUser,
-                content = message,
-                timestamp = Clock.System.now().epochSeconds
+                timestamp = Clock.System.now().epochSeconds,
+                content = message
 
             )
             chatRepository.saveChatMessage(chatMessage)
@@ -71,35 +75,52 @@ class AIChatViewModel(
                 inputText = "",
                 isSending = false
             )
+
+
             // Simulate AI assistant reply
             val aiReply = chatRepository.sendMessage(
                 message = message
             )
-            chatRepository.saveChatMessage(aiReply)
+
+            if (aiReply.success && aiReply.action != null) {
+                executeAction(aiReply.action)
+            }
+
+
+            val cm: ChatMessage.TextMessage = ChatMessage.TextMessage(
+                uuid = Uuid.random(),
+                user = currentUser,
+                sender = UserModel.AI,
+                timestamp = Clock.System.now().epochSeconds,
+                content = aiReply.message
+            )
+
 
             _uiState.value = _uiState.value.copy(
-                messages = _uiState.value.messages + aiReply
+                messages = _uiState.value.messages + cm
             )
         }
     }
 
     private fun sendAudio(audioFilePath: String, duration: Long) {
-        screenModelScope.launch {
-            _uiState.value = _uiState.value.copy(isSending = true)
-            val audioMessage = ChatMessage.AudioMessage(
-                uuid = Uuid.random(),
-                user = currentUser,
-                sender = currentUser,
-                audioFilePath = audioFilePath,
-                duration = duration,
-                timestamp = Clock.System.now().epochSeconds
-            )
-            chatRepository.saveChatMessage(audioMessage)
-            _uiState.value = _uiState.value.copy(
-                messages = _uiState.value.messages + audioMessage,
-                isSending = false
-            )
-            // Simulate AI assistant reply (optional)
+        throw NotImplementedError("Audio messages are not supported yet")
+    }
+
+    private suspend fun executeAction(action: Action) {
+
+        when (action) {
+            is Action.InsertLedger -> {
+                if (action.dto != null) {
+                    ledgerRepository.insert(action.dto.toModel())
+                }
+            }
+
+            else -> {
+                throw IllegalArgumentException("Unsupported action: $action")
+            }
+
         }
+
+
     }
 }

@@ -12,7 +12,7 @@ class OnboardingScreen : Screen {
         val rootNavigator = LocalNavigator.currentOrThrow
         var currentStep by remember { mutableStateOf(0) }
         when (currentStep) {
-            0 -> OnboardingScreen1(
+            0 -> OnboardingScreen0(
                 currentPage = 0,
                 totalPages = 4,
                 onNext = { currentStep++ })

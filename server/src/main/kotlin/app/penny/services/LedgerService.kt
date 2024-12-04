@@ -7,15 +7,6 @@ import app.penny.servershared.dto.entityDto.LedgerDto
 class LedgerService(
     private val ledgerRepository: LedgerRepository
 ) {
-    fun insertLedgers(
-        ledgers: List<LedgerDto>,
-        userId: Long
-    ) {
-        val ledgersWithUserId = ledgers.map { ledger ->
-            ledger.copy(userId = userId)
-        }
-        ledgerRepository.insert(ledgersWithUserId)
-    }
 
     fun getLedgersByUserIdAfterLastSync(
         userId: Long,

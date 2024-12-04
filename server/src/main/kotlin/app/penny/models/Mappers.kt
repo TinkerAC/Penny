@@ -6,14 +6,17 @@ import app.penny.servershared.dto.entityDto.TransactionDto
 import app.penny.servershared.dto.entityDto.UserDto
 import org.jetbrains.exposed.sql.ResultRow
 
-fun ResultRow.toLedgerDto(): LedgerDto {
+fun ResultRow.toLedgerDto(
+    userUuid: String
+): LedgerDto {
     return LedgerDto(
+        userUuid = userUuid,
         uuid = this[Ledgers.uuid],
         name = this[Ledgers.name],
         currencyCode = this[Ledgers.currencyCode],
         createdAt = this[Ledgers.createdAt],
-        updatedAt = this[Ledgers.updatedAt],
-        userId = this[Ledgers.userId].value
+        updatedAt = this[Ledgers.updatedAt]
+
     )
 }
 

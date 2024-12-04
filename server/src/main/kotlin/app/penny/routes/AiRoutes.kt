@@ -2,7 +2,8 @@ package app.penny.routes
 
 import app.penny.servershared.dto.requestDto.GetActionDetailRequest
 import app.penny.servershared.dto.requestDto.GetActionRequest
-import app.penny.servershared.dto.responseDto.GetActionResponse
+import app.penny.servershared.dto.requestDto.GetAiReplyResponse
+import app.penny.servershared.enumerate.Action
 import app.penny.services.AiService
 import io.ktor.server.routing.Route
 
@@ -21,25 +22,26 @@ fun Route.aiRoutes(
         authenticate(
             "access-jwt"
         ) {
-            post("/get-action") {
+            post("/get-reply") {
                 val request = call.receive<GetActionRequest>()
-                val action: String? = aiService.getAction(request.text)
+                val action: Action? = aiService.getAction(request.text)
+
                 if (action == null) {
                     call.respond(
                         HttpStatusCode.OK,
-                        GetActionResponse(
+                        GetAiReplyResponse(
                             success = false,
                             message = "Failed to infer action",
-                            action = ""
+                            content = "Failed to infer action"
                         )
                     )
                     return@post
                 } else {
                     call.respond(
                         HttpStatusCode.OK,
-                        GetActionResponse(
+                        GetAiReplyResponse(
                             success = true,
-                            message = "Action inferred successfully",
+                            message = "Successfully inferred action",
                             action = action
                         )
                     )
@@ -48,8 +50,6 @@ fun Route.aiRoutes(
 
             post("/get-action-detail") {
                 val request: GetActionDetailRequest = call.receive<GetActionDetailRequest>()
-
-
             }
 
         }
