@@ -29,6 +29,7 @@ import app.penny.core.domain.usecase.CountUnsyncedDataUseCase
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
 import app.penny.core.domain.usecase.GetAllTransactionsUseCase
+import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
@@ -142,7 +143,7 @@ fun commonModule() = module {
     // 提供 UseCase
     factory { GetAllLedgerUseCase(get()) }
     factory { InsertRandomTransactionUseCase(get(), get()) }
-
+    factory { InitLocalUserUseCase(get(), get()) }
     factory { GetAllTransactionsUseCase(get()) }
     factory { SearchTransactionsUseCase(get()) }
     factory { CheckIsEmailRegisteredUseCase(get()) }

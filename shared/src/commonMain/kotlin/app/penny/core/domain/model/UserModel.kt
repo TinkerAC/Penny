@@ -8,7 +8,7 @@ import kotlin.uuid.Uuid
 data class UserModel(
     var uuid: Uuid = Uuid.fromLongs(0, 0),
     val username: String = "",
-    val email: String = "",
+    val email: String? = null,
     val createdAt: Instant = Instant.DISTANT_PAST,
     val updatedAt: Instant = Instant.DISTANT_PAST
 ) {

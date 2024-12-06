@@ -171,7 +171,7 @@ fun UserModel.toEntity(): UserEntity {
     return UserEntity(
         uuid = uuid.toString(),
         username = username,
-        email = email,
+        email = email ?: "",
         created_at = createdAt.epochSeconds,
         updated_at = updatedAt.epochSeconds
     )
@@ -203,7 +203,11 @@ fun ChatMessage.toEntity(): ChatMessageEntity {
             audio_file_path = null,
             duration = null,
             //json encode action
-            action = action?.let { Json.encodeToString(Action.serializer(), it) }
+            action = action?.let {
+                Json.encodeToString(
+                    Action.serializer(), it,
+                )
+            }
         )
 
     }

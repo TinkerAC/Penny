@@ -107,7 +107,7 @@ class AIChatViewModel(
     }
 
     private suspend fun executeAction(action: Action) {
-
+        println("Executing action: $action")
         when (action) {
             is Action.InsertLedger -> {
                 if (action.dto != null) {

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.presentation.ui.components.PennyLogo
 import app.penny.presentation.ui.components.RegisterAndLoginModal
 import app.penny.presentation.ui.theme.spacing
@@ -24,6 +25,9 @@ import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
 import penny.shared.generated.resources.LeckerliOne_Regular
 import penny.shared.generated.resources.Res
+
+
+
 
 @Composable
 fun OnboardingPage(
@@ -138,6 +142,7 @@ fun OnboardingLoginPage(
     content: String,
     currentPage: Int,
     totalPages: Int,
+
     onNext: () -> Unit
 ) {
     var showLoginModal by remember { mutableStateOf(false) }
@@ -243,7 +248,9 @@ fun OnboardingLoginPage(
 
                     // Use Local Account Button
                     OutlinedButton(
-                        onClick = { useLocalAccount = true; onNext() },
+                        onClick = {
+                            useLocalAccount = true; onNext()
+                        },
                         modifier = Modifier
                             .weight(1f)
                             .height(56.dp)
@@ -253,6 +260,8 @@ fun OnboardingLoginPage(
                             text = "跳过",
                             style = typography.titleMedium
                         )
+
+
                     }
                 }
             }

@@ -5,6 +5,7 @@ import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.UserModel
+import app.penny.core.domain.usecase.InitLocalUserUseCase
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,24 +66,9 @@ fun ApplicationInitializer.initUser(): ApplicationInitializer {
 
     val userRepository: UserRepository by inject()
     val userDataRepository: UserDataRepository by inject()
-
+    val initLocalUserUseCase: InitLocalUserUseCase by inject() //TODO: 为OnBoarding 创建viewModel,并在那里调用
     CoroutineScope(Dispatchers.Default).launch {
-        val count = userRepository.count()
-        if (count == 0L) {
-            Logger.i { "Creating default user..." }//TODO: 在UI中引导用户创建账户
-            // 创建默认用户
-            val user =
-                UserModel(
-                    uuid = Uuid.random(),
-                    username = "PennyPal",
-                    email = ""
-                )
-            userRepository.insert(user)
-            userDataRepository.setUserUuid(user.uuid.toString())
-        } else {
-            Logger.i("Current user : ${userDataRepository.getUserUuid()}")
-        }
-
+        initLocalUserUseCase()
     }
     return this
 
