@@ -1,8 +1,8 @@
+// file: shared/src/commonMain/kotlin/app/penny/servershared/dto/entityDto/LedgerDto.kt
 package app.penny.servershared.dto.entityDto
 
 import app.penny.servershared.dto.BaseEntityDto
 import kotlinx.serialization.Serializable
-import kotlin.uuid.Uuid
 
 @Serializable
 data class LedgerDto(
@@ -14,7 +14,14 @@ data class LedgerDto(
     val createdAt: Long,
     val updatedAt: Long,
 ) : BaseEntityDto() {
-    fun completedForAction(): Boolean {
+    override fun completedForAction(): Boolean {
         return name.isNotBlank() && currencyCode.isNotBlank()
+    }
+
+    override fun editableFields(): List<Pair<String, String?>> {
+        return listOf(
+            "name" to name,
+            "currencyCode" to currencyCode
+        )
     }
 }

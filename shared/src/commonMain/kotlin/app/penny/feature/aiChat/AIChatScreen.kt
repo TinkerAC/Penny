@@ -16,20 +16,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.penny.feature.aiChat.components.ChatBubble
+import app.penny.feature.aiChat.components.FunctionalBubble
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import kotlinx.coroutines.launch
 
 class AIChatScreen : Screen {
-
     @Composable
     override fun Content() {
         val rootNavigator = LocalNavigator.currentOrThrow
-
         val viewModel = koinScreenModel<AIChatViewModel>()
-
         val uiState by viewModel.uiState.collectAsState()
 
         Scaffold(
@@ -45,43 +45,62 @@ class AIChatScreen : Screen {
                 ChatInputBar(
                     inputText = uiState.inputText,
                     onTextChanged = { text ->
-                        viewModel.handleIntent(AIChatIntent.SendMessage(text))
+                        // 不在这里直接sendMessage，否则会重复发消息，改为只更新输入框
                     },
                     onSendClicked = { message ->
                         viewModel.handleIntent(AIChatIntent.SendMessage(message))
                     },
                     onAttachClicked = {
-                        // Handle file attachment (functionality left blank)
+                        // 附件功能留空
                     },
                     onAudioClicked = {
-                        // Handle audio input (functionality left blank)
+                        // 语音功能留空
                     }
                 )
             }
         ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-                if (uiState.isLoading) {
-                    // Show a loading indicator
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f),
-                        reverseLayout = true,
-                        contentPadding = PaddingValues(16.dp)
-                    ) {
-                        items(uiState.messages.reversed()) { message ->
-                            ChatBubble(message = message)
-                            Spacer(modifier = Modifier.height(8.dp))
+            Box(modifier = Modifier
+                .padding(paddingValues)
+                .background(MaterialTheme.colorScheme.background)) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    if (uiState.isLoading) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator()
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .weight(1f),
+                            reverseLayout = true,
+                            contentPadding = PaddingValues(16.dp)
+                        ) {
+                            items(uiState.messages.reversed()) { message ->
+                                ChatBubble(message = message)
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
                         }
                     }
+
+                    // 功能性气泡
+                    FunctionalBubble(
+                        show = uiState.showFunctionalBubble,
+                        action = uiState.pendingAction,
+                        dto = uiState.pendingDto,
+                        onConfirm = { editedFields ->
+                            uiState.pendingAction?.let { action ->
+                                viewModel.handleIntent(AIChatIntent.ConfirmPendingAction(action, editedFields))
+                            }
+                        },
+                        onDismiss = {
+                            // 用户取消，关闭bubble
+                            // 这里简单处理：关闭bubble，但保留pendingAction/dto以便以后需要？
+                            // 实际可根据需求清空
+                            viewModel.screenModelScope.launch {
+                                viewModel.cancelBubble()
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -115,6 +134,7 @@ fun ChatInputBar(
                 value = textFieldValue,
                 onValueChange = {
                     textFieldValue = it
+                    onTextChanged(it.text)
                 },
                 placeholder = { Text("Type a message") },
                 modifier = Modifier

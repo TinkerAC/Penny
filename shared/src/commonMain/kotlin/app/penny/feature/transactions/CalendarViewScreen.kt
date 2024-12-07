@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.Icon
@@ -94,7 +95,7 @@ fun CalendarHeader(currentMonth: LocalDate, onMonthChange: (Long) -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = { onMonthChange(-1) }) {
-            Icon(imageVector = Icons.Default.ArrowBackIos, contentDescription = "Previous Month")
+            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month")
         }
         Text(
             text = "${currentMonth.year} - ${currentMonth.month.name}",

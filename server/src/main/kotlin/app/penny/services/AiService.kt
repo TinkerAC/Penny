@@ -15,10 +15,9 @@ import kotlinx.serialization.json.Json
 class AiService(
     private val openAiClient: OpenAI
 ) {
-    private val  json = Json {
+    private val json = Json {
         coerceInputValues = true
     }
-
 
     suspend fun getAction(
         text: String
@@ -30,9 +29,12 @@ class AiService(
             return getActionDetail(actionName, text)
         }
 
-
         return null
     }
+
+
+
+
 
     private suspend fun getActionName(
         text: String
@@ -128,10 +130,8 @@ class AiService(
 
         val response = completion.choices.first().message.content
 
-        val ledgerDto = response?.let { json.decodeFromString(LedgerDto.serializer(), it) }
-
         return Action.InsertLedger(
-            dto = ledgerDto
+            actionDetail = response
         )
 
     }

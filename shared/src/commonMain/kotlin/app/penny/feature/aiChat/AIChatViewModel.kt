@@ -7,17 +7,24 @@ import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
+import app.penny.core.domain.enum.Currency
 import app.penny.core.domain.model.ChatMessage
+import app.penny.core.domain.model.LedgerModel
+import app.penny.servershared.dto.BaseEntityDto
+import app.penny.servershared.dto.entityDto.LedgerDto
 import app.penny.servershared.enumerate.Action
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.serialization.json.Json
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+
 
 @OptIn(ExperimentalUuidApi::class)
 class AIChatViewModel(
@@ -29,7 +36,6 @@ class AIChatViewModel(
 
     private val _uiState = MutableStateFlow(AIChatUiState())
     val uiState: StateFlow<AIChatUiState> = _uiState.asStateFlow()
-
 
     private lateinit var currentUser: UserModel
 
@@ -47,6 +53,10 @@ class AIChatViewModel(
             is AIChatIntent.LoadChatHistory -> loadChatHistory()
             is AIChatIntent.SendMessage -> sendMessage(intent.message)
             is AIChatIntent.SendAudio -> sendAudio(intent.audioFilePath, intent.duration)
+            is AIChatIntent.ConfirmPendingAction -> confirmPendingAction(
+                intent.action,
+                intent.editedFields
+            )
         }
     }
 
@@ -67,7 +77,6 @@ class AIChatViewModel(
                 sender = currentUser,
                 timestamp = Clock.System.now().epochSeconds,
                 content = message
-
             )
             chatRepository.saveChatMessage(chatMessage)
             _uiState.value = _uiState.value.copy(
@@ -76,25 +85,19 @@ class AIChatViewModel(
                 isSending = false
             )
 
-
-            // Simulate AI assistant reply
-            val aiReply = chatRepository.sendMessage(
-                message = message
-            )
+            val aiReply = chatRepository.sendMessage(message = message)
 
             if (aiReply.success && aiReply.action != null) {
-                executeAction(aiReply.action)
+                handleAction(aiReply.action)
             }
 
-
-            val cm: ChatMessage.TextMessage = ChatMessage.TextMessage(
+            val cm = ChatMessage.TextMessage(
                 uuid = Uuid.random(),
                 user = currentUser,
                 sender = UserModel.AI,
                 timestamp = Clock.System.now().epochSeconds,
                 content = aiReply.message
             )
-
 
             _uiState.value = _uiState.value.copy(
                 messages = _uiState.value.messages + cm
@@ -106,21 +109,136 @@ class AIChatViewModel(
         throw NotImplementedError("Audio messages are not supported yet")
     }
 
-    private suspend fun executeAction(action: Action) {
-        println("Executing action: $action")
+    private fun handleAction(action: Action) {
+        screenModelScope.launch {
+            println("Handling action: $action")
+            val dto = parseDtoFromAction(action)
+
+            if (dto == null) {
+                // 无法解析dto，视为信息不足，显示FunctionalBubble（空dto）
+                _uiState.value = _uiState.value.copy(
+                    showFunctionalBubble = true,
+                    pendingAction = action,
+                    pendingDto = null
+                )
+                return@launch
+            }
+
+            if (dto.completedForAction()) {
+                // 足够信息直接执行
+                executeAction(action, dto)
+            } else {
+                // 不足信息，弹出bubble让用户编辑
+                _uiState.value = _uiState.value.copy(
+                    showFunctionalBubble = true,
+                    pendingAction = action,
+                    pendingDto = dto
+                )
+            }
+        }
+    }
+
+    private fun parseDtoFromAction(action: Action): BaseEntityDto? {
+        val detailJson = action.actionDetail ?: return null
+        val json = Json { ignoreUnknownKeys = true }
+        return when (action.actionName) {
+            "insertLedgerRecord" -> json.decodeFromString<LedgerDto>(detailJson)
+            "insertTransactionRecord" -> {
+                // 假设未来有TransactionDto
+                // json.decodeFromString<TransactionDto>(detailJson)
+                // 这里先留空
+                null
+            }
+
+            else -> null
+        }
+    }
+
+    private suspend fun executeAction(action: Action, dto: BaseEntityDto) {
         when (action) {
             is Action.InsertLedger -> {
-                if (action.dto != null) {
-                    ledgerRepository.insert(action.dto.toModel())
-                }
+                val ledgerDto = dto as LedgerDto
+                val ledger = ledgerRepository.insert(
+                    ledgerModel = LedgerModel(
+                        name = ledgerDto.name,
+                        currency =Currency.valueOf(ledgerDto.currencyCode),
+                    )
+                )
+                val chatMessage = ChatMessage.TextMessage(
+                    uuid = Uuid.random(),
+                    user = currentUser,
+                    sender = UserModel.AI,
+                    timestamp = Clock.System.now().epochSeconds,
+                    content = "Successfully created ledger"
+                )
+                chatRepository.saveChatMessage(chatMessage)
+                _uiState.value = _uiState.value.copy(
+                    messages = _uiState.value.messages + chatMessage,
+                    showFunctionalBubble = false,
+                    pendingAction = null,
+                    pendingDto = null
+                )
             }
 
             else -> {
                 throw IllegalArgumentException("Unsupported action: $action")
             }
-
         }
+    }
+
+    private fun confirmPendingAction(action: Action, editedFields: Map<String, String?>) {
+        screenModelScope.launch {
+            val originalDto = _uiState.value.pendingDto
+            val newDto = rebuildDto(action, originalDto, editedFields)
+            if (newDto != null && newDto.completedForAction()) {
+                executeAction(action, newDto)
+            } else {
+                // 用户编辑后仍不完整，继续显示bubble或报错，这里简单处理继续显示
+                _uiState.value = _uiState.value.copy(
+                    showFunctionalBubble = true,
+                    pendingAction = action,
+                    pendingDto = newDto ?: originalDto
+                )
+            }
+        }
+    }
+
+    private fun rebuildDto(
+        action: Action,
+        originalDto: BaseEntityDto?,
+        editedFields: Map<String, String?>
+    ): BaseEntityDto? {
+        // 根据action类型重建dto
+        return when (action.actionName) {
+            "insertLedgerRecord" -> {
+                val o = (originalDto as? LedgerDto) ?: LedgerDto(
+                    userUuid = currentUser.uuid.toString(),
+                    uuid = Uuid.random().toString(),
+                    name = "",
+                    currencyCode = "",
+                    createdAt = Clock.System.now().epochSeconds,
+                    updatedAt = Clock.System.now().epochSeconds
+                )
+                o.copy(
+                    name = editedFields["name"] ?: o.name,
+                    currencyCode = editedFields["currencyCode"] ?: o.currencyCode
+                )
+            }
+
+            else -> originalDto
+        }
+    }
 
 
+    fun cancelBubble() {
+        _uiState.update { state ->
+            state.copy(
+                showFunctionalBubble = false,
+                pendingAction = null,
+                pendingDto = null
+            )
+        }
     }
 }
+
+
