@@ -89,6 +89,8 @@ class AIChatViewModel(
 
             if (aiReply.success && aiReply.action != null) {
                 handleAction(aiReply.action)
+
+
             }
 
             val cm = ChatMessage.TextMessage(
@@ -110,59 +112,33 @@ class AIChatViewModel(
     }
 
     private fun handleAction(action: Action) {
+
+
         screenModelScope.launch {
-            println("Handling action: $action")
-            val dto = parseDtoFromAction(action)
 
-            if (dto == null) {
-                // 无法解析dto，视为信息不足，显示FunctionalBubble（空dto）
-                _uiState.value = _uiState.value.copy(
-                    showFunctionalBubble = true,
-                    pendingAction = action,
-                    pendingDto = null
-                )
-                return@launch
-            }
+            val dto = action.dto
 
-            if (dto.completedForAction()) {
-                // 足够信息直接执行
-                executeAction(action, dto)
+            if (dto == null || dto.completedForAction()) {
+
+                executeAction(action, dto!!)
             } else {
-                // 不足信息，弹出bubble让用户编辑
                 _uiState.value = _uiState.value.copy(
                     showFunctionalBubble = true,
                     pendingAction = action,
                     pendingDto = dto
                 )
             }
+
         }
     }
 
-    private fun parseDtoFromAction(action: Action): BaseEntityDto? {
-        val detailJson = action.actionDetail ?: return null
-        val json = Json { ignoreUnknownKeys = true }
-        return when (action.actionName) {
-            "insertLedgerRecord" -> json.decodeFromString<LedgerDto>(detailJson)
-            "insertTransactionRecord" -> {
-                // 假设未来有TransactionDto
-                // json.decodeFromString<TransactionDto>(detailJson)
-                // 这里先留空
-                null
-            }
-
-            else -> null
-        }
-    }
 
     private suspend fun executeAction(action: Action, dto: BaseEntityDto) {
         when (action) {
             is Action.InsertLedger -> {
                 val ledgerDto = dto as LedgerDto
                 val ledger = ledgerRepository.insert(
-                    ledgerModel = LedgerModel(
-                        name = ledgerDto.name,
-                        currency =Currency.valueOf(ledgerDto.currencyCode),
-                    )
+                    ledgerDto.toModel()
                 )
                 val chatMessage = ChatMessage.TextMessage(
                     uuid = Uuid.random(),

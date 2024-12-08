@@ -1,12 +1,16 @@
-// 文件：server/src/main/kotlin/app/penny/utils/Extensions.kt
+// file: server/src/main/kotlin/app/penny/utils/UserAttributes.kt
 package app.penny.utils
 
+import app.penny.servershared.dto.entityDto.UserDto
 import io.ktor.server.application.ApplicationCall
-import io.ktor.server.auth.jwt.JWTPrincipal
-import io.ktor.server.auth.principal
+import io.ktor.util.*
 
-fun ApplicationCall.getUserId(): Long? {
-    val principal = this.principal<JWTPrincipal>()
-    val userId = principal?.getClaim("userId", String::class)
-    return userId?.toLong()
-}
+/**
+ * AttributeKey to store UserDto in ApplicationCall attributes.
+ */
+val UserKey = AttributeKey<UserDto>("User")
+
+/**
+ * Extension function to retrieve the current user from ApplicationCall.
+ */
+fun ApplicationCall.getUser(): UserDto? = attributes.getOrNull(UserKey)

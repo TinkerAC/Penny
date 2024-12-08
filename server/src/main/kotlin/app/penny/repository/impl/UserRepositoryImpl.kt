@@ -34,4 +34,13 @@ class UserRepositoryImpl : UserRepository {
         }.value
     }
 
+
+    override fun findById(id: Long): UserDto? {
+        return transaction {
+            Users
+                .selectAll().where { Users.id eq id }
+                .map { it.toUserDto() }
+                .singleOrNull()
+        }
+    }
 }

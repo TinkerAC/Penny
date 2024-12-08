@@ -1,4 +1,4 @@
-// 文件：server/src/main/kotlin/app/penny/services/UserService.kt
+// file: server/src/main/kotlin/app/penny/services/UserService.kt
 package app.penny.services
 
 import app.penny.config.JwtConfig
@@ -13,6 +13,9 @@ class UserService(
     private val userRepository: UserRepository,
     private val jwtConfig: JwtConfig
 ) {
+    /**
+     * Registers a new user with the provided credentials.
+     */
     fun register(credentials: RegisterRequest): Boolean {
         if (userRepository.findByEmail(credentials.email) != null) {
             return false
@@ -23,6 +26,9 @@ class UserService(
         return true
     }
 
+    /**
+     * Logs in a user and returns a LoginResponse containing tokens and user information.
+     */
     fun login(credentials: LoginRequest): LoginResponse {
         val userEntity = userRepository.findByEmail(credentials.email)
             ?: return LoginResponse(
@@ -52,17 +58,28 @@ class UserService(
         }
     }
 
+    /**
+     * Checks if an email is already registered.
+     */
     fun checkIsEmailRegistered(email: String): Boolean {
         return userRepository.findByEmail(email) != null
     }
+
+    /**
+     * Finds a user by their unique identifier.
+     */
+    fun findUserById(id: Long): UserDto? {
+        return userRepository.findById(id)
+    }
 }
 
-// 扩展函数，用于转换 UserEntity 到 UserResponseDto
+/**
+ * Extension function to convert UserEntity to UserDto.
+ */
 fun UserDto.toUserResponseDto(): UserDto {
     return UserDto(
         id = id,
         username = username,
         email = email,
-        )
+    )
 }
-

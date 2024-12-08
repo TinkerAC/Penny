@@ -1,3 +1,4 @@
+// file: shared/src/androidMain/kotlin/app/penny/di/AppModule.android.kt
 package app.penny.di
 
 import app.cash.sqldelight.db.SqlDriver
@@ -10,22 +11,22 @@ import org.koin.dsl.module
 
 actual fun platformModule() = module {
     single<SqlDriver> {
-        AndroidSqliteDriver(
+        val driver = AndroidSqliteDriver(
             schema = PennyDatabase.Schema,
             context = androidContext(),
             name = "penny.db"
         )
+
+        // 启用日志记录
+        driver.execute(null, "PRAGMA sqlite_trace = ON;", 0)
+
+        driver
     }
 
     single { MultiplatformSettingsWrapper(context = androidContext()).createSettings() }
 
-
-    // ktor http engine (okhttp)
-
+    // 其他配置
     single {
-        HttpClient(
-
-        )
-
+        HttpClient()
     }
 }

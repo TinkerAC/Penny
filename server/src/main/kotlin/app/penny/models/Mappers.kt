@@ -41,8 +41,8 @@ fun ResultRow.toUserDto(): UserDto {
         id = this[Users.id].value,
         username = this[Users.username],
         email = this[Users.email],
-        passwordHash = this[Users.passwordHash],
         createdAt = this[Users.createdAt],
-        updatedAt = this[Users.updatedAt]
+        updatedAt = this[Users.updatedAt],
+        passwordHash = this[Users.passwordHash]
     )
 }

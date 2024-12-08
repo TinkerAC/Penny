@@ -2,7 +2,10 @@
 package app.penny.servershared.dto.entityDto
 
 import app.penny.servershared.dto.BaseEntityDto
+import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Serializable
 data class LedgerDto(
@@ -24,4 +27,23 @@ data class LedgerDto(
             "currencyCode" to currencyCode
         )
     }
+
+    companion object {
+        @OptIn(ExperimentalUuidApi::class)
+        fun create(
+            userUuid: String,
+            name: String,
+            currencyCode: String
+        ): LedgerDto {
+            return LedgerDto(
+                userUuid = userUuid,
+                uuid = Uuid.random().toString(),
+                name = name,
+                currencyCode = currencyCode,
+                createdAt = Clock.System.now().epochSeconds,
+                updatedAt = Clock.System.now().epochSeconds
+            )
+        }
+    }
+
 }
