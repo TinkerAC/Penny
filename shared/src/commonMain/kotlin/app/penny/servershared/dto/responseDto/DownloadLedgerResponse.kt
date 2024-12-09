@@ -1,7 +1,7 @@
 package app.penny.servershared.dto.responseDto
 
 import app.penny.servershared.dto.BaseResponseDto
-import app.penny.servershared.dto.entityDto.LedgerDto
+import app.penny.servershared.dto.LedgerDto
 import kotlinx.serialization.Serializable
 
 @Serializable

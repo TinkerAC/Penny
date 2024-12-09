@@ -1,6 +1,5 @@
-package app.penny.servershared.dto.entityDto
+package app.penny.servershared.dto
 
-import app.penny.servershared.dto.BaseEntityDto
 import kotlinx.serialization.Serializable
 
 @Serializable

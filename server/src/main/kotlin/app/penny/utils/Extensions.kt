@@ -1,7 +1,7 @@
 // 文件：server/src/main/kotlin/app/penny/utils/Extensions.kt
 package app.penny.utils
 
-import app.penny.servershared.dto.entityDto.UserDto
+import app.penny.servershared.dto.UserDto
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal

@@ -9,7 +9,7 @@ import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.ChatMessage
 import app.penny.servershared.dto.BaseEntityDto
-import app.penny.servershared.dto.entityDto.LedgerDto
+import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.enumerate.Action
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope

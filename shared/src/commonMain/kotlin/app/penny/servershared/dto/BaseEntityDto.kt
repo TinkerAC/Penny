@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlin.uuid.ExperimentalUuidApi
 
 @Serializable
-abstract class BaseEntityDto(
+sealed class BaseEntityDto(
 ) {
 
 

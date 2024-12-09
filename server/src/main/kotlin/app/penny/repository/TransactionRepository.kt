@@ -1,7 +1,7 @@
 // 文件：server/src/main/kotlin/app/penny/repository/TransactionRepository.kt
 package app.penny.repository
 
-import app.penny.servershared.dto.entityDto.TransactionDto
+import app.penny.servershared.dto.TransactionDto
 
 interface TransactionRepository {
     fun findByUserIdAndUpdatedAfter(userId: Long, timeStamp: Long): List<TransactionDto>

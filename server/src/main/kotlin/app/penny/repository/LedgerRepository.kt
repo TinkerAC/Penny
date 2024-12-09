@@ -1,7 +1,7 @@
 // 文件：server/src/main/kotlin/app/penny/repository/LedgerRepository.kt
 package app.penny.repository
 
-import app.penny.servershared.dto.entityDto.LedgerDto
+import app.penny.servershared.dto.LedgerDto
 
 interface LedgerRepository {
     fun insert(userId: Long, ledgers: List<LedgerDto>)

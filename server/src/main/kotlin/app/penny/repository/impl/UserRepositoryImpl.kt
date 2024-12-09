@@ -4,7 +4,7 @@ package app.penny.repository.impl
 import app.penny.models.Users
 import app.penny.models.toUserDto
 import app.penny.repository.UserRepository
-import app.penny.servershared.dto.entityDto.UserDto
+import app.penny.servershared.dto.UserDto
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
@@ -30,6 +30,7 @@ class UserRepositoryImpl : UserRepository {
             Users.insert {
                 it[Users.uuid] = uuid
                 it[Users.email] = email
+                it[Users.username] = ""
                 it[Users.passwordHash] = passwordHash
                 val currentTime = Clock.System.now().epochSeconds
                 it[createdAt] = currentTime

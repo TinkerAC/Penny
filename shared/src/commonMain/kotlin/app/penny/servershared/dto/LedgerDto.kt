@@ -1,7 +1,6 @@
 // file: shared/src/commonMain/kotlin/app/penny/servershared/dto/entityDto/LedgerDto.kt
-package app.penny.servershared.dto.entityDto
+package app.penny.servershared.dto
 
-import app.penny.servershared.dto.BaseEntityDto
 import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 import kotlin.uuid.ExperimentalUuidApi

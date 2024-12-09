@@ -4,7 +4,7 @@ package app.penny.repository.impl
 import app.penny.models.Transactions
 import app.penny.models.toTransactionDto
 import app.penny.repository.TransactionRepository
-import app.penny.servershared.dto.entityDto.TransactionDto
+import app.penny.servershared.dto.TransactionDto
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.batchInsert

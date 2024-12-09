@@ -20,9 +20,9 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import app.penny.servershared.dto.entityDto.LedgerDto
-import app.penny.servershared.dto.entityDto.TransactionDto
-import app.penny.servershared.dto.entityDto.UserDto
+import app.penny.servershared.dto.LedgerDto
+import app.penny.servershared.dto.TransactionDto
+import app.penny.servershared.dto.UserDto
 import app.penny.servershared.enumerate.Action
 import kotlinx.serialization.json.Json
 

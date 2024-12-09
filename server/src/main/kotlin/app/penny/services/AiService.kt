@@ -1,8 +1,8 @@
 // file: server/src/main/kotlin/app/penny/services/AiService.kt
 package app.penny.services
 
-import app.penny.servershared.dto.entityDto.LedgerDto
-import app.penny.servershared.dto.entityDto.UserDto
+import app.penny.servershared.dto.LedgerDto
+import app.penny.servershared.dto.UserDto
 import app.penny.servershared.enumerate.Action
 import app.penny.utils.getAuthedUser
 

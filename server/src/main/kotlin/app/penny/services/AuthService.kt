@@ -3,7 +3,7 @@ package app.penny.services
 
 import app.penny.config.JwtConfig
 import app.penny.repository.UserRepository
-import app.penny.servershared.dto.entityDto.UserDto
+import app.penny.servershared.dto.UserDto
 import app.penny.servershared.dto.responseDto.RefreshTokenResponse
 import com.auth0.jwt.exceptions.JWTVerificationException
 

@@ -1,9 +1,9 @@
 // 文件：server/src/main/kotlin/app/penny/models/Extensions.kt
 package app.penny.models
 
-import app.penny.servershared.dto.entityDto.LedgerDto
-import app.penny.servershared.dto.entityDto.TransactionDto
-import app.penny.servershared.dto.entityDto.UserDto
+import app.penny.servershared.dto.LedgerDto
+import app.penny.servershared.dto.TransactionDto
+import app.penny.servershared.dto.UserDto
 import org.jetbrains.exposed.sql.ResultRow
 
 fun ResultRow.toLedgerDto(
@@ -39,6 +39,7 @@ fun ResultRow.toTransactionDto(): TransactionDto {
 fun ResultRow.toUserDto(): UserDto {
     return UserDto(
         id = this[Users.id].value,
+        uuid = this[Users.uuid],
         username = this[Users.username],
         email = this[Users.email],
         createdAt = this[Users.createdAt],

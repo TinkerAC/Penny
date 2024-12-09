@@ -2,7 +2,7 @@
 package app.penny.services
 
 import app.penny.repository.LedgerRepository
-import app.penny.servershared.dto.entityDto.LedgerDto
+import app.penny.servershared.dto.LedgerDto
 
 class LedgerService(
     private val ledgerRepository: LedgerRepository

@@ -6,7 +6,7 @@ import app.penny.repository.UserRepository
 import app.penny.servershared.dto.requestDto.LoginRequest
 import app.penny.servershared.dto.responseDto.LoginResponse
 import app.penny.servershared.dto.requestDto.RegisterRequest
-import app.penny.servershared.dto.entityDto.UserDto
+import app.penny.servershared.dto.UserDto
 import org.mindrot.jbcrypt.BCrypt
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
