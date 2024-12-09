@@ -17,8 +17,6 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "Penny",
         state = rememberWindowState(
-
-
         )
     ) {
         App()

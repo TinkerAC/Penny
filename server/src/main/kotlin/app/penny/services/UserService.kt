@@ -82,6 +82,9 @@ class UserService(
      * Checks if an email is already registered.
      */
     fun checkIsEmailRegistered(email: String): Boolean {
+
+
+
         return userRepository.findByEmail(email) != null
     }
 

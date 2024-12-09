@@ -76,6 +76,18 @@ fun Route.userRoutes(userService: UserService) {
         }
 
         get("/checkIsEmailRegistered") {
+
+            if (call.request.queryParameters.isEmpty() || call.request.queryParameters["email"].isNullOrEmpty()) {
+                call.respond(
+                    HttpStatusCode.BadRequest,
+                    CheckIsEmailRegisteredResponse(
+                        success = false,
+                        message = "Valid email is required"
+                    )
+                )
+                return@get
+            }
+
             val email = call.request.queryParameters["email"]
             if (email.isNullOrEmpty()) {
                 call.respond(

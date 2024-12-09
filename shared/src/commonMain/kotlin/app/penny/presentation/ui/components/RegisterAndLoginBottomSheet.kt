@@ -77,7 +77,7 @@ fun RegisterAndLoginBottomSheet(
                     if (!focusState.isFocused) {
                         viewModel.handleIntent(
                             ProfileIntent.UnfocusEmail(
-                                uiState.value.email ?: ""
+                                uiState.value.email
                             )
                         )
                     }
@@ -133,6 +133,12 @@ fun RegisterAndLoginBottomSheet(
                     }
                 }
             )
+        }
+
+        //render error message
+        uiState.value.errorMessage?.let { errorMessage ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(errorMessage, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
         }
 
         Spacer(modifier = Modifier.height(24.dp))

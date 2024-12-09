@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,12 +22,14 @@ import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.presentation.ui.components.PennyLogo
 import app.penny.presentation.ui.components.RegisterAndLoginModal
 import app.penny.presentation.ui.theme.spacing
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import penny.shared.generated.resources.LeckerliOne_Regular
 import penny.shared.generated.resources.Res
-
-
 
 
 @Composable
@@ -135,6 +138,7 @@ fun OnboardingPage(
     }
 }
 
+
 @Composable
 fun OnboardingLoginPage(
     illustration: Painter,
@@ -147,6 +151,11 @@ fun OnboardingLoginPage(
 ) {
     var showLoginModal by remember { mutableStateOf(false) }
     var useLocalAccount by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val initLocalUserUseCase: InitLocalUserUseCase = object : KoinComponent {
+        val initLocalUserUseCase: InitLocalUserUseCase by inject()
+    }.initLocalUserUseCase
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -249,7 +258,10 @@ fun OnboardingLoginPage(
                     // Use Local Account Button
                     OutlinedButton(
                         onClick = {
-                            useLocalAccount = true; onNext()
+                            coroutineScope.launch {
+                                initLocalUserUseCase()
+                            }
+                            onNext()
                         },
                         modifier = Modifier
                             .weight(1f)

@@ -4,7 +4,6 @@ import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
-import app.penny.core.domain.model.UserModel
 import app.penny.core.domain.usecase.InitLocalUserUseCase
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +14,6 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 interface Platform {
     val name: String
@@ -68,7 +66,7 @@ fun ApplicationInitializer.initUser(): ApplicationInitializer {
     val userDataRepository: UserDataRepository by inject()
     val initLocalUserUseCase: InitLocalUserUseCase by inject() //TODO: 为OnBoarding 创建viewModel,并在那里调用
     CoroutineScope(Dispatchers.Default).launch {
-        initLocalUserUseCase()
+//        initLocalUserUseCase()
     }
     return this
 

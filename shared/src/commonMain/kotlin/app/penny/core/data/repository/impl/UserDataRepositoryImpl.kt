@@ -34,9 +34,7 @@ class UserDataRepositoryImpl(
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun getUserUuid(): Uuid {
         val userUuid = userDataManager.getStringOrNull(UserDataManager.USER_UUID)
-        return userUuid?.let {
-            Uuid.parse(it)
-        } ?: throw IllegalStateException("User UUID is not set.")
+        return userUuid?.let { Uuid.parse(it) } ?: error("User UUID is null")
     }
 
     override suspend fun setUserUuid(uuid: String) {

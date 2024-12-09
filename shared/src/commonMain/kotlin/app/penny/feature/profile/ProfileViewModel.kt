@@ -7,6 +7,7 @@ import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,7 +55,13 @@ class ProfileViewModel(
         return authRepository.checkIsEmailRegistered(email)
     }
 
-    private fun checkEmailStatus(email: String) {
+    private fun checkEmailStatus(email: String?) {
+
+        if (email.isNullOrBlank()) {
+            Logger.d("Email not checked for $email")
+           return
+        }
+
         screenModelScope.launch {
             val isEmailRegistered = checkEmailAvailability(email)
             val localUser = userRepository.findByEmailIsNull()
