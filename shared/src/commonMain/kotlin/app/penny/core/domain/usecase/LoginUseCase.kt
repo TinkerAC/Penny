@@ -25,7 +25,6 @@ class LoginUseCase(
         //if there is a local user, and the email is not registered, bind the email to the local user
 
 
-
         val response = authRepository.login(email, password)
 
         if (response.success) {
@@ -40,20 +39,29 @@ class LoginUseCase(
             //create local user
 
             try {
+
                 val userDto = response.userDto!!
                 val userModel = userDto.toUserModel()
-                userRepository.insert(userModel)
+
+                val user = userRepository.findByEmail(userModel.email!!)
+
+                if (user != null && user.email == user.email && user.uuid == userModel.uuid) { // assume that the user is the same
+                    Logger.d("User already exists,will not create new user ,just setting as active")
+                } else {
+                    userRepository.insert(userModel)
+                }
 
 
                 //set kv data for user uuid
 
                 userDataRepository.setUserUuid(userModel.uuid.toString())
 
-                userDataRepository.setUserEmail(userModel.email!!)
+                userDataRepository.setUserEmail(userModel.email)
 
 
             } catch (e: Exception) {
                 Logger.e("Error creating User From Login Response")
+                throw e
             }
 
 

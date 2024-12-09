@@ -1,218 +1,388 @@
 package app.penny.core.domain.enum
 
+import androidx.compose.runtime.TestOnly
+
+
 enum class Category(
     val parentCategory: Category?,
     val categoryName: String,
     val categoryIcon: String,
+    val description: String
 ) {
     // 顶级类别
-    INCOME(null, "Income", "ic_category_income"),
-    EXPENSE(null, "Expense", "ic_category_expense"),
+    INCOME(null, "Income", "ic_category_income", "All types of income"),
+    EXPENSE(null, "Expense", "ic_category_expense", "All types of expenses"),
 
-    // 收入子类别
-    SALARY(INCOME, "Salary", "ic_salary"),
-    BASIC_SALARY(SALARY, "Base Salary", "ic_base_salary"),
-    BONUS(SALARY, "Bonus", "ic_bonus"),
-    OVERTIME(SALARY, "Overtime Pay", "ic_overtime"),
-    COMMISSION(SALARY, "Commission", "ic_commission"),
+    // ------------------- 收入子类别 -------------------
+    // 1. Salary & Wages
+    SALARY_WAGES(
+        INCOME,
+        "Salary & Wages",
+        "ic_category_salary_wages",
+        "Income from regular employment"
+    ),
+    BASE_SALARY(SALARY_WAGES, "Base Salary", "ic_base_salary", "Main salary from your job"),
+    BONUS(SALARY_WAGES, "Bonus", "ic_bonus", "Additional performance-based pay"),
+    OVERTIME(SALARY_WAGES, "Overtime", "ic_overtime", "Extra pay for overtime work"),
+    COMMISSION(
+        SALARY_WAGES,
+        "Commission",
+        "ic_commission",
+        "Income based on sales or performance metrics"
+    ),
 
-    BUSINESS(INCOME, "Business Income", "ic_business"),
-    SALES(BUSINESS, "Sales", "ic_sales"),
-    SERVICE(BUSINESS, "Service Revenue", "ic_service"),
-    CONSULTING(BUSINESS, "Consulting Fees", "ic_consulting"),
-    ROYALTIES(BUSINESS, "Royalties", "ic_royalties"),
+    // 2. Business & Freelance
+    BUSINESS_FREELANCE(
+        INCOME,
+        "Business & Freelance",
+        "ic_category_business_freelance",
+        "Income from side business or freelance work"
+    ),
+    FREELANCE(
+        BUSINESS_FREELANCE,
+        "Freelance/Gig Work",
+        "ic_freelance",
+        "Payment for freelance or gig economy jobs"
+    ),
+    CONSULTING_FEES(
+        BUSINESS_FREELANCE,
+        "Consulting Fees",
+        "ic_consulting",
+        "Fees for providing professional advice"
+    ),
+    SIDE_BUSINESS_INCOME(
+        BUSINESS_FREELANCE,
+        "Side Business Income",
+        "ic_side_business_income",
+        "Earnings from a small business or side hustle"
+    ),
 
-    INVESTMENT(INCOME, "Investment Income", "ic_investment"),
-    DIVIDENDS(INVESTMENT, "Dividends", "ic_dividends"),
-    INTEREST(INVESTMENT, "Interest", "ic_interest"),
-    CAPITAL_GAINS(INVESTMENT, "Capital Gains", "ic_capital_gains"),
-    RENTAL_INCOME(INVESTMENT, "Rental Income", "ic_rental"),
+    // 3. Investments & Passive Income
+    INVESTMENTS_PASSIVE(
+        INCOME,
+        "Investments & Passive Income",
+        "ic_category_investments_passive",
+        "Income from investments or passive sources"
+    ),
+    DIVIDENDS(INVESTMENTS_PASSIVE, "Dividends", "ic_dividends", "Payments from stocks or funds"),
+    INTEREST(
+        INVESTMENTS_PASSIVE,
+        "Interest",
+        "ic_interest",
+        "Interest from savings, bonds, or loans"
+    ),
+    RENTAL_INCOME(
+        INVESTMENTS_PASSIVE,
+        "Rental Income",
+        "ic_rental_income",
+        "Income from renting out property"
+    ),
 
-    RETIREMENT(INCOME, "Retirement Income", "ic_retirement"),
-    PENSION(RETIREMENT, "Pension", "ic_pension"),
-    SOCIAL_SECURITY(RETIREMENT, "Social Security", "ic_social_security"),
-    ANNUITY(RETIREMENT, "Annuity", "ic_annuity"),
-    IRA_DISTRIBUTION(RETIREMENT, "IRA Distribution", "ic_ira"),
+    // 4. Government & Benefits
+    GOVERNMENT_BENEFITS(
+        INCOME,
+        "Government & Benefits",
+        "ic_category_government_benefits",
+        "Income from government programs"
+    ),
+    TAX_REFUNDS(
+        GOVERNMENT_BENEFITS,
+        "Tax Refunds",
+        "ic_tax_refunds",
+        "Reimbursements from paid taxes"
+    ),
+    UNEMPLOYMENT_BENEFITS(
+        GOVERNMENT_BENEFITS,
+        "Unemployment Benefits",
+        "ic_unemployment_benefits",
+        "Payments received while unemployed"
+    ),
+    SOCIAL_SECURITY(
+        GOVERNMENT_BENEFITS,
+        "Social Security",
+        "ic_social_security",
+        "Government old-age or disability benefits"
+    ),
+    PENSION(GOVERNMENT_BENEFITS, "Pension", "ic_pension", "Retirement income from a pension plan"),
 
-    PART_TIME(INCOME, "Part-time Income", "ic_part_time"),
-    FREELANCE(PART_TIME, "Freelance Work", "ic_freelance"),
-    GIG(PART_TIME, "Gig Work", "ic_gig"),
-    TUTORING(PART_TIME, "Tutoring", "ic_tutoring"),
-    BABYSITTING(PART_TIME, "Babysitting", "ic_babysitting"),
+    // 5. Miscellaneous & Other
+    MISC_OTHER_INCOME(
+        INCOME,
+        "Miscellaneous & Other",
+        "ic_category_misc_other_income",
+        "Other forms of income not covered above"
+    ),
+    GIFTS_RECEIVED(
+        MISC_OTHER_INCOME,
+        "Gifts Received",
+        "ic_gifts_received",
+        "Money received as a gift"
+    ),
+    LOTTERY_WINNINGS(
+        MISC_OTHER_INCOME,
+        "Lottery Winnings",
+        "ic_lottery_winnings",
+        "Money won from lotteries or gambling"
+    ),
+    INHERITANCE(
+        MISC_OTHER_INCOME,
+        "Inheritance",
+        "ic_inheritance",
+        "Wealth received from an estate"
+    ),
 
-    GOVERNMENT(INCOME, "Government Benefits", "ic_government"),
-    WELFARE(GOVERNMENT, "Welfare", "ic_welfare"),
-    UNEMPLOYMENT(GOVERNMENT, "Unemployment", "ic_unemployment"),
-    DISABILITY(GOVERNMENT, "Disability", "ic_disability"),
-    VETERANS_BENEFITS(GOVERNMENT, "Veterans Benefits", "ic_veterans"),
+    // ------------------- 支出子类别 -------------------
+    // 1. Housing
+    HOUSING(EXPENSE, "Housing", "ic_category_housing", "Expenses related to your home"),
+    RENT_MORTGAGE(
+        HOUSING,
+        "Rent/Mortgage",
+        "ic_rent_mortgage",
+        "Monthly rent or mortgage payments"
+    ),
+    PROPERTY_TAXES(
+        HOUSING,
+        "Property Taxes",
+        "ic_property_taxes",
+        "Taxes related to property ownership"
+    ),
+    HOME_MAINTENANCE(
+        HOUSING,
+        "Home Maintenance & Repairs",
+        "ic_home_maintenance",
+        "Expenses for home upkeep"
+    ),
+    HOME_INSURANCE(HOUSING, "Home Insurance", "ic_home_insurance", "Insurance covering your home"),
 
-    GIFTS(INCOME, "Gifts Received", "ic_gifts"),
-    CASH_GIFTS(GIFTS, "Cash Gifts", "ic_cash_gifts"),
-    INHERITANCE(GIFTS, "Inheritance", "ic_inheritance"),
-    TRUST_FUND(GIFTS, "Trust Fund", "ic_trust"),
-    LOTTERY(GIFTS, "Lottery Winnings", "ic_lottery"),
+    // 2. Utilities
+    UTILITIES(EXPENSE, "Utilities", "ic_category_utilities", "Basic services for your home"),
+    ELECTRICITY(UTILITIES, "Electricity", "ic_electricity", "Monthly electric bill"),
+    WATER(UTILITIES, "Water", "ic_water", "Water and sewer charges"),
+    GAS(UTILITIES, "Gas", "ic_gas", "Natural gas for heating or cooking"),
+    INTERNET_PHONE_CABLE(
+        UTILITIES,
+        "Internet/Phone/Cable",
+        "ic_internet_phone_cable",
+        "Telecommunication and media services"
+    ),
 
-    TAX_REFUND(INCOME, "Tax Refund", "ic_tax_refund"),
-    FEDERAL_REFUND(TAX_REFUND, "Federal Refund", "ic_federal_refund"),
-    STATE_REFUND(TAX_REFUND, "State Refund", "ic_state_refund"),
-    LOCAL_REFUND(TAX_REFUND, "Local Refund", "ic_local_refund"),
+    // 3. Transportation
+    TRANSPORTATION(EXPENSE, "Transportation", "ic_category_transportation", "Costs to get around"),
+    FUEL(TRANSPORTATION, "Fuel", "ic_fuel", "Gasoline or diesel for vehicles"),
+    AUTO_INSURANCE_EXPENSE(
+        TRANSPORTATION,
+        "Auto Insurance",
+        "ic_auto_insurance_expense",
+        "Insurance for your vehicle"
+    ),
+    AUTO_MAINTENANCE_EXPENSE(
+        TRANSPORTATION,
+        "Auto Maintenance",
+        "ic_auto_maintenance_expense",
+        "Repair and maintenance costs for your vehicle"
+    ),
+    PUBLIC_TRANSIT(
+        TRANSPORTATION,
+        "Public Transit",
+        "ic_public_transit",
+        "Bus, train, or subway fares"
+    ),
+    RIDE_SHARING(
+        TRANSPORTATION,
+        "Ride-Sharing",
+        "ic_ride_sharing",
+        "Uber, Lyft, or other ride-hailing services"
+    ),
+    PARKING(TRANSPORTATION, "Parking", "ic_parking", "Parking fees"),
+    AIR_TRAVEL(TRANSPORTATION, "Air Travel", "ic_air_travel", "Airline tickets and related fees"),
 
-    INSURANCE_PAYOUT(INCOME, "Insurance Payout", "ic_insurance"),
-    HEALTH_INSURANCE_PAYOUT(INSURANCE_PAYOUT, "Health Insurance", "ic_health_insurance"),
-    CAR_INSURANCE_PAYOUT(INSURANCE_PAYOUT, "Car Insurance", "ic_car_insurance"),
-    LIFE_INSURANCE_PAYOUT(INSURANCE_PAYOUT, "Life Insurance", "ic_life_insurance"),
-    PROPERTY_INSURANCE_PAYOUT(INSURANCE_PAYOUT, "Property Insurance", "ic_property_insurance"),
+    // 4. Groceries & Household Supplies
+    GROCERIES_HOUSEHOLD(
+        EXPENSE,
+        "Groceries & Household Supplies",
+        "ic_category_groceries_household",
+        "Food and basic household items"
+    ),
+    GROCERIES(GROCERIES_HOUSEHOLD, "Groceries", "ic_groceries", "Everyday food shopping"),
+    CLEANING_SUPPLIES(
+        GROCERIES_HOUSEHOLD,
+        "Cleaning Supplies",
+        "ic_cleaning_supplies",
+        "Detergents, paper towels, etc."
+    ),
+    HOUSEHOLD_ITEMS(
+        GROCERIES_HOUSEHOLD,
+        "Household Items",
+        "ic_household_items",
+        "Non-food household necessities"
+    ),
 
-    OTHER_INCOME(INCOME, "Other Income", "ic_other_income"),
-    ALIMONY(OTHER_INCOME, "Alimony", "ic_alimony"),
-    CHILD_SUPPORT(OTHER_INCOME, "Child Support", "ic_child_support"),
-    LEGAL_SETTLEMENT(OTHER_INCOME, "Legal Settlement", "ic_legal"),
-    MISCELLANEOUS_INCOME(OTHER_INCOME, "Miscellaneous", "ic_misc"),
+    // 5. Dining & Entertainment
+    DINING_ENTERTAINMENT(
+        EXPENSE,
+        "Dining & Entertainment",
+        "ic_category_dining_entertainment",
+        "Meals out and leisure activities"
+    ),
+    RESTAURANTS(
+        DINING_ENTERTAINMENT,
+        "Restaurants",
+        "ic_restaurants",
+        "Meals eaten at restaurants"
+    ),
+    BARS_ALCOHOL(
+        DINING_ENTERTAINMENT,
+        "Bars & Alcohol",
+        "ic_bars_alcohol",
+        "Spending on bars or alcoholic beverages"
+    ),
+    MOVIES_STREAMING(
+        DINING_ENTERTAINMENT,
+        "Movies & Streaming",
+        "ic_movies_streaming",
+        "Cinema tickets or streaming subscriptions"
+    ),
+    CONCERTS_EVENTS(
+        DINING_ENTERTAINMENT,
+        "Concerts & Events",
+        "ic_concerts_events",
+        "Tickets to concerts, shows, or events"
+    ),
+    VACATIONS(DINING_ENTERTAINMENT, "Vacations", "ic_vacations", "Travel and holiday expenses"),
 
-    // 支出子类别
-    // Housing Categories
-    HOUSING(EXPENSE, "Housing", "ic_category_housing"),
-    RENT_OR_MORTGAGE(HOUSING, "Rent/Mortgage", "ic_category_rent_or_mortgage"),
-    PROPERTY_TAXES(HOUSING, "Property Taxes", "ic_category_property_taxes"),
-    HOME_INSURANCE(HOUSING, "Home Insurance", "ic_category_home_insurance"),
-    HOME_MAINTENANCE(HOUSING, "Home Maintenance", "ic_category_home_maintenance"),
-    HOUSE_CLEANING(HOUSING, "House Cleaning", "ic_category_house_cleaning"),
+    // 6. Health & Fitness
+    HEALTH_FITNESS(
+        EXPENSE,
+        "Health & Fitness",
+        "ic_category_health_fitness",
+        "Medical and wellness costs"
+    ),
+    DOCTOR_DENTIST(
+        HEALTH_FITNESS,
+        "Doctor/Dentist",
+        "ic_doctor_dentist",
+        "Costs for medical or dental visits"
+    ),
+    PHARMACY(HEALTH_FITNESS, "Pharmacy", "ic_pharmacy", "Medication and health products"),
+    HEALTH_INSURANCE_EXPENSE(
+        HEALTH_FITNESS,
+        "Health Insurance",
+        "ic_health_insurance_expense",
+        "Insurance premiums for health coverage"
+    ),
+    GYM_FITNESS(
+        HEALTH_FITNESS,
+        "Gym/Fitness",
+        "ic_gym_fitness",
+        "Gym memberships, fitness classes"
+    ),
 
-    // Utilities Categories
-    UTILITIES(EXPENSE, "Utilities", "ic_category_utilities"),
-    ELECTRICITY(UTILITIES, "Electricity", "ic_category_electricity"),
-    WATER(UTILITIES, "Water", "ic_category_water"),
-    NATURAL_GAS(UTILITIES, "Natural Gas", "ic_category_natural_gas"),
-    INTERNET(UTILITIES, "Internet", "ic_category_internet"),
-    PHONE_SERVICE(UTILITIES, "Phone Service", "ic_category_phone_service"),
-    CABLE_TV(UTILITIES, "Cable TV", "ic_category_cable_tv"),
+    // 7. Insurance & Financial
+    INSURANCE_FINANCIAL(
+        EXPENSE,
+        "Insurance & Financial",
+        "ic_category_insurance_financial",
+        "Financial services and insurance expenses"
+    ),
+    LIFE_INSURANCE_EXPENSE(
+        INSURANCE_FINANCIAL,
+        "Life Insurance",
+        "ic_life_insurance_expense",
+        "Premiums for life insurance"
+    ),
+    BANK_FEES(INSURANCE_FINANCIAL, "Bank Fees", "ic_bank_fees", "Service charges from banks"),
+    LOAN_PAYMENTS(
+        INSURANCE_FINANCIAL,
+        "Loan Payments",
+        "ic_loan_payments",
+        "Monthly loan or credit payments"
+    ),
+    TAXES_EXPENSE(
+        INSURANCE_FINANCIAL,
+        "Taxes",
+        "ic_taxes_expense",
+        "Non-property taxes or additional tax payments"
+    ),
 
-    // Transportation Categories
-    TRANSPORTATION(EXPENSE, "Transportation", "ic_category_transportation"),
-    FUEL(TRANSPORTATION, "Fuel", "ic_category_fuel"),
-    AUTO_PAYMENT(TRANSPORTATION, "Auto Payment", "ic_category_auto_payment"),
-    AUTO_INSURANCE(TRANSPORTATION, "Auto Insurance", "ic_category_auto_insurance"),
-    PUBLIC_TRANSIT(TRANSPORTATION, "Public Transit", "ic_category_public_transit"),
-    PARKING(TRANSPORTATION, "Parking", "ic_category_parking"),
-    AUTO_MAINTENANCE(TRANSPORTATION, "Auto Maintenance", "ic_category_auto_maintenance"),
-    RIDE_SHARING(TRANSPORTATION, "Ride Sharing", "ic_category_ride_sharing"),
-    AIR_TRAVEL(TRANSPORTATION, "Air Travel", "ic_category_air_travel"),
+    // 8. Personal Care & Clothing
+    PERSONAL_CARE_CLOTHING(
+        EXPENSE,
+        "Personal Care & Clothing",
+        "ic_category_personal_care_clothing",
+        "Personal grooming and apparel"
+    ),
+    HAIRCARE(PERSONAL_CARE_CLOTHING, "Haircare", "ic_haircare", "Haircuts, styling products"),
+    SKINCARE(
+        PERSONAL_CARE_CLOTHING,
+        "Skincare",
+        "ic_skincare",
+        "Lotions, creams, skincare treatments"
+    ),
+    COSMETICS(PERSONAL_CARE_CLOTHING, "Cosmetics", "ic_cosmetics", "Make-up and related products"),
+    CLOTHING_EXPENSE(
+        PERSONAL_CARE_CLOTHING,
+        "Clothing",
+        "ic_clothing_expense",
+        "Apparel and accessories"
+    ),
+    LAUNDRY(PERSONAL_CARE_CLOTHING, "Laundry", "ic_laundry", "Dry cleaning or laundry services"),
 
-    // Food & Dining Categories
-    FOOD_AND_DINING(EXPENSE, "Food & Dining", "ic_category_food_and_dining"),
-    GROCERIES(FOOD_AND_DINING, "Groceries", "ic_category_groceries"),
-    RESTAURANTS(FOOD_AND_DINING, "Restaurants", "ic_category_restaurants"),
-    FAST_FOOD(FOOD_AND_DINING, "Fast Food", "ic_category_fast_food"),
-    COFFEE_SHOPS(FOOD_AND_DINING, "Coffee Shops", "ic_category_coffee_shops"),
-    BARS_AND_ALCOHOL(FOOD_AND_DINING, "Bars & Alcohol", "ic_category_bars_and_alcohol"),
-    SNACKS_AND_CANDY(FOOD_AND_DINING, "Snacks & Candy", "ic_category_snacks_and_candy"),
-
-    // Entertainment Categories
-    ENTERTAINMENT(EXPENSE, "Entertainment", "ic_category_entertainment"),
-    MOVIES_AND_THEATER(ENTERTAINMENT, "Movies & Theater", "ic_category_movies_and_theater"),
-    MUSIC_AND_CONCERTS(ENTERTAINMENT, "Music & Concerts", "ic_category_music_and_concerts"),
-    GAMES_AND_HOBBIES(ENTERTAINMENT, "Games & Hobbies", "ic_category_games_and_hobbies"),
-    AMUSEMENT_PARKS(ENTERTAINMENT, "Amusement Parks", "ic_category_amusement_parks"),
-    VACATIONS(ENTERTAINMENT, "Vacations", "ic_category_vacations"),
-    SUBSCRIPTIONS(ENTERTAINMENT, "Subscriptions", "ic_category_subscriptions"),
-    NIGHTLIFE(ENTERTAINMENT, "Nightlife", "ic_category_nightlife"),
-
-    // Health & Fitness Categories
-    HEALTH_AND_FITNESS(EXPENSE, "Health & Fitness", "ic_category_health_and_fitness"),
-    DOCTOR(HEALTH_AND_FITNESS, "Doctor", "ic_category_doctor"),
-    DENTIST(HEALTH_AND_FITNESS, "Dentist", "ic_category_dentist"),
-    PHARMACY(HEALTH_AND_FITNESS, "Pharmacy", "ic_category_pharmacy"),
-    HEALTH_INSURANCE(HEALTH_AND_FITNESS, "Health Insurance", "ic_category_health_insurance"),
-    GYM_AND_FITNESS(HEALTH_AND_FITNESS, "Gym & Fitness", "ic_category_gym_and_fitness"),
-    SPA_AND_MASSAGE(HEALTH_AND_FITNESS, "Spa & Massage", "ic_category_spa_and_massage"),
-    SPORTS_EQUIPMENT(HEALTH_AND_FITNESS, "Sports Equipment", "ic_category_sports_equipment"),
-
-    // Insurance Categories
-    INSURANCE(EXPENSE, "Insurance", "ic_category_insurance"),
-    LIFE_INSURANCE(INSURANCE, "Life Insurance", "ic_category_life_insurance"),
-    HOME_INSURANCE_DUPLICATE(INSURANCE, "Home Insurance", "ic_category_home_insurance"),
-    AUTO_INSURANCE_DUPLICATE(INSURANCE, "Auto Insurance", "ic_category_auto_insurance"),
-    HEALTH_INSURANCE_DUPLICATE(INSURANCE, "Health Insurance", "ic_category_health_insurance"),
-
-    // Financial Categories
-    FINANCIAL(EXPENSE, "Financial", "ic_category_financial"),
-    BANK_FEES(FINANCIAL, "Bank Fees", "ic_category_bank_fees"),
-    INTEREST_CHARGES(FINANCIAL, "Interest Charges", "ic_category_interest_charges"),
-    INVESTMENT_FEES(FINANCIAL, "Investment Fees", "ic_category_investment_fees"),
-    TAXES(FINANCIAL, "Taxes", "ic_category_taxes"),
-    FINES_AND_PENALTIES(FINANCIAL, "Fines & Penalties", "ic_category_fines_and_penalties"),
-    LOAN_PAYMENTS(FINANCIAL, "Loan Payments", "ic_category_loan_payments"),
-
-    // Personal Care Categories
-    PERSONAL_CARE(EXPENSE, "Personal Care", "ic_category_personal_care"),
-    HAIRCARE(PERSONAL_CARE, "Haircare", "ic_category_haircare"),
-    SKINCARE(PERSONAL_CARE, "Skincare", "ic_category_skincare"),
-    COSMETICS(PERSONAL_CARE, "Cosmetics", "ic_category_cosmetics"),
-    CLOTHING(PERSONAL_CARE, "Clothing", "ic_category_clothing"),
-    LAUNDRY(PERSONAL_CARE, "Laundry", "ic_category_laundry"),
-
-    // Education Categories
-    EDUCATION(EXPENSE, "Education", "ic_category_education"),
-    TUITION(EDUCATION, "Tuition", "ic_category_tuition"),
-    BOOKS_AND_SUPPLIES(EDUCATION, "Books & Supplies", "ic_category_books_and_supplies"),
-    STUDENT_LOAN_PAYMENTS(EDUCATION, "Student Loan Payments", "ic_category_student_loan_payments"),
-    TRAINING_AND_CERTIFICATIONS(
-        EDUCATION,
+    // 9. Education & Childcare
+    EDUCATION_CHILDCARE(
+        EXPENSE,
+        "Education & Childcare",
+        "ic_category_education_childcare",
+        "Costs for schooling and child-related care"
+    ),
+    TUITION(EDUCATION_CHILDCARE, "Tuition", "ic_tuition", "School or university fees"),
+    BOOKS_SUPPLIES(
+        EDUCATION_CHILDCARE,
+        "Books & Supplies",
+        "ic_books_supplies",
+        "Textbooks and educational materials"
+    ),
+    CHILDCARE_EXPENSE(
+        EDUCATION_CHILDCARE,
+        "Childcare",
+        "ic_childcare_expense",
+        "Daycare or babysitting costs"
+    ),
+    TRAINING_CERTIFICATIONS(
+        EDUCATION_CHILDCARE,
         "Training & Certifications",
-        "ic_category_training_and_certifications"
+        "ic_training_certifications",
+        "Professional courses and certifications"
     ),
 
-    // Gifts & Donations Categories
-    GIFTS_AND_DONATIONS(EXPENSE, "Gifts & Donations", "ic_category_gifts_and_donations"),
-    GIFTS_GIVEN(GIFTS_AND_DONATIONS, "Gifts Given", "ic_category_gifts_given"),
-    CHARITABLE_DONATIONS(
-        GIFTS_AND_DONATIONS,
-        "Charitable Donations",
-        "ic_category_charitable_donations"
+    // 10. Miscellaneous & Gifts
+    MISC_GIFTS(
+        EXPENSE,
+        "Miscellaneous & Gifts",
+        "ic_category_misc_gifts",
+        "Other expenses and gifts"
     ),
-    TIPS_AND_GRATUITIES(
-        GIFTS_AND_DONATIONS,
-        "Tips & Gratuities",
-        "ic_category_tips_and_gratuities"
+    GIFTS_DONATIONS(
+        MISC_GIFTS,
+        "Gifts & Donations",
+        "ic_gifts_donations",
+        "Presents given, charitable donations"
     ),
-
-    // Family Categories
-    FAMILY(EXPENSE, "Family", "ic_category_family"),
-    CHILDCARE(FAMILY, "Childcare", "ic_category_childcare"),
-    ALLOWANCES(FAMILY, "Allowances", "ic_category_allowances"),
-    ELDER_CARE(FAMILY, "Elder Care", "ic_category_elder_care"),
-
-    // Pets Categories
-    PETS(EXPENSE, "Pets", "ic_category_pets"),
-    PET_FOOD(PETS, "Pet Food", "ic_category_pet_food"),
-    VETERINARY(PETS, "Veterinary", "ic_category_veterinary"),
-    PET_SUPPLIES(PETS, "Pet Supplies", "ic_category_pet_supplies"),
-    PET_GROOMING(PETS, "Pet Grooming", "ic_category_pet_grooming"),
-
-    // Shopping Categories
-    SHOPPING(EXPENSE, "Shopping", "ic_category_shopping"),
-    ELECTRONICS(SHOPPING, "Electronics", "ic_category_electronics"),
-    HOME_IMPROVEMENT(SHOPPING, "Home Improvement", "ic_category_home_improvement"),
-    APPLIANCES(SHOPPING, "Appliances", "ic_category_appliances"),
-    FURNITURE(SHOPPING, "Furniture", "ic_category_furniture"),
-    OFFICE_SUPPLIES(SHOPPING, "Office Supplies", "ic_category_office_supplies"),
-    BABY_SUPPLIES(SHOPPING, "Baby Supplies", "ic_category_baby_supplies"),
-    CLOTHING_AND_ACCESSORIES(
-        SHOPPING,
-        "Clothing & Accessories",
-        "ic_category_clothing_and_accessories"
+    PET_EXPENSES(MISC_GIFTS, "Pet Expenses", "ic_pet_expenses", "Pet food, vet costs, etc."),
+    OTHER_EXPENSES(
+        MISC_GIFTS,
+        "Other Expenses",
+        "ic_other_expenses",
+        "Expenses not fitting other categories"
     ),
-    BOOKS(SHOPPING, "Books", "ic_category_books"),
-    MUSIC(SHOPPING, "Music", "ic_category_music"),
+    UNCATEGORIZED(
+        MISC_GIFTS,
+        "Uncategorized",
+        "ic_uncategorized",
+        "Not yet assigned to any category"
+    );
 
 
-    // Miscellaneous Categories
-    MISCELLANEOUS(EXPENSE, "Miscellaneous", "ic_category_miscellaneous"),
-    OTHER_EXPENSES(MISCELLANEOUS, "Other Expenses", "ic_category_other_expenses"),
-    UNCATEGORIZED(MISCELLANEOUS, "Uncategorized", "ic_category_uncategorized");
-
-
-    // Add helper functions
+    // Helper functions
     fun getLevel1Category(): Category {
         var currentCategory = this
         while (currentCategory.parentCategory != null && currentCategory.parentCategory != INCOME && currentCategory.parentCategory != EXPENSE) {
@@ -257,11 +427,9 @@ enum class Category(
             return level
         }
 
-
         /**
          * return all level 1 categories
          */
-
         fun getLevel1Categories(): List<Category> {
             return getSubCategories(INCOME) + getSubCategories(EXPENSE)
         }
@@ -272,10 +440,96 @@ enum class Category(
         fun getLevel2Categories(): List<Category> {
             return getLevel1Categories().flatMap { getSubCategories(it) }
         }
-    }
 
+        /**
+         * 根据所有分类动态生成一个用于LLM的提示词框架，帮助LLM根据自然语言从中提取结构化信息。
+         */
+        fun generateLLMPrompt(
+            text: String,
+            userLocalDate:String
+        ): String {
+            val incomeCategories = getSubCategories(INCOME).joinToString("\n") { parent ->
+                val subs = getSubCategories(parent).joinToString(", ") { it.categoryName }
+                if (subs.isBlank()) parent.categoryName else "${parent.categoryName}: $subs"
+            }
+
+            val expenseCategories = getSubCategories(EXPENSE).joinToString("\n") { parent ->
+                val subs = getSubCategories(parent).joinToString(", ") { it.categoryName }
+                if (subs.isBlank()) parent.categoryName else "${parent.categoryName}: $subs"
+            }
+
+            return """
+[Role]
+You are a helpful assistant that extracts structured information from a user's natural language description of a financial transaction. 
+[Goal]
+The user will provide a text describing a transaction and a user's local date.
+You will identify:
+   - amount (The transaction amount, if any)
+   - remark (Any free-text note or remark about the transaction)
+   - category (The transaction category, chosen from the provided category list)
+   - transactionType (Either "income" or "expense" based on context)
+   - transactionDate (A specific date in yyyy-MM-dd format if mentioned ,or inferred from the user's local date and user's description)
+
+Here are the categories you can choose from:
+INCOME CATEGORIES:
+$incomeCategories
+
+EXPENSE CATEGORIES:
+$expenseCategories
+
+[Additional Information]
+The output should be a JSON object with the fields shown above.
+If you cannot find a suitable category from the user's description, category can be null.
+If information is missing or not provided in the user's input, set that field to null.
+If can't indentify the transaction date, use the user's local date as the transaction date.
+
+Return only the JSON object and nothing else.
+[Example]
+input: 
+text:"I spent $50 on groceries on 2024-11-15"
+userLocalDate: 2024-11-20
+
+output:
+{
+    "amount": 50,
+    "remark": "on groceries",
+    "category": "Groceries",
+    "transactionType": "expense",
+    "transactionDate": "2024-11-15",
+}
+
+INPUT:
+text:"It cost me $100 to fix my car yesterday"
+userLocalDate: 2024-12-20
+
+OUTPUT:
+{
+    "amount": 100,
+    "remark": "to fix my car",
+    "category": "Auto Maintenance",
+    "transactionType": "expense",
+    "transactionDate": "2024-12-19",
+}
+
+INPUT:
+text:"I received $500 as a gift"
+userLocalDate: 2024-12-25
+OUTPUT:
+{
+    "amount": 500,
+    "remark": "as a gift",
+    "category": "Gifts Received",
+    "transactionType": "income",
+    "transactionDate": "2024-12-25",
+}
+         """.trimIndent()
+        }
+    }
 
     override fun toString(): String {
         return super.toString()
     }
 }
+
+
+

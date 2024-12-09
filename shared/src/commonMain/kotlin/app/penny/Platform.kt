@@ -41,10 +41,10 @@ fun ApplicationInitializer.initSession(
     CoroutineScope(Dispatchers.Default).launch {
 
         val isFirstTime = userDataRepository.getIsFirstTime()
-        if (isFirstTime) {
-            Logger.i("First time launch, skip session initialization")
-            return@launch // 如果是第一次启动，跳过初始化
-        }
+//        if (isFirstTime) {
+//            Logger.i("First time launch, skip session initialization")
+//            return@launch // 如果是第一次启动，跳过初始化
+//        } //TODO: 实现此逻辑
         Logger.i { "Initializing session..." }
         try {
             val accessToken = tokenManager.getAccessToken()

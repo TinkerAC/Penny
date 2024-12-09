@@ -1,6 +1,8 @@
 package app.penny.servershared.dto
 
 import kotlinx.serialization.Serializable
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Serializable
 data class TransactionDto(
@@ -15,6 +17,9 @@ data class TransactionDto(
     val remark: String?,
     val createdAt: Long,
     val updatedAt: Long,
-): BaseEntityDto()
+) : BaseEntityDto() {
+
+
+}
 
 

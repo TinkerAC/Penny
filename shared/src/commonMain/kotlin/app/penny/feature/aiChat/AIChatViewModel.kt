@@ -13,6 +13,7 @@ import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.enumerate.Action
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -87,7 +88,6 @@ class AIChatViewModel(
             if (aiReply.success && aiReply.action != null) {
                 handleAction(aiReply.action)
 
-
             }
 
             val cm = ChatMessage.TextMessage(
@@ -134,15 +134,17 @@ class AIChatViewModel(
         when (action) {
             is Action.InsertLedger -> {
                 val ledgerDto = dto as LedgerDto
+                Logger.w("Action InsertLedger: $ledgerDto")
                 val ledger = ledgerRepository.insert(
                     ledgerDto.toModel()
                 )
+
                 val chatMessage = ChatMessage.TextMessage(
                     uuid = Uuid.random(),
                     user = currentUser,
                     sender = UserModel.AI,
                     timestamp = Clock.System.now().epochSeconds,
-                    content = "Successfully created ledger"
+                    content = "Successfully created ledger${ledger}"
                 )
                 chatRepository.saveChatMessage(chatMessage)
                 _uiState.value = _uiState.value.copy(

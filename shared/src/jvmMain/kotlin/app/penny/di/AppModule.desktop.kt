@@ -12,15 +12,13 @@ actual fun platformModule() = module {
         val databasePath = "penny.db"
         val driver = JdbcSqliteDriver("jdbc:sqlite:$databasePath")
 
-        // 启用日志记录
-        driver.execute(null, "PRAGMA sqlite_trace = ON;", 0)
-
         // 检查数据库文件是否存在
         val dbFile = java.io.File(databasePath)
         if (!dbFile.exists()) {
             // 如果数据库文件不存在，创建数据库表结构
             PennyDatabase.Schema.create(driver)
         }
+
         driver
     }
 

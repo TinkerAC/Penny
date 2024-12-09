@@ -12,7 +12,6 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 data class NewTransactionUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val selectedCategory: Category = Category.MISCELLANEOUS,
     val remark: String = "",
     val amount: BigDecimal = BigDecimal.ZERO,
     val selectedTab: NewTransactionTab = NewTransactionTab.EXPENSE,
@@ -27,7 +26,6 @@ data class NewTransactionUiState(
 
     val selectedParentCategory: Category? = null,
     val selectedSubCategory: Category? = null,
-
 
     // 添加 NumPad 的状态属性
     val operand1: String = "0.00",

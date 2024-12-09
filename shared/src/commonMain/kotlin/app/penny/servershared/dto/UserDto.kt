@@ -10,5 +10,6 @@ data class UserDto(
     val email: String = "",
     val createdAt: Long = 0,
     val updatedAt: Long = 0,
-    val passwordHash: String? = null
+    val passwordHash: String? = null,
+    val timeZoneId: String? = null
 ) : BaseEntityDto()

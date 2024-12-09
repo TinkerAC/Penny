@@ -5,7 +5,6 @@ import app.penny.core.domain.model.LedgerModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 sealed class NewTransactionIntent {
-    data class SelectCategory(val category: Category) : NewTransactionIntent()
     data class SelectTab(val tab: NewTransactionTab) : NewTransactionIntent()
     data class SetRemark(val remark: String) : NewTransactionIntent()
     data class SelectLedger(val ledger: LedgerModel) : NewTransactionIntent()

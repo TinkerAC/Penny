@@ -30,6 +30,7 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalUuidApi::class)
 fun LedgerEntity.toModel(): LedgerModel {
     return LedgerModel(
+        userUuid = Uuid.parse(user_uuid),
         uuid = Uuid.parse(uuid),
         name = name,
         currency = Currency.valueOf(currency_code),
@@ -138,6 +139,7 @@ fun LedgerModel.toLedgerDto(): LedgerDto {
 @OptIn(ExperimentalUuidApi::class)
 fun LedgerDto.toModel(): LedgerModel {
     return LedgerModel(
+        userUuid = Uuid.parse(userUuid),
         uuid = Uuid.parse(uuid),
         name = name ,
         currency = currencyCode.let { Currency.valueOf(it) },
@@ -234,6 +236,7 @@ fun ChatMessageEntity.toModel(): ChatMessage {
 
 @OptIn(ExperimentalUuidApi::class)
 fun UserDto.toUserModel(): UserModel {
+
     return UserModel(
         uuid = Uuid.parse(uuid),
         username = username ?: "",

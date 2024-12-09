@@ -114,7 +114,7 @@ class DashboardScreen : Screen {
 
         Text("Last Synced At: ${dashboardViewModel.uiState.value.lastSyncedAt ?: "Never"}")
 
-
+        Text("Active User: ${dashboardViewModel.uiState.value.activeUser?: "No Active User"})")
         Text(uiState.value.message ?: "")
 
 

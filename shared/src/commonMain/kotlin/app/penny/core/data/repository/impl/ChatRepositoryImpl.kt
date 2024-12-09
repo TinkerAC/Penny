@@ -6,10 +6,8 @@ import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.ChatMessage
-import app.penny.core.domain.model.UserModel
 import app.penny.core.network.ApiClient
 import app.penny.servershared.dto.requestDto.GetAiReplyResponse
-import kotlinx.datetime.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -21,9 +19,8 @@ class ChatRepositoryImpl(
     private val apiClient: ApiClient
 ) : ChatRepository {
     override suspend fun sendMessage(message: String): GetAiReplyResponse {
-        //TODO: Implement this with apiClient
 
-        val response = apiClient.ai.getAction(message)
+        val response = apiClient.ai.getAiReply(message)
 
         return response
 

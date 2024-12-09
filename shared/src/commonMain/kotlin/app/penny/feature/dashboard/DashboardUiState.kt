@@ -1,6 +1,7 @@
 package app.penny.feature.dashboard
 
 import app.penny.core.domain.model.TransactionModel
+import app.penny.core.domain.model.UserModel
 import kotlinx.datetime.Instant
 
 data class DashboardUiState(
@@ -9,5 +10,6 @@ data class DashboardUiState(
     val errorMessage: String? = null,
     val addTransactionModalVisible: Boolean = false,
     val lastSyncedAt: Instant? = null,
-    val message: String? = null
+    val message: String? = null,
+    val activeUser:UserModel? = null
 )

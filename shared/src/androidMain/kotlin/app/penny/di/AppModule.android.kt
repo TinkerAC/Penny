@@ -17,9 +17,6 @@ actual fun platformModule() = module {
             name = "penny.db"
         )
 
-        // 启用日志记录
-        driver.execute(null, "PRAGMA sqlite_trace = ON;", 0)
-
         driver
     }
 

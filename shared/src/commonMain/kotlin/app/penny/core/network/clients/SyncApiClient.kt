@@ -29,7 +29,11 @@ class SyncApiClient(
             method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
-            setBody(UploadLedgerRequest(ledgers.size, ledgers, lastSynced))
+            setBody(UploadLedgerRequest(
+                total = ledgers.size,
+                ledgers = ledgers,
+                lastSyncedAt = lastSynced
+            ))
         }
     }
 
@@ -51,7 +55,7 @@ class SyncApiClient(
             method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
-            setBody(UploadTransactionRequest(transactions, lastSynced))
+            setBody(UploadTransactionRequest(transactions = transactions, lastSynced = lastSynced))
         }
     }
 

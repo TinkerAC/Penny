@@ -13,7 +13,7 @@ data class TransactionModel(
     var uuid: Uuid = Uuid.parse("00000000-0000-0000-0000-000000000000"),
     var ledgerUuid: Uuid = Uuid.parse("00000000-0000-0000-0000-000000000000"),
     val transactionDate: Instant,
-    val category: Category = Category.MISCELLANEOUS,
+    val category: Category = Category.EXPENSE,
     val transactionType: TransactionType = TransactionType.EXPENSE,
     var amount: BigDecimal = BigDecimal.ZERO,
     val currency: Currency = Currency.USD,

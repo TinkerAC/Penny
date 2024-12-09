@@ -25,8 +25,10 @@ class UserApiClient(
             method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
-            setBody(RegisterRequest( uuid = uuid
-                , email = email, password = password))
+            setBody(RegisterRequest(
+                uuid = uuid
+                , email = email, password = password
+            ))
         }
     }
 

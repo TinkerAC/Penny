@@ -1,8 +1,6 @@
 // file: server/src/main/kotlin/app/penny/routes/AiRoutes.kt
 package app.penny.routes
 
-import app.penny.servershared.dto.requestDto.GetActionDetailRequest
-import app.penny.servershared.dto.requestDto.GetActionRequest
 import app.penny.servershared.dto.requestDto.GetAiReplyRequest
 import app.penny.servershared.dto.requestDto.GetAiReplyResponse
 import app.penny.servershared.enumerate.Action
@@ -26,7 +24,9 @@ fun Route.aiRoutes(
 
                 val action: Action? = aiService.getAction(
                     call = call,
-                    text = request.text?.trim() ?: ""
+                    text = request.text?.trim() ?: "",
+                    invokeInstant = request.invokeInstant,
+                    userTimeZoneId = request.userTimeZoneId
                 )
 
                 if (action != null) {

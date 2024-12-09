@@ -83,8 +83,6 @@ class UserService(
      */
     fun checkIsEmailRegistered(email: String): Boolean {
 
-
-
         return userRepository.findByEmail(email) != null
     }
 

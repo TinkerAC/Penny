@@ -160,13 +160,14 @@ fun commonModule() = module {
 
 
     // 注入 ViewModel
-    factory { NewTransactionViewModel(get(), get()) }
+    factory { NewTransactionViewModel(get(), get(),get()) }
     factory {
         DashboardViewModel(
             insertRandomTransactionUseCase = get(),
             uploadUnsyncedLedgerUseCase = get(),
             userDataRepository = get(),
             downloadUnsyncedLedgerUseCase = get(),
+            get(),
             get(),
             get()
         )

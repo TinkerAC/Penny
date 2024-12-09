@@ -42,7 +42,7 @@ class AnalyticViewModel(
     init {
         screenModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            fetchAllLedgers()
+            findUserLedgers()
             _uiState.value = _uiState.value.copy(isLoading = false)
             Logger.d("ledgers: ${_uiState.value.ledgers}")
             val recentLedgerId = userDataRepository.getRecentLedgerUuidOrNull()
@@ -209,8 +209,12 @@ class AnalyticViewModel(
     }
 
 
-    private suspend fun fetchAllLedgers() {
-        val ledgers = ledgerRepository.findByUserUuid(userDataRepository.getUserUuid())
+    private suspend fun findUserLedgers() {
+        val activeUser = userDataRepository.getUserUuid()
+        val ledgers = ledgerRepository.findByUserUuid(activeUser)
+
+        Logger.d("User $activeUser has ledgers: $ledgers")
+
         _uiState.value = _uiState.value.copy(ledgers = ledgers)
     }
 

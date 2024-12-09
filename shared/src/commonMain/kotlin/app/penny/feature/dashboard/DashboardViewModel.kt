@@ -2,6 +2,7 @@ package app.penny.feature.dashboard
 
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.SyncDataUseCase
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
 
 
 class DashboardViewModel(
@@ -21,7 +23,8 @@ class DashboardViewModel(
     private val userDataRepository: UserDataRepository,
     private val downloadUnsyncedLedgerUseCase: DownloadUnsyncedLedgerUseCase,
     private val syncDataUseCase: SyncDataUseCase,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
@@ -87,10 +90,16 @@ class DashboardViewModel(
         Logger.d("uploaded updated ledgers")
     }
 
-    fun fetchUserData() {
+    @OptIn(ExperimentalUuidApi::class)
+    private fun fetchUserData() {
         screenModelScope.launch {
             val lastSyncedAt = userDataRepository.getLastSyncedAt()
             _uiState.value = _uiState.value.copy(lastSyncedAt = lastSyncedAt)
+
+            val userUuid = userDataRepository.getUserUuid()
+            val user = userRepository.findByUuid(userUuid)
+            _uiState.value = _uiState.value.copy(activeUser = user)
+
         }
     }
 

@@ -5,5 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetActionDetailRequest(
+    override var invokeInstant: Long,
+    override val userTimeZoneId: String,
     val action: String
 ) : BaseRequestDto()

@@ -3,6 +3,7 @@ package app.penny.feature.newTransaction
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
+import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.enum.Category
 import app.penny.core.domain.enum.Currency
 import app.penny.core.domain.enum.TransactionType
@@ -28,7 +29,8 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalUuidApi::class)
 class NewTransactionViewModel(
     private val transactionRepository: TransactionRepository,
-    private val ledgerRepository: LedgerRepository
+    private val ledgerRepository: LedgerRepository,
+    private val userDataRepository: UserDataRepository
 ) : ScreenModel {
 
 
@@ -49,8 +51,8 @@ class NewTransactionViewModel(
         fetchLedgers()
         selectParentCategory(
             when (_uiState.value.selectedTab) {
-                NewTransactionTab.INCOME -> Category.OTHER_INCOME
-                NewTransactionTab.EXPENSE -> Category.MISCELLANEOUS
+                NewTransactionTab.INCOME -> Category.getSubCategories(Category.INCOME).first()
+                NewTransactionTab.EXPENSE -> Category.getSubCategories(Category.EXPENSE).first()
             }
         )
     }
@@ -59,7 +61,6 @@ class NewTransactionViewModel(
     fun handleIntent(intent: NewTransactionIntent) {
         when (intent) {
             is NewTransactionIntent.SelectTab -> selectTab(intent.tab)
-            is NewTransactionIntent.SelectCategory -> selectCategory(intent.category)
             is NewTransactionIntent.SetRemark -> setRemark(intent.remark)
             is NewTransactionIntent.ToggleLedgerDropdown -> toggleLedgerDropdown()
             is NewTransactionIntent.SelectLedger -> selectLedger(intent.ledger)
@@ -75,10 +76,12 @@ class NewTransactionViewModel(
 
     private fun selectParentCategory(category: Category) {
         _uiState.value = _uiState.value.copy(selectedParentCategory = category)
+
+        Logger.d("`selectParentCategory` called{${category.name}}")
+        Logger.d("`selectParentCategory` called{${Category.getSubCategories(category).first().name}}")
         _uiState.value =
             _uiState.value.copy(selectedSubCategory = Category.getSubCategories(category).first())
 
-        Logger.d("`selectParentCategory` called{${category.name}}")
     }
 
 
@@ -86,7 +89,7 @@ class NewTransactionViewModel(
         val transaction = TransactionModel(
             ledgerUuid = _uiState.value.selectedLedger!!.uuid,
             transactionDate = Clock.System.now(),
-            category = _uiState.value.selectedSubCategory ?: Category.MISCELLANEOUS,
+            category = _uiState.value.selectedSubCategory ?: Category.OTHER_EXPENSES,
             transactionType = _uiState.value.selectedTransactionType,
             amount = BigDecimal.parseString(_uiState.value.amountText),
             currency = _uiState.value.selectedLedger?.currency ?: Currency.USD,
@@ -118,8 +121,8 @@ class NewTransactionViewModel(
         )
         selectParentCategory(
             when (tab) {
-                NewTransactionTab.INCOME -> Category.OTHER_INCOME
-                NewTransactionTab.EXPENSE -> Category.MISCELLANEOUS
+                NewTransactionTab.INCOME -> Category.MISC_OTHER_INCOME
+                NewTransactionTab.EXPENSE -> Category.OTHER_EXPENSES
             }
         )
         Logger.d("`selectTab` called{${tab.name}}")
@@ -127,10 +130,7 @@ class NewTransactionViewModel(
 
 
 
-    private fun selectCategory(category: Category) {
-        _uiState.value = _uiState.value.copy(selectedCategory = category)
-        Logger.d("`selectCategory` called{${category.name}}")
-    }
+
 
     private fun setRemark(remark: String) {
         _uiState.value = _uiState.value.copy(remark = remark)
@@ -152,7 +152,8 @@ class NewTransactionViewModel(
 
     private fun fetchLedgers() {
         screenModelScope.launch {
-            val ledgers = ledgerRepository.findAll()
+            val userUuid = userDataRepository.getUserUuid()
+            val ledgers = ledgerRepository.findByUserUuid(userUuid)
             _uiState.value = _uiState.value.copy(ledgers = ledgers)
         }
         Logger.d("`fetchLedgers` called")

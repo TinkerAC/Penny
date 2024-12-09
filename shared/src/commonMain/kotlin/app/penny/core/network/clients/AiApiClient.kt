@@ -16,7 +16,7 @@ class AiApiClient(
     httpClient: HttpClient, tokenProvider: TokenProvider
 ) : BaseAuthedApiClient(httpClient, tokenProvider) {
 
-    suspend fun getAction(
+    suspend fun getAiReply(
         text: String
     ): GetAiReplyResponse {
         return makeAuthenticatedRequest(
