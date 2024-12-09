@@ -19,13 +19,14 @@ class UserApiClient(
     tokenProvider: TokenProvider
 ) : BaseApiClient(httpClient) {
 
-    suspend fun register(email: String, password: String): RegisterResponse {
+    suspend fun register(uuid:String? =null,email: String, password: String): RegisterResponse {
         return makeRequest(
             url = "$API_URL/user/register",
             method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
-            setBody(RegisterRequest(email = email, password = password))
+            setBody(RegisterRequest( uuid = uuid
+                , email = email, password = password))
         }
     }
 

@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class RegisterRequest (
+data class RegisterRequest(
+    val uuid: String?,
     val email: String,
     val password: String
 ): BaseRequestDto()

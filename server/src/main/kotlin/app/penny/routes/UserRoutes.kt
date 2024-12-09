@@ -1,7 +1,6 @@
 // 文件：server/src/main/kotlin/app/penny/routes/UserRoutes.kt
 package app.penny.routes
 
-import app.penny.servershared.dto.entityDto.UserDto
 import app.penny.servershared.dto.responseDto.CheckIsEmailRegisteredResponse
 import app.penny.servershared.dto.requestDto.LoginRequest
 import app.penny.servershared.dto.requestDto.RegisterRequest
@@ -20,6 +19,26 @@ fun Route.userRoutes(userService: UserService) {
     route("/user") {
         post("/register") {
             val credentials = call.receive<RegisterRequest>()
+
+
+            val userExist = userService.checkIsEmailRegistered(credentials.email)
+
+            if (
+                userExist
+            ) {
+                call.respond(
+                    HttpStatusCode.BadRequest,
+                    RegisterResponse(
+                        success = false,
+                        message = "User already exists",
+                        userDto = null
+                    )
+                )
+                return@post
+            }
+
+
+
 
             val newUser = userService.register(credentials)
 

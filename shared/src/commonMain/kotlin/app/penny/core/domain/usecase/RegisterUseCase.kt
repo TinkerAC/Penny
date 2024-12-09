@@ -7,9 +7,13 @@ class RegisterUseCase(
     private val apiClient: ApiClient
 ) {
 
-    suspend operator fun invoke(email: String, password: String): RegisterResponse {
+    suspend operator fun invoke(email: String, password: String, uuid: String?): RegisterResponse {
         //register user,return the message from the server
-        return apiClient.user.register(email, password)
+        return apiClient.user.register(
+            uuid = uuid,
+            email = email,
+            password = password
+        )
 
 
     }

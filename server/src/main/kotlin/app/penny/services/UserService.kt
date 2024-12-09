@@ -8,6 +8,8 @@ import app.penny.servershared.dto.responseDto.LoginResponse
 import app.penny.servershared.dto.requestDto.RegisterRequest
 import app.penny.servershared.dto.entityDto.UserDto
 import org.mindrot.jbcrypt.BCrypt
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class UserService(
     private val userRepository: UserRepository,
@@ -16,6 +18,7 @@ class UserService(
     /**
      * Registers a new user with the provided credentials.
      */
+    @OptIn(ExperimentalUuidApi::class)
     fun register(credentials: RegisterRequest): UserDto? {
         if (userRepository.findByEmail(credentials.email) != null) {
             throw IllegalArgumentException("User already exists")
@@ -23,7 +26,11 @@ class UserService(
 
         val passwordHash = BCrypt.hashpw(credentials.password, BCrypt.gensalt())
         try {
+
+            val uuid :String = credentials.uuid ?: Uuid.random().toString()
+
             val pk = userRepository.insert(
+                uuid = uuid,
                 email = credentials.email,
                 passwordHash = passwordHash
             )

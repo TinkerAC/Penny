@@ -139,9 +139,8 @@ fun LedgerModel.toLedgerDto(): LedgerDto {
 fun LedgerDto.toModel(): LedgerModel {
     return LedgerModel(
         uuid = Uuid.parse(uuid),
-        name = name ?: "",
-        currency = currencyCode?.let { Currency.valueOf(it) }
-            ?: throw IllegalArgumentException("Currency code is required"),
+        name = name ,
+        currency = currencyCode.let { Currency.valueOf(it) },
         description = "",
         count = 0,
         balance = BigDecimal.ZERO,

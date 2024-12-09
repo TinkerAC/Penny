@@ -131,7 +131,7 @@ class ProfileViewModel(
             }
 
             // 邮箱未注册，尝试注册
-            val registerResponse = registerUseCase(email, password)
+            val registerResponse = registerUseCase(email, password, uuid = null)
             if (registerResponse.success) {
                 // 注册成功后可选择自动登录或提示用户登录
                 // TODO: 若需要注册后自动登录可在此调用 attemptLogin(...)
