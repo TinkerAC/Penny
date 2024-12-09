@@ -7,8 +7,6 @@ import app.penny.repository.*
 import app.penny.repository.impl.*
 import app.penny.routes.*
 import app.penny.services.*
-import app.penny.utils.UserKey
-import app.penny.utils.getUser
 import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIHost
 import com.typesafe.config.ConfigFactory
@@ -18,7 +16,6 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.http.HttpStatusCode
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -49,7 +46,7 @@ fun Application.module() {
     val ledgerService = LedgerService(ledgerRepository)
     val transactionService = TransactionService(transactionRepository)
     val statisticsService = StatisticsService(ledgerRepository, transactionRepository)
-    val authService = AuthService(jwtConfig)
+    val authService = AuthService(jwtConfig, userRepository = userRepository)
 
     // Install Content Negotiation
     install(ContentNegotiation) {
@@ -65,8 +62,6 @@ fun Application.module() {
                 if (userId != null) {
                     val user = userService.findUserById(userId)
                     if (user != null) {
-                        // Store the user in call.attributes for later retrieval
-                        credential.context.attributes.put(UserKey, user)
                         JWTPrincipal(credential.payload)
                     } else {
                         null // Invalid user

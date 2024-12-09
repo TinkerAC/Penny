@@ -47,17 +47,21 @@ object JwtConfig {
     }
 
 
-    fun makeAccessToken(userId: Long): String = JWT.create()
-        .withIssuer(ISSUER)
-        .withClaim("userId", userId)
-        .withExpiresAt(getExpiration(ACCESS_TOKEN_VALIDITY_IN_MS))
-        .sign(accessTokenAlgorithm)
+    fun makeAccessToken(userId: Long, userUuid: String): String =
+        JWT.create()
+            .withIssuer(ISSUER)
+            .withClaim("userId", userId)
+            .withClaim("userUuid", userUuid)
+            .withExpiresAt(getExpiration(ACCESS_TOKEN_VALIDITY_IN_MS))
+            .sign(accessTokenAlgorithm)
 
-    fun makeRefreshToken(userId: Long): String = JWT.create()
-        .withIssuer(ISSUER)
-        .withClaim("userId", userId)
-        .withExpiresAt(getExpiration(REFRESH_TOKEN_VALIDITY_IN_MS))
-        .sign(refreshTokenAlgorithm)
+    fun makeRefreshToken(userId: Long, userUuid: String): String =
+        JWT.create()
+            .withIssuer(ISSUER)
+            .withClaim("userId", userId)
+            .withClaim("userUuid", userUuid)
+            .withExpiresAt(getExpiration(REFRESH_TOKEN_VALIDITY_IN_MS))
+            .sign(refreshTokenAlgorithm)
 
 
     fun getUserIdFromRefreshToken(token: String): Long {

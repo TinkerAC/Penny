@@ -11,7 +11,7 @@ import app.penny.servershared.dto.responseDto.UploadTransactionResponse
 import app.penny.services.LedgerService
 import app.penny.services.StatisticsService
 import app.penny.services.TransactionService
-import app.penny.utils.getUserId
+import app.penny.utils.getAuthedUser
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
@@ -31,8 +31,8 @@ fun Route.syncRoutes(
         authenticate("access-jwt") {
             route("/ledger") {
                 get("/download") {
-                    val userId = call.getUserId()
-                    if (userId == null) {
+                    val user = call.getAuthedUser()
+                    if (user == null) {
                         call.respond(HttpStatusCode.Unauthorized)
                         return@get
                     }
@@ -40,7 +40,7 @@ fun Route.syncRoutes(
                     val lastSyncedAt = call.parameters["lastSyncedAt"]?.toLong() ?: 0
 
                     val ledgers = ledgerService.getLedgersByUserIdAfterLastSync(
-                        userId = userId,
+                        userId = user.id,
                         lastSyncedAt = lastSyncedAt
                     )
 
@@ -56,8 +56,8 @@ fun Route.syncRoutes(
                 }
 
                 post("/upload") {
-                    val userId = call.getUserId()
-                    if (userId == null) {
+                    val user = call.getAuthedUser()
+                    if (user == null) {
                         call.respond(HttpStatusCode.Unauthorized)
                         return@post
                     }
@@ -95,8 +95,8 @@ fun Route.syncRoutes(
 
             route("/transaction") {
                 get("/download") {
-                    val userId = call.getUserId()
-                    if (userId == null) {
+                    val user = call.getAuthedUser()
+                    if (user == null) {
                         call.respond(HttpStatusCode.Unauthorized)
                         return@get
                     }
@@ -104,7 +104,7 @@ fun Route.syncRoutes(
                     val lastSyncedAt = call.parameters["lastSyncedAt"]?.toLong() ?: 0
 
                     val transactions = transactionService.findUnsyncedTransactions(
-                        userId = userId,
+                        userId = user.id,
                         lastSyncedAt = lastSyncedAt
                     )
 
@@ -120,8 +120,8 @@ fun Route.syncRoutes(
                 }
 
                 post("/upload") {
-                    val userId = call.getUserId()
-                    if (userId == null) {
+                    val user = call.getAuthedUser()
+                    if (user == null) {
                         call.respond(HttpStatusCode.Unauthorized)
                         return@post
                     }
@@ -157,8 +157,8 @@ fun Route.syncRoutes(
             }
 
             get("/count") {
-                val userId = call.getUserId()
-                if (userId == null) {
+                val user = call.getAuthedUser()
+                if (user == null) {
                     call.respond(HttpStatusCode.Unauthorized)
                     return@get
                 }
@@ -166,7 +166,7 @@ fun Route.syncRoutes(
                 val lastSyncedAt = call.parameters["lastSyncedAt"]?.toLong() ?: 0
 
                 val count = statisticsService.getUnsyncedDataCount(
-                    userId = userId,
+                    userId = user.id,
                     lastSyncedAt = lastSyncedAt
                 )
 

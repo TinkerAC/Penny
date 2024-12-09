@@ -6,7 +6,7 @@ import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.database.LedgerLocalDataSourceImpl
 import app.penny.core.data.database.TransactionLocalDataSource
 import app.penny.core.data.database.UserLocalDataSource
-import app.penny.core.data.database.UserLocalDataSourceImpl
+import app.penny.core.data.database.dataSourceImpl.UserLocalDataSourceImpl
 import app.penny.core.data.database.dataSourceImpl.ChatMessageLocalDataSourceImpl
 import app.penny.core.data.database.dataSourceImpl.TransactionLocalDataSourceImpl
 import app.penny.core.data.kvstore.TokenManager
@@ -24,7 +24,6 @@ import app.penny.core.data.repository.impl.LedgerRepositoryImpl
 import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
 import app.penny.core.data.repository.impl.UserRepositoryImpl
-import app.penny.core.domain.usecase.CheckIsEmailRegisteredUseCase
 import app.penny.core.domain.usecase.CountUnsyncedDataUseCase
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
@@ -146,8 +145,7 @@ fun commonModule() = module {
     factory { InitLocalUserUseCase(get(), get()) }
     factory { GetAllTransactionsUseCase(get()) }
     factory { SearchTransactionsUseCase(get()) }
-    factory { CheckIsEmailRegisteredUseCase(get()) }
-    factory { LoginUseCase(get()) }
+    factory { LoginUseCase(get(),get(),get())}
     factory { UploadUnsyncedLedgerUseCase(get(), get()) }
     factory { RegisterUseCase(get()) }
     factory { DownloadUnsyncedLedgerUseCase(get(), get()) }

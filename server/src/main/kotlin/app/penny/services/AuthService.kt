@@ -2,11 +2,14 @@
 package app.penny.services
 
 import app.penny.config.JwtConfig
+import app.penny.repository.UserRepository
+import app.penny.servershared.dto.entityDto.UserDto
 import app.penny.servershared.dto.responseDto.RefreshTokenResponse
 import com.auth0.jwt.exceptions.JWTVerificationException
 
 class AuthService(
-    private val jwtConfig: JwtConfig
+    private val jwtConfig: JwtConfig,
+    private val userRepository: UserRepository
 ) {
 
     private fun verifyRefreshToken(token: String): Boolean {
@@ -18,9 +21,15 @@ class AuthService(
         }
     }
 
-    private fun getAuthenticatedUserId(token: String): Long? {
+    private fun getAuthedUser(token: String): UserDto? {
         return try {
-            jwtConfig.getUserIdFromRefreshToken(token)
+            val jwt = jwtConfig.refreshTokenVerifier.verify(token)
+
+            val userId = jwt.getClaim("userId").asLong()
+
+            val user = userRepository.findById(userId)
+
+            return user
         } catch (e: JWTVerificationException) {
             null
         }
@@ -29,10 +38,10 @@ class AuthService(
     fun refreshTokens(refreshToken: String): RefreshTokenResponse {
         val isRefreshTokenValid = verifyRefreshToken(refreshToken)
         if (isRefreshTokenValid) {
-            val userId = getAuthenticatedUserId(refreshToken)
-            if (userId != null) {
-                val accessToken = jwtConfig.makeAccessToken(userId)
-                val newRefreshToken = jwtConfig.makeRefreshToken(userId)
+            val authedUser = getAuthedUser(refreshToken)
+            if (authedUser != null) {
+                val accessToken = jwtConfig.makeAccessToken(authedUser.id, authedUser.uuid)
+                val newRefreshToken = jwtConfig.makeRefreshToken(authedUser.id, authedUser.uuid)
                 return RefreshTokenResponse(
                     success = true,
                     message = "Token refreshed",

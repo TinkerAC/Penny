@@ -15,7 +15,6 @@ class UserRepositoryImpl(
 ) : UserRepository {
 
 
-
     override suspend fun insert(userModel: UserModel) {
         userLocalDataSource.insert(userModel.toEntity())
     }
@@ -41,5 +40,13 @@ class UserRepositoryImpl(
 
     override suspend fun count(): Long {
         return userLocalDataSource.count()
+    }
+
+    override suspend fun findByEmail(email: String): UserModel? {
+        return userLocalDataSource.findByEmail(email)?.toModel()
+    }
+
+    override suspend fun findByEmailIsNull(): UserModel? {
+        return userLocalDataSource.findByEmailIsNull().firstOrNull()?.toModel()
     }
 }

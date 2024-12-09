@@ -48,11 +48,8 @@ class ProfileScreen : Screen {
                 sheetState = bottomSheetState,
             ) {
                 RegisterAndLoginBottomSheet(
-                    viewModel = viewModel,
-                    onDismiss = {
-                        viewModel.handleIntent(ProfileIntent.DismissLoginModal)
-                    },
-                    uiState = uiState.value
+                    uiState = uiState,
+                    viewModel = viewModel
                 )
             }
         }
@@ -70,9 +67,9 @@ class ProfileScreen : Screen {
                         uiState = uiState.value
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    FunctionGrid(viewModel)
+                    FunctionGrid() // 不再调用Intent，标记未实现导航逻辑
                     Spacer(modifier = Modifier.height(16.dp))
-                    MenuList(viewModel)
+                    MenuList() // 同上，不调用Intent，标记未实现导航逻辑
                 }
             }
         )
@@ -107,7 +104,6 @@ fun UserInfoSection(
             .padding(vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 用户头像
         Icon(
             imageVector = Icons.Default.AccountCircle,
             contentDescription = "用户头像",
@@ -122,7 +118,6 @@ fun UserInfoSection(
             tint = MaterialTheme.colorScheme.primary
         )
         Spacer(modifier = Modifier.height(8.dp))
-        // 用户名或登录提示
         Text(
             text = when {
                 uiState.isLoggedIn -> uiState.username ?: uiState.email ?: "PennyPal"
@@ -132,7 +127,6 @@ fun UserInfoSection(
             color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.height(16.dp))
-        // 统计信息
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
@@ -163,12 +157,14 @@ fun StatisticItem(number: Int, label: String) {
 }
 
 @Composable
-fun FunctionGrid(viewModel: ProfileViewModel) {
+fun FunctionGrid() {
+    // 原本这里有导航 Intent，现在移除
+    // TODO: navigation not implemented
     val features = listOf(
-        FeatureItem("通知", Icons.Default.Notifications, ProfileIntent.NavigateToNotifications),
-        FeatureItem("我的徽章", Icons.Default.Badge, ProfileIntent.NavigateToBadges),
-        FeatureItem("Penny's Box", Icons.Default.Storage, ProfileIntent.NavigateToPennyBox),
-        FeatureItem("设置", Icons.Default.Settings, ProfileIntent.NavigateToSettings)
+        FeatureItem("通知", Icons.Default.Notifications),
+        FeatureItem("我的徽章", Icons.Default.Badge),
+        FeatureItem("Penny's Box", Icons.Default.Storage),
+        FeatureItem("设置", Icons.Default.Settings)
     )
 
     LazyVerticalGrid(
@@ -181,7 +177,9 @@ fun FunctionGrid(viewModel: ProfileViewModel) {
             Column(
                 modifier = Modifier
                     .padding(8.dp)
-                    .clickable { viewModel.handleIntent(feature.intent) },
+                    .clickable {
+                        // TODO: navigation not implemented
+                    },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(
@@ -202,16 +200,16 @@ fun FunctionGrid(viewModel: ProfileViewModel) {
 
 data class FeatureItem(
     val name: String,
-    val icon: ImageVector,
-    val intent: ProfileIntent
+    val icon: ImageVector
 )
 
 @Composable
-fun MenuList(viewModel: ProfileViewModel) {
+fun MenuList() {
+    // TODO: navigation not implemented
     val menuItems = listOf(
-        MenuItem("使用帮助", Icons.Default.Help, ProfileIntent.NavigateToHelp),
-        MenuItem("意见反馈", Icons.Default.Feedback, ProfileIntent.NavigateToFeedback),
-        MenuItem("关于我们", Icons.Default.Info, ProfileIntent.NavigateToAboutUs)
+        MenuItem("使用帮助", Icons.Default.Help),
+        MenuItem("意见反馈", Icons.Default.Feedback),
+        MenuItem("关于我们", Icons.Default.Info)
     )
     Column(
         modifier = Modifier
@@ -223,7 +221,9 @@ fun MenuList(viewModel: ProfileViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
-                    .clickable { viewModel.handleIntent(menuItem.intent) },
+                    .clickable {
+                        // TODO: navigation not implemented
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -245,6 +245,5 @@ fun MenuList(viewModel: ProfileViewModel) {
 
 data class MenuItem(
     val name: String,
-    val icon: ImageVector,
-    val intent: ProfileIntent
+    val icon: ImageVector
 )

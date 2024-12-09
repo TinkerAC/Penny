@@ -4,7 +4,8 @@ package app.penny.services
 import app.penny.servershared.dto.entityDto.LedgerDto
 import app.penny.servershared.dto.entityDto.UserDto
 import app.penny.servershared.enumerate.Action
-import app.penny.utils.getUser
+import app.penny.utils.getAuthedUser
+
 import com.aallam.openai.api.chat.*
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
@@ -30,7 +31,7 @@ class AiService(
         call: ApplicationCall,
         text: String
     ): Action? {
-        val user = call.getUser()
+        val user = call.getAuthedUser()
         if (user == null) {
             // Optionally handle the absence of a user, e.g., throw an exception
             return null

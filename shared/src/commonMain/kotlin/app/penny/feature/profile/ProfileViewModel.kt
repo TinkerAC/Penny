@@ -2,7 +2,7 @@ package app.penny.feature.profile
 
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.domain.usecase.CheckIsEmailRegisteredUseCase
+import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -16,10 +16,10 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalUuidApi::class)
 class ProfileViewModel(
     private val userDataRepository: UserDataRepository,
-    private val checkIsEmailRegisteredUseCase: CheckIsEmailRegisteredUseCase,
     private val loginUseCase: LoginUseCase,
     private val registerUseCase: RegisterUseCase,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 
 ) : ScreenModel {
 
@@ -29,139 +29,135 @@ class ProfileViewModel(
     init {
         screenModelScope.launch {
             fetchProfileStatistics()
-
             _uiState.value = _uiState.value.copy(
                 isLoggedIn = authRepository.isLoggedIn()
             )
-
         }
     }
 
     fun handleIntent(intent: ProfileIntent) {
         when (intent) {
-            ProfileIntent.TryLogin -> tryLogin()
-            is ProfileIntent.Login -> login(intent.username, intent.password)
-            is ProfileIntent.UnfocusEmail -> unfocusUsername(intent.username)
+            ProfileIntent.TryLogin -> showLoginModal()
+            is ProfileIntent.Login -> attemptLogin(intent.email, intent.password)
+            is ProfileIntent.Register -> attemptRegister(intent.email, intent.password)
+            is ProfileIntent.UnfocusEmail -> checkEmailStatus(intent.email)
             ProfileIntent.DismissLoginModal -> dismissLoginModal()
-            ProfileIntent.NavigateToSettings -> navigateToSettings()
-            ProfileIntent.NavigateToNotifications -> navigateToNotifications()
-            ProfileIntent.NavigateToBadges -> navigateToBadges()
-            ProfileIntent.NavigateToPennyBox -> navigateToPennyBox()
-            ProfileIntent.NavigateToHelp -> navigateToHelp()
-            ProfileIntent.NavigateToFeedback -> navigateToFeedback()
-            ProfileIntent.NavigateToAboutUs -> navigateToAboutUs()
+            ProfileIntent.ToggleModalMode -> toggleModalMode()
+            is ProfileIntent.InputEmail -> {
+                _uiState.value = _uiState.value.copy(email = intent.email)
+            }
         }
     }
 
-    private fun unfocusUsername(email: String) {
+    private suspend fun checkEmailAvailability(email: String): Boolean? {
+        // 返回值：true已注册，false未注册，null未知（出错）
+        return authRepository.checkIsEmailRegistered(email)
+    }
+
+    private fun checkEmailStatus(email: String) {
         screenModelScope.launch {
-            val isEmailRegistered = checkIsEmailRegisteredUseCase(email)
+            val isEmailRegistered = checkEmailAvailability(email)
+            val localUser = userRepository.findByEmailIsNull()
 
-            var errorMessage: String? = null
-
-            when (isEmailRegistered) {
-                null -> {
+            val errorMessage: String? = when {
+                isEmailRegistered == null -> {
+                    // 无法确定该邮箱是否已注册
+                    // TODO: 在此根据需求添加错误提示或逻辑
+                    null
                 }
-
-                true -> {
-                    errorMessage = "Welcome back $email"
+                localUser == null -> {
+                    // 无本地匿名用户
+                    if (isEmailRegistered) "此邮箱已注册，请登录" else "此邮箱未注册，将创建新账户"
                 }
-
-                false -> {
-                    errorMessage = "New user? A new account will be created for you."
+                else -> {
+                    // 有本地匿名用户（意味着绑定）
+                    if (isEmailRegistered) "此邮箱已注册，将尝试绑定" else "此邮箱未注册，可将本地数据绑定到新账户"
                 }
             }
 
-            _uiState.value = _uiState.value.copy(
-                errorMessage = errorMessage
-            )
-
+            _uiState.value = _uiState.value.copy(errorMessage = errorMessage)
         }
     }
 
-    private fun login(email: String, password: String) {
+    private fun attemptLogin(email: String, password: String) {
         screenModelScope.launch {
-            try {
+            val isEmailRegistered = checkEmailAvailability(email)
 
-                val isEmailRegistered = checkIsEmailRegisteredUseCase(email)
+            if (isEmailRegistered == null) {
+                // 无法确定邮箱状态
+                // TODO: 在此添加错误逻辑处理
+                _uiState.value = _uiState.value.copy(errorMessage = "网络错误，请稍后再试")
+                return@launch
+            }
 
-                if (isEmailRegistered == null) {
-                    _uiState.value = _uiState.value.copy(
-                        errorMessage = null
-                    )
-                    return@launch
-                }
+            if (!isEmailRegistered) {
+                // 邮箱未注册，无法登录
+                _uiState.value = _uiState.value.copy(errorMessage = "邮箱未注册，请先注册")
+                return@launch
+            }
 
-                if (!isEmailRegistered) {
-                    // register and login
-                    val registerResponse = registerUseCase(email, password)
-                    if (registerResponse.success) {
-                        _uiState.value = _uiState.value.copy(
-                            errorMessage = "Account created successfully."
-                        )
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            errorMessage = "An error occurred during registration."
-                        )
-
-                    }
-
-                    val loginResponse = loginUseCase(email, password)
-                    if (loginResponse.success) {
-                        _uiState.value = _uiState.value.copy(
-                            errorMessage = "Login successful."
-                        )
-                        handleIntent(ProfileIntent.DismissLoginModal)
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            errorMessage = loginResponse.message
-                        )
-                    }
-
-
-                }
-                val result = loginUseCase(email, password)
-                // Handle successful login
-                if (result.success) {
-                    _uiState.value = _uiState.value.copy(
-
-                        loggingModalVisible = false,
-                        username = result.userDto?.username ?: "",
-                        errorMessage = null
-                    )
-                    fetchProfileStatistics()
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        errorMessage = result.message
-                    )
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
+            // 尝试登录
+            val loginResponse = loginUseCase(email, password)
+            if (loginResponse.success) {
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = "An unknown error occurred during login."
+                    loggingModalVisible = false,
+                    username = loginResponse.userDto?.username ?: "",
+                    errorMessage = null,
+                    isLoggedIn = true
+                )
+                fetchProfileStatistics()
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = loginResponse.message
                 )
             }
         }
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    private suspend fun fetchProfileStatistics() {
-        _uiState.value = _uiState.value.copy(isLoading = true)
+    private fun attemptRegister(email: String, password: String) {
+        screenModelScope.launch {
+            val isEmailRegistered = checkEmailAvailability(email)
+            if (isEmailRegistered == null) {
+                // 无法确定邮箱状态
+                // TODO: 在此添加错误逻辑处理
+                _uiState.value = _uiState.value.copy(errorMessage = "网络错误，请稍后再试")
+                return@launch
+            }
+
+            if (isEmailRegistered) {
+                // 邮箱已注册
+                _uiState.value = _uiState.value.copy(errorMessage = "此邮箱已注册，请直接登录")
+                return@launch
+            }
+
+            // 邮箱未注册，尝试注册
+            val registerResponse = registerUseCase(email, password)
+            if (registerResponse.success) {
+                // 注册成功后可选择自动登录或提示用户登录
+                // TODO: 若需要注册后自动登录可在此调用 attemptLogin(...)
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "注册成功，请登录",
+                    modalInLoginMode = true
+                )
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = registerResponse.message ?: "注册过程中出现未知错误"
+                )
+            }
+        }
+    }
+
+    private fun toggleModalMode() {
         _uiState.value = _uiState.value.copy(
-            userUuid = userDataRepository.getUserUuid(),
-            email = userDataRepository.getUserEmailOrNull(),
-            username = userDataRepository.getUserNameOrNull(),
-            // 假设这里获取统计数据
-            continuousCheckInDays = 5,
-            totalTransactionDays = 30,
-            totalTransactionCount = 100
+            modalInLoginMode = !_uiState.value.modalInLoginMode,
+            errorMessage = null
         )
     }
 
-    private fun tryLogin() {
+    private fun showLoginModal() {
         _uiState.value = _uiState.value.copy(
-            loggingModalVisible = true
+            loggingModalVisible = true,
+            errorMessage = null
         )
     }
 
@@ -172,32 +168,17 @@ class ProfileViewModel(
         )
     }
 
-    // 导航函数示例
-    private fun navigateToSettings() {
-        // 执行导航到设置页面的逻辑
-    }
-
-    private fun navigateToNotifications() {
-        // 执行导航到通知页面的逻辑
-    }
-
-    private fun navigateToBadges() {
-        // 执行导航到徽章页面的逻辑
-    }
-
-    private fun navigateToPennyBox() {
-        // 执行导航到 Penny's Box 的逻辑
-    }
-
-    private fun navigateToHelp() {
-        // 执行导航到使用帮助页面的逻辑
-    }
-
-    private fun navigateToFeedback() {
-        // 执行导航到意见反馈页面的逻辑
-    }
-
-    private fun navigateToAboutUs() {
-        // 执行导航到关于我们页面的逻辑
+    @OptIn(ExperimentalUuidApi::class)
+    private suspend fun fetchProfileStatistics() {
+        _uiState.value = _uiState.value.copy(isLoading = true)
+        _uiState.value = _uiState.value.copy(
+            userUuid = userDataRepository.getUserUuid(),
+            email = userDataRepository.getUserEmailOrNull(),
+            username = userDataRepository.getUserNameOrNull(),
+            continuousCheckInDays = 5,   // TODO: 从业务逻辑中获取实际数据
+            totalTransactionDays = 30,   // TODO: 从业务逻辑中获取实际数据
+            totalTransactionCount = 100, // TODO: 从业务逻辑中获取实际数据
+            isLoading = false
+        )
     }
 }

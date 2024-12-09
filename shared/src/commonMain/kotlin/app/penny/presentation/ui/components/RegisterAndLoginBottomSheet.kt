@@ -1,5 +1,7 @@
+// file: shared/src/commonMain/kotlin/app/penny/presentation/ui/components/RegisterAndLoginBottomSheet.kt
 package app.penny.presentation.ui.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -7,13 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,19 +24,29 @@ import app.penny.feature.profile.ProfileViewModel
 
 @Composable
 fun RegisterAndLoginBottomSheet(
-    viewModel: ProfileViewModel,
-    onDismiss: () -> Unit,
-    uiState: ProfileUiState
+    uiState: State<ProfileUiState>,
+    viewModel: ProfileViewModel
 ) {
+    val scope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .animateContentSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // 切换登录/注册模式的Toggle按钮
+        ToggleButton(
+            isLoginMode = uiState.value.modalInLoginMode,
+            onToggle = {
+                viewModel.handleIntent(ProfileIntent.ToggleModalMode)
+            }
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Circular Avatar
+        // 头像区域
         Box(
             modifier = Modifier
                 .size(80.dp)
@@ -58,30 +64,31 @@ fun RegisterAndLoginBottomSheet(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Email TextField
-        var email by remember { mutableStateOf("") }
-        var hasFocused by remember { mutableStateOf(false) }
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier
+            value = uiState.value.email ?: "",
+            onValueChange = { email ->
+                viewModel.handleIntent(ProfileIntent.InputEmail(email))
+            },
+            label = { Text("邮箱") },
+            modifier =
+            Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
-                    if (hasFocused && !focusState.isFocused) {
-                        viewModel.handleIntent(ProfileIntent.UnfocusEmail(email))
-                    }
-                    if (focusState.isFocused) {
-                        hasFocused = true // 标记为已经聚焦过
+                    if (!focusState.isFocused) {
+                        viewModel.handleIntent(
+                            ProfileIntent.UnfocusEmail(
+                                uiState.value.email ?: ""
+                            )
+                        )
                     }
                 },
             singleLine = true,
-            isError = uiState.errorMessage?.contains("email") == true
-        )
+
+            )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password TextField
+        // 密码输入
         var password by remember { mutableStateOf("") }
         var passwordVisible by remember { mutableStateOf(false) }
         OutlinedTextField(
@@ -92,10 +99,8 @@ fun RegisterAndLoginBottomSheet(
             singleLine = true,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val image = if (passwordVisible)
-                    Icons.Default.Visibility
-                else Icons.Default.VisibilityOff
-
+                val image =
+                    if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                 val description = if (passwordVisible) "隐藏密码" else "显示密码"
 
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -103,41 +108,59 @@ fun RegisterAndLoginBottomSheet(
                 }
             }
         )
+        if (!uiState.value.modalInLoginMode) {
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Error Message
-        if (uiState.errorMessage != null) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = uiState.errorMessage ?: "",
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodyMedium
+            // 注册模式下的确认密码输入
+            var confirmPassword by remember { mutableStateOf("") }
+            var confirmPasswordVisible by remember { mutableStateOf(false) }
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = { Text("确认密码") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image =
+                        if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                    val description = if (confirmPasswordVisible) "隐藏密码" else "显示密码"
+
+                    IconButton(onClick = {
+                        confirmPasswordVisible = !confirmPasswordVisible
+                    }) {
+                        Icon(imageVector = image, contentDescription = description)
+                    }
+                }
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Login Button
+        // 登录或注册按钮
         Button(
             onClick = {
-                if (email.isNotBlank() && password.isNotBlank()) {
-                    viewModel.handleIntent(ProfileIntent.Login(email, password))
+                if (uiState.value.modalInLoginMode) {
+                    viewModel.handleIntent(ProfileIntent.Login(uiState.value.email ?: "", password))
+                } else {
+                    viewModel.handleIntent(ProfileIntent.Register(uiState.value.email ?: "", password))
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("登录")
+            Text(if (uiState.value.modalInLoginMode) "登录" else "注册")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Close Button
-        TextButton(onClick = onDismiss) {
+        // 关闭按钮
+        TextButton(onClick = {
+            viewModel.handleIntent(ProfileIntent.DismissLoginModal)
+        }) {
             Text("关闭")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
-
-
 

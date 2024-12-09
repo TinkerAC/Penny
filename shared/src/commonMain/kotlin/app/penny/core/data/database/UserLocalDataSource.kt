@@ -14,4 +14,11 @@ interface UserLocalDataSource {
 
 
     fun findAll(): List<UserEntity>
+
+
+    fun findByEmail(email: String): UserEntity?
+
+
+
+    fun findByEmailIsNull(): List<UserEntity>
 }

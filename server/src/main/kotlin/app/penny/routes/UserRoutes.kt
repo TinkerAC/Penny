@@ -1,11 +1,13 @@
 // 文件：server/src/main/kotlin/app/penny/routes/UserRoutes.kt
 package app.penny.routes
 
+import app.penny.servershared.dto.entityDto.UserDto
 import app.penny.servershared.dto.responseDto.CheckIsEmailRegisteredResponse
 import app.penny.servershared.dto.requestDto.LoginRequest
 import app.penny.servershared.dto.requestDto.RegisterRequest
 import app.penny.servershared.dto.responseDto.RegisterResponse
 import app.penny.services.UserService
+import app.penny.services.toUserResponseDto
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -18,20 +20,24 @@ fun Route.userRoutes(userService: UserService) {
     route("/user") {
         post("/register") {
             val credentials = call.receive<RegisterRequest>()
-            val success = userService.register(credentials)
-            if (success) {
+
+            val newUser = userService.register(credentials)
+
+            if (newUser != null) {
                 call.respond(
                     RegisterResponse(
                         success = true,
-                        message = "User registered successfully"
+                        message = "User registered successfully",
+                        userDto = newUser.toUserResponseDto()
                     )
                 )
             } else {
                 call.respond(
-                    HttpStatusCode.Conflict,
+                    HttpStatusCode.BadRequest,
                     RegisterResponse(
                         success = false,
-                        message = "User already exists"
+                        message = "User already exists",
+                        userDto = null
                     )
                 )
             }

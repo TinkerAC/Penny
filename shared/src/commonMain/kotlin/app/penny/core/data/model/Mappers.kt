@@ -22,6 +22,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import app.penny.servershared.dto.entityDto.LedgerDto
 import app.penny.servershared.dto.entityDto.TransactionDto
+import app.penny.servershared.dto.entityDto.UserDto
 import app.penny.servershared.enumerate.Action
 import kotlinx.serialization.json.Json
 
@@ -229,4 +230,16 @@ fun ChatMessageEntity.toModel(): ChatMessage {
 
         else -> throw IllegalArgumentException("Unknown message type: $type")
     }
+}
+
+
+@OptIn(ExperimentalUuidApi::class)
+fun UserDto.toUserModel(): UserModel {
+    return UserModel(
+        uuid = Uuid.parse(uuid),
+        username = username ?: "",
+        email = email,
+        createdAt = Instant.fromEpochSeconds(createdAt),
+        updatedAt = Instant.fromEpochSeconds(updatedAt)
+    )
 }

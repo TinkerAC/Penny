@@ -48,55 +48,9 @@ fun Route.aiRoutes(
                         )
                     )
                 }
-
-
-
-
-
-
-
-
-
-
             }
 
-            /**
-             * Endpoint to get detailed information about a specific action.
-             * Note: Implementation depends on your specific requirements.
-             */
-            post("/get-action-detail") {
-                val request: GetActionDetailRequest = call.receive()
 
-                // Example implementation; adjust based on actual Action details
-                val actionDetail = when (request.action
-                    "InsertLedger" -> {
-                        // Assuming 'text' contains necessary information
-                        aiService.getActionDetail("insertLedgerRecord", request.text, call)
-                    }
-                    // Handle other action types similarly
-                    else -> null
-                }
-
-                if (actionDetail != null) {
-                    call.respond(
-                        HttpStatusCode.OK,
-                        GetAiReplyResponse(
-                            success = true,
-                            message = "Successfully retrieved action details",
-                            action = actionDetail
-                        )
-                    )
-                } else {
-                    call.respond(
-                        HttpStatusCode.OK,
-                        GetAiReplyResponse(
-                            success = false,
-                            message = "Failed to retrieve action details",
-                            content = "Failed to retrieve action details"
-                        )
-                    )
-                }
-            }
         }
     }
 }

@@ -16,5 +16,9 @@ interface UserRepository {
     suspend fun deleteByUuid(userUuid: Uuid)
     suspend fun count(): Long
 
+    suspend fun findByEmail(email: String): UserModel?
+
+    suspend fun findByEmailIsNull(): UserModel?
+
 
 }

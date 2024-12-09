@@ -5,6 +5,7 @@ import app.penny.models.Users
 import app.penny.models.toUserDto
 import app.penny.repository.UserRepository
 import app.penny.servershared.dto.entityDto.UserDto
+import io.ktor.util.debug.useContextElementInDebugMode
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
@@ -21,11 +22,10 @@ class UserRepositoryImpl : UserRepository {
         }
     }
 
-    override fun insert(username: String, passwordHash: String): Long {
+    override fun insert(email: String, passwordHash: String): Long {
         return transaction {
             Users.insert {
-                it[Users.email] = username
-                it[Users.username] = username
+                it[Users.email] = email
                 it[Users.passwordHash] = passwordHash
                 val currentTime = Clock.System.now().epochSeconds
                 it[createdAt] = currentTime

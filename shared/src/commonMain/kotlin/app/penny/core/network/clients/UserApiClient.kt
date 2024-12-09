@@ -39,13 +39,14 @@ class UserApiClient(
         }
     }
 
-    suspend fun checkIsEmailRegistered(username: String): CheckIsEmailRegisteredResponse {
+    suspend fun checkIsEmailRegistered(email: String): CheckIsEmailRegisteredResponse {
         val response = makeRequest<CheckIsEmailRegisteredResponse>(
             url = "$API_URL/user/checkIsEmailRegistered",
             method = HttpMethod.Get
         ) {
-            parameter("email", username)
+            parameter("email", email)
         }
+
         return response
     }
 }

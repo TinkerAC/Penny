@@ -10,16 +10,12 @@ data class ProfileUiState @OptIn(ExperimentalUuidApi::class) constructor(
     val email: String? = null,
     val profileImage: String = "",
     val userUuid: Uuid = Uuid.fromLongs(0, 0),
-
+    val modalInLoginMode : Boolean = true,
     val isLoggedIn: Boolean = false,
-
-    val isEmailRegistered: Boolean = false,
+    val isEmailRegistered: Boolean = false, // TODO: 根据实际逻辑使用
     val loggingModalVisible: Boolean = false,
 
-    // 连续签到天数
     val continuousCheckInDays: Int = 0,
-    // 记账总笔数
     val totalTransactionCount: Int = 0,
-    // 记账天数
     val totalTransactionDays: Int = 0,
 )

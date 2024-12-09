@@ -7,6 +7,9 @@ interface AuthRepository {
 
     suspend fun getAccessToken(): String?
     suspend fun logout()
+
+    suspend fun checkIsEmailRegistered(email: String): Boolean?
+
     fun isLoggedIn(): Boolean
 
 

@@ -1,5 +1,6 @@
-package app.penny.core.data.database
+package app.penny.core.data.database.dataSourceImpl
 
+import app.penny.core.data.database.UserLocalDataSource
 import app.penny.database.UserEntity
 import app.penny.database.UserQueries
 
@@ -33,5 +34,13 @@ class UserLocalDataSourceImpl(
 
     override fun findAll(): List<UserEntity> {
         return userQueries.findAll().executeAsList()
+    }
+
+    override fun findByEmail(email: String): UserEntity? {
+        return userQueries.findByEmail(email).executeAsOneOrNull()
+    }
+
+    override fun findByEmailIsNull(): List<UserEntity> {
+        return userQueries.findByEmailIsNull().executeAsList()
     }
 }

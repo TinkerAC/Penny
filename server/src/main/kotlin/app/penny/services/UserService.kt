@@ -16,14 +16,27 @@ class UserService(
     /**
      * Registers a new user with the provided credentials.
      */
-    fun register(credentials: RegisterRequest): Boolean {
+    fun register(credentials: RegisterRequest): UserDto? {
         if (userRepository.findByEmail(credentials.email) != null) {
-            return false
+            throw IllegalArgumentException("User already exists")
         }
 
         val passwordHash = BCrypt.hashpw(credentials.password, BCrypt.gensalt())
-        userRepository.insert(credentials.email, passwordHash)
-        return true
+        try {
+            val pk = userRepository.insert(
+                email = credentials.email,
+                passwordHash = passwordHash
+            )
+
+            val newUser = userRepository.findById(pk)
+
+            return newUser
+
+        } catch (e: Exception) {
+            throw IllegalArgumentException("User already exists")
+        }
+
+
     }
 
     /**
@@ -39,8 +52,8 @@ class UserService(
 
         return if (BCrypt.checkpw(credentials.password, userEntity.passwordHash)) {
             val userId = userEntity.id
-            val accessToken = jwtConfig.makeAccessToken(userId)
-            val refreshToken = jwtConfig.makeRefreshToken(userId)
+            val accessToken = jwtConfig.makeAccessToken(userId, userEntity.uuid)
+            val refreshToken = jwtConfig.makeRefreshToken(userId, userEntity.uuid)
             LoginResponse(
                 success = true,
                 message = "Login successful",
@@ -81,5 +94,6 @@ fun UserDto.toUserResponseDto(): UserDto {
         id = id,
         username = username,
         email = email,
+        uuid = uuid,
     )
 }
