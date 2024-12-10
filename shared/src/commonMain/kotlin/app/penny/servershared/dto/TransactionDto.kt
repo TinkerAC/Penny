@@ -8,7 +8,7 @@ import kotlin.uuid.Uuid
 data class TransactionDto(
     val userId: Long,
     val uuid: String,
-    val ledgerUuid: String,
+    var ledgerUuid: String,
     val transactionType: String,
     val transactionDate: Long,
     val categoryName: String,
@@ -18,6 +18,25 @@ data class TransactionDto(
     val createdAt: Long,
     val updatedAt: Long,
 ) : BaseEntityDto() {
+
+    override fun editableFields(): List<Pair<String, String?>> {
+        return listOf(
+            "transactionType" to transactionType,
+            "transactionDate" to transactionDate.toString(),
+            "categoryName" to categoryName,
+            "amount" to amount,
+            "remark" to remark
+        )
+    }
+
+    override fun completedForAction(): Boolean {
+        return transactionType.isNotBlank() && transactionDate > 0 && categoryName.isNotBlank() && amount.isNotBlank()
+    }
+
+
+
+
+
 
 
 }

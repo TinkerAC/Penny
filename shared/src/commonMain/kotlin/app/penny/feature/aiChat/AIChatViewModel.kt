@@ -5,11 +5,13 @@ import app.penny.core.data.model.toModel
 import app.penny.core.domain.model.UserModel
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
+import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.ChatMessage
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.LedgerDto
+import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.enumerate.Action
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -29,7 +31,8 @@ class AIChatViewModel(
     private val chatRepository: ChatRepository,
     private val userDataRepository: UserDataRepository,
     private val userRepository: UserRepository,
-    private val ledgerRepository: LedgerRepository
+    private val ledgerRepository: LedgerRepository,
+    private val transactionRepository: TransactionRepository
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(AIChatUiState())
@@ -153,6 +156,37 @@ class AIChatViewModel(
                     pendingDto = null
                 )
             }
+
+
+            is Action.InsertTransaction->{
+                val transactionDto = dto as TransactionDto
+                Logger.w("Action InsertTransaction: $transactionDto")
+
+                transactionDto.ledgerUuid = userDataRepository.getRecentLedgerUuidOrNull()!!.toString()
+
+
+                val transaction = transactionRepository.insert(
+                    transactionDto.toModel()
+                )
+
+
+                val chatMessage = ChatMessage.TextMessage(
+                    uuid = Uuid.random(),
+                    user = currentUser,
+                    sender = UserModel.AI,
+                    timestamp = Clock.System.now().epochSeconds,
+                    content = "Successfully created transaction${transaction}"
+                )
+                chatRepository.saveChatMessage(chatMessage)
+                _uiState.value = _uiState.value.copy(
+                    messages = _uiState.value.messages + chatMessage,
+                    showFunctionalBubble = false,
+                    pendingAction = null,
+                    pendingDto = null
+                )
+            }
+
+
 
             else -> {
                 throw IllegalArgumentException("Unsupported action: $action")

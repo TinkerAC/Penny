@@ -413,8 +413,8 @@ enum class Category(
         }
 
         // 根据名称获取分类
-        fun getCategoryByName(name: String): Category? {
-            return entries.find { it.categoryName.equals(name, ignoreCase = true) }
+        fun fromCategoryName(categoryName: String): Category? {
+            return entries.find { it.categoryName == categoryName }
         }
 
         fun getLevel(category: Category): Int {
@@ -446,18 +446,17 @@ enum class Category(
          */
         fun generateLLMPrompt(
             text: String,
-            userLocalDate:String
+            userLocalDate: String
         ): String {
             val incomeCategories = getSubCategories(INCOME).joinToString("\n") { parent ->
-                val subs = getSubCategories(parent).joinToString(", ") { it.categoryName }
-                if (subs.isBlank()) parent.categoryName else "${parent.categoryName}: $subs"
+                val subs = getSubCategories(parent).joinToString(", ") { it.name }  // 使用 name 代替 categoryName
+                if (subs.isBlank()) parent.name else "${parent.name}: $subs"  // 使用 name 代替 categoryName
             }
 
             val expenseCategories = getSubCategories(EXPENSE).joinToString("\n") { parent ->
-                val subs = getSubCategories(parent).joinToString(", ") { it.categoryName }
-                if (subs.isBlank()) parent.categoryName else "${parent.categoryName}: $subs"
+                val subs = getSubCategories(parent).joinToString(", ") { it.name }  // 使用 name 代替 categoryName
+                if (subs.isBlank()) parent.name else "${parent.name}: $subs"  // 使用 name 代替 categoryName
             }
-
             return """
 [Role]
 You are a helpful assistant that extracts structured information from a user's natural language description of a financial transaction. 
@@ -493,7 +492,7 @@ output:
 {
     "amount": 50,
     "remark": "on groceries",
-    "category": "Groceries",
+    "category": "GROCERIES",
     "transactionType": "expense",
     "transactionDate": "2024-11-15",
 }
@@ -506,7 +505,7 @@ OUTPUT:
 {
     "amount": 100,
     "remark": "to fix my car",
-    "category": "Auto Maintenance",
+    "category": "AUTO_MAINTENANCE_EXPENSE",
     "transactionType": "expense",
     "transactionDate": "2024-12-19",
 }
@@ -525,6 +524,7 @@ OUTPUT:
          """.trimIndent()
         }
     }
+
 
     override fun toString(): String {
         return super.toString()

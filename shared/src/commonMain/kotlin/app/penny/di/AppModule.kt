@@ -156,7 +156,7 @@ fun commonModule() = module {
         )
     }
 
-    factory { AIChatViewModel(get(), get(), get(),get()) }
+    factory { AIChatViewModel(get(), get(), get(),get(),get()) }
 
 
     // 注入 ViewModel
@@ -185,7 +185,7 @@ fun commonModule() = module {
 
     factory { NewLedgerViewModel(get(), get()) }
 
-    factory { AIChatViewModel(get(), get(), get(),get()) }
+    factory { AIChatViewModel(get(), get(), get(),get(),get()) }
 
 
 }
