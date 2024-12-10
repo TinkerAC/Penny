@@ -89,7 +89,7 @@ class NewTransactionViewModel(
         val transaction = TransactionModel(
             ledgerUuid = _uiState.value.selectedLedger!!.uuid,
             transactionDate = Clock.System.now(),
-            category = _uiState.value.selectedSubCategory ?: Category.OTHER_EXPENSES,
+            category = _uiState.value.selectedSubCategory ?: Category.getLevel1Categories().first(),
             transactionType = _uiState.value.selectedTransactionType,
             amount = BigDecimal.parseString(_uiState.value.amountText),
             currency = _uiState.value.selectedLedger?.currency ?: Currency.USD,
@@ -105,8 +105,6 @@ class NewTransactionViewModel(
     }
 
     private fun selectTab(tab: NewTransactionTab) {
-
-
         _uiState.value = _uiState.value.copy(selectedTab = tab)
         // initial numpad and category state
         _uiState.value = _uiState.value.copy(
@@ -121,8 +119,8 @@ class NewTransactionViewModel(
         )
         selectParentCategory(
             when (tab) {
-                NewTransactionTab.INCOME -> Category.MISC_OTHER_INCOME
-                NewTransactionTab.EXPENSE -> Category.OTHER_EXPENSES
+                NewTransactionTab.INCOME -> Category.getIncomeCategories().first()
+                NewTransactionTab.EXPENSE -> Category.getExpenseCategories().first()
             }
         )
         Logger.d("`selectTab` called{${tab.name}}")
