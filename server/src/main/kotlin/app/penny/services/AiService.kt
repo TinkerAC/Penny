@@ -89,8 +89,10 @@ class AiService(
             - analyzeSpending (analyze spending habits)
             - setReminder (set financial reminders)
             - none (no action required)
+            
             [Examples]
-            - "I spent $50 at a supermarket today" => insertLedgerRecord
+            - "Create a new ledger called 'Expenses' in USD" => insertLedgerRecord
+            - "I spent $50 at a supermarket today" => insertTransactionRecord
             - "Show me the spending records for November" => queryRecords
             - "Export my financial records from last month" => exportRecords
             - "How is the weather today?" => none

@@ -116,7 +116,6 @@ class AIChatViewModel(
             val dto = action.dto
 
             if (dto == null || dto.completedForAction()) {
-
                 executeAction(action, dto!!)
             } else {
                 _uiState.value = _uiState.value.copy(
