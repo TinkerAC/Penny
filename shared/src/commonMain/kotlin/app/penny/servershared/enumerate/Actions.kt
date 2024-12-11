@@ -8,19 +8,31 @@ import kotlinx.serialization.Serializable
 sealed class Action {
     abstract val description: String
     abstract val actionName: String
-    abstract val dto:BaseEntityDto?
+    abstract val dto: BaseEntityDto?
+
+
+    abstract fun copy(dto: BaseEntityDto?): Action
 
     @Serializable
     data class InsertLedger(
         override val description: String = "Add a Ledger record",
         override val actionName: String = "insertLedgerRecord",
         override val dto: BaseEntityDto?
-    ) : Action()
+    ) : Action() {
+
+        override fun copy(dto: BaseEntityDto?): InsertLedger {
+            return InsertLedger(description, actionName, dto)
+        }
+    }
 
     @Serializable
     data class InsertTransaction(
         override val description: String = "Add a Transaction record",
         override val actionName: String = "insertTransactionRecord",
         override val dto: BaseEntityDto?
-    ) : Action()
+    ) : Action() {
+        override fun copy(dto: BaseEntityDto?): InsertTransaction {
+            return InsertTransaction(description, actionName, dto)
+        }
+    }
 }

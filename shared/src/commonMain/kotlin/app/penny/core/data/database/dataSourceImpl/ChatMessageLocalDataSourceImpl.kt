@@ -39,10 +39,24 @@ class ChatMessageLocalDataSourceImpl(
     }
 
     override fun updateByUuid(chatMessageEntity: ChatMessageEntity) {
-        TODO("Not yet implemented")
+        chatMessageQueries.updateByUuid(
+            uuid = chatMessageEntity.uuid,
+            user_uuid = chatMessageEntity.user_uuid,
+            sender_uuid = chatMessageEntity.sender_uuid,
+            type = chatMessageEntity.type,
+            content = chatMessageEntity.content,
+            action = chatMessageEntity.action,
+            audio_file_path = chatMessageEntity.audio_file_path,
+            duration = chatMessageEntity.duration,
+            timestamp = chatMessageEntity.timestamp,
+            action_status = chatMessageEntity.action_status
+
+        )
     }
 
     override fun deleteByUuid(uuid: String) {
         TODO("Not yet implemented")
     }
+
+
 }

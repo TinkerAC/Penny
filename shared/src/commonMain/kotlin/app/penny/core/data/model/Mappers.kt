@@ -6,6 +6,7 @@ import app.penny.core.domain.enum.Currency
 import app.penny.core.domain.enum.LedgerCover
 import app.penny.core.domain.enum.TransactionType
 import app.penny.core.domain.model.AchievementModel
+import app.penny.core.domain.model.ActionStatus
 import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
@@ -24,6 +25,7 @@ import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UserDto
 import app.penny.servershared.enumerate.Action
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 
@@ -141,7 +143,7 @@ fun LedgerDto.toModel(): LedgerModel {
     return LedgerModel(
         userUuid = Uuid.parse(userUuid),
         uuid = Uuid.parse(uuid),
-        name = name ,
+        name = name,
         currency = currencyCode.let { Currency.valueOf(it) },
         description = "",
         count = 0,
@@ -194,43 +196,49 @@ fun UserEntity.toModel(): UserModel {
 
 @OptIn(ExperimentalUuidApi::class)
 fun ChatMessage.toEntity(): ChatMessageEntity {
-    return when (this) {
-        is ChatMessage.TextMessage -> ChatMessageEntity(
-            uuid = uuid.toString(),
-            user_uuid = user.uuid.toString(),
-            sender_uuid = sender.uuid.toString(),
-            type = MESSAGE_TYPE.TEXT.value,
-            content = content,
-            timestamp = timestamp,
-            audio_file_path = null,
-            duration = null,
-            //json encode action
-            action = action?.let {
-                Json.encodeToString(
-                    Action.serializer(), it,
-                )
-            }
-        )
+    return ChatMessageEntity(
+        uuid = uuid.toString(),
+        user_uuid = user.uuid.toString(),
+        sender_uuid = sender.uuid.toString(),
+        type = MESSAGE_TYPE.TEXT.value,
+        content = content,
+        timestamp = timestamp,
+        audio_file_path = null,
+        duration = null,
+        action = action?.let { Json.encodeToString(it) },
+        action_status = actionStatus?.name
+    )
 
-    }
 
 }
 
 
 @OptIn(ExperimentalUuidApi::class)
 fun ChatMessageEntity.toModel(): ChatMessage {
-    return when (type) {
-        MESSAGE_TYPE.TEXT.value -> ChatMessage.TextMessage(
-            uuid = Uuid.parse(uuid),
-            user = UserModel(Uuid.parse(user_uuid), "", ""),
-            sender = UserModel(Uuid.parse(sender_uuid), "", ""),
-            timestamp = timestamp,
-            content = content!!,
-            action = action?.let { Json.decodeFromString(Action.serializer(), it) }
-        )
-
-        else -> throw IllegalArgumentException("Unknown message type: $type")
-    }
+    return ChatMessage(
+        uuid = Uuid.parse(uuid),
+        user = UserModel(
+            Uuid.parse(user_uuid),
+            "",
+            "",
+            Instant.fromEpochSeconds(0),
+            Instant.fromEpochSeconds(0)
+        ),
+        sender = UserModel(
+            Uuid.parse(sender_uuid),
+            "",
+            "",
+            Instant.fromEpochSeconds(0),
+            Instant.fromEpochSeconds(0)
+        ),
+        type = MESSAGE_TYPE.TEXT,
+        content = content,
+        timestamp = timestamp,
+        audioFilePath = audio_file_path,
+        duration = duration,
+        action = action?.let { Json.decodeFromString(it) },
+        actionStatus = action_status?.let { ActionStatus.valueOf(it) }
+    )
 }
 
 

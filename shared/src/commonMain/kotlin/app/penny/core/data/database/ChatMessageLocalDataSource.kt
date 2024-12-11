@@ -15,4 +15,6 @@ interface ChatMessageLocalDataSource {
     fun updateByUuid(chatMessageEntity: ChatMessageEntity)
 
     fun deleteByUuid(uuid: String)
+
+
 }

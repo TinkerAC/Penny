@@ -1,27 +1,32 @@
-// file: shared/src/commonMain/kotlin/app/penny/feature/aiChat/model/ChatMessage.kt
+// file: shared/src/commonMain/kotlin/app/penny/core/domain/model/ChatMessage.kt
 package app.penny.core.domain.model
 
+import app.penny.core.data.model.MESSAGE_TYPE
+import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.enumerate.Action
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+enum class ActionStatus {
+    Pending,
+    Completed,
+    Cancelled
+}
 
 @OptIn(ExperimentalUuidApi::class)
-sealed class ChatMessage {
+data class ChatMessage(
+    val type: MESSAGE_TYPE,
+    val uuid: Uuid,
+    val user: UserModel,
+    val sender: UserModel,
+    val timestamp: Long,
+    val content: String? = null,
+    val action: Action? = null,
+    val audioFilePath: String? = null,
+    val duration: Long? = null,
+    val actionStatus: ActionStatus? = null
+){
 
-    abstract val uuid: Uuid
-    abstract val user: UserModel
-    abstract val sender: UserModel
-    abstract val timestamp: Long
-    abstract val action: Action?
 
-    data class TextMessage(
-        override val action: Action? = null,
-        override val uuid: Uuid,
-        override val user: UserModel,
-        override val sender: UserModel,
-        override val timestamp: Long,
-        val content: String,
-    ) : ChatMessage()
 
 }

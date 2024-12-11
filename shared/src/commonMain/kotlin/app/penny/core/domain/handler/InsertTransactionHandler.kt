@@ -1,5 +1,5 @@
 // file: shared/src/commonMain/kotlin/app/penny/core/domain/handler/InsertTransactionHandler.kt
-package app.penny.core.domain.hendler
+package app.penny.core.domain.handler
 
 import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
@@ -32,12 +32,14 @@ class InsertTransactionHandler(
             throw IllegalArgumentException("Invalid DTO type for InsertTransaction action")
         }
 
+
         // 确保 ledgerUuid 和 currencyCode 已设置
         dto.ledgerUuid =
             userDataRepository.getRecentLedgerUuidOrNull()?.toString() ?: dto.ledgerUuid
         dto.currencyCode =
             ledgerRepository.findByUuid(Uuid.parse(dto.ledgerUuid))?.currency?.currencyCode
                 ?: dto.currencyCode
+
 
         // 插入交易
         val transaction = withContext(Dispatchers.Default) {

@@ -36,7 +36,11 @@ class ChatRepositoryImpl(
         return chatMessageLocalDataSource.findByUserUuid(userUuid.toString()).map { it.toModel() }
     }
 
-    override suspend fun saveChatMessage(chatMessage: ChatMessage) {
+    override suspend fun insert(chatMessage: ChatMessage) {
         chatMessageLocalDataSource.insert(chatMessage.toEntity())
+    }
+
+    override suspend fun update(chatMessage: ChatMessage) {
+        chatMessageLocalDataSource.updateByUuid(chatMessage.toEntity())
     }
 }

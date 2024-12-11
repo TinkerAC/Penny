@@ -1,5 +1,5 @@
 // file: shared/src/commonMain/kotlin/app/penny/core/domain/handler/ActionHandler.kt
-package app.penny.core.domain.hendler
+package app.penny.core.domain.handler
 
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.enumerate.Action

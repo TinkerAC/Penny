@@ -1,15 +1,22 @@
-// file: shared/src/commonMain/kotlin/app/penny/feature/aiChat/AIChatIntent.kt
 package app.penny.feature.aiChat
 
 import app.penny.servershared.enumerate.Action
+import app.penny.core.domain.model.ChatMessage
+import app.penny.servershared.EditableField
 
-// 用户点击气泡确认后带回数据的Intent
 sealed class AIChatIntent {
     data class SendMessage(val message: String) : AIChatIntent()
     data class SendAudio(val audioFilePath: String, val duration: Long) : AIChatIntent()
     object LoadChatHistory : AIChatIntent()
     data class ConfirmPendingAction(
-        val action: Action,
-        val editedFields: Map<String, String?>
+        val message: ChatMessage,
+        val editableFields: Map<String,String?>
     ) : AIChatIntent()
+    data class DismissFunctionalMessage(
+        val message: ChatMessage
+    ) : AIChatIntent()
+
+
+
+
 }

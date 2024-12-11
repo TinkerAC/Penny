@@ -14,5 +14,8 @@ interface ChatRepository {
         userUuid: Uuid
     ):List<ChatMessage>
 
-    suspend fun saveChatMessage(chatMessage: ChatMessage)
+    suspend fun insert(chatMessage: ChatMessage)
+
+
+    suspend fun update(chatMessage: ChatMessage)
 }

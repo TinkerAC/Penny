@@ -556,10 +556,6 @@ enum class Category(
     }
 
     companion object {
-        // 获取所有顶级分类
-        fun getAllParentCategories(): List<Category> {
-            return entries.filter { it.parentCategory == null }
-        }
 
         // 获取特定父类的所有子类
         fun getSubCategories(parentCategory: Category): List<Category> {
@@ -600,7 +596,7 @@ enum class Category(
          * return all level 1 categories
          */
         fun getLevel1Categories(): List<Category> {
-            return getAllParentCategories()
+            return getIncomeCategories() + getExpenseCategories()
         }
 
         /**
@@ -666,7 +662,7 @@ and output should be:
     "amount": 50,
     "remark": "on groceries",
     "category": "EXPENSE_FOOD_GROCERIES",
-    "transactionType": "expense",
+    "transactionType": "EXPENSE",
     "transactionDate": "2024-11-15",
 }
 
@@ -680,7 +676,7 @@ and output should be:
     "amount": 100,
     "remark": "to fix my car",
     "category": "EXPENSE_TRANSPORTATION_VEHICLE_MAINTENANCE",
-    "transactionType": "expense",
+    "transactionType": "EXPENSE",
     "transactionDate": "2024-12-19",
 }
 
@@ -695,7 +691,7 @@ and the output should be:
     "amount": 500,
     "remark": "as a gift",
     "category": "INCOME_MISCELLANEOUS_GIFTS",
-    "transactionType": "income",
+    "transactionType": "INCOME",
     "transactionDate": "2024-12-25",
 }
 

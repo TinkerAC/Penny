@@ -241,12 +241,18 @@ class AiService(
         )
 
         println("prompt: $prompt")
+        val input = "text:$text \n userLocalDate:$userLocalDate"
+        println("input: $input")
 
         val chatCompletionRequest = ChatCompletionRequest(
             model = ModelId("gpt-4o-mini"),
             messages = listOf(
                 ChatMessage(role = ChatRole.System, content = prompt),
-                ChatMessage(role = ChatRole.User, content = text)
+                ChatMessage(
+                    role = ChatRole.User,
+                    content = input
+
+                )
             )
         )
 
