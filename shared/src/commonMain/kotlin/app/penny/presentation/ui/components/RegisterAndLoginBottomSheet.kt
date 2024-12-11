@@ -108,12 +108,13 @@ fun RegisterAndLoginBottomSheet(
                 }
             }
         )
+        // 注册模式下的确认密码输入
+        var confirmPassword by remember { mutableStateOf("") }
+        var confirmPasswordVisible by remember { mutableStateOf(false) }
         if (!uiState.value.modalInLoginMode) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 注册模式下的确认密码输入
-            var confirmPassword by remember { mutableStateOf("") }
-            var confirmPasswordVisible by remember { mutableStateOf(false) }
+
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
@@ -138,7 +139,11 @@ fun RegisterAndLoginBottomSheet(
         //render error message
         uiState.value.errorMessage?.let { errorMessage ->
             Spacer(modifier = Modifier.height(8.dp))
-            Text(errorMessage, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
+            Text(
+                errorMessage,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -149,7 +154,13 @@ fun RegisterAndLoginBottomSheet(
                 if (uiState.value.modalInLoginMode) {
                     viewModel.handleIntent(ProfileIntent.Login(uiState.value.email ?: "", password))
                 } else {
-                    viewModel.handleIntent(ProfileIntent.Register(uiState.value.email ?: "", password))
+                    viewModel.handleIntent(
+                        ProfileIntent.Register(
+                            uiState.value.email ?: "",
+                            password,
+                            confirmPassword = confirmPassword
+                        )
+                    )
                 }
             },
             modifier = Modifier.fillMaxWidth()

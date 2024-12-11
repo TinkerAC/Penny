@@ -57,6 +57,8 @@ class DashboardViewModel(
                 clearUserData()
 
 
+
+
             is DashboardIntent.DownloadUnsyncedLedgers ->
                 downloadUnsyncedLedgers()
 
@@ -107,6 +109,8 @@ class DashboardViewModel(
         screenModelScope.launch {
             userDataRepository.clearUserData()
             authRepository.clearToken()
+            userRepository.deleteAll()
+
         }
         Logger.d("cleared user data")
     }

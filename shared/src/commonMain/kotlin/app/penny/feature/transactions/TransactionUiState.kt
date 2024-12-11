@@ -1,9 +1,11 @@
 package app.penny.feature.transactions
 
 import app.penny.core.domain.model.TransactionModel
+import app.penny.core.domain.model.UserModel
 import kotlinx.datetime.LocalDate
 
 data class TransactionUiState(
+    val user:UserModel? = null,
     val isLoading: Boolean = false,
     val transactions: List<TransactionModel> = emptyList(),
     val errorMessage: String = "",

@@ -20,5 +20,12 @@ interface UserRepository {
 
     suspend fun findByEmailIsNull(): UserModel?
 
+    suspend fun deleteAll()
+
+
+    suspend fun findCurrentUser(): UserModel?
+
+
+    suspend fun upsertByUuid(userModel: UserModel)
 
 }

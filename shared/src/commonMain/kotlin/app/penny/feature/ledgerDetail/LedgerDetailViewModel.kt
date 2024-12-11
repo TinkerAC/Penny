@@ -2,8 +2,10 @@ package app.penny.feature.ledgerDetail
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.LedgerModel
+import app.penny.core.domain.usecase.DeleteLedgerUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,13 +16,12 @@ import kotlin.uuid.ExperimentalUuidApi
 class LedgerDetailViewModel(
 
     private val ledgerModel: LedgerModel,
-    private val ledgerRepository: LedgerRepository
+    private val deleteLedgerUseCase: DeleteLedgerUseCase
 
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(LedgerDetailUiState(ledger = ledgerModel))
     val uiState: StateFlow<LedgerDetailUiState> = _uiState.asStateFlow()
-
 
     fun handleIntent(intent: LedgerDetailIntent) {
         when (intent) {
@@ -37,7 +38,12 @@ class LedgerDetailViewModel(
     @OptIn(ExperimentalUuidApi::class)
     private fun deleteLedger() {
         screenModelScope.launch {
-            ledgerRepository.deleteByUuid(ledgerModel.uuid)
+            try {
+                deleteLedgerUseCase()
+            } catch (e: IllegalStateException) {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+                Logger.d { "Cannot delete the only ledger" }
+            }
         }
     }
 

@@ -15,7 +15,7 @@ interface UserLocalDataSource {
 
     fun findAll(): List<UserEntity>
 
-
+    fun deleteAll()
     fun findByEmail(email: String): UserEntity?
 
 

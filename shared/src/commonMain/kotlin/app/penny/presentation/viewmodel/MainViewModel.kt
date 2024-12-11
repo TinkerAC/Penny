@@ -24,9 +24,7 @@ class MainViewModel(
 
     init {
         screenModelScope.launch {
-
             fetchLedgers()
-
         }
     }
 

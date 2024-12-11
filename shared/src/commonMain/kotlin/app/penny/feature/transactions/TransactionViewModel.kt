@@ -1,6 +1,8 @@
 package app.penny.feature.transactions
 
-import app.penny.core.domain.usecase.GetAllTransactionsUseCase
+import app.penny.core.data.repository.TransactionRepository
+import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.data.repository.UserRepository
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -14,16 +16,21 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.uuid.ExperimentalUuidApi
 
 class TransactionViewModel(
-    private val getAllTransactionsUseCase: GetAllTransactionsUseCase
+    private val transactionRepository: TransactionRepository,
+    private val userRepository: UserRepository
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(TransactionUiState())
     val uiState: StateFlow<TransactionUiState> = _uiState.asStateFlow()
 
     init {
-        fetchTransactions()//TODO: replace with partial fetch
-        //select the "Day" group by option by default
-        handleIntent(TransactionIntent.SelectGroupByOption(GroupBy.Time.Day))
+        screenModelScope.launch {
+            _uiState.value = _uiState.value.copy(user = userRepository.findCurrentUser())
+
+            fetchTransactions()
+            //select the "Day" group by option by default
+            handleIntent(TransactionIntent.SelectGroupByOption(GroupBy.Time.Day))
+        }
 
     }
 
@@ -92,10 +99,11 @@ class TransactionViewModel(
         _uiState.value = _uiState.value.copy(groupedTransactions = groupedTransactions)
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     private fun fetchTransactions() {
         screenModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            val transactions = getAllTransactionsUseCase()
+            val transactions = transactionRepository.findByUserUuid(_uiState.value.user!!.uuid)
             _uiState.value = _uiState.value.copy(transactions = transactions, isLoading = false)
             // 初始分组
             _uiState.value.selectedGroupByOption?.let { doGroupBy(it) }

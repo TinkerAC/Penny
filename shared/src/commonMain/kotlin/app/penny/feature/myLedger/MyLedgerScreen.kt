@@ -46,7 +46,7 @@ class MyLedgerScreen : Screen {
                     Button(
                         onClick = {
                             rootNavigator.push(NewLedgerScreen(
-                                updateMyLedgerCallBack = {
+                                callBack = {
                                     viewModel.handleIntent(MyLedgerIntent.RefreshLedgers)
                                 }
                             ))

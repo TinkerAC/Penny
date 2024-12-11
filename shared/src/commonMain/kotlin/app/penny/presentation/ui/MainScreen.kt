@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.feature.aiChat.AIChatScreen
+import app.penny.feature.onBoarding.OnboardingNavigatorScreen
 import app.penny.feature.transactions.TransactionScreen
 import app.penny.presentation.ui.screens.BottomNavItem
 import app.penny.presentation.viewmodel.MainViewModel
@@ -30,6 +31,7 @@ class MainScreen : Screen {
         val uiState by viewModel.uiState.collectAsState()
 
         val rootNavigator = LocalNavigator.currentOrThrow
+
 
         Navigator(
             screen = remember { BottomNavItem.Dashboard.screen },
@@ -80,7 +82,6 @@ class MainScreen : Screen {
     }
 
 }
-
 
 
 @Composable

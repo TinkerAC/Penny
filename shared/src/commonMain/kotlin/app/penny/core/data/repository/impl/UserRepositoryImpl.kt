@@ -1,6 +1,7 @@
 package app.penny.core.data.repository.impl
 
 import app.penny.core.data.database.UserLocalDataSource
+import app.penny.core.data.kvstore.UserDataManager
 import app.penny.core.data.model.toEntity
 import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.UserRepository
@@ -11,7 +12,8 @@ import kotlin.uuid.Uuid
 
 
 class UserRepositoryImpl(
-    private val userLocalDataSource: UserLocalDataSource
+    private val userLocalDataSource: UserLocalDataSource,
+    private val userDataManager: UserDataManager
 ) : UserRepository {
 
 
@@ -48,5 +50,19 @@ class UserRepositoryImpl(
 
     override suspend fun findByEmailIsNull(): UserModel? {
         return userLocalDataSource.findByEmailIsNull().firstOrNull()?.toModel()
+    }
+
+    override suspend fun deleteAll() {
+        userLocalDataSource.deleteAll()
+    }
+
+
+    override suspend fun findCurrentUser(): UserModel? {
+        val activeUserUuid = userDataManager.getStringOrNull(UserDataManager.USER_UUID)
+        return activeUserUuid?.let { userLocalDataSource.findByUuid(it)?.toModel() }
+    }
+
+    override suspend fun upsertByUuid(userModel: UserModel) {
+        userLocalDataSource.upsertByUuid(userModel.toEntity())
     }
 }

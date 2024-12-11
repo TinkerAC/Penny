@@ -39,12 +39,12 @@ fun ApplicationInitializer.initSession(
     val tokenManager: TokenManager by inject()
 
     CoroutineScope(Dispatchers.Default).launch {
-
         val isFirstTime = userDataRepository.getIsFirstTime()
-//        if (isFirstTime) {
-//            Logger.i("First time launch, skip session initialization")
-//            return@launch // 如果是第一次启动，跳过初始化
-//        } //TODO: 实现此逻辑
+
+        if (isFirstTime) {
+            Logger.i("First time launch, skip session initialization")
+            return@launch // 如果是第一次启动，跳过初始化 session
+        } //TODO: 实现此逻辑
         Logger.i { "Initializing session..." }
         try {
             val accessToken = tokenManager.getAccessToken()
@@ -74,21 +74,7 @@ fun ApplicationInitializer.initUser(): ApplicationInitializer {
 }
 
 
-@OptIn(ExperimentalUuidApi::class)
-fun ApplicationInitializer.initLedger() {
-    val userDataRepository: UserDataRepository by inject()
-    val ledgerRepository: LedgerRepository by inject()
 
-    CoroutineScope(Dispatchers.Default).launch {
-        // 初始化账本
-        val userUuid = userDataRepository.getUserUuid()
-        val isFirstTime = userDataRepository.getIsFirstTime()
-
-
-    }
-
-
-}
 
 
 // initialize: 链式调用 initKoin 和 initSession

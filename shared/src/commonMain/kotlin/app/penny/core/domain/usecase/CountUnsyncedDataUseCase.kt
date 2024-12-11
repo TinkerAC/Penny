@@ -21,11 +21,6 @@ class CountUnsyncedDataUseCase(
 
         val lastSyncedAt: Instant? = userDataRepository.getLastSyncedAt()
 
-        if (userUuid == null) {
-            Logger.e { "User UUID is null" }
-            return CountUnsyncedDataResult(0, 0)
-        }
-
         val unsyncedLedgerCount = ledgerRepository.countByUserUuidAndUpdatedAtAfter(
             userUuid = userUuid,
             timeStamp = lastSyncedAt ?: Instant.DISTANT_PAST

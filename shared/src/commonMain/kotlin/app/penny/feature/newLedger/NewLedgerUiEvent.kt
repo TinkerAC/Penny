@@ -1,6 +1,9 @@
 package app.penny.feature.newLedger
 
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
 sealed class NewLedgerUiEvent {
-    data class ShowSnackbar(val message: String) : NewLedgerUiEvent()
-    data object NavigateBack : NewLedgerUiEvent()
+    data class ShowSnackBar(val message: String) : NewLedgerUiEvent()
+    data class OnFinishInsert @OptIn(ExperimentalUuidApi::class) constructor(val newLedgerUuid:Uuid) : NewLedgerUiEvent()
 }

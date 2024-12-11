@@ -5,6 +5,7 @@ import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.network.clients.UserApiClient
 import app.penny.servershared.dto.responseDto.LoginResponse
+import app.penny.servershared.dto.responseDto.RegisterResponse
 import co.touchlab.kermit.Logger
 
 class AuthRepositoryImpl(
@@ -23,6 +24,12 @@ class AuthRepositoryImpl(
             Logger.e { "Login failed: ${response.message}" }
         }
         return response
+    }
+
+    override suspend fun register(email: String, password: String, uuid: String?): RegisterResponse {
+        val response = userApiClient.register(uuid = uuid, email = email, password = password)
+        return response
+
     }
 
 

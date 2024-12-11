@@ -16,7 +16,7 @@ import kotlin.uuid.Uuid
 
 class LedgerRepositoryImpl(
     private val apiClient: ApiClient,
-    private val ledgerLocalDataSource: LedgerLocalDataSource
+    private val ledgerLocalDataSource: LedgerLocalDataSource,
 ) : LedgerRepository {
 
     override suspend fun insert(ledgerModel: LedgerModel) {
@@ -40,6 +40,7 @@ class LedgerRepositoryImpl(
 
     override suspend fun deleteByUuid(ledgerUuid: Uuid) {
         ledgerLocalDataSource.deleteByUuid(ledgerUuid.toString())
+
     }
 
 

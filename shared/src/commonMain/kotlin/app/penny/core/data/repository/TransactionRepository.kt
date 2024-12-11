@@ -49,4 +49,7 @@ interface TransactionRepository {
     ): DownloadTransactionResponse
 
 
+    suspend fun findByUserUuid(userUuid: Uuid): List<TransactionModel>
+
+
 }

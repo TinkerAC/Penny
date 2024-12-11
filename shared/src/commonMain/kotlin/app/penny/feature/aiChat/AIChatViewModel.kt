@@ -172,7 +172,6 @@ class AIChatViewModel(
                 val failureMessage = "执行操作失败: ${action.actionName}"
                 val failureChatMessage = message.copy(
                     content = failureMessage,
-                    actionStatus = ActionStatus.Cancelled
                 )
                 updateMessage(failureChatMessage)
             }

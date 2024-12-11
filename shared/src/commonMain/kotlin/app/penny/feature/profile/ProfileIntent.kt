@@ -4,7 +4,9 @@ sealed class ProfileIntent {
     object TryLogin : ProfileIntent()
     object DismissLoginModal : ProfileIntent()
     class Login(val email: String, val password: String) : ProfileIntent()
-    class Register(val email: String, val password: String) : ProfileIntent()
+    class Register(val email: String, val password: String,
+        val confirmPassword: String
+        ) : ProfileIntent()
 
     class UnfocusEmail(val email: String?) : ProfileIntent()
 

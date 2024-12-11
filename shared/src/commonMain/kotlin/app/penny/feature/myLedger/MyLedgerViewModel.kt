@@ -45,11 +45,5 @@ class MyLedgerViewModel(
         }
     }
 
-    fun deleteLedger(ledgerModel: LedgerModel) {
-        screenModelScope.launch {
-            ledgerRepository.deleteByUuid(ledgerModel.uuid)
-        }
-    }
-
 
 }

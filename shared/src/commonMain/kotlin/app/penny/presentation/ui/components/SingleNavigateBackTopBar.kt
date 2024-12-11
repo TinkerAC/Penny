@@ -13,7 +13,9 @@ fun SingleNavigateBackTopBar(
     onNavigateBack: () -> Unit
 ) {
     TopAppBar(
-        title = { Text(title) },
+        title = {
+            Text(title)
+                },
         navigationIcon = {
             IconButton(onClick = onNavigateBack) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")

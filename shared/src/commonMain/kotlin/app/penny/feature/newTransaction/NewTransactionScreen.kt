@@ -1,15 +1,13 @@
 // file: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/newTransaction/NewTransactionScreen.kt
 package app.penny.feature.newTransaction
-
+import LedgerDropdownSelector
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.enum.Category
 import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.model.LedgerModel
 import app.penny.presentation.ui.components.CategorySelector
 import app.penny.presentation.ui.components.numPad.NumPad
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
@@ -38,8 +37,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
 import co.touchlab.kermit.Logger
+import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalVoyagerApi::class)
+
+@OptIn(ExperimentalUuidApi::class, ExperimentalVoyagerApi::class)
 class NewTransactionScreen : Screen, ScreenTransition {
 
     override val key: ScreenKey = uniqueScreenKey
@@ -118,48 +119,14 @@ class NewTransactionScreen : Screen, ScreenTransition {
                         Column(
                             modifier = Modifier.weight(2f)
                         ) {
-                            Button(
-                                onClick = {
+                            LedgerDropdownSelector(
+                                currentLedger = uiState.selectedLedger ?: LedgerModel(),
+                                allLedgers = uiState.ledgers,
+                                onLedgerSelected = { ledger ->
                                     newTransactionViewModel.handleIntent(
-                                        NewTransactionIntent.ToggleLedgerDropdown
+                                        NewTransactionIntent.SelectLedger(ledger)
                                     )
-                                }
-                            ) {
-                                Text(uiState.selectedLedger?.name + " ▼")
-                            }
-
-
-                            DropdownMenu(
-                                expanded = uiState.isLedgerDropdownExpanded,
-                                onDismissRequest = {
-                                    newTransactionViewModel.handleIntent(
-                                        NewTransactionIntent.ToggleLedgerDropdown
-                                    )
-                                }
-                            ) {
-                                uiState.ledgers.forEach { ledger ->
-                                    Column(
-                                        modifier = Modifier.clickable {
-                                            newTransactionViewModel.handleIntent(
-                                                NewTransactionIntent.SelectLedger(ledger)
-                                            )
-                                            //fold the dropdown
-                                            newTransactionViewModel.handleIntent(
-                                                NewTransactionIntent.ToggleLedgerDropdown
-                                            )
-
-                                        }
-                                    ) {
-                                        Text(
-                                            ledger.name,
-
-                                            )
-                                    }
-
-                                }
-                            }
-
-
+                                })
                         }
 
 

@@ -27,7 +27,6 @@ import app.penny.core.data.repository.impl.UserRepositoryImpl
 import app.penny.core.domain.usecase.CountUnsyncedDataUseCase
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
-import app.penny.core.domain.usecase.GetAllTransactionsUseCase
 import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.LoginUseCase
@@ -113,7 +112,7 @@ fun commonModule() = module {
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
 
-    single<UserRepository> { UserRepositoryImpl(get()) }
+    single<UserRepository> { UserRepositoryImpl(get(),get()) }
 
     single<ChatRepository> { ChatRepositoryImpl(get(),get(),get()) }
 
@@ -143,7 +142,6 @@ fun commonModule() = module {
     factory { GetAllLedgerUseCase(get()) }
     factory { InsertRandomTransactionUseCase(get(), get()) }
     factory { InitLocalUserUseCase(get(), get()) }
-    factory { GetAllTransactionsUseCase(get()) }
     factory { SearchTransactionsUseCase(get()) }
     factory { LoginUseCase(get(),get(),get())}
     factory { UploadUnsyncedLedgerUseCase(get(), get()) }
@@ -175,7 +173,7 @@ fun commonModule() = module {
 
 
     factory { AnalyticViewModel(get(), get(), get()) }
-    factory { TransactionViewModel(get()) }
+    factory { TransactionViewModel(get(),get()) }
     factory { MainViewModel(get(), get()) }
     factory { MyLedgerViewModel(get(), get()) }
     factory { NewLedgerViewModel(get(), get()) }

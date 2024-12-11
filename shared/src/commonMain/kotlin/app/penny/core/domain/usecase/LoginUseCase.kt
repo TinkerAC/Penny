@@ -4,8 +4,10 @@ import app.penny.core.data.model.toUserModel
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
+import app.penny.core.domain.exception.LoginException
 import app.penny.servershared.dto.responseDto.LoginResponse
 import co.touchlab.kermit.Logger
+import kotlinx.io.IOException
 import kotlin.uuid.ExperimentalUuidApi
 
 class LoginUseCase(
@@ -15,62 +17,66 @@ class LoginUseCase(
 ) {
     @OptIn(ExperimentalUuidApi::class)
     suspend operator fun invoke(
-        email: String, password: String
+        email: String,
+        password: String
     ): LoginResponse {
 
-        //check if there is a local user(no email present)
 
-        val localUser = userRepository.findByEmailIsNull()
-        Logger.d("Local User: $localUser")
-        //if there is a local user, and the email is not registered, bind the email to the local user
+        try {
+            // Check if there is a local user (no email present)
+            val localUser = userRepository.findByEmailIsNull()
+            Logger.d("Local User: $localUser")
 
+            // Attempt login
+            val response = authRepository.login(email, password)
 
-        val response = authRepository.login(email, password)
-
-        if (response.success) {
-            val accessToken = response.accessToken!!
-            val refreshToken = response.refreshToken!!
-            Logger.d(
-                response.toString()
-            )
-            authRepository.saveAccessToken(accessToken)
-            authRepository.saveRefreshToken(refreshToken)
-
-            //create local user
-
-            try {
-
-                val userDto = response.userDto!!
-                val userModel = userDto.toUserModel()
-
-                val user = userRepository.findByEmail(userModel.email!!)
-
-                if (user != null && user.email == user.email && user.uuid == userModel.uuid) { // assume that the user is the same
-                    Logger.d("User already exists,will not create new user ,just setting as active")
-                } else {
-                    userRepository.insert(userModel)
-                }
-
-
-                //set kv data for user uuid
-
-                userDataRepository.setUserUuid(userModel.uuid.toString())
-
-                userDataRepository.setUserEmail(userModel.email)
-
-
-            } catch (e: Exception) {
-                Logger.e("Error creating User From Login Response")
-                throw e
+            // Handle successful response
+            if (response.success) {
+                handleSuccessfulLogin(response)
+            } else {
+                throw LoginException.InvalidCredentialsException
             }
 
-
+            return response
+        } catch (e: IOException) {
+            // Handle network-related exceptions
+            Logger.e("Network error during login", e)
+            throw LoginException.NetworkException
+        } catch (e: LoginException) {
+            // Rethrow known login exceptions
+            throw e
+        } catch (e: Exception) {
+            // Handle unknown errors
+            Logger.e("Unexpected error during login", e)
+            throw LoginException.UnknownException(e)
         }
-
-
-
-
-        return response
     }
 
+    @OptIn(ExperimentalUuidApi::class)
+    private suspend fun handleSuccessfulLogin(response: LoginResponse) {
+        val accessToken = response.accessToken!!
+        val refreshToken = response.refreshToken!!
+        Logger.d(response.toString())
+
+        // Save tokens
+        authRepository.saveAccessToken(accessToken)
+        authRepository.saveRefreshToken(refreshToken)
+
+        // Create or update local user
+        try {
+            val userDto = response.userDto!!
+            val userModel = userDto.toUserModel()
+
+            // upsert user
+            userRepository.upsertByUuid(userModel)
+
+            // Set user data
+            userDataRepository.setUserUuid(userModel.uuid.toString())
+            userModel.email?.let { userDataRepository.setUserEmail(it) }
+
+        } catch (e: Exception) {
+            Logger.e("Error processing user data from login response", e)
+            throw LoginException.ServerException
+        }
+    }
 }

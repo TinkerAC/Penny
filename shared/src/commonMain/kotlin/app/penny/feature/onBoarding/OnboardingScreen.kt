@@ -1,44 +1,89 @@
+// file: shared/src/commonMain/kotlin/app/penny/feature/onBoarding/OnboardingNavigatorScreen.kt
 package app.penny.feature.onBoarding
 
 import androidx.compose.runtime.*
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import app.penny.presentation.ui.MainScreen
+import cafe.adriel.voyager.navigator.*
 import cafe.adriel.voyager.navigator.currentOrThrow
+import app.penny.feature.newLedger.NewLedgerScreen
+import app.penny.presentation.ui.MainScreen
 
-class OnboardingScreen : Screen {
+/**
+ * OnboardingNavigatorScreen负责多步Onboarding流程的导航。
+ * 使用Voyager的Navigator包裹各个Onboarding步骤Screen。
+ */
+class OnboardingNavigatorScreen : Screen {
     @Composable
     override fun Content() {
         val rootNavigator = LocalNavigator.currentOrThrow
-        var currentStep by remember { mutableStateOf(0) }
-        when (currentStep) {
-            0 -> OnboardingScreen0(
-                currentPage = 0,
-                totalPages = 4,
-                onNext = { currentStep++ })
+        // 使用子Navigator来管理Onboarding步骤
+        val onboardingScreens = listOf(
+            OnboardingStep0(),
+            OnboardingStep1(),
+            OnboardingStep2(),
+            OnboardingStep3Login(),
+            OnboardingStep4InitLedger()
+        )
 
-            1 -> OnboardingScreen1(
-                currentPage = 1,
-                totalPages = 4,
-                onNext = { currentStep++ })
+        // 初始化子Navigator
+        CurrentOnboardingFlow(onboardingScreens = onboardingScreens, onFinish = {
+            // 当用户完成Onboarding后，导航至主界面
+            rootNavigator.replaceAll(MainScreen())
+        })
+    }
+}
 
-            2 -> OnboardingScreen2(
-                currentPage = 2,
-                totalPages = 4,
-                onNext = { currentStep++ })
+@Composable
+fun CurrentOnboardingFlow(
+    onboardingScreens: List<Screen>,
+    onFinish: () -> Unit
+) {
+    val rootNavigator = LocalNavigator.currentOrThrow
 
-            3 -> OnboardingScreen3Login(
-                currentPage = 3,
-                totalPages = 4,
-                onNext = {
-                    rootNavigator.push(MainScreen())
-                })
+    // 使用一个本地的Navigator来承载Onboarding多个步骤
+    Navigator(onboardingScreens.first()) { navigator ->
+        val currentIndex = onboardingScreens.indexOf(navigator.lastItem)
+        val isLast = currentIndex == onboardingScreens.lastIndex
 
-            else -> rootNavigator.replaceAll(
-                MainScreen()
+        // 包装当前Screen，并为其提供「上一步」和「下一步」的回调
+        val currentScreen = navigator.lastItem
+        (currentScreen as? OnboardingStepScreen)?.SetNavigationActions(
+            onPrevious = {
+                if (currentIndex > 0) {
+                    navigator.pop()
+                }
+            },
+            onNext = {
+                if (isLast) {
+                    // 完成Onboarding流程
+                    onFinish()
+                } else {
+                    // 导航至下一个步骤
+                    navigator.push(onboardingScreens[currentIndex + 1])
+                }
+            },
+            onFinish = onFinish
+        )
 
-            )
+        // 显示当前的Onboarding步骤Screen内容
+        currentScreen.Content()
+    }
+}
 
-        }
+
+// 定义一个接口，使Onboarding步骤可以接收「上一步」「下一步」回调
+interface OnboardingStepScreen : Screen {
+    var onPrevious: (() -> Unit)?
+    var onNext: (() -> Unit)?
+    var onFinish: (() -> Unit)?
+
+    fun SetNavigationActions(
+        onPrevious: () -> Unit,
+        onNext: () -> Unit,
+        onFinish: () -> Unit
+    ) {
+        this.onPrevious = onPrevious
+        this.onNext = onNext
+        this.onFinish = onFinish
     }
 }

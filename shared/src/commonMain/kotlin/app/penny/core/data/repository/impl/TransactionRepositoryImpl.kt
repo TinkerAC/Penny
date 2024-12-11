@@ -125,4 +125,10 @@ class TransactionRepositoryImpl(
             timestamp = timeStamp.epochSeconds
         )
     }
+
+
+    override suspend fun findByUserUuid(userUuid: Uuid): List<TransactionModel> {
+        return transactionLocalDataSource.findByUserUuid(userUuid.toString())
+            .map { it.toModel() }
+    }
 }

@@ -15,6 +15,8 @@ class InitLocalUserUseCase(
     @OptIn(ExperimentalUuidApi::class)
     suspend operator fun invoke() {
 
+        userDataRepository.setIsFirstTime(false)
+
         if (userRepository.findByEmailIsNull() != null) {
             Logger.d("Local User initialize skipped because local user already exists")
             return
@@ -37,6 +39,7 @@ class InitLocalUserUseCase(
 
 
         userDataRepository.setUserUuid(userUuid.toString())
+        userDataRepository.setIsFirstTime(false)
 
         Logger.d("Local User initialized")
 

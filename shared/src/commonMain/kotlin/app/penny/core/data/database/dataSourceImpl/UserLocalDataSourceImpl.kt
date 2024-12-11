@@ -17,7 +17,7 @@ class UserLocalDataSourceImpl(
     }
 
     override fun upsertByUuid(userEntity: UserEntity) {
-        userQueries.insert(
+        userQueries.upsertByUuid(
             uuid = userEntity.uuid,
             username = userEntity.username,
             email = userEntity.email
@@ -42,5 +42,9 @@ class UserLocalDataSourceImpl(
 
     override fun findByEmailIsNull(): List<UserEntity> {
         return userQueries.findByEmailIsNull().executeAsList()
+    }
+
+    override fun deleteAll() {
+        userQueries.deleteAll()
     }
 }

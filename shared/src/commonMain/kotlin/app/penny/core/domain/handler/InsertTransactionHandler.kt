@@ -38,15 +38,19 @@ class InsertTransactionHandler(
             userDataRepository.getRecentLedgerUuidOrNull()?.toString() ?: dto.ledgerUuid
         dto.currencyCode =
             ledgerRepository.findByUuid(Uuid.parse(dto.ledgerUuid))?.currency?.currencyCode
-                ?: dto.currencyCode
+                ?: throw IllegalArgumentException("Currency code not found for ledger")
 
 
         // 插入交易
-        val transaction = withContext(Dispatchers.Default) {
-            transactionRepository.insert(dto.toModel())
-        }
+        try {
+            val transaction = withContext(Dispatchers.Default) {
+                transactionRepository.insert(dto.toModel())
+            }
+            Logger.i("Successfully inserted transaction: $transaction")
 
-        Logger.i("Successfully inserted transaction: $transaction")
-        // 可在此处添加后续逻辑，如通知聊天系统
+        } catch (e: Exception) {
+            Logger.e("Failed to insert transaction: $dto", e)
+            throw e
+        }
     }
 }

@@ -1,3 +1,4 @@
+// file: shared/src/commonMain/kotlin/app/penny/feature/onBoarding/OnboardingPages.kt
 package app.penny.feature.onBoarding
 
 import androidx.compose.foundation.Image
@@ -6,40 +7,31 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.font.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.usecase.InitLocalUserUseCase
+import app.penny.di.getKoinInstance
 import app.penny.presentation.ui.components.PennyLogo
 import app.penny.presentation.ui.components.RegisterAndLoginModal
 import app.penny.presentation.ui.theme.spacing
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.Font
-import org.jetbrains.compose.resources.painterResource
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import penny.shared.generated.resources.LeckerliOne_Regular
-import penny.shared.generated.resources.Res
-
 
 @Composable
 fun OnboardingPage(
-    illustration: Painter,
+    illustration: Painter?,
     title: String,
     content: String,
     currentPage: Int,
     totalPages: Int,
-    onNext: () -> Unit
+    onNext: () -> Unit,
+    onPrevious: (() -> Unit)? = null
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -58,15 +50,17 @@ fun OnboardingPage(
                 PennyLogo()
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
 
-                // Illustration
-                Image(
-                    painter = illustration,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp)
-                )
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
+                // Illustration (可选)
+                illustration?.let {
+                    Image(
+                        painter = it,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp)
+                    )
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
+                }
 
                 // Title
                 Text(
@@ -120,18 +114,37 @@ fun OnboardingPage(
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
-                // Next Button
-                Button(
-                    onClick = onNext,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(horizontal = MaterialTheme.spacing.medium)
+                // Navigation Buttons (上一步/下一步)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = if (currentPage == totalPages - 1) "Start" else "Next",
-                        style = typography.titleMedium
-                    )
+                    OutlinedButton(
+                        onClick = { onPrevious?.invoke() },
+                        enabled = onPrevious != null,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp)
+                            .padding(end = 8.dp)
+                    ) {
+                        Text(
+                            text = "上一步",
+                            style = typography.titleMedium
+                        )
+                    }
+
+                    Button(
+                        onClick = onNext,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp)
+                            .padding(start = 8.dp)
+                    ) {
+                        Text(
+                            text = if (currentPage == totalPages - 1) "完成" else "下一步",
+                            style = typography.titleMedium
+                        )
+                    }
                 }
             }
         }
@@ -141,21 +154,16 @@ fun OnboardingPage(
 
 @Composable
 fun OnboardingLoginPage(
-    illustration: Painter,
+    illustration: Painter?,
     title: String,
     content: String,
     currentPage: Int,
     totalPages: Int,
-
     onNext: () -> Unit
 ) {
     var showLoginModal by remember { mutableStateOf(false) }
-    var useLocalAccount by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    val initLocalUserUseCase: InitLocalUserUseCase = object : KoinComponent {
-        val initLocalUserUseCase: InitLocalUserUseCase by inject()
-    }.initLocalUserUseCase
-
+    val initLocalUserUseCase = getKoinInstance<InitLocalUserUseCase>()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -174,15 +182,17 @@ fun OnboardingLoginPage(
                 PennyLogo()
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
 
-                // Illustration
-                Image(
-                    painter = illustration,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp)
-                )
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
+                // Illustration (可选)
+                illustration?.let {
+                    Image(
+                        painter = it,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp)
+                    )
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
+                }
 
                 // Title
                 Text(
@@ -236,45 +246,42 @@ fun OnboardingLoginPage(
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
-                // Login / Register Buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                // 登录 / 注册 按钮
+                Button(
+                    onClick = {
+
+                        showLoginModal = true
+                              },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .padding(horizontal = MaterialTheme.spacing.medium)
                 ) {
-                    // Login / Register Button (Modal)
-                    Button(
-                        onClick = { showLoginModal = true },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(56.dp)
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        Text(
-                            text = "登录 / 注册",
-                            style = typography.titleMedium
-                        )
-                    }
+                    Text(
+                        text = "登录 / 注册",
+                        style = typography.titleMedium
+                    )
+                }
 
-                    // Use Local Account Button
-                    OutlinedButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                initLocalUserUseCase()
-                            }
-                            onNext()
-                        },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(56.dp)
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        Text(
-                            text = "跳过",
-                            style = typography.titleMedium
-                        )
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
-
-                    }
+                // 跳过按钮
+                OutlinedButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            initLocalUserUseCase()
+                        }
+                        onNext()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .padding(horizontal = MaterialTheme.spacing.medium)
+                ) {
+                    Text(
+                        text = "跳过",
+                        style = typography.titleMedium
+                    )
                 }
             }
         }
@@ -283,7 +290,9 @@ fun OnboardingLoginPage(
         if (showLoginModal) {
             RegisterAndLoginModal(
                 onDismiss = { showLoginModal = false },
-                onLoginSuccess = { onNext() }
+                onLoginSuccess = {
+                    onNext()
+                }
             )
         }
     }

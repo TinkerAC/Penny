@@ -21,43 +21,59 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import app.penny.core.domain.exception.LoginException
+import app.penny.core.domain.exception.RegisterException
+import app.penny.core.domain.usecase.LoginUseCase
+import app.penny.core.domain.usecase.RegisterUseCase
+import app.penny.di.getKoinInstance
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterAndLoginModal(
-    onDismiss: () -> Unit, onLoginSuccess: () -> Unit
+    onDismiss: () -> Unit,
+    onLoginSuccess: () -> Unit,
 ) {
     var isLoginMode by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
+    val loginUseCase: LoginUseCase = getKoinInstance()
+    val registerUseCase: RegisterUseCase = getKoinInstance()
+    var errorMessage by remember { mutableStateOf("") }
 
-    // 模态窗口内容
+    // Modal content
     Surface(
-        modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f))
-            .clickable { onDismiss() }, color = Color.Transparent
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f))
+            .clickable { onDismiss() },
+        color = Color.Transparent
     ) {
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
+        Box(contentAlignment = Alignment.Center) {
             Surface(
-                modifier = Modifier.fillMaxWidth(0.9f).animateContentSize(),
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .animateContentSize(),
                 shape = MaterialTheme.shapes.medium,
                 color = MaterialTheme.colorScheme.background
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp).clickable(enabled = false) {}, // 禁止点击关闭
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .clickable(enabled = false) {},
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // 圆角滑块切换登录或注册
-                    ToggleButton(isLoginMode = isLoginMode,
-                        onToggle = { isLoginMode = !isLoginMode })
+                    // Toggle between Login and Register
+                    ToggleButton(isLoginMode = isLoginMode) { isLoginMode = !isLoginMode }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Circular Avatar
                     Box(
-                        modifier = Modifier.size(80.dp).clip(CircleShape)
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.primary),
                         contentAlignment = Alignment.Center
                     ) {
@@ -86,79 +102,109 @@ fun RegisterAndLoginModal(
                     // Password TextField
                     var password by remember { mutableStateOf("") }
                     var passwordVisible by remember { mutableStateOf(false) }
-                    OutlinedTextField(value = password,
+                    OutlinedTextField(
+                        value = password,
                         onValueChange = { password = it },
                         label = { Text("密码") },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            val image = if (passwordVisible) Icons.Default.Visibility
-                            else Icons.Default.VisibilityOff
-
-                            val description = if (passwordVisible) "隐藏密码" else "显示密码"
-
+                            val image =
+                                if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(imageVector = image, contentDescription = description)
+                                Icon(imageVector = image, contentDescription = null)
                             }
-                        })
+                        }
+                    )
 
+                    // Confirm Password TextField in Register mode
+
+                    var confirmPassword by remember { mutableStateOf("") }
+                    var confirmPasswordVisible by remember { mutableStateOf(false) }
                     if (!isLoginMode) {
                         Spacer(modifier = Modifier.height(16.dp))
-
-                        // Confirm Password TextField (注册模式下)
-                        var confirmPassword by remember { mutableStateOf("") }
-                        var confirmPasswordVisible by remember { mutableStateOf(false) }
-                        OutlinedTextField(value = confirmPassword,
+                        OutlinedTextField(
+                            value = confirmPassword,
                             onValueChange = { confirmPassword = it },
                             label = { Text("确认密码") },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
-                                val image = if (confirmPasswordVisible) Icons.Default.Visibility
-                                else Icons.Default.VisibilityOff
-
-                                val description =
-                                    if (confirmPasswordVisible) "隐藏密码" else "显示密码"
-
-                                IconButton(onClick = {
-                                    confirmPasswordVisible = !confirmPasswordVisible
-                                }) {
-                                    Icon(imageVector = image, contentDescription = description)
-                                }
-                            })
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    // 登录或注册按钮
-                    Button(
-                        onClick = {
-                            // 处理登录或注册逻辑
-                            if (isLoginMode) {
-                                // 登录逻辑
-                                scope.launch {
-                                    // 模拟登录成功
-                                    onLoginSuccess()
-                                    onDismiss()
-                                }
-                            } else {
-                                // 注册逻辑
-                                scope.launch {
-                                    // 模拟注册成功
-                                    onLoginSuccess()
-                                    onDismiss()
+                                val image =
+                                    if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                                    Icon(imageVector = image, contentDescription = null)
                                 }
                             }
-                        }, modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // render error message if any
+                    if (errorMessage.isNotEmpty()) {
+
+                        Text(
+                            text = errorMessage,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+
+                    }
+
+                    // Login/Register Button
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                if (isLoginMode) {
+                                    // Login logic
+                                    try {
+                                        loginUseCase(email, password)
+                                        onLoginSuccess()
+                                    } catch (e: LoginException) {
+                                        errorMessage = when (e) {
+                                            is LoginException.InvalidCredentialsException -> "Invalid email or password"
+                                            is LoginException.NetworkException -> "Network connection failed"
+                                            is LoginException.ServerException -> "Server encountered an error"
+                                            is LoginException.UnknownException -> "Unknown error occurred"
+                                        }
+                                    }
+                                } else {
+                                    // Register logic
+                                    try {
+                                        registerUseCase(email, password, confirmPassword, null)
+                                        errorMessage = "Register success, please login"
+                                        // toggle to login mode after successful registration
+                                        isLoginMode = true
+                                    } catch (e: RegisterException) {
+                                        errorMessage = when (e) {
+                                            is RegisterException.EmailAlreadyRegisteredException -> "This email has been registered, please login"
+                                            is RegisterException.NetworkException -> "Network error, please try again later"
+                                            is RegisterException.ServerException -> "Server error, please try again later"
+                                            is RegisterException.UnknownException -> "Unknown error occurred"
+                                            is RegisterException.PasswordNotMatchException -> "Password not match"
+                                        }
+                                    }
+
+
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(if (isLoginMode) "登录" else "注册")
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // 关闭按钮
+                    // Close Button
                     TextButton(onClick = onDismiss) {
                         Text("关闭")
                     }
