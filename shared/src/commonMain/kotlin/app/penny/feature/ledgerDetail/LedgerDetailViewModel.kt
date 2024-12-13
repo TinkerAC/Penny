@@ -14,10 +14,8 @@ import kotlin.uuid.ExperimentalUuidApi
 
 
 class LedgerDetailViewModel(
-
     private val ledgerModel: LedgerModel,
     private val deleteLedgerUseCase: DeleteLedgerUseCase
-
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(LedgerDetailUiState(ledger = ledgerModel))

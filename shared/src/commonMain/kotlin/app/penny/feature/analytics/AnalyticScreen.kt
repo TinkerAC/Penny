@@ -10,9 +10,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import app.penny.presentation.ui.components.LedgerSelectionDialog
 import app.penny.presentation.ui.components.LoadingScreen
-import app.penny.feature.analytics.chartAndTable.AssetChangeTable
-import app.penny.feature.analytics.chartAndTable.CategoryPieChart
-import app.penny.feature.analytics.chartAndTable.IncomeExpenseTrendChartCard
+import app.penny.feature.analytics.component.AssetChangeTable
+import app.penny.feature.analytics.component.CategoryPieChart
+import app.penny.feature.analytics.component.IncomeExpenseTrendChartCard
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 
@@ -57,7 +57,7 @@ class AnalyticScreen : Screen {
                 false -> {
                     // 显示图表
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize() // 为 LazyColumn 添加高度约束
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         item {
                             IncomeExpenseTrendChartCard(

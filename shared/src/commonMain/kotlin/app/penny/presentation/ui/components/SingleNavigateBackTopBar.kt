@@ -14,12 +14,24 @@ fun SingleNavigateBackTopBar(
 ) {
     TopAppBar(
         title = {
-            Text(title)
-                },
+            Text(
+                title,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        },
         navigationIcon = {
             IconButton(onClick = onNavigateBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
+//        },
+//        colors = TopAppBarDefaults.topAppBarColors(
+//            containerColor = MaterialTheme.colorScheme.primaryContainer
+//        )
     )
 }

@@ -1,4 +1,4 @@
-package app.penny.presentation.ui.theme
+package app.penny.presentation.ui.theme.theme1
 
 import androidx.compose.ui.graphics.Color
 

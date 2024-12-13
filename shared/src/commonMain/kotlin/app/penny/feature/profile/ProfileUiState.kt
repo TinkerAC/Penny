@@ -12,7 +12,7 @@ data class ProfileUiState @OptIn(ExperimentalUuidApi::class) constructor(
     val userUuid: Uuid = Uuid.fromLongs(0, 0),
     val modalInLoginMode : Boolean = true,
     val isLoggedIn: Boolean = false,
-    val isEmailRegistered: Boolean = false, // TODO: 根据实际逻辑使用
+    val isEmailRegistered: Boolean = false,
     val loggingModalVisible: Boolean = false,
 
     val continuousCheckInDays: Int = 0,

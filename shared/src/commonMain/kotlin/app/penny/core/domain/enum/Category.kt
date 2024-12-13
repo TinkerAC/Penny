@@ -707,5 +707,103 @@ and the output should be:
     }
 }
 
+//enum class Category(
+//    val parentCategory: Category?,
+//    val categoryName: String,
+//    val categoryIcon: String,
+//    val description: String
+//) {
+//    // Top-level Categories
+//    INCOME(null, "Income", "ic_category_income", "All types of income"),
+//    EXPENSE(null, "Expense", "ic_category_expense", "All types of expenses"),
+//
+//    // Income First-Level Categories
+//    INCOME_SALARY(INCOME, "Salary", "ic_category_salary", "Regular salary or wages"),
+//    INCOME_SALARY_BONUS(INCOME_SALARY, "Bonus", "ic_category_salary_bonus", "Additional compensation or bonuses"),
+//    INCOME_SALARY_OVERTIME(INCOME_SALARY, "Overtime", "ic_category_salary_overtime", "Earnings from overtime work"),
+//    INCOME_SALARY_OTHER(INCOME_SALARY, "Other", "ic_category_income_other", "Other types of salary income"),
+//
+//    INCOME_BUSINESS(INCOME, "Business", "ic_category_business", "Income from business activities"),
+//    INCOME_BUSINESS_SALES(INCOME_BUSINESS, "Sales", "ic_category_business_sales", "Revenue from sales"),
+//    INCOME_BUSINESS_SERVICES(INCOME_BUSINESS, "Services", "ic_category_business_services", "Income from services rendered"),
+//    INCOME_BUSINESS_OTHER(INCOME_BUSINESS, "Other", "ic_category_income_other", "Other types of business income"),
+//
+//    INCOME_INVESTMENT(INCOME, "Investment", "ic_category_investment", "Income from investments"),
+//    INCOME_INVESTMENT_DIVIDENDS(INCOME_INVESTMENT, "Dividends", "ic_category_investment_dividends", "Income from dividends"),
+//    INCOME_INVESTMENT_INTEREST(INCOME_INVESTMENT, "Interest", "ic_category_investment_interest", "Income from interest"),
+//    INCOME_INVESTMENT_CAPITAL_GAINS(INCOME_INVESTMENT, "Capital Gains", "ic_category_investment_capital_gains", "Income from capital gains"),
+//    INCOME_INVESTMENT_OTHER(INCOME_INVESTMENT, "Other", "ic_category_income_other", "Other types of investment income"),
+//
+//    INCOME_GIFTS(INCOME, "Gifts", "ic_category_gifts", "Income from gifts"),
+//    INCOME_GIFTS_PRESENTIAL(INCOME_GIFTS, "Presentational", "ic_category_gifts_presentational", "Gifts received in person"),
+//    INCOME_GIFTS_MONETARY(INCOME_GIFTS, "Monetary", "ic_category_gifts_monetary", "Monetary gifts"),
+//    INCOME_GIFTS_OTHER(INCOME_GIFTS, "Other", "ic_category_income_other", "Other types of gift income"),
+//
+//    INCOME_OTHER(INCOME, "Other", "ic_category_income_other", "Other types of income"),
+//
+//    // Expense First-Level Categories
+//    EXPENSE_HOUSING(EXPENSE, "Housing", "ic_category_housing", "Expenses related to housing"),
+//    EXPENSE_HOUSING_RENT(EXPENSE_HOUSING, "Rent", "ic_category_housing_rent", "Monthly rent payments"),
+//    EXPENSE_HOUSING_MORTGAGE(EXPENSE_HOUSING, "Mortgage", "ic_category_housing_mortgage", "Mortgage payments"),
+//    EXPENSE_HOUSING_PROPERTY_TAX(EXPENSE_HOUSING, "Property Tax", "ic_category_housing_property_tax", "Property tax payments"),
+//    EXPENSE_HOUSING_UTILITIES(EXPENSE_HOUSING, "Utilities", "ic_category_housing_utilities", "Utility bills"),
+//    EXPENSE_HOUSING_OTHER(EXPENSE_HOUSING, "Other", "ic_category_expense_other", "Other housing expenses"),
+//
+//    EXPENSE_TRANSPORTATION(EXPENSE, "Transportation", "ic_category_transportation", "Expenses related to transportation"),
+//    EXPENSE_TRANSPORTATION_FUEL(EXPENSE_TRANSPORTATION, "Fuel", "ic_category_transportation_fuel", "Fuel expenses"),
+//    EXPENSE_TRANSPORTATION_PUBLIC_TRANSIT(EXPENSE_TRANSPORTATION, "Public Transit", "ic_category_transportation_public_transit", "Public transportation costs"),
+//    EXPENSE_TRANSPORTATION_INSURANCE(EXPENSE_TRANSPORTATION, "Insurance", "ic_category_transportation_insurance", "Transportation insurance"),
+//    EXPENSE_TRANSPORTATION_MAINTENANCE(EXPENSE_TRANSPORTATION, "Maintenance", "ic_category_transportation_maintenance", "Vehicle maintenance and repairs"),
+//    EXPENSE_TRANSPORTATION_OTHER(EXPENSE_TRANSPORTATION, "Other", "ic_category_expense_other", "Other transportation expenses"),
+//
+//    EXPENSE_FOOD(EXPENSE, "Food", "ic_category_food", "Expenses related to food"),
+//    EXPENSE_FOOD_GROCERIES(EXPENSE_FOOD, "Groceries", "ic_category_food_groceries", "Grocery store purchases"),
+//    EXPENSE_FOOD_RESTAURANTS(EXPENSE_FOOD, "Restaurants", "ic_category_food_restaurants", "Dining out at restaurants"),
+//    EXPENSE_FOOD_CAFES(EXPENSE_FOOD, "Cafes", "ic_category_food_cafes", "Expenses at cafes and coffee shops"),
+//    EXPENSE_FOOD_OTHER(EXPENSE_FOOD, "Other", "ic_category_expense_other", "Other food-related expenses"),
+//
+//    EXPENSE_UTILITIES(EXPENSE, "Utilities", "ic_category_utilities", "Utility expenses"),
+//    EXPENSE_UTILITIES_ELECTRICITY(EXPENSE_UTILITIES, "Electricity", "ic_category_utilities_electricity", "Electricity bills"),
+//    EXPENSE_UTILITIES_WATER(EXPENSE_UTILITIES, "Water", "ic_category_utilities_water", "Water bills"),
+//    EXPENSE_UTILITIES_GAS(EXPENSE_UTILITIES, "Gas", "ic_category_utilities_gas", "Gas bills"),
+//    EXPENSE_UTILITIES_INTERNET(EXPENSE_UTILITIES, "Internet", "ic_category_utilities_internet", "Internet service bills"),
+//    EXPENSE_UTILITIES_OTHER(EXPENSE_UTILITIES, "Other", "ic_category_expense_other", "Other utility expenses"),
+//
+//    EXPENSE_ENTERTAINMENT(EXPENSE, "Entertainment", "ic_category_entertainment", "Expenses for entertainment"),
+//    EXPENSE_ENTERTAINMENT_MOVIES(EXPENSE_ENTERTAINMENT, "Movies", "ic_category_entertainment_movies", "Movie tickets and rentals"),
+//    EXPENSE_ENTERTAINMENT_CONCERTS(EXPENSE_ENTERTAINMENT, "Concerts", "ic_category_entertainment_concerts", "Concert tickets and events"),
+//    EXPENSE_ENTERTAINMENT_STREAMING(EXPENSE_ENTERTAINMENT, "Streaming", "ic_category_entertainment_streaming", "Streaming service subscriptions"),
+//    EXPENSE_ENTERTAINMENT_GAMES(EXPENSE_ENTERTAINMENT, "Games", "ic_category_entertainment_games", "Video and board games"),
+//    EXPENSE_ENTERTAINMENT_OTHER(EXPENSE_ENTERTAINMENT, "Other", "ic_category_expense_other", "Other entertainment expenses"),
+//
+//    EXPENSE_HEALTHCARE(EXPENSE, "Healthcare", "ic_category_healthcare", "Healthcare-related expenses"),
+//    EXPENSE_HEALTHCARE_INSURANCE(EXPENSE_HEALTHCARE, "Insurance", "ic_category_healthcare_insurance", "Health insurance premiums"),
+//    EXPENSE_HEALTHCARE_MEDICATION(EXPENSE_HEALTHCARE, "Medication", "ic_category_healthcare_medication", "Prescription and over-the-counter medications"),
+//    EXPENSE_HEALTHCARE_DOCTORS(EXPENSE_HEALTHCARE, "Doctors", "ic_category_healthcare_doctors", "Doctor and specialist visits"),
+//    EXPENSE_HEALTHCARE_DENTAL(EXPENSE_HEALTHCARE, "Dental", "ic_category_healthcare_dental", "Dental care expenses"),
+//    EXPENSE_HEALTHCARE_OTHER(EXPENSE_HEALTHCARE, "Other", "ic_category_expense_other", "Other healthcare expenses"),
+//
+//    EXPENSE_PERSONAL(EXPENSE, "Personal", "ic_category_personal", "Personal expenses"),
+//    EXPENSE_PERSONAL_CLOTHING(EXPENSE_PERSONAL, "Clothing", "ic_category_personal_clothing", "Clothing and accessories"),
+//    EXPENSE_PERSONAL_TOILETRIES(EXPENSE_PERSONAL, "Toiletries", "ic_category_personal_toiletries", "Personal hygiene products"),
+//    EXPENSE_PERSONAL_HAIRCUT(EXPENSE_PERSONAL, "Haircut", "ic_category_personal_haircut", "Haircut and salon services"),
+//    EXPENSE_PERSONAL_OTHER(EXPENSE_PERSONAL, "Other", "ic_category_expense_other", "Other personal expenses"),
+//
+//    EXPENSE_EDUCATION(EXPENSE, "Education", "ic_category_education", "Education-related expenses"),
+//    EXPENSE_EDUCATION_TUITION(EXPENSE_EDUCATION, "Tuition", "ic_category_education_tuition", "Tuition fees for education"),
+//    EXPENSE_EDUCATION_BOOKS(EXPENSE_EDUCATION, "Books", "ic_category_education_books", "Educational materials and books"),
+//    EXPENSE_EDUCATION_COURSES(EXPENSE_EDUCATION, "Courses", "ic_category_education_courses", "Online or in-person courses"),
+//    EXPENSE_EDUCATION_OTHER(EXPENSE_EDUCATION, "Other", "ic_category_expense_other", "Other education expenses"),
+//
+//    EXPENSE_INSURANCE(EXPENSE, "Insurance", "ic_category_insurance", "Insurance-related expenses"),
+//    EXPENSE_INSURANCE_HEALTH(EXPENSE_INSURANCE, "Health", "ic_category_insurance_health", "Health insurance payments"),
+//    EXPENSE_INSURANCE_AUTO(EXPENSE_INSURANCE, "Auto", "ic_category_insurance_auto", "Auto insurance premiums"),
+//    EXPENSE_INSURANCE_HOME(EXPENSE_INSURANCE, "Home", "ic_category_insurance_home", "Home insurance payments"),
+//    EXPENSE_INSURANCE_LIFE(EXPENSE_INSURANCE, "Life", "ic_category_insurance_life", "Life insurance premiums"),
+//    EXPENSE_INSURANCE_OTHER(EXPENSE_INSURANCE, "Other", "ic_category_expense_other", "Other insurance expenses"),
+//
+//    EXPENSE_OTHER(EXPENSE, "Other", "ic_category_expense_other", "Other types of expenses");
+//}
+
 
 

@@ -55,6 +55,7 @@ sqliteXX4Dialect = "2.0.2"
 uuid = "0.8.4"
 voyagerVersion = "1.1.0-beta02"
 logback = "1.5.11"
+uiToolingPreviewDesktop = "1.7.0"
 [libraries]
 # Koin 依赖，版本统一为 3
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -153,6 +154,7 @@ multiplatformSettings-coroutines = { module = "com.russhwolf:multiplatform-setti
 #http client
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+androidx-ui-tooling-preview-desktop = { group = "androidx.compose.ui", name = "ui-tooling-preview-desktop", version.ref = "uiToolingPreviewDesktop" }
 
 
 

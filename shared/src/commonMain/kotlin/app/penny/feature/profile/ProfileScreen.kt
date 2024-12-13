@@ -7,10 +7,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.Feedback
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
@@ -24,9 +24,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.penny.feature.setting.SettingScreen
 import app.penny.presentation.ui.components.RegisterAndLoginBottomSheet
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 
 class ProfileScreen : Screen {
 
@@ -82,7 +85,7 @@ fun TopBar() {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "个人中心",
+                text = "Profile",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -121,7 +124,7 @@ fun UserInfoSection(
         Text(
             text = when {
                 uiState.isLoggedIn -> uiState.username ?: uiState.email ?: "PennyPal"
-                else -> "点击登录"
+                else -> "Tap to login"
             },
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onBackground
@@ -131,9 +134,9 @@ fun UserInfoSection(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            StatisticItem(number = uiState.continuousCheckInDays, label = "连续打卡")
-            StatisticItem(number = uiState.totalTransactionDays, label = "记账天数")
-            StatisticItem(number = uiState.totalTransactionCount, label = "记账笔数")
+            StatisticItem(number = uiState.continuousCheckInDays, label = "Total Amount")
+            StatisticItem(number = uiState.totalTransactionDays, label = "Days")
+            StatisticItem(number = uiState.totalTransactionCount, label = "Transactions")
         }
     }
 }
@@ -158,13 +161,13 @@ fun StatisticItem(number: Int, label: String) {
 
 @Composable
 fun FunctionGrid() {
-    // 原本这里有导航 Intent，现在移除
-    // TODO: navigation not implemented
+
+    val rootNavigator = LocalNavigator.current?.parent
     val features = listOf(
-        FeatureItem("通知", Icons.Default.Notifications),
+        FeatureItem("Notifications", Icons.Default.Notifications),
         FeatureItem("我的徽章", Icons.Default.Badge),
         FeatureItem("Penny's Box", Icons.Default.Storage),
-        FeatureItem("设置", Icons.Default.Settings)
+        FeatureItem("Settings", Icons.Default.Settings, SettingScreen())
     )
 
     LazyVerticalGrid(
@@ -178,7 +181,9 @@ fun FunctionGrid() {
                 modifier = Modifier
                     .padding(8.dp)
                     .clickable {
-                        // TODO: navigation not implemented
+                        feature.screen?.let {
+                            rootNavigator?.push(it)
+                        }
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -200,14 +205,15 @@ fun FunctionGrid() {
 
 data class FeatureItem(
     val name: String,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val screen: Screen? = null
 )
 
 @Composable
 fun MenuList() {
     // TODO: navigation not implemented
     val menuItems = listOf(
-        MenuItem("使用帮助", Icons.Default.Help),
+        MenuItem("使用帮助", Icons.AutoMirrored.Filled.Help),
         MenuItem("意见反馈", Icons.Default.Feedback),
         MenuItem("关于我们", Icons.Default.Info)
     )

@@ -12,17 +12,20 @@ import app.penny.core.data.database.dataSourceImpl.TransactionLocalDataSourceImp
 import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.kvstore.TokenProvider
 import app.penny.core.data.kvstore.UserDataManager
+import app.penny.core.data.kvstore.UserPreferenceManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.data.repository.UserPreferenceRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.data.repository.impl.AuthRepositoryImpl
 import app.penny.core.data.repository.impl.ChatRepositoryImpl
 import app.penny.core.data.repository.impl.LedgerRepositoryImpl
 import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
+import app.penny.core.data.repository.impl.UserPreferenceRepositoryImpl
 import app.penny.core.data.repository.impl.UserRepositoryImpl
 import app.penny.core.domain.usecase.CountUnsyncedDataUseCase
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
@@ -47,6 +50,7 @@ import app.penny.feature.myLedger.MyLedgerViewModel
 import app.penny.feature.newLedger.NewLedgerViewModel
 import app.penny.feature.newTransaction.NewTransactionViewModel
 import app.penny.feature.profile.ProfileViewModel
+import app.penny.feature.setting.SettingViewModel
 import app.penny.feature.transactions.TransactionViewModel
 import app.penny.presentation.viewmodel.MainViewModel
 import io.ktor.client.HttpClient
@@ -103,6 +107,7 @@ fun commonModule() = module {
     single<TokenProvider> { TokenManager(get(), get()) }
     single { TokenManager(get(), get()) }
 
+    single { UserPreferenceManager(get()) }
     // 提供 Repository
     single<TransactionRepository> { TransactionRepositoryImpl(get(), get(), get()) }
 
@@ -112,10 +117,11 @@ fun commonModule() = module {
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
 
-    single<UserRepository> { UserRepositoryImpl(get(),get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
 
-    single<ChatRepository> { ChatRepositoryImpl(get(),get(),get()) }
+    single<ChatRepository> { ChatRepositoryImpl(get(), get(), get()) }
 
+    single<UserPreferenceRepository> { UserPreferenceRepositoryImpl(get()) }
 
 
     //注入ApiClient
@@ -136,14 +142,14 @@ fun commonModule() = module {
     }
 
 
-    single { ApiClient(get(), get(), get(),get())}
+    single { ApiClient(get(), get(), get(), get()) }
 
     // 提供 UseCase
     factory { GetAllLedgerUseCase(get()) }
     factory { InsertRandomTransactionUseCase(get(), get()) }
     factory { InitLocalUserUseCase(get(), get()) }
     factory { SearchTransactionsUseCase(get()) }
-    factory { LoginUseCase(get(),get(),get())}
+    factory { LoginUseCase(get(), get(), get()) }
     factory { UploadUnsyncedLedgerUseCase(get(), get()) }
     factory { RegisterUseCase(get()) }
     factory { DownloadUnsyncedLedgerUseCase(get(), get()) }
@@ -154,11 +160,16 @@ fun commonModule() = module {
         )
     }
 
-    factory { AIChatViewModel(get(), get(), get(),get(),get()) }
+    factory { AIChatViewModel(get(), get(), get(), get(), get()) }
 
 
     // 注入 ViewModel
-    factory { NewTransactionViewModel(get(), get(),get()) }
+
+    factory { SettingViewModel(get()) }
+
+    factory { NewTransactionViewModel(get(), get(), get()) }
+
+
     factory {
         DashboardViewModel(
             insertRandomTransactionUseCase = get(),
@@ -173,7 +184,7 @@ fun commonModule() = module {
 
 
     factory { AnalyticViewModel(get(), get(), get()) }
-    factory { TransactionViewModel(get(),get()) }
+    factory { TransactionViewModel(get(), get()) }
     factory { MainViewModel(get(), get()) }
     factory { MyLedgerViewModel(get(), get()) }
     factory { NewLedgerViewModel(get(), get()) }
@@ -183,7 +194,7 @@ fun commonModule() = module {
 
     factory { NewLedgerViewModel(get(), get()) }
 
-    factory { AIChatViewModel(get(), get(), get(),get(),get()) }
+    factory { AIChatViewModel(get(), get(), get(), get(), get()) }
 
 
 }

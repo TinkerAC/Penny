@@ -45,6 +45,7 @@ class AuthRepositoryImpl(
     }
 
     override fun isLoggedIn(): Boolean {
+
         val accessToken = tokenManager.getAccessTokenFromMemory()
         val isValid = accessToken != null && !tokenManager.isTokenExpired(accessToken)
         Logger.d { "Is logged in: $isValid" }
