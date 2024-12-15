@@ -24,7 +24,7 @@ data class LedgerDto(
      * 判断是否完成插入账本的动作。
      */
     override fun isCompleteFor(action: Action): Boolean {
-        return when(action) {
+        return when (action) {
             is Action.InsertLedger -> {
                 name.isNotBlank() && currencyCode.isNotBlank()
             }

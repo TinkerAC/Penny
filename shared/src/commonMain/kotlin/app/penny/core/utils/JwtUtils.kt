@@ -1,5 +1,6 @@
 package app.penny.core.utils
 
+import io.ktor.util.decodeBase64Bytes
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
@@ -7,7 +8,6 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
-import io.ktor.util.decodeBase64Bytes
 
 object JwtUtils {
 

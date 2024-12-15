@@ -8,8 +8,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LoginRequest(
     override var invokeInstant: Long = Clock.System.now().epochSeconds,
-    override val userTimeZoneId: String =TimeZone.currentSystemDefault().id,
+    override val userTimeZoneId: String = TimeZone.currentSystemDefault().id,
     val email: String,
     val username: String? = null,
     val password: String
-): BaseRequestDto()
+) : BaseRequestDto()

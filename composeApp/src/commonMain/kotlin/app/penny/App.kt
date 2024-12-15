@@ -15,9 +15,6 @@ import app.penny.presentation.ui.MainScreen
 import app.penny.presentation.ui.ThemeManager
 import app.penny.presentation.ui.ThemeState
 import app.penny.presentation.ui.theme.AppTheme
-import app.penny.presentation.ui.theme.DisplayMode
-import app.penny.presentation.ui.theme.ThemeConstraint
-import app.penny.presentation.ui.theme.theme1.Theme1
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 

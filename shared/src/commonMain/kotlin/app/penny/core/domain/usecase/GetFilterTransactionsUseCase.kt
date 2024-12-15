@@ -1,6 +1,5 @@
 package app.penny.core.domain.usecase
 
-import androidx.compose.foundation.interaction.DragInteraction
 import kotlinx.datetime.Instant
 
 class GetFilterTransactionsUseCase {

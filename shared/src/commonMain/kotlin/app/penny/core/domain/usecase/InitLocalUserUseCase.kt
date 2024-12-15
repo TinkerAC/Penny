@@ -22,7 +22,7 @@ class InitLocalUserUseCase(
             return
         }
 
-        val count  = userRepository.count()
+        val count = userRepository.count()
         Logger.d("Local User count: $count")
 
 

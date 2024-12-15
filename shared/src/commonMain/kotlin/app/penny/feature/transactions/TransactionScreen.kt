@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.*
@@ -14,13 +15,16 @@ import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.feature.transactions.component.CalendarViewContent
 import app.penny.feature.transactions.component.GroupByBottomAppBar
 import app.penny.feature.transactions.component.ListViewContent
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
+
 
 class TransactionScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -43,21 +47,25 @@ class TransactionScreen : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("交易记录") },
+                    title = {
+                        Text(
+                            stringResource(SharedRes.strings.transaction)
+                        )
+                    },
                     actions = {
                         //navigation icon
 
                         IconButton(onClick = { rootNavigator.pop() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
-                                contentDescription = "返回"
+                                contentDescription = stringResource(SharedRes.strings.back)
                             )
                         }
 
                         IconButton(onClick = { isCalendarView = !isCalendarView }) {
                             Icon(
-                                imageVector = if (isCalendarView) Icons.Filled.List else Icons.Filled.CalendarToday,
-                                contentDescription = "切换视图"
+                                imageVector = if (isCalendarView) Icons.AutoMirrored.Filled.List else Icons.Filled.CalendarToday,
+                                contentDescription = stringResource(SharedRes.strings.toggle_view)
                             )
                         }
                     }

@@ -6,15 +6,15 @@ import app.penny.models.Users
 import app.penny.repository.LedgerRepository
 import app.penny.servershared.dto.LedgerDto
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 class LedgerRepositoryImpl : LedgerRepository {
 
-    override fun insert(userId: Long,ledgers: List<LedgerDto>) {
+    override fun insert(userId: Long, ledgers: List<LedgerDto>) {
         transaction {
             Ledgers.batchInsert(ledgers) { ledger ->
                 this[Ledgers.uuid] = ledger.uuid

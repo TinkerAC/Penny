@@ -13,9 +13,10 @@ import app.penny.servershared.dto.responseDto.RemoteUnsyncedDataCountResponse
 import app.penny.servershared.dto.responseDto.UploadLedgerResponse
 import app.penny.servershared.dto.responseDto.UploadTransactionResponse
 import io.ktor.client.HttpClient
+import io.ktor.client.request.parameter
+import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
-import io.ktor.client.request.*
 import io.ktor.http.contentType
 
 class SyncApiClient(
@@ -29,11 +30,13 @@ class SyncApiClient(
             method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
-            setBody(UploadLedgerRequest(
-                total = ledgers.size,
-                ledgers = ledgers,
-                lastSyncedAt = lastSynced
-            ))
+            setBody(
+                UploadLedgerRequest(
+                    total = ledgers.size,
+                    ledgers = ledgers,
+                    lastSyncedAt = lastSynced
+                )
+            )
         }
     }
 

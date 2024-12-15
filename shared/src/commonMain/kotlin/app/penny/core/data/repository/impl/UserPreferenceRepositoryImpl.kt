@@ -1,7 +1,7 @@
 package app.penny.core.data.repository.impl
 
-import app.penny.core.data.repository.UserPreferenceRepository
 import app.penny.core.data.kvstore.UserPreferenceManager
+import app.penny.core.data.repository.UserPreferenceRepository
 import app.penny.presentation.ui.theme.DisplayMode
 import app.penny.presentation.ui.theme.ThemeColor
 import app.penny.presentation.ui.theme.ThemeConstraint

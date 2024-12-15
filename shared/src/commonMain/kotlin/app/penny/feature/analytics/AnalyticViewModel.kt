@@ -6,6 +6,7 @@ import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.enum.TransactionType
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
+import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.core.domain.usecase.SearchTransactionsUseCase
 import app.penny.core.utils.generateDateSequence
 import app.penny.core.utils.generateMonthSequence
@@ -28,7 +29,6 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
-import app.penny.core.domain.model.valueObject.YearMonth
 
 @OptIn(ExperimentalUuidApi::class)
 class AnalyticViewModel(

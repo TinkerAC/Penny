@@ -7,19 +7,18 @@ import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UserDto
 import app.penny.servershared.enumerate.Action
 import app.penny.utils.getAuthedUser
-
-import com.aallam.openai.api.chat.*
-import com.aallam.openai.api.logging.Logger
+import com.aallam.openai.api.chat.ChatCompletion
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
-import com.mysql.cj.log.Log
 import io.ktor.server.application.ApplicationCall
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.format
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.contentOrNull

@@ -26,7 +26,11 @@ class AuthRepositoryImpl(
         return response
     }
 
-    override suspend fun register(email: String, password: String, uuid: String?): RegisterResponse {
+    override suspend fun register(
+        email: String,
+        password: String,
+        uuid: String?
+    ): RegisterResponse {
         val response = userApiClient.register(uuid = uuid, email = email, password = password)
         return response
 

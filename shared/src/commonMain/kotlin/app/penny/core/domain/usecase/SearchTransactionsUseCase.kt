@@ -16,7 +16,7 @@ class SearchTransactionsUseCase(
     private val transactionRepository: TransactionRepository
 ) {
     suspend operator fun invoke(
-        ledgerUuid:Uuid,
+        ledgerUuid: Uuid,
         startDate: LocalDate,
         endDate: LocalDate
     ): List<TransactionModel> {

@@ -1,9 +1,9 @@
 // 文件：server/src/main/kotlin/app/penny/routes/UserRoutes.kt
 package app.penny.routes
 
-import app.penny.servershared.dto.responseDto.CheckIsEmailRegisteredResponse
 import app.penny.servershared.dto.requestDto.LoginRequest
 import app.penny.servershared.dto.requestDto.RegisterRequest
+import app.penny.servershared.dto.responseDto.CheckIsEmailRegisteredResponse
 import app.penny.servershared.dto.responseDto.RegisterResponse
 import app.penny.services.UserService
 import app.penny.services.toUserResponseDto
@@ -36,8 +36,6 @@ fun Route.userRoutes(userService: UserService) {
                 )
                 return@post
             }
-
-
 
 
             val newUser = userService.register(credentials)

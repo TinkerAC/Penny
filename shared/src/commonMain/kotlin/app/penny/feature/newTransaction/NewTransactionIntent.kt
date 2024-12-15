@@ -2,7 +2,6 @@ package app.penny.feature.newTransaction
 
 import app.penny.core.domain.enum.Category
 import app.penny.core.domain.model.LedgerModel
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 sealed class NewTransactionIntent {
     data class SelectTab(val tab: NewTransactionTab) : NewTransactionIntent()

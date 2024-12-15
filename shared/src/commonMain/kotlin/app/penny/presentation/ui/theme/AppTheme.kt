@@ -1,9 +1,9 @@
 package app.penny.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import app.penny.presentation.ui.theme.theme1.AppTypography
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import app.penny.presentation.ui.theme.theme1.AppTypography
 import app.penny.presentation.ui.theme.theme1.Theme1
 import app.penny.presentation.ui.theme.theme2.Theme2
 

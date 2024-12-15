@@ -1,7 +1,8 @@
 package app.penny.presentation.ui.theme.theme2
+
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import app.penny.presentation.ui.theme.ThemeConfig
@@ -247,15 +248,15 @@ val unspecified_scheme = ColorFamily(
 )
 
 
-object Theme2 :ThemeConfig() {
+object Theme2 : ThemeConfig() {
     override val name: String = "Theme2"
     override val lightTheme = lightScheme
-    override val mediumContrastLightColorTheme :ColorScheme= mediumContrastLightColorScheme
-    override val highContrastLightColorTheme :ColorScheme= highContrastLightColorScheme
+    override val mediumContrastLightColorTheme: ColorScheme = mediumContrastLightColorScheme
+    override val highContrastLightColorTheme: ColorScheme = highContrastLightColorScheme
 
     override val darkTheme = darkScheme
-    override val mediumContrastDarkColorTheme :ColorScheme= mediumContrastDarkColorScheme
-    override val highContrastDarkColorTheme :ColorScheme= highContrastDarkColorScheme
+    override val mediumContrastDarkColorTheme: ColorScheme = mediumContrastDarkColorScheme
+    override val highContrastDarkColorTheme: ColorScheme = highContrastDarkColorScheme
 
 }
 

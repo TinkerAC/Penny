@@ -114,9 +114,8 @@ class DebugScreen : Screen {
 
         Text("Last Synced At: ${debugViewModel.uiState.value.lastSyncedAt ?: "Never"}")
 
-        Text("Active User: ${debugViewModel.uiState.value.activeUser?: "No Active User"})")
+        Text("Active User: ${debugViewModel.uiState.value.activeUser ?: "No Active User"})")
         Text(uiState.value.message ?: "")
-
 
 
     }

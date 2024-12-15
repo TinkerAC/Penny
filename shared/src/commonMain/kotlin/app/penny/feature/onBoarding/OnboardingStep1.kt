@@ -1,11 +1,10 @@
-
 // file: shared/src/commonMain/kotlin/app/penny/feature/onBoarding/OnboardingStep1.kt
 package app.penny.feature.onBoarding
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.resources.painterResource
-import penny.shared.generated.resources.Res
-import penny.shared.generated.resources.onboarding_data_trend
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.painterResource
+
 
 class OnboardingStep1 : OnboardingStepScreen {
     override var onPrevious: (() -> Unit)? = null
@@ -15,7 +14,7 @@ class OnboardingStep1 : OnboardingStepScreen {
     @Composable
     override fun Content() {
         OnboardingPage(
-            illustration = painterResource(Res.drawable.onboarding_data_trend),
+            illustration = painterResource(SharedRes.images.onboarding_data_trend),
             title = "Trends That Matter",
             content = "Discover hidden patterns in your spending habits with beautiful charts and insights.",
             currentPage = 1,

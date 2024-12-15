@@ -1,15 +1,15 @@
 // File: shared/src/commonMain/kotlin/app/penny/feature/transactions/components/ListViewContent.kt
 package app.penny.feature.transactions.component
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.feature.transactions.GroupedTransaction
 import app.penny.feature.transactions.TransactionUiState
 import app.penny.feature.transactions.TransactionViewModel

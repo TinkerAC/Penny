@@ -10,4 +10,4 @@ data class RefreshTokenRequest(
     override var invokeInstant: Long = Clock.System.now().epochSeconds,
     override val userTimeZoneId: String = TimeZone.currentSystemDefault().id,
     val refreshToken: String
-): BaseRequestDto()
+) : BaseRequestDto()

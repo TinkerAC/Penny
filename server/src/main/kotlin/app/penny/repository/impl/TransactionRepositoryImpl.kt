@@ -6,10 +6,10 @@ import app.penny.models.toTransactionDto
 import app.penny.repository.TransactionRepository
 import app.penny.servershared.dto.TransactionDto
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 class TransactionRepositoryImpl : TransactionRepository {

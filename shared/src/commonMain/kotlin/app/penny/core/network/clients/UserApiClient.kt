@@ -9,9 +9,10 @@ import app.penny.servershared.dto.responseDto.CheckIsEmailRegisteredResponse
 import app.penny.servershared.dto.responseDto.LoginResponse
 import app.penny.servershared.dto.responseDto.RegisterResponse
 import io.ktor.client.HttpClient
+import io.ktor.client.request.parameter
+import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
-import io.ktor.client.request.*
 import io.ktor.http.contentType
 
 class UserApiClient(
@@ -19,16 +20,17 @@ class UserApiClient(
     tokenProvider: TokenProvider
 ) : BaseApiClient(httpClient) {
 
-    suspend fun register(uuid:String? =null,email: String, password: String): RegisterResponse {
+    suspend fun register(uuid: String? = null, email: String, password: String): RegisterResponse {
         return makeRequest(
             url = "$API_URL/user/register",
             method = HttpMethod.Post
         ) {
             contentType(ContentType.Application.Json)
-            setBody(RegisterRequest(
-                uuid = uuid
-                , email = email, password = password
-            ))
+            setBody(
+                RegisterRequest(
+                    uuid = uuid, email = email, password = password
+                )
+            )
         }
     }
 

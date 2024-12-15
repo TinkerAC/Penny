@@ -53,6 +53,9 @@ interface TransactionRepository {
     suspend fun findByUserUuid(userUuid: Uuid): List<TransactionModel>
 
 
-    suspend fun findByUserUuidAndYearMonth(userUuid: Uuid, yearMonth: YearMonth): List<TransactionModel>
+    suspend fun findByUserUuidAndYearMonth(
+        userUuid: Uuid,
+        yearMonth: YearMonth
+    ): List<TransactionModel>
 
 }

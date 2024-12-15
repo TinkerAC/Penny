@@ -11,5 +11,5 @@ data class DebugState(
     val addTransactionModalVisible: Boolean = false,
     val lastSyncedAt: Instant? = null,
     val message: String? = null,
-    val activeUser:UserModel? = null
+    val activeUser: UserModel? = null
 )

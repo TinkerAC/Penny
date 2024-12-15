@@ -1,7 +1,7 @@
 package app.penny.core.data.repository.impl
 
-import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.kvstore.UserDataManager
+import app.penny.core.data.repository.UserDataRepository
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

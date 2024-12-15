@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="composeApp" type="AndroidRunConfigurationType"
-        factoryName="Android App" activateToolWindowBeforeRun="false">
+    <configuration name="composeApp" activateToolWindowBeforeRun="false" default="false"
+        factoryName="Android App" type="AndroidRunConfigurationType">
         <module name="Penny.composeApp.main" />
         <option name="DEPLOY" value="true" />
         <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />

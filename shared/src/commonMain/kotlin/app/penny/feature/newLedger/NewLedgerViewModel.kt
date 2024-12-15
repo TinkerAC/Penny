@@ -95,7 +95,8 @@ class NewLedgerViewModel(
 
     // 选择货币
     private fun selectCurrency(currency: Currency) {
-        _uiState.value = _uiState.value.copy(currency = currency, currencySelectorModalVisible = false)
+        _uiState.value =
+            _uiState.value.copy(currency = currency, currencySelectorModalVisible = false)
     }
 
     // 验证账本名称

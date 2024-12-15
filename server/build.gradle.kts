@@ -57,10 +57,7 @@ dependencies {
 
     //mysql
     implementation(libs.mysql.connector.java)
-    implementation (libs.openai.client)
-
-
-
+    implementation(libs.openai.client)
 
 
 }

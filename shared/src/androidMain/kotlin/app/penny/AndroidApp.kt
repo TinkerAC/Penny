@@ -6,9 +6,7 @@ import app.penny.di.platformModule
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.koin.KermitKoinLogger
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
 
 class AndroidApp : Application() {
     override fun onCreate() {

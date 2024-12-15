@@ -20,7 +20,6 @@ interface LedgerRepository {
     suspend fun findByUserUuid(userUuid: Uuid): List<LedgerModel>
 
 
-
     suspend fun countByUserUuid(userUuid: Uuid): Long
 
     suspend fun countByUserUuidAndUpdatedAtAfter(

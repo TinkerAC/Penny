@@ -1,12 +1,12 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/onBoarding/OnboardingNavigatorScreen.kt
 package app.penny.feature.onBoarding
 
-import androidx.compose.runtime.*
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.*
-import cafe.adriel.voyager.navigator.currentOrThrow
-import app.penny.feature.newLedger.NewLedgerScreen
+import androidx.compose.runtime.Composable
 import app.penny.presentation.ui.MainScreen
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 
 /**
  * OnboardingNavigatorScreen负责多步Onboarding流程的导航。

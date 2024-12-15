@@ -1,11 +1,10 @@
-
 // file: shared/src/commonMain/kotlin/app/penny/feature/onBoarding/OnboardingStep2.kt
 package app.penny.feature.onBoarding
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.resources.painterResource
-import penny.shared.generated.resources.Res
-import penny.shared.generated.resources.onboarding_chat_bot
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.painterResource
+
 
 class OnboardingStep2 : OnboardingStepScreen {
     override var onPrevious: (() -> Unit)? = null
@@ -15,7 +14,7 @@ class OnboardingStep2 : OnboardingStepScreen {
     @Composable
     override fun Content() {
         OnboardingPage(
-            illustration = painterResource(Res.drawable.onboarding_chat_bot),
+            illustration = painterResource(SharedRes.images.onboarding_chat_bot),
             title = "Talk. Manage. Simplify.",
             content = "Experience the power of AI with natural language commands to manage your finances.",
             currentPage = 2,

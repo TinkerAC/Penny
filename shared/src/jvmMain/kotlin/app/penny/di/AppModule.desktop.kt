@@ -1,8 +1,8 @@
 // file: shared/src/jvmMain/kotlin/app/penny/di/AppModule.desktop.kt
 package app.penny.di
 
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.penny.database.PennyDatabase
 import app.penny.platform.MultiplatformSettingsWrapper
 import org.koin.dsl.module

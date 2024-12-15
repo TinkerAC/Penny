@@ -9,10 +9,11 @@ interface ChatRepository {
     suspend fun sendMessage(message: String): GetAiReplyResponse
 
     suspend fun sendAudio(audioFilePath: String, duration: Long)
+
     @OptIn(ExperimentalUuidApi::class)
     suspend fun findChatHistoryByUserUuid(
         userUuid: Uuid
-    ):List<ChatMessage>
+    ): List<ChatMessage>
 
     suspend fun insert(chatMessage: ChatMessage)
 

@@ -2,18 +2,20 @@
 package app.penny.feature.analytics
 
 import AnalyticsTopBar
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.penny.feature.analytics.chartAndTable.CategoryPieChart
+import app.penny.feature.analytics.component.AssetChangeTable
+import app.penny.feature.analytics.component.IncomeExpenseTrendChartCard
 import app.penny.presentation.ui.components.LedgerSelectionDialog
 import app.penny.presentation.ui.components.LoadingScreen
-import app.penny.feature.analytics.component.AssetChangeTable
-import app.penny.feature.analytics.chartAndTable.CategoryPieChart
-import app.penny.feature.analytics.component.IncomeExpenseTrendChartCard
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 
@@ -51,6 +53,7 @@ class AnalyticScreen : Screen {
                 uiState.isLoading -> {
                     LoadingScreen(modifier = Modifier.fillMaxSize())
                 }
+
                 else -> {
                     LazyColumn(
                         modifier = Modifier

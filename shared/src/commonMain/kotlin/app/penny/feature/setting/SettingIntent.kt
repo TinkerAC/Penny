@@ -8,4 +8,10 @@ sealed class SettingIntent {
     data class SetTheme(val themeName: ThemeColor) : SettingIntent()
     data class SetConstraints(val constraints: ThemeConstraint) : SettingIntent()
     data class SetDisplayMode(val darkMode: DisplayMode) : SettingIntent()
+    data class SetLanguage(val language: Language) : SettingIntent()
+}
+
+enum class Language {
+    ENGLISH,
+    CHINESE,
 }

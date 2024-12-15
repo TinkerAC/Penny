@@ -1,4 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="app_name">Penny</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="transaction">Transaction</string>
+    <string name="analytics">Analytics</string>
+    <string name="profile">Profile</string>
+    <string name="back_button">Back</string>
+    <string name="tap_to_login">Tap to login</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="register">Register</string>
+    <string name="toggle_view">Toggle view</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="category">Category</string>
+    <string name="balance">Balance</string>
+    <string name="amount">Amount</string>
+    <string name="date">Date</string>
+    <string name="remarks">Remarks</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="notification">Notification</string>
+    <string name="settings">Settings</string>
+    <string name="language">Language</string>
+    <string name="pennys_box">Penny's Box</string>
+    <string name="currency">Currency</string>
+    <string name="help">Help</string>
+    <string name="about">About</string>
+    <string name="theme_color">Theme Color</string>
+    <string name="display_mode">Display Mode</string>
+    <string name="display_mode_light">Light</string>
+    <string name="display_mode_dark">Dark</string>
+    <string name="display_mode_system">System</string>
+    <string name="currency_code">Currency Code</string>
+    <string name="constraint">Constraint</string>
+    <string name="preference_setting_description">Customize Penny</string>
+    <string name="constraint_high">High</string>
+    <string name="constraint_medium">Medium</string>
+    <string name="constraint_low">Low</string>
+    <string name="preference">Preference</string>
+
+
 </resources>

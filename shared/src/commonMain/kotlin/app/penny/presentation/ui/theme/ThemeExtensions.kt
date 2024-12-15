@@ -1,10 +1,10 @@
 package app.penny.presentation.ui.theme
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.Composable
 
 
 val LocalSpacing = staticCompositionLocalOf { Spacing() }

@@ -3,7 +3,6 @@ package app.penny.feature.transactions
 
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.UserModel
-import app.penny.core.domain.model.valueObject.YearMonth
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.LocalDate
 
@@ -24,9 +23,9 @@ data class TransactionUiState(
     val selectedDate: LocalDate? = null, // 当前选中的日期
 
     // 新增字段
-    val totalIncome:BigDecimal = BigDecimal.ZERO,
-    val totalExpense:BigDecimal = BigDecimal.ZERO,
-    val totalBalance:BigDecimal = totalIncome - totalExpense
+    val totalIncome: BigDecimal = BigDecimal.ZERO,
+    val totalExpense: BigDecimal = BigDecimal.ZERO,
+    val totalBalance: BigDecimal = totalIncome - totalExpense
 
 )
 
@@ -78,7 +77,7 @@ data class GroupedTransaction(
     val balance: BigDecimal,
     val income: BigDecimal,
     val expense: BigDecimal
-){
+) {
 //    companion object {
 //        fun computeSum(transactions: List<TransactionModel>): GroupedTransaction {
 //            val balance = transactions.fold(BigDecimal.ZERO) { acc, transaction ->

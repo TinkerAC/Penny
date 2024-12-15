@@ -1,6 +1,5 @@
 package app.penny.feature.ledgerDetail
 
-import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.usecase.DeleteLedgerUseCase
 import cafe.adriel.voyager.core.model.ScreenModel

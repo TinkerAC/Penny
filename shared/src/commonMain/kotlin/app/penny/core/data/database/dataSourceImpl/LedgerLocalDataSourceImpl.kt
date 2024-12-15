@@ -53,7 +53,6 @@ class LedgerLocalDataSourceImpl(
     override fun insert(ledgerEntity: LedgerEntity) {
 
 
-
         ledgerQueries.insert(
             user_uuid = ledgerEntity.user_uuid,
             uuid = ledgerEntity.uuid,

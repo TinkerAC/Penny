@@ -10,4 +10,4 @@ data class CheckIsEmailRegisteredResponse(
     override val message: String,
     val isEmailRegistered: Boolean? = null
 
-    ) : BaseResponseDto()
+) : BaseResponseDto()

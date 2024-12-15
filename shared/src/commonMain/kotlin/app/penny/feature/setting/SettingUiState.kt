@@ -6,11 +6,14 @@ import app.penny.presentation.ui.theme.ThemeConstraint
 
 data class SettingUiState(
     val theme: ThemeColor = ThemeColor.THEME1,
-    val themes : List<ThemeColor> =ThemeColor.entries,
+    val themes: List<ThemeColor> = ThemeColor.entries,
 
     val displayMode: DisplayMode = DisplayMode.SYSTEM,
-    val displayModes : List<DisplayMode> = DisplayMode.entries,
+    val displayModes: List<DisplayMode> = DisplayMode.entries,
 
     val constraint: ThemeConstraint = ThemeConstraint.MEDIUM,
-    val constraints : List<ThemeConstraint> = ThemeConstraint.entries
+    val constraints: List<ThemeConstraint> = ThemeConstraint.entries,
+
+    val language: Language = Language.ENGLISH,
+    val languages: List<Language> = Language.entries
 )

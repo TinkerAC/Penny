@@ -1,27 +1,43 @@
 package app.penny.feature.aiChat
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import app.penny.feature.aiChat.components.ChatBackground
 import app.penny.feature.aiChat.components.ChatBubble
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
-
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import kotlinx.coroutines.launch
 
 class AIChatScreen : Screen {
     @Composable
@@ -85,10 +101,19 @@ class AIChatScreen : Screen {
                                 ChatBubble(
                                     message = message,
                                     onActionConfirm = { msg, editableFields ->
-                                        viewModel.handleIntent(AIChatIntent.ConfirmPendingAction(msg, editableFields))
+                                        viewModel.handleIntent(
+                                            AIChatIntent.ConfirmPendingAction(
+                                                msg,
+                                                editableFields
+                                            )
+                                        )
                                     },
                                     onActionDismiss = { m ->
-                                        viewModel.handleIntent(AIChatIntent.DismissFunctionalMessage(m))
+                                        viewModel.handleIntent(
+                                            AIChatIntent.DismissFunctionalMessage(
+                                                m
+                                            )
+                                        )
                                     }
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))

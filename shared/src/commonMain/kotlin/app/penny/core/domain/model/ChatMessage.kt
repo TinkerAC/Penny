@@ -2,7 +2,6 @@
 package app.penny.core.domain.model
 
 import app.penny.core.data.model.MESSAGE_TYPE
-import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.enumerate.Action
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -25,8 +24,7 @@ data class ChatMessage(
     val audioFilePath: String? = null,
     val duration: Long? = null,
     val actionStatus: ActionStatus? = null
-){
-
+) {
 
 
 }

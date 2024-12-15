@@ -78,7 +78,11 @@ class NewTransactionViewModel(
         _uiState.value = _uiState.value.copy(selectedParentCategory = category)
 
         Logger.d("`selectParentCategory` called{${category.name}}")
-        Logger.d("`selectParentCategory` called{${Category.getSubCategories(category).first().name}}")
+        Logger.d(
+            "`selectParentCategory` called{${
+                Category.getSubCategories(category).first().name
+            }}"
+        )
         _uiState.value =
             _uiState.value.copy(selectedSubCategory = Category.getSubCategories(category).first())
 
@@ -125,9 +129,6 @@ class NewTransactionViewModel(
         )
         Logger.d("`selectTab` called{${tab.name}}")
     }
-
-
-
 
 
     private fun setRemark(remark: String) {

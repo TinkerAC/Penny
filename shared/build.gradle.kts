@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
-
+    id("dev.icerock.mobile.multiplatform-resources") version "0.24.4"
 }
 
 kotlin {
@@ -39,7 +39,8 @@ kotlin {
 
             dependencies {
                 // 公共依赖项
-//                implementation(libs.composable.table)
+                api(libs.resources.compose) // 如果使用 Compose Multiplatform
+
                 implementation(libs.ktor.utils)
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
@@ -62,7 +63,7 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.ui)
-                implementation(compose.components.resources)
+//                implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.thechance101.chart)
@@ -84,8 +85,6 @@ kotlin {
                 //image loader
                 implementation(libs.coil.compose)
 //                implementation(libs.coil.network.okhttp)
-
-
 
 
             }
@@ -181,3 +180,9 @@ sqldelight {
         }
     }
 }
+multiplatformResources {
+    resourcesClassName = "SharedRes"
+    resourcesPackage = "app.penny.shared"
+    iosBaseLocalizationRegion = "en"
+}
+

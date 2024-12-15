@@ -1,8 +1,8 @@
 package app.penny
 
+import org.koin.core.component.KoinComponent
 import org.koin.dsl.KoinAppDeclaration
 import platform.UIKit.UIDevice
-import org.koin.core.component.KoinComponent
 
 class IOSPlatform : Platform {
     override val name: String =
@@ -13,7 +13,7 @@ actual fun getPlatform(): Platform = IOSPlatform()
 
 
 actual class ApplicationInitializer actual constructor(
-     application: Any?
+    application: Any?
 ) : KoinComponent {
     actual fun initKoin(appDeclaration: KoinAppDeclaration): ApplicationInitializer {
         app.penny.di.initKoin()

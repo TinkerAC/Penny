@@ -1,26 +1,46 @@
 // MainScreen.kt
 package app.penny.presentation.ui
 
-import androidx.compose.animation.EnterTransition
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.feature.aiChat.AIChatScreen
-import app.penny.feature.onBoarding.OnboardingNavigatorScreen
 import app.penny.feature.transactions.TransactionScreen
 import app.penny.presentation.ui.screens.BottomNavItem
 import app.penny.presentation.viewmodel.MainViewModel
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.*
+import cafe.adriel.voyager.navigator.CurrentScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.compose.stringResource
 
 class MainScreen : Screen {
 
@@ -115,7 +135,7 @@ fun BottomAppBarWithFAB(
                                 BottomNavItem.Profile -> Icons.Filled.Person
                                 else -> Icons.Filled.Home
                             },
-                            contentDescription = item.title
+                            contentDescription = stringResource(item.titleStringResource)
                         )
                     },
                     selected = selectedItem == index,

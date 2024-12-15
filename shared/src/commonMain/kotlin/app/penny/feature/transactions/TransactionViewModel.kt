@@ -5,7 +5,6 @@ import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.enum.TransactionType
 import app.penny.core.domain.model.TransactionModel
-import app.penny.core.domain.model.UserModel
 import app.penny.core.domain.model.valueObject.YearMonth
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -16,12 +15,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.todayIn
-import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
 
 /**
@@ -54,7 +50,7 @@ class TransactionViewModel(
                 handleIntent(TransactionIntent.SelectGroupByOption(GroupBy.Time.Day))
             } catch (e: Exception) {
                 Logger.e("Initialization error: ${e.message}")
-                _uiState.update { it.copy(errorMessage = e.message?: "未知错误") }
+                _uiState.update { it.copy(errorMessage = e.message ?: "未知错误") }
             }
         }
     }
@@ -158,7 +154,12 @@ class TransactionViewModel(
                     Logger.e("User UUID is null")
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, errorMessage = e.message ?: "数据获取失败") }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = e.message ?: "数据获取失败"
+                    )
+                }
                 Logger.e("Error fetching transactions: ${e.message}")
             }
         }
@@ -174,7 +175,8 @@ class TransactionViewModel(
             try {
                 val userUuid = _uiState.value.user?.uuid
                 if (userUuid != null) {
-                    val transactions = transactionRepository.findByUserUuidAndYearMonth(userUuid, yearMonth)
+                    val transactions =
+                        transactionRepository.findByUserUuidAndYearMonth(userUuid, yearMonth)
                     _uiState.update { it.copy(transactions = transactions, isLoading = false) }
                     Logger.d("Fetched ${transactions.size} transactions for $yearMonth")
 
@@ -188,7 +190,12 @@ class TransactionViewModel(
                     Logger.e("User UUID is null")
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, errorMessage = e.message?: "数据获取失败") }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = e.message ?: "数据获取失败"
+                    )
+                }
                 Logger.e("Error fetching transactions for month: ${e.message}")
             }
         }
@@ -213,14 +220,22 @@ class TransactionViewModel(
     private fun groupByTime(groupBy: GroupBy.Time): List<GroupedTransaction> {
         val transactions = _uiState.value.transactions
         val groupedMap = transactions.groupBy { transaction ->
-            val zonedDateTime = transaction.transactionInstant.toLocalDateTime(TimeZone.currentSystemDefault())
+            val zonedDateTime =
+                transaction.transactionInstant.toLocalDateTime(TimeZone.currentSystemDefault())
             when (groupBy) {
-                GroupBy.Time.Day -> "${zonedDateTime.year}-${zonedDateTime.monthNumber.toString().padStart(2, '0')}-${zonedDateTime.dayOfMonth.toString().padStart(2, '0')}"
+                GroupBy.Time.Day -> "${zonedDateTime.year}-${
+                    zonedDateTime.monthNumber.toString().padStart(2, '0')
+                }-${zonedDateTime.dayOfMonth.toString().padStart(2, '0')}"
+
                 GroupBy.Time.Week -> {
                     val weekOfYear = ((zonedDateTime.dayOfYear - 1) / 7) + 1
                     "${zonedDateTime.year}-W${weekOfYear.toString().padStart(2, '0')}"
                 }
-                GroupBy.Time.Month -> "${zonedDateTime.year}-${zonedDateTime.monthNumber.toString().padStart(2, '0')}"
+
+                GroupBy.Time.Month -> "${zonedDateTime.year}-${
+                    zonedDateTime.monthNumber.toString().padStart(2, '0')
+                }"
+
                 GroupBy.Time.Season -> {
                     val season = when (zonedDateTime.monthNumber) {
                         in 1..3 -> "Q1"
@@ -230,6 +245,7 @@ class TransactionViewModel(
                     }
                     "${zonedDateTime.year}-$season"
                 }
+
                 GroupBy.Time.Year -> "${zonedDateTime.year}"
             }
         }

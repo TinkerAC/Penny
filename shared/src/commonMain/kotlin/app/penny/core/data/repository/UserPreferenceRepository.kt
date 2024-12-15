@@ -15,5 +15,4 @@ interface UserPreferenceRepository {
     fun setDisplayMode(displayMode: DisplayMode)
 
 
-
 }

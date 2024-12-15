@@ -11,4 +11,4 @@ data class LoginResponse(
     val userDto: UserDto? = null,
     val accessToken: String? = null,
     val refreshToken: String? = null
-): BaseResponseDto()
+) : BaseResponseDto()

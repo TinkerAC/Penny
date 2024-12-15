@@ -44,7 +44,6 @@ class LedgerRepositoryImpl(
     }
 
 
-
     override suspend fun downloadUnsyncedLedgersByUserUuid(lastSyncedAt: Instant): List<LedgerModel> {
         val downloadLedgerResponse = apiClient.sync.downloadLedgers(lastSyncedAt.epochSeconds)
 

@@ -10,27 +10,43 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import app.penny.feature.analytics.AnalyticScreen
 import app.penny.feature.dashboard.DebugScreen
 import app.penny.feature.profile.ProfileScreen
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
-import org.jetbrains.compose.resources.stringResource
+import dev.icerock.moko.resources.StringResource
+
 
 sealed class BottomNavItem(
     val route: String,
     val icon: ImageVector,
-    val title: String,
+    val titleStringResource: StringResource,
     val screen: Screen
 ) {
     data object Dashboard :
-        BottomNavItem("dashboard", Icons.Filled.Home,
-            stringResource(Res.)
-            DebugScreen())
+        BottomNavItem(
+            "dashboard", Icons.Filled.Home,
+            SharedRes.strings.dashboard,
+            DebugScreen()
+        )
 
     data object Analytics :
-        BottomNavItem("analytics", Icons.Filled.PieChart, "Analytics", AnalyticScreen())
+        BottomNavItem(
+            "analytics", Icons.Filled.PieChart,
+            SharedRes.strings.analytics, AnalyticScreen()
+        )
 
-    data object Profile : BottomNavItem("profile", Icons.Filled.Person, "Profile", ProfileScreen())
+    data object Profile : BottomNavItem(
+        "profile",
+        Icons.Filled.Person,
+        SharedRes.strings.profile,
+        ProfileScreen()
+    )
 
     data object Transactions :
-        BottomNavItem("transactions", Icons.Filled.Person, "Transactions", ProfileScreen())
+        BottomNavItem(
+            "transactions", Icons.Filled.Person,
+            SharedRes.strings.transaction,
+            ProfileScreen()
+        )
 
     companion object {
         val items = listOf(Dashboard, Analytics, Profile)

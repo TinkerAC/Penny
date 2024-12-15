@@ -1,8 +1,6 @@
 package app.penny.presentation.ui.theme
 
 import androidx.compose.material3.ColorScheme
-import app.penny.presentation.ui.theme.theme1.Theme1
-import app.penny.presentation.ui.theme.theme2.Theme2
 
 abstract class ThemeConfig(
 ) {

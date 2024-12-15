@@ -1,4 +1,5 @@
 package app.penny.presentation.ui
+
 import app.penny.presentation.ui.theme.DisplayMode
 import app.penny.presentation.ui.theme.ThemeConfig
 import app.penny.presentation.ui.theme.ThemeConstraint

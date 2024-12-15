@@ -1,9 +1,9 @@
 package app.penny.core.data.kvstore
 
-import kotlin.uuid.Uuid
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class UserDataManager(
     private val settings: Settings
@@ -61,6 +61,7 @@ class UserDataManager(
     fun getBooleanOrNull(key: String): Boolean? {
         return settings.getBooleanOrNull(key)
     }
+
     fun getBoolean(key: String): Boolean {
         return settings.getBoolean(key = key, defaultValue = false)
     }

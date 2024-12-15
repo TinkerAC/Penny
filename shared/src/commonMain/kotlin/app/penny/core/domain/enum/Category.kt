@@ -1,7 +1,5 @@
 package app.penny.core.domain.enum
 
-import androidx.compose.runtime.TestOnly
-
 
 enum class Category(
     val parentCategory: Category?,

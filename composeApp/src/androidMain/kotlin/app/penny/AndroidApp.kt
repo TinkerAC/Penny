@@ -7,7 +7,8 @@ class AndroidApp : Application() {
         super.onCreate()
 
         ApplicationInitializer(
-            application = this)
+            application = this
+        )
             .initialize()
 
 

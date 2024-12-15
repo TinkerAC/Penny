@@ -2,9 +2,9 @@
 package app.penny.feature.onBoarding
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.resources.painterResource
-import penny.shared.generated.resources.Res
-import penny.shared.generated.resources.onboarding_cloud_sync
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.painterResource
+
 
 class OnboardingStep0 : OnboardingStepScreen {
     override var onPrevious: (() -> Unit)? = null
@@ -14,7 +14,7 @@ class OnboardingStep0 : OnboardingStepScreen {
     @Composable
     override fun Content() {
         OnboardingPage(
-            illustration = painterResource(Res.drawable.onboarding_cloud_sync),
+            illustration = painterResource(SharedRes.images.onboarding_cloud_sync),
             title = "Your Data, Everywhere",
             content = "Seamlessly sync your financial records across all devices. Access your data anytime, anywhere.",
             currentPage = 0,

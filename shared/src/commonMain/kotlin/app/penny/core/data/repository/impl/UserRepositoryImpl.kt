@@ -6,7 +6,6 @@ import app.penny.core.data.model.toEntity
 import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.UserModel
-import kotlinx.datetime.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

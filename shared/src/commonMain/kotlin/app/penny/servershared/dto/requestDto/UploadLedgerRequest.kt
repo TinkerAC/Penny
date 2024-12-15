@@ -9,8 +9,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UploadLedgerRequest(
     override var invokeInstant: Long = Clock.System.now().epochSeconds,
-    override val userTimeZoneId: String =TimeZone.currentSystemDefault().id,
+    override val userTimeZoneId: String = TimeZone.currentSystemDefault().id,
     val total: Int,
     val ledgers: List<LedgerDto>,
     val lastSyncedAt: Long
-): BaseRequestDto()
+) : BaseRequestDto()

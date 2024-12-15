@@ -17,7 +17,7 @@ interface UserDataRepository {
     suspend fun getUserUuid(): Uuid
     suspend fun setUserUuid(uuid: String)
 
-    suspend fun getLastSyncedAt():Instant?
+    suspend fun getLastSyncedAt(): Instant?
     suspend fun setLastSyncedAt(lastSyncedAt: Instant)
 
     suspend fun clearUserData()
@@ -31,10 +31,8 @@ interface UserDataRepository {
     suspend fun setUserEmail(userEmail: String)
 
 
-
     suspend fun getIsFirstTime(): Boolean
     suspend fun setIsFirstTime(isFirstTime: Boolean)
-
 
 
 }

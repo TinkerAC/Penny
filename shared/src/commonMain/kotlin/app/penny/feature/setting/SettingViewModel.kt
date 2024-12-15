@@ -5,11 +5,12 @@ import app.penny.presentation.ui.ThemeManager
 import app.penny.presentation.ui.ThemeState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import cafe.adriel.voyager.core.registry.screenModule
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
 class SettingViewModel(
     private val userPreferenceRepository: UserPreferenceRepository
 
@@ -73,6 +74,13 @@ class SettingViewModel(
                         )
                     )
                 }
+            }
+
+            is SettingIntent.SetLanguage -> {
+                _uiState.value = _uiState.value.copy(language = intent.language)
+//                userPreferenceRepository.setLanguage(_uiState.value.language)
+                Logger.d { "Language set to ${_uiState.value.language}" }
+
             }
         }
     }

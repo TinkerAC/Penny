@@ -2,20 +2,15 @@ package app.penny
 
 import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.repository.AuthRepository
-import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.data.repository.UserRepository
-import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.di.getKoinInstance
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.dsl.KoinAppDeclaration
-
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import kotlin.uuid.ExperimentalUuidApi
+import org.koin.dsl.KoinAppDeclaration
 
 interface Platform {
     val name: String
@@ -62,7 +57,6 @@ fun ApplicationInitializer.initSession(
     return this // 返回自身
 
 }
-
 
 
 // initialize: 链式调用 initKoin 和 initSession

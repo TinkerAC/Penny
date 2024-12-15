@@ -4,7 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,8 +22,29 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,14 +52,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.enum.Category
 import app.penny.core.domain.enum.TransactionType
-import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.ActionStatus
-import app.penny.core.domain.model.UserModel
+import app.penny.core.domain.model.ChatMessage
 import app.penny.servershared.EditableField
 import app.penny.servershared.FieldType
-import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.enumerate.Action
-import kotlinx.coroutines.launch
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -36,11 +66,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import org.jetbrains.compose.resources.painterResource
-import penny.shared.generated.resources.Res
-import penny.shared.generated.resources.avatar_boy
-import penny.shared.generated.resources.avatar_girl
-import penny.shared.generated.resources.avatar_penny
+
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
@@ -58,7 +84,7 @@ fun ChatBubble(
         if (!isUser) {
             // AI Avatar
             Image(
-                painter = painterResource(Res.drawable.avatar_penny),
+                painter = painterResource(SharedRes.images.avatar_penny),
                 contentDescription = null,
                 modifier = Modifier
                     .size(40.dp)
@@ -102,16 +128,19 @@ fun ChatBubble(
                             }
                         )
                     }
+
                     ActionStatus.Completed -> {
                         ActionCompletedContent(
                             action = message.action,
                         )
                     }
+
                     ActionStatus.Cancelled -> {
                         ActionCancelledContent(
                             action = message.action
                         )
                     }
+
                     else -> {
                         // 理论上不会出现
                         Text(
@@ -127,7 +156,7 @@ fun ChatBubble(
 
             Image(
                 painter = painterResource(
-                    if (Random.nextBoolean()) Res.drawable.avatar_girl else Res.drawable.avatar_boy
+                    if (Random.nextBoolean()) SharedRes.images.avatar_girl else SharedRes.images.avatar_boy
                 ),
                 contentDescription = null,
                 modifier = Modifier
@@ -203,6 +232,7 @@ private fun ActionPendingContent(
                         }
                     )
                 }
+
                 else -> {}
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -310,7 +340,9 @@ private fun DatePickerField(
         if (selectedDateEpoch > 0) {
             val instant = Instant.fromEpochSeconds(selectedDateEpoch)
             val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-            "${localDateTime.year}-${localDateTime.monthNumber.toString().padStart(2, '0')}-${localDateTime.dayOfMonth.toString().padStart(2, '0')}"
+            "${localDateTime.year}-${
+                localDateTime.monthNumber.toString().padStart(2, '0')
+            }-${localDateTime.dayOfMonth.toString().padStart(2, '0')}"
         } else {
             ""
         }

@@ -3,10 +3,10 @@ package app.penny.services
 
 import app.penny.config.JwtConfig
 import app.penny.repository.UserRepository
-import app.penny.servershared.dto.requestDto.LoginRequest
-import app.penny.servershared.dto.responseDto.LoginResponse
-import app.penny.servershared.dto.requestDto.RegisterRequest
 import app.penny.servershared.dto.UserDto
+import app.penny.servershared.dto.requestDto.LoginRequest
+import app.penny.servershared.dto.requestDto.RegisterRequest
+import app.penny.servershared.dto.responseDto.LoginResponse
 import org.mindrot.jbcrypt.BCrypt
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -27,7 +27,7 @@ class UserService(
         val passwordHash = BCrypt.hashpw(credentials.password, BCrypt.gensalt())
         try {
 
-            val uuid :String = credentials.uuid ?: Uuid.random().toString()
+            val uuid: String = credentials.uuid ?: Uuid.random().toString()
 
             val pk = userRepository.insert(
                 uuid = uuid,

@@ -6,8 +6,6 @@ import app.penny.servershared.EditableField
 import app.penny.servershared.FieldType
 import app.penny.servershared.enumerate.Action
 import kotlinx.serialization.Serializable
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Serializable
 data class TransactionDto(

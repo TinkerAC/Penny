@@ -11,10 +11,10 @@ class DownloadUnsyncedLedgerUseCase(
 ) {
     suspend operator fun invoke() {
 
-        val lastSyncedAt :Instant? = userDataRepository.getLastSyncedAt()
+        val lastSyncedAt: Instant? = userDataRepository.getLastSyncedAt()
 
         val unsyncedLedgers = ledgerRepository.downloadUnsyncedLedgersByUserUuid(
-             lastSyncedAt = lastSyncedAt?: Instant.DISTANT_PAST
+            lastSyncedAt = lastSyncedAt ?: Instant.DISTANT_PAST
         )
 
         //call upsertLedgers for each ledger
@@ -22,11 +22,6 @@ class DownloadUnsyncedLedgerUseCase(
         unsyncedLedgers.forEach {
             ledgerRepository.upsert(it)
         }
-
-
-
-
-
 
 
     }

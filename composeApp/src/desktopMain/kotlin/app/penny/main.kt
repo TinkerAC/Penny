@@ -3,9 +3,8 @@ package app.penny
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import app.penny.core.data.repository.UserDataRepository
-import app.penny.di.getKoinInstance
-import kotlinx.coroutines.coroutineScope
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.stringResource
 
 //JVM entry point
 fun main() = application {
@@ -16,10 +15,9 @@ fun main() = application {
         .initialize()
 
 
-
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Penny",
+        title = stringResource(SharedRes.strings.app_name),
         state = rememberWindowState(
         )
     ) {

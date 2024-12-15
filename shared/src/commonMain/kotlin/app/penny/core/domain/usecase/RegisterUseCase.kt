@@ -2,9 +2,7 @@
 package app.penny.core.domain.usecase
 
 import app.penny.core.data.repository.AuthRepository
-import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.exception.RegisterException
-import app.penny.servershared.dto.responseDto.LoginResponse
 import app.penny.servershared.dto.responseDto.RegisterResponse
 import co.touchlab.kermit.Logger
 import kotlinx.io.IOException
@@ -12,10 +10,12 @@ import kotlinx.io.IOException
 class RegisterUseCase(
     private val authRepository: AuthRepository,
 ) {
-    suspend operator fun invoke(email: String,
-                                password: String,
-                                confirmPassword: String,
-                                uuid: String?): RegisterResponse {
+    suspend operator fun invoke(
+        email: String,
+        password: String,
+        confirmPassword: String,
+        uuid: String?
+    ): RegisterResponse {
 
         if (password != confirmPassword) {
             throw RegisterException.PasswordNotMatchException

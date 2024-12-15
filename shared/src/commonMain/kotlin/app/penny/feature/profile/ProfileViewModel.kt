@@ -5,7 +5,6 @@ import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.exception.LoginException
 import app.penny.core.domain.exception.RegisterException
-import app.penny.core.domain.model.UserModel
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
 import app.penny.servershared.dto.responseDto.LoginResponse

@@ -3,19 +3,33 @@ package app.penny
 
 import app.penny.config.DatabaseFactory
 import app.penny.config.JwtConfig
-import app.penny.repository.*
-import app.penny.repository.impl.*
-import app.penny.routes.*
-import app.penny.services.*
+import app.penny.repository.LedgerRepository
+import app.penny.repository.TransactionRepository
+import app.penny.repository.UserRepository
+import app.penny.repository.impl.LedgerRepositoryImpl
+import app.penny.repository.impl.TransactionRepositoryImpl
+import app.penny.repository.impl.UserRepositoryImpl
+import app.penny.routes.aiRoutes
+import app.penny.routes.authRoutes
+import app.penny.routes.syncRoutes
+import app.penny.routes.userRoutes
+import app.penny.services.AiService
+import app.penny.services.AuthService
+import app.penny.services.LedgerService
+import app.penny.services.StatisticsService
+import app.penny.services.TransactionService
+import app.penny.services.UserService
 import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIHost
 import com.typesafe.config.ConfigFactory
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.routing.*
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.jwt.jwt
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.routing.routing
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 

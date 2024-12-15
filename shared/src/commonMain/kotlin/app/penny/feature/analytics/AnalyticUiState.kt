@@ -56,8 +56,6 @@ enum class AnalyticTab {
 }
 
 
-
-
 data class IncomeExpenseTrendChartData(
     val xAxisData: List<String>,
     val incomeValues: List<Double>,

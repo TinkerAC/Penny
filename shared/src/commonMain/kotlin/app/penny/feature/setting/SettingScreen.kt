@@ -1,25 +1,45 @@
 package app.penny.feature.setting
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.penny.feature.setting.component.ExposedDropDownSetting
 import app.penny.feature.setting.component.ExpendSetting
+import app.penny.feature.setting.component.ExposedDropDownSetting
 import app.penny.feature.setting.component.SettingSection
 import app.penny.feature.setting.component.ThemeColorOptionContent
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.compose.stringResource
+
 
 class SettingScreen : Screen {
     @Composable
@@ -59,11 +79,24 @@ class SettingScreen : Screen {
                         ) {
                             // 主题设置部分
                             SettingSection(
-                                title = "Preferences",
-                                description = "Customize Penny",
+                                title = stringResource(SharedRes.strings.preference),
+                                description = stringResource(SharedRes.strings.preference_setting_description),
                                 settingItems = listOf {
+
+                                    ExposedDropDownSetting(
+                                        settingName = stringResource(SharedRes.strings.language),
+                                        items = uiState.languages,
+                                        selectedItem = uiState.language,
+                                        onItemSelected = {
+                                            viewModel.handleIntent(
+                                                SettingIntent.SetLanguage(it)
+                                            )
+                                        },
+                                        displayMapper = { it.name }
+                                    )
+
                                     ExpendSetting(
-                                        settingName = "Theme Color",
+                                        settingName = stringResource(SharedRes.strings.theme_color),
                                         currentValue = uiState.theme,
                                         options = uiState.themes,
                                         onValueChange = {
@@ -80,7 +113,7 @@ class SettingScreen : Screen {
                                         },
                                     )
                                     ExposedDropDownSetting(
-                                        settingName = "Display Mode",
+                                        settingName = stringResource(SharedRes.strings.display_mode),
                                         items = uiState.displayModes,
                                         selectedItem = uiState.displayMode,
                                         onItemSelected = {
@@ -91,7 +124,7 @@ class SettingScreen : Screen {
                                         displayMapper = { it.name }
                                     )
                                     ExposedDropDownSetting(
-                                        settingName = "Constraints",
+                                        settingName = stringResource(SharedRes.strings.constraint),
                                         items = uiState.constraints,
                                         selectedItem = uiState.constraint,
                                         onItemSelected = {

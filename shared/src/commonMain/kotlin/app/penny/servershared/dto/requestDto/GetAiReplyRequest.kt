@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetAiReplyRequest(
     override var invokeInstant: Long = Clock.System.now().epochSeconds,
-    override val userTimeZoneId: String =TimeZone.currentSystemDefault().id,
+    override val userTimeZoneId: String = TimeZone.currentSystemDefault().id,
     var text: String? = null
 ) : BaseRequestDto()

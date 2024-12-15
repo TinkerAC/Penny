@@ -10,6 +10,7 @@ class UserPreferenceManager(
     fun putString(key: String, value: String) {
         settings.set(key = key, value = value)
     }
+
     fun getStringOrNull(key: String) = settings.getStringOrNull(key)
 
 

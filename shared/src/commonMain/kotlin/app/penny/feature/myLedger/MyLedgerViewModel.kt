@@ -2,7 +2,6 @@ package app.penny.feature.myLedger
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.domain.model.LedgerModel
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow

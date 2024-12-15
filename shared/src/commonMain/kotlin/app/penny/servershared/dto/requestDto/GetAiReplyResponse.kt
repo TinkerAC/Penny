@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 data class GetAiReplyResponse(
     override val message: String,
     override val success: Boolean,
-    val content : String = "",
-    val action:Action? = null
-): BaseResponseDto()
+    val content: String = "",
+    val action: Action? = null
+) : BaseResponseDto()

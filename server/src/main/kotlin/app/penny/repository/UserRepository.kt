@@ -6,7 +6,9 @@ import app.penny.servershared.dto.UserDto
 interface UserRepository {
     fun findByEmail(email: String): UserDto?
     fun insert(
-        uuid:String,
-        email: String, passwordHash: String): Long
+        uuid: String,
+        email: String, passwordHash: String
+    ): Long
+
     fun findById(id: Long): UserDto?
 }
