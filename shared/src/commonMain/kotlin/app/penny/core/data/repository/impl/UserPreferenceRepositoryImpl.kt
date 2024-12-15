@@ -2,6 +2,7 @@ package app.penny.core.data.repository.impl
 
 import app.penny.core.data.kvstore.UserPreferenceManager
 import app.penny.core.data.repository.UserPreferenceRepository
+import app.penny.feature.setting.Language
 import app.penny.presentation.ui.theme.DisplayMode
 import app.penny.presentation.ui.theme.ThemeColor
 import app.penny.presentation.ui.theme.ThemeConstraint
@@ -43,5 +44,17 @@ class UserPreferenceRepositoryImpl(
 
     override fun setDisplayMode(displayMode: DisplayMode) {
         settingManager.putString(UserPreferenceManager.DARK_MODE, displayMode.name)
+    }
+
+
+    override fun setLanguage(language: Language) {
+        settingManager.putString(UserPreferenceManager.LANGUAGE, language.name)
+    }
+
+    override fun getLanguage(): Language {
+        return Language.valueOf(
+            settingManager.getStringOrNull(UserPreferenceManager.LANGUAGE)
+                ?: Language.ENGLISH.name
+        )
     }
 }

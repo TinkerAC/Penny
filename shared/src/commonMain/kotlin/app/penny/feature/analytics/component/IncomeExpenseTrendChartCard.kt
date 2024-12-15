@@ -17,10 +17,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.penny.shared.SharedRes
 import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.lineChart.LineChart
 import com.aay.compose.lineChart.model.LineParameters
 import com.aay.compose.lineChart.model.LineType
+import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun IncomeExpenseTrendChartCard(
@@ -33,7 +35,8 @@ fun IncomeExpenseTrendChartCard(
     val incomeLine = LineParameters(
         data = incomeValues,
         lineColor = Color(0xFF4CAF50), // 绿色
-        label = "收入",
+        label =
+        stringResource(SharedRes.strings.income),
         lineType = LineType.CURVED_LINE,
         lineShadow = true
     )
@@ -41,7 +44,7 @@ fun IncomeExpenseTrendChartCard(
     val expenseLine = LineParameters(
         data = expenseValues,
         lineColor = Color(0xFFF44336), // 红色
-        label = "支出",
+        label = stringResource(SharedRes.strings.expense),
         lineType = LineType.CURVED_LINE,
         lineShadow = true
     )
@@ -57,7 +60,7 @@ fun IncomeExpenseTrendChartCard(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "收入与支出趋势",
+                text = stringResource(SharedRes.strings.income_expense_trend),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -70,7 +73,7 @@ fun IncomeExpenseTrendChartCard(
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
                     Text(
-                        text = "暂无数据",
+                        text = stringResource(SharedRes.strings.no_data),
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp

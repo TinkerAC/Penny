@@ -1,6 +1,7 @@
 package app.penny.feature.setting
 
 import app.penny.core.data.repository.UserPreferenceRepository
+import app.penny.presentation.ui.LanguageManager
 import app.penny.presentation.ui.ThemeManager
 import app.penny.presentation.ui.ThemeState
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -24,7 +25,8 @@ class SettingViewModel(
             _uiState.value = _uiState.value.copy(
                 theme = userPreferenceRepository.getThemeColor(),
                 displayMode = userPreferenceRepository.getDisplayMode(),
-                constraint = userPreferenceRepository.getConstraints()
+                constraint = userPreferenceRepository.getConstraints(),
+                language = userPreferenceRepository.getLanguage()
             )
         }
 
@@ -78,7 +80,8 @@ class SettingViewModel(
 
             is SettingIntent.SetLanguage -> {
                 _uiState.value = _uiState.value.copy(language = intent.language)
-//                userPreferenceRepository.setLanguage(_uiState.value.language)
+                userPreferenceRepository.setLanguage(_uiState.value.language)
+                LanguageManager.setLocaleTo(_uiState.value.language)
                 Logger.d { "Language set to ${_uiState.value.language}" }
 
             }

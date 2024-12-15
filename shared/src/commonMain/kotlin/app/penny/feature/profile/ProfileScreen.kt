@@ -43,9 +43,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.penny.feature.setting.SettingScreen
 import app.penny.presentation.ui.components.RegisterAndLoginBottomSheet
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import dev.icerock.moko.resources.compose.stringResource
 
 class ProfileScreen : Screen {
 
@@ -139,8 +141,8 @@ fun UserInfoSection(
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = when {
-                uiState.isLoggedIn -> uiState.username ?: uiState.email ?: "PennyPal"
-                else -> "Tap to login"
+                uiState.isLoggedIn -> uiState.username ?: uiState.email ?: stringResource(SharedRes.strings.default_username)
+                else -> stringResource(SharedRes.strings.tap_to_login)
             },
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onBackground
@@ -180,10 +182,22 @@ fun FunctionGrid() {
 
     val rootNavigator = LocalNavigator.current?.parent
     val features = listOf(
-        FeatureItem("Notifications", Icons.Default.Notifications),
-        FeatureItem("我的徽章", Icons.Default.WorkspacePremium),
-        FeatureItem("Penny's Box", Icons.Default.HomeRepairService),
-        FeatureItem("Settings", Icons.Default.Settings, SettingScreen())
+        FeatureItem(
+            stringResource(SharedRes.strings.notification),
+            Icons.Default.Notifications
+        ),
+        FeatureItem(
+            stringResource(SharedRes.strings.my_ledger),
+            Icons.Default.WorkspacePremium
+        ),
+        FeatureItem(
+            stringResource(SharedRes.strings.pennys_box),
+            Icons.Default.HomeRepairService
+        ),
+        FeatureItem(
+            stringResource(SharedRes.strings.settings),
+            Icons.Default.Settings, SettingScreen()
+        )
     )
 
     LazyVerticalGrid(
@@ -229,9 +243,15 @@ data class FeatureItem(
 fun MenuList() {
     // TODO: navigation not implemented
     val menuItems = listOf(
-        MenuItem("使用帮助", Icons.AutoMirrored.Filled.Help),
-        MenuItem("意见反馈", Icons.Default.Feedback),
-        MenuItem("关于我们", Icons.Default.Info)
+        MenuItem(
+            stringResource(SharedRes.strings.help),
+            Icons.AutoMirrored.Filled.Help),
+        MenuItem(
+            stringResource(SharedRes.strings.feedback),
+            Icons.Default.Feedback),
+        MenuItem(
+            stringResource(SharedRes.strings.about),
+            Icons.Default.Info)
     )
     Column(
         modifier = Modifier

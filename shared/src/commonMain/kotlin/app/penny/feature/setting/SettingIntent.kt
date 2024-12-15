@@ -11,7 +11,11 @@ sealed class SettingIntent {
     data class SetLanguage(val language: Language) : SettingIntent()
 }
 
-enum class Language {
-    ENGLISH,
-    CHINESE,
+enum class Language(
+    val locale: String
+) {
+
+    ENGLISH("en"),
+    CHINESE("zh")
+
 }

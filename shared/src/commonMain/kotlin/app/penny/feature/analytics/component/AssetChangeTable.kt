@@ -15,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.penny.shared.SharedRes
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.LocalDate
 
 @Composable
@@ -38,7 +40,8 @@ fun AssetChangeTable(
         ) {
             // 标题
             Text(
-                text = "资产日变动表",
+                text =
+                stringResource(SharedRes.strings.asset_daily_change),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -53,19 +56,19 @@ fun AssetChangeTable(
             ) {
 
                 TableCell(
-                    text = "Date",
+                    text = stringResource(SharedRes.strings.date),
                     modifier = Modifier.weight(1f), isHeader = true
                 )
                 TableCell(
-                    text = "Income",
+                    text = stringResource(SharedRes.strings.income),
                     modifier = Modifier.weight(1f), isHeader = true
                 )
                 TableCell(
-                    text = "Expense",
+                    text = stringResource(SharedRes.strings.expense),
                     modifier = Modifier.weight(1f), isHeader = true
                 )
                 TableCell(
-                    text = "Balance",
+                    text = stringResource(SharedRes.strings.balance),
                     modifier = Modifier.weight(1f), isHeader = true
                 )
             }

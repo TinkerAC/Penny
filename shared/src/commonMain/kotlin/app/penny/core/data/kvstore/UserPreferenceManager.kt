@@ -18,6 +18,7 @@ class UserPreferenceManager(
         const val THEME_NAME = "theme_name"
         const val CONSTRAINTS = "constraints"//LOW, MEDIUM, HIGH
         const val DARK_MODE = "dark_mode" //SYSTEM, LIGHT, DARK
+        const val LANGUAGE = "language" //ENGLISH, CHINESE
     }
 
 

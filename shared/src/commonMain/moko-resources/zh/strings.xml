@@ -1,4 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="my_string">My default localization string</string>
+    <string name="app_name">Penny</string>
+    <string name="hello_world">你好，世界！</string>
+    <string name="dashboard">仪表板</string>
+    <string name="transaction">交易</string>
+    <string name="analytics">分析</string>
+    <string name="profile">个人资料</string>
+    <string name="back_button">返回</string>
+    <string name="tap_to_login">点击登录</string>
+    <string name="login">登录</string>
+    <string name="logout">登出</string>
+    <string name="email">电子邮件</string>
+    <string name="password">密码</string>
+    <string name="forgot_password">忘记密码？</string>
+    <string name="register">注册</string>
+    <string name="toggle_view">切换视图</string>
+    <string name="back">返回</string>
+    <string name="next">下一步</string>
+    <string name="income">收入</string>
+    <string name="expense">支出</string>
+    <string name="category">类别</string>
+    <string name="balance">余额</string>
+    <string name="amount">金额</string>
+    <string name="date">日期</string>
+    <string name="remarks">备注</string>
+    <string name="add_transaction">添加交易</string>
+    <string name="notification">通知</string>
+    <string name="settings">设置</string>
+    <string name="language">语言</string>
+    <string name="pennys_box">Penny的魔盒</string>
+    <string name="currency">货币</string>
+    <string name="help">帮助</string>
+    <string name="about">关于</string>
+    <string name="theme_color">主题颜色</string>
+    <string name="display_mode">显示模式</string>
+    <string name="display_mode_light">亮色</string>
+    <string name="display_mode_dark">暗色</string>
+    <string name="display_mode_system">系统</string>
+    <string name="currency_code">货币代码</string>
+    <string name="constraint">约束</string>
+    <string name="preference_setting_description">自定义Penny</string>
+    <string name="constraint_high">高</string>
+    <string name="constraint_medium">中</string>
+    <string name="constraint_low">低</string>
+    <string name="preference">偏好</string>
+    <string name="default_username">PennyPal</string>
+    <string name="my_ledger">我的账本</string>
+    <string name="feedback">意见反馈</string>
+    <string name="security">安全</string>
+    <string name="security_setting_description">保护您的数据安全</string>
+    <string name="add">添加</string>
+    <string name="edit">编辑</string>
+    <string name="author">作者</string>
+    <string name="version">版本</string>
+    <string name="github">GitHub</string>
+    <string name="no_data">暂无数据</string>
+    <string name="income_abbr">收</string>
+    <string name="expense_abbr">支</string>
+    <string name="balance_abbr">余</string>
+    <string name="income_expense_trend">收支趋势</string>
+    <string name="asset_daily_change">资产日变化</string>
+
+
+
+
 </resources>

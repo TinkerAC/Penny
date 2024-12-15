@@ -11,6 +11,7 @@ import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserPreferenceRepository
 import app.penny.di.getKoinInstance
 import app.penny.feature.onBoarding.OnboardingNavigatorScreen
+import app.penny.presentation.ui.LanguageManager
 import app.penny.presentation.ui.MainScreen
 import app.penny.presentation.ui.ThemeManager
 import app.penny.presentation.ui.ThemeState
@@ -23,6 +24,9 @@ import cafe.adriel.voyager.transitions.SlideTransition
 fun App() {
 
     val userPreferenceRepository = getKoinInstance<UserPreferenceRepository>()
+    val language = userPreferenceRepository.getLanguage()
+    // 设置语言
+     LanguageManager.setLocaleTo(language)
 
     // 当前主题状态
     var themeState by remember {

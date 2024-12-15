@@ -51,7 +51,7 @@ class SettingScreen : Screen {
         Scaffold(
             topBar = {
                 SingleNavigateBackTopBar(
-                    title = "Settings",
+                    title = stringResource(SharedRes.strings.settings),
                     onNavigateBack = { rootNavigator.pop() },
                 )
             }
@@ -77,7 +77,7 @@ class SettingScreen : Screen {
                                 .background(MaterialTheme.colorScheme.surface),
                             elevation = CardDefaults.cardElevation(3.dp)
                         ) {
-                            // 主题设置部分
+                            // Preference setting section
                             SettingSection(
                                 title = stringResource(SharedRes.strings.preference),
                                 description = stringResource(SharedRes.strings.preference_setting_description),
@@ -144,8 +144,8 @@ class SettingScreen : Screen {
 
                             // 安全设置部分：锁定开关
                             SettingSection(
-                                title = "Security",
-                                description = "Keep your data safe",
+                                title = stringResource(SharedRes.strings.security),
+                                description = stringResource(SharedRes.strings.security_setting_description),
                                 settingItems = listOf {
                                     SwitchSetting(
                                         settingName = "Lock App",
@@ -246,20 +246,20 @@ fun AuthorInfoSurface() {
             modifier = Modifier.padding(16.dp)
         ) {
             InfoSetting(
-                settingName = "Author",
+                settingName = stringResource(SharedRes.strings.author),
                 info = "Tinker"
             )
             InfoSetting(
-                settingName = "Email",
+                settingName = stringResource(SharedRes.strings.email),
                 info = "220110790202@zufe.edu"
             )
 
             InfoSetting(
-                settingName = "Version",
+                settingName = stringResource(SharedRes.strings.version),
                 info = "1.0.0"
             )
             InfoSetting(
-                settingName = "GitHub",
+                settingName = stringResource(SharedRes.strings.github),
                 info = "https://github.com/TinkerAC/Penny"
             )
 
