@@ -2,7 +2,7 @@ package app.penny.feature.analytics
 
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
-import app.penny.core.utils.getDaysInMonth
+import app.penny.core.domain.model.valueObject.YearMonth
 import com.aay.compose.donutChart.model.PieChartData
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
@@ -55,33 +55,7 @@ enum class AnalyticTab {
     Custom
 }
 
-data class YearMonth(
-    val year: Int,
-    val month: Int
-) {
-    override fun toString(): String {
-        return "$year-$month"
-    }
 
-    fun getLocalDateSequence(): List<LocalDate> {
-        val daysInMonth = getDaysInMonth(year, month)
-
-        return (1..daysInMonth step 2).map { LocalDate(year, month, it) }
-
-    }
-
-    operator fun compareTo(yearMonth: YearMonth): Int {
-        return when {
-            year > yearMonth.year -> 1
-            year < yearMonth.year -> -1
-            month > yearMonth.month -> 1
-            month < yearMonth.month -> -1
-            else -> 0
-        }
-    }
-
-
-}
 
 
 data class IncomeExpenseTrendChartData(

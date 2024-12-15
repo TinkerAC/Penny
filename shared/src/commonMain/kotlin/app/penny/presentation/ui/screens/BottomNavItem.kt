@@ -8,9 +8,10 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.penny.feature.analytics.AnalyticScreen
-import app.penny.feature.dashboard.DashboardScreen
+import app.penny.feature.dashboard.DebugScreen
 import app.penny.feature.profile.ProfileScreen
 import cafe.adriel.voyager.core.screen.Screen
+import org.jetbrains.compose.resources.stringResource
 
 sealed class BottomNavItem(
     val route: String,
@@ -19,7 +20,9 @@ sealed class BottomNavItem(
     val screen: Screen
 ) {
     data object Dashboard :
-        BottomNavItem("dashboard", Icons.Filled.Home, "Dashboard", DashboardScreen())
+        BottomNavItem("dashboard", Icons.Filled.Home,
+            stringResource(Res.)
+            DebugScreen())
 
     data object Analytics :
         BottomNavItem("analytics", Icons.Filled.PieChart, "Analytics", AnalyticScreen())

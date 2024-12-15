@@ -1,10 +1,12 @@
 package app.penny
 
 import app.penny.core.data.kvstore.TokenManager
+import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.usecase.InitLocalUserUseCase
+import app.penny.di.getKoinInstance
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,14 +39,17 @@ fun ApplicationInitializer.initSession(
 ): ApplicationInitializer {
     val userDataRepository: UserDataRepository by inject()
     val tokenManager: TokenManager by inject()
+    val authRepository = getKoinInstance<AuthRepository>()
 
     CoroutineScope(Dispatchers.Default).launch {
         val isFirstTime = userDataRepository.getIsFirstTime()
+        val isUserLoggedIn = authRepository.isLoggedIn()
 
-        if (isFirstTime) {
-            Logger.i("First time launch, skip session initialization")
-            return@launch // 如果是第一次启动，跳过初始化 session
-        } //TODO: 实现此逻辑
+        if (isFirstTime || !isUserLoggedIn) {
+            Logger.i("First time launch Or User not logged in")
+            return@launch
+        }
+
         Logger.i { "Initializing session..." }
         try {
             val accessToken = tokenManager.getAccessToken()
@@ -57,23 +62,6 @@ fun ApplicationInitializer.initSession(
     return this // 返回自身
 
 }
-
-@OptIn(ExperimentalUuidApi::class)
-fun ApplicationInitializer.initUser(): ApplicationInitializer {
-    //如果数据库中没有用户信息,创建默认用户
-
-    val userRepository: UserRepository by inject()
-    val userDataRepository: UserDataRepository by inject()
-    val initLocalUserUseCase: InitLocalUserUseCase by inject() //TODO: 为OnBoarding 创建viewModel,并在那里调用
-    CoroutineScope(Dispatchers.Default).launch {
-//        initLocalUserUseCase()
-    }
-    return this
-
-
-}
-
-
 
 
 

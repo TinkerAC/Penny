@@ -1,4 +1,4 @@
-// DashboardScreen.kt
+// DebugScreen.kt
 package app.penny.feature.dashboard
 
 import androidx.compose.foundation.layout.height
@@ -21,13 +21,13 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 
-class DashboardScreen : Screen {
+class DebugScreen : Screen {
 
     @Composable
     override fun Content() {
-        val dashboardViewModel = koinScreenModel<DashboardViewModel>()
+        val debugViewModel = koinScreenModel<DebugViewModel>()
         val navigator = LocalNavigator.currentOrThrow
-        val uiState = dashboardViewModel.uiState.collectAsState()
+        val uiState = debugViewModel.uiState.collectAsState()
         val rootNavigator = navigator.parent
         var count by remember { mutableStateOf(0) }
         var tier by remember { mutableStateOf(0) }
@@ -71,7 +71,7 @@ class DashboardScreen : Screen {
 
         Button(
             onClick = {
-                dashboardViewModel.insertRandomTransaction(count, tier)
+                debugViewModel.insertRandomTransaction(count, tier)
             }
         ) {
             Text("Insert Random Transaction")
@@ -79,7 +79,7 @@ class DashboardScreen : Screen {
 
         Button(
             onClick = {
-                dashboardViewModel.uploadUpdatedLedgers()
+                debugViewModel.uploadUpdatedLedgers()
             }
         ) {
             Text("Upload Ledgers")
@@ -87,14 +87,14 @@ class DashboardScreen : Screen {
 
         Button(
             onClick = {
-                dashboardViewModel.clearUserData()
+                debugViewModel.clearUserData()
             }
         ) {
             Text("Clear User Data(Token, User Name, User Email)")
         }
         Button(
             onClick = {
-                dashboardViewModel.downloadUnsyncedLedgers()
+                debugViewModel.downloadUnsyncedLedgers()
             }
         ) {
             Text("Download Unsynced Ledgers")
@@ -103,7 +103,7 @@ class DashboardScreen : Screen {
 
         Button(
             onClick = {
-                dashboardViewModel.syncAllData()
+                debugViewModel.syncAllData()
             }
         ) {
             Text("Sync All Data")
@@ -112,9 +112,9 @@ class DashboardScreen : Screen {
 
 
 
-        Text("Last Synced At: ${dashboardViewModel.uiState.value.lastSyncedAt ?: "Never"}")
+        Text("Last Synced At: ${debugViewModel.uiState.value.lastSyncedAt ?: "Never"}")
 
-        Text("Active User: ${dashboardViewModel.uiState.value.activeUser?: "No Active User"})")
+        Text("Active User: ${debugViewModel.uiState.value.activeUser?: "No Active User"})")
         Text(uiState.value.message ?: "")
 
 

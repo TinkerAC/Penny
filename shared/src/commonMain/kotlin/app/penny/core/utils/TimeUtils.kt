@@ -1,7 +1,8 @@
 // file: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/transactions/utils/DateUtils.kt
 package app.penny.core.utils
 
-import app.penny.feature.analytics.YearMonth
+
+import app.penny.core.domain.model.valueObject.YearMonth
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
@@ -41,17 +42,17 @@ fun localDateNow(): LocalDate {
  * @param month 月份（1-12）
  * @return 该月的天数
  */
-fun getDaysInMonth(year: Int, month: Int): Int {
+fun getDaysInMonth(yearMonth: YearMonth): Int {
     // 创建指定月份的第一天
-    val date = LocalDate(year, month, 1)
+    val date = LocalDate(yearMonth.year, yearMonth.month, 1)
 
     // 计算下一个月的第一天
-    val nextMonth = if (month == 12) {
+    val nextMonth = if (date.monthNumber == 12) {
         // 如果是12月，下一个月为下一年的1月
-        LocalDate(year + 1, 1, 1)
+        LocalDate(yearMonth.year + 1, 1, 1)
     } else {
         // 否则，下一个月为当前年的下一个月
-        LocalDate(year, month + 1, 1)
+        LocalDate(yearMonth.year, yearMonth.month + 1, 1)
     }
 
     // 通过减去一天，得到当前月的最后一天

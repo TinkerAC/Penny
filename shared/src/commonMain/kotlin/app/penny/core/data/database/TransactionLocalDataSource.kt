@@ -42,4 +42,10 @@ interface TransactionLocalDataSource {
 
     fun countByLedgerUuid(ledgerUuid: String): Long
 
+    fun findByUserUuidAndTransactionDateBetween(
+        userUuid: String,
+        startEpochSeconds: Long,
+        endEpochSeconds: Long
+    ): List<TransactionEntity>
+
 }

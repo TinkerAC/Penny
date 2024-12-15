@@ -13,12 +13,12 @@ data class UserDto(
     val createdAt: Long = 0,
     val updatedAt: Long = 0,
     val passwordHash: String? = null,
-) : BaseEntityDto(){
+) : BaseEntityDto() {
     override fun getEditableFields(): List<EditableField> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override fun isCompleteFor(action: Action): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 }

@@ -28,7 +28,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
-
+import app.penny.core.domain.model.valueObject.YearMonth
 
 @OptIn(ExperimentalUuidApi::class)
 class AnalyticViewModel(
@@ -137,7 +137,7 @@ class AnalyticViewModel(
             endDate = LocalDate(
                 yearMonth.year,
                 yearMonth.month,
-                getDaysInMonth(yearMonth.year, yearMonth.month)
+                getDaysInMonth(yearMonth)
             )
         )
         performFilter()
@@ -300,7 +300,7 @@ class AnalyticViewModel(
 
                 // 将数据按每两天一组进行分组
                 val yearMonth = _uiState.value.selectedYearMonth
-                val daysInMonth = getDaysInMonth(yearMonth.year, yearMonth.month)
+                val daysInMonth = getDaysInMonth(yearMonth)
                 val localDateSequence = (1..daysInMonth step 2).map { day ->
                     LocalDate(yearMonth.year, yearMonth.month, day)
                 }
@@ -315,7 +315,7 @@ class AnalyticViewModel(
 
                 // 将交易按映射后的日期分组
                 val groupedTransactions = transactions.groupBy {
-                    mappingDayOfMonth(it.transactionDate.toLocalDateTime(timeZone).date)
+                    mappingDayOfMonth(it.transactionInstant.toLocalDateTime(timeZone).date)
                 }
 
                 // 汇总收入和支出
@@ -364,7 +364,7 @@ class AnalyticViewModel(
 
                 // 将交易按日期分组
                 val groupedTransactions = transactions.groupBy {
-                    it.transactionDate.toLocalDateTime(timeZone).date
+                    it.transactionInstant.toLocalDateTime(timeZone).date
                 }
 
                 // 汇总收入和支出
@@ -407,7 +407,7 @@ class AnalyticViewModel(
 
                 // 将交易按月份分组
                 val groupedTransactions = transactions.groupBy {
-                    it.transactionDate.toLocalDateTime(timeZone).date.monthNumber
+                    it.transactionInstant.toLocalDateTime(timeZone).date.monthNumber
                 }
 
                 // 汇总收入和支出
@@ -467,7 +467,7 @@ class AnalyticViewModel(
                             expenseByDate[date] = 0.0
                         }
                         val groupedTransactions = transactions.groupBy {
-                            it.transactionDate.toLocalDateTime(timeZone).date
+                            it.transactionInstant.toLocalDateTime(timeZone).date
                         }
 
                         groupedTransactions.forEach { (date, transactionsInGroup) ->
@@ -507,7 +507,7 @@ class AnalyticViewModel(
                         val groupedTransactions = transactions.groupBy {
                             mappingDayOfMonth(
                                 mappingDayOfMonth(
-                                    it.transactionDate.toLocalDateTime(
+                                    it.transactionInstant.toLocalDateTime(
                                         timeZone
                                     ).date
                                 )
@@ -557,8 +557,8 @@ class AnalyticViewModel(
 
                         val groupedTransactions = transactions.groupBy {
                             YearMonth(
-                                it.transactionDate.toLocalDateTime(timeZone).date.year,
-                                it.transactionDate.toLocalDateTime(timeZone).date.monthNumber
+                                it.transactionInstant.toLocalDateTime(timeZone).date.year,
+                                it.transactionInstant.toLocalDateTime(timeZone).date.monthNumber
                             )
                         }
 
@@ -604,7 +604,7 @@ class AnalyticViewModel(
                         }
 
                         val groupedTransactions = transactions.groupBy {
-                            it.transactionDate.toLocalDateTime(timeZone).date.year
+                            it.transactionInstant.toLocalDateTime(timeZone).date.year
                         }
 
                         groupedTransactions.forEach { (year, transactionsInGroup) ->
@@ -715,7 +715,7 @@ class AnalyticViewModel(
     ): List<Pair<LocalDate, Triple<BigDecimal, BigDecimal, BigDecimal>>> {
 
         val groupedTransactions = transactions.groupBy {
-            it.transactionDate.toLocalDateTime(TimeZone.currentSystemDefault()).date
+            it.transactionInstant.toLocalDateTime(TimeZone.currentSystemDefault()).date
         }
 
         val assetTableData =

@@ -1,16 +1,13 @@
+// file: shared/src/commonMain/kotlin/app/penny/feature/analytics/chartAndTable/IncomeExpenseTrendChartCard.kt
 package app.penny.feature.analytics.component
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aay.compose.baseComponents.model.LegendPosition
@@ -42,48 +39,56 @@ fun IncomeExpenseTrendChartCard(
         lineShadow = true
     )
 
-    // 绘制图表
-    Surface(
-        modifier = Modifier
-            .height(300.dp)
+    Card(
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        shadowElevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = MaterialTheme.shapes.medium
     ) {
-
-        if (incomeValues.isEmpty() && expenseValues.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxWidth().height(300.dp),
-                contentAlignment = androidx.compose.ui.Alignment.Center
-            ) {
-                Text(
-                    text = "暂无数据",
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = 16.sp
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "收入与支出趋势",
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            if (incomeValues.isEmpty() && expenseValues.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp),
+                    contentAlignment = androidx.compose.ui.Alignment.Center
+                ) {
+                    Text(
+                        text = "暂无数据",
+                        style = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 16.sp
+                        )
                     )
+                }
+            } else {
+                LineChart(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp),
+                    linesParameters = listOf(incomeLine, expenseLine),
+                    xAxisData = xAxisData,
+                    legendPosition = LegendPosition.TOP,
+                    isGrid = true,
+                    gridColor = Color.LightGray,
+                    yAxisStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
+                    xAxisStyle = TextStyle(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 12.sp
+                    ),
+                    descriptionStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
+                    showGridWithSpacer = true,
                 )
             }
-        } else {
-            LineChart(
-                modifier = modifier.padding(16.dp),
-                linesParameters = listOf(incomeLine, expenseLine),
-                xAxisData = xAxisData,
-                legendPosition = LegendPosition.TOP,
-                isGrid = true,
-                gridColor = Color.LightGray,
-                yAxisStyle = TextStyle(color = Color.Black),
-                xAxisStyle = TextStyle(
-                    color = Color.Black,
-                    fontSize = 12.sp
-                ),
-                descriptionStyle = TextStyle(color = Color.Black),
-                showGridWithSpacer = true,
-            )
-
-
         }
-
     }
 }

@@ -11,10 +11,13 @@ import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.Feedback
+import androidx.compose.material.icons.filled.HomeRepairService
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material.icons.filled.WorkspacePremium
+import androidx.compose.material.icons.filled.Workspaces
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -165,8 +168,8 @@ fun FunctionGrid() {
     val rootNavigator = LocalNavigator.current?.parent
     val features = listOf(
         FeatureItem("Notifications", Icons.Default.Notifications),
-        FeatureItem("我的徽章", Icons.Default.Badge),
-        FeatureItem("Penny's Box", Icons.Default.Storage),
+        FeatureItem("我的徽章", Icons.Default.WorkspacePremium),
+        FeatureItem("Penny's Box", Icons.Default.HomeRepairService),
         FeatureItem("Settings", Icons.Default.Settings, SettingScreen())
     )
 

@@ -15,6 +15,7 @@ class AndroidApp : Application() {
         super.onCreate()
         Logger.i("AndroidApp.onCreate")
 
+
         startKoin {
             logger(
                 KermitKoinLogger(Logger.withTag("koin"))

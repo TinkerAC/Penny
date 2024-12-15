@@ -88,7 +88,7 @@ class NewTransactionViewModel(
     private fun insertTransaction() {
         val transaction = TransactionModel(
             ledgerUuid = _uiState.value.selectedLedger!!.uuid,
-            transactionDate = Clock.System.now(),
+            transactionInstant = Clock.System.now(),
             category = _uiState.value.selectedSubCategory ?: Category.getLevel1Categories().first(),
             transactionType = _uiState.value.selectedTransactionType,
             amount = BigDecimal.parseString(_uiState.value.amountText),

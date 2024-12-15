@@ -83,3 +83,9 @@ WHERE ledgerEntity.user_uuid = ?;
 
 countByLedgerUuid:
 SELECT COUNT(*) FROM transactionEntity WHERE ledger_uuid = ?;
+
+
+findByUserUuidAndTransactionDateBetween:
+SELECT transactionEntity.* FROM transactionEntity
+JOIN ledgerEntity ON transactionEntity.ledger_uuid = ledgerEntity.uuid
+WHERE ledgerEntity.user_uuid = ? AND transactionEntity.transaction_date BETWEEN ? AND ?;

@@ -24,7 +24,6 @@ import kotlin.uuid.Uuid
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UserDto
-import app.penny.servershared.enumerate.Action
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -65,7 +64,7 @@ fun TransactionModel.toEntity(): TransactionEntity {
     return TransactionEntity(
         uuid = uuid.toString(),
         ledger_uuid = ledgerUuid.toString(),
-        transaction_date = transactionDate.epochSeconds,
+        transaction_date = transactionInstant.epochSeconds,
         category_name = category.name,
         transaction_type = transactionType.name,
         amount = amount.toPlainString(),
@@ -81,7 +80,7 @@ fun TransactionModel.toEntity(): TransactionEntity {
 fun TransactionEntity.toModel(): TransactionModel {
     return TransactionModel(
         ledgerUuid = Uuid.parse(ledger_uuid),
-        transactionDate = Instant.fromEpochSeconds(transaction_date),
+        transactionInstant = Instant.fromEpochSeconds(transaction_date),
         category = Category.valueOf(category_name),
         transactionType = TransactionType.valueOf(transaction_type),
         amount = BigDecimal.parseString(amount),
@@ -101,7 +100,7 @@ fun TransactionModel.toDto(
         uuid = uuid.toString(),
         ledgerUuid = ledgerUuid.toString(),
         transactionType = transactionType.name,
-        transactionDate = transactionDate.epochSeconds,
+        transactionDate = transactionInstant.epochSeconds,
         categoryName = category.name,
         currencyCode = currency.currencyCode,
         amount = amount.toPlainString(),
@@ -158,7 +157,7 @@ fun LedgerDto.toModel(): LedgerModel {
 @OptIn(ExperimentalUuidApi::class)
 fun TransactionDto.toModel(): TransactionModel {
     return TransactionModel(
-        transactionDate = Instant.fromEpochSeconds(transactionDate),
+        transactionInstant = Instant.fromEpochSeconds(transactionDate),
         category = Category.valueOf(categoryName),
         transactionType = TransactionType.valueOf(transactionType),
         amount = BigDecimal.parseString(amount),

@@ -176,14 +176,14 @@ fun LedgerCoverItem(
         Surface(
             shape = MaterialTheme.shapes.medium,
             color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
-            modifier = Modifier.size(64.dp)
+            modifier = Modifier.size(128.dp)
         ) {
             Image(
                 painter = painterResource(cover.drawable),
                 contentDescription = cover.coverName,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
+                    .size(48.dp)
+                    .padding(8.dp)
             )
         }
         Spacer(modifier = Modifier.height(8.dp))

@@ -7,9 +7,14 @@ import app.penny.core.data.model.toModel
 import app.penny.core.data.model.toDto
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.domain.model.TransactionModel
+import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.core.network.ApiClient
 import app.penny.servershared.dto.responseDto.DownloadTransactionResponse
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -130,5 +135,35 @@ class TransactionRepositoryImpl(
     override suspend fun findByUserUuid(userUuid: Uuid): List<TransactionModel> {
         return transactionLocalDataSource.findByUserUuid(userUuid.toString())
             .map { it.toModel() }
+    }
+
+
+    override suspend fun findByUserUuidAndYearMonth(
+        userUuid: Uuid,
+        yearMonth: YearMonth
+    ): List<TransactionModel> {
+        // 指定时区，这里以系统默认时区为例
+        val timeZone = TimeZone.currentSystemDefault()
+
+        // 创建该月的第一天的 LocalDateTime（00:00:00）
+        val startDateTime = LocalDateTime(yearMonth.year, yearMonth.month, 1, 0, 0, 0)
+        // 转换为 Instant
+        val startInstant = startDateTime.toInstant(timeZone)
+        // 获取 epochSeconds
+        val startEpochSeconds = startInstant.epochSeconds
+
+        // 获取该月的最后一天
+        val lastDay = LocalDate(yearMonth.year, yearMonth.month, 1).dayOfMonth
+        // 创建该月最后一天的 LocalDateTime（23:59:59）
+        val endDateTime = LocalDateTime(yearMonth.year, yearMonth.month, lastDay, 23, 59, 59)
+        // 转换为 Instant
+        val endInstant = endDateTime.toInstant(timeZone)
+        // 获取 epochSeconds
+        val endEpochSeconds = endInstant.epochSeconds
+
+        // 调用 DAO 方法查询该时间区间内的交易记录
+        return transactionLocalDataSource.findByUserUuidAndTransactionDateBetween(
+            userUuid.toString(), startEpochSeconds, endEpochSeconds
+        ).map { it.toModel() }
     }
 }

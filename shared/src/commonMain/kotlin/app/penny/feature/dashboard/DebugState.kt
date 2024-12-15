@@ -4,7 +4,7 @@ import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.UserModel
 import kotlinx.datetime.Instant
 
-data class DashboardUiState(
+data class DebugState(
     val transactions: List<TransactionModel> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null,

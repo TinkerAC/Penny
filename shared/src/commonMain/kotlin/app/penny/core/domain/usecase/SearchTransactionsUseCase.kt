@@ -32,7 +32,7 @@ class SearchTransactionsUseCase(
 
 
         val result = transactionsByLedger.filter {
-            it.transactionDate.epochSeconds in startTimeStamp..endTimeStamp
+            it.transactionInstant.epochSeconds in startTimeStamp..endTimeStamp
         }
         Logger.d("Get transactions by ledger $ledgerUuid between $startDate and $endDate: ${result.size}")
         return result

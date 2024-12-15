@@ -109,4 +109,14 @@ class TransactionLocalDataSourceImpl(
     override fun countByLedgerUuid(ledgerUuid: String): Long {
         return transactionsQueries.countByLedgerUuid(ledger_uuid = ledgerUuid).executeAsOne()
     }
+
+    override fun findByUserUuidAndTransactionDateBetween(
+        userUuid: String,
+        startEpochSeconds: Long,
+        endEpochSeconds: Long
+    ): List<TransactionEntity> {
+        return transactionsQueries.findByUserUuidAndTransactionDateBetween(
+            userUuid, startEpochSeconds, endEpochSeconds
+        ).executeAsList()
+    }
 }

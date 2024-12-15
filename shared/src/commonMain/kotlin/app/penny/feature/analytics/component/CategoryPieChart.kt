@@ -1,24 +1,14 @@
-package app.penny.feature.analytics.component
+// file: shared/src/commonMain/kotlin/app/penny/feature/analytics/chartAndTable/CategoryPieChart.kt
+package app.penny.feature.analytics.chartAndTable
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import co.touchlab.kermit.Logger
 import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.donutChart.PieChart
 import com.aay.compose.donutChart.model.PieChartData
-
 
 @Composable
 fun CategoryPieChart(
@@ -27,34 +17,64 @@ fun CategoryPieChart(
     expensePieChartData: List<PieChartData>
 ) {
     // 使用 remember 和 mutableStateOf 来存储图表类型
-    var chartType by remember { mutableStateOf(0) }
+    var isIncome by remember { mutableStateOf(true) }
 
-    // Surface容器包裹 PieChart
-    Surface(
+    Card(
         modifier = modifier
-            .height(300.dp)
             .fillMaxWidth()
             .padding(16.dp),
-        shadowElevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = MaterialTheme.shapes.medium
     ) {
-        Column {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
             // 切换收入和支出
-            Switch(
-                checked = chartType == 0,
-                onCheckedChange = { isChecked ->
-                    chartType = if (isChecked) 0 else 1
-                    Logger.d("chartType: $chartType")
-                },
-                modifier = Modifier.padding(16.dp)
-            )
-
-            // 根据 chartType 显示不同的 PieChart 数据
-            PieChart(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                pieChartData = if (chartType == 0) expensePieChartData else incomePieChartData,
-                legendPosition = LegendPosition.TOP
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "显示: ",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                SegmentedButton(
+                    selected = isIncome,
+                    onSelected = { isIncome = true },
+                    text = "收入"
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                SegmentedButton(
+                    selected = !isIncome,
+                    onSelected = { isIncome = false },
+                    text = "支出"
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            // 根据图表类型显示不同的 PieChart 数据
+            PieChart(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+                pieChartData = if (isIncome) incomePieChartData else expensePieChartData,
+                legendPosition = LegendPosition.BOTTOM
             )
         }
+    }
+}
+
+@Composable
+fun SegmentedButton(selected: Boolean, onSelected: () -> Unit, text: String) {
+    Button(
+        onClick = onSelected,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+            contentColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+        ),
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier.width(100.dp)
+    ) {
+        Text(text)
     }
 }

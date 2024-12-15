@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
 
-class DashboardViewModel(
+class DebugViewModel(
     private val insertRandomTransactionUseCase: InsertRandomTransactionUseCase,
     private val uploadUnsyncedLedgerUseCase: UploadUnsyncedLedgerUseCase,
     private val userDataRepository: UserDataRepository,
@@ -26,8 +26,8 @@ class DashboardViewModel(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository
 ) : ScreenModel {
-    private val _uiState = MutableStateFlow(DashboardUiState())
-    val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(DebugState())
+    val uiState: StateFlow<DebugState> = _uiState.asStateFlow()
 
     init {
         fetchUserData()
@@ -43,7 +43,7 @@ class DashboardViewModel(
 
 
     private fun insertTransaction() {
-        _uiState.value = DashboardUiState(isLoading = true)
+        _uiState.value = DebugState(isLoading = true)
     }
 
 
@@ -55,8 +55,6 @@ class DashboardViewModel(
 
             is DashboardIntent.ClearUserData ->
                 clearUserData()
-
-
 
 
             is DashboardIntent.DownloadUnsyncedLedgers ->

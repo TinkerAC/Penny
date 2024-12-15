@@ -65,7 +65,7 @@ class InsertRandomTransactionUseCase(
                 TransactionModel(
                     uuid = Uuid.random(), // 随机化 UUID
                     ledgerUuid = ledger.uuid,
-                    transactionDate = transactionDate,
+                    transactionInstant = transactionDate,
                     category = category,
                     transactionType = transactionType,
                     amount = amount,
