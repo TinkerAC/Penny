@@ -3,17 +3,13 @@ package app.penny.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PieChart
-import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -31,14 +27,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.feature.aiChat.AIChatScreen
-import app.penny.feature.transactions.TransactionScreen
+import app.penny.presentation.ui.components.SafeAreaBackgrounds
 import app.penny.presentation.ui.screens.BottomNavItem
 import app.penny.presentation.viewmodel.MainViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
 
@@ -52,89 +46,70 @@ class MainScreen : Screen {
 
         val rootNavigator = LocalNavigator.currentOrThrow
 
+        val items = BottomNavItem.items
 
-        Navigator(
-            screen = remember { BottomNavItem.Dashboard.screen },
-        ) { navigator ->
+        var selectedItem by remember { mutableStateOf(0) }
 
-            val items = listOf(
-                BottomNavItem.Dashboard,
-                BottomNavItem.Analytics,
-                BottomNavItem.Transactions,
-                BottomNavItem.Profile
-            )
-
-            var selectedItem by remember { mutableStateOf(0) }
-
+        SafeAreaBackgrounds(
+            topColor = items[selectedItem].statusBarColor(),
+            bottomColor = MaterialTheme.colorScheme.surface
+        ) {
             Scaffold(
-                topBar = {
-                    // Implement a TopAppBar if needed
-                },
                 bottomBar = {
                     BottomAppBarWithFAB(
                         items = items,
                         selectedItem = selectedItem,
                         onItemSelected = { index, item ->
                             selectedItem = index
-                            when (item) {
-                                BottomNavItem.Dashboard -> navigator.replaceAll(item.screen)
-                                BottomNavItem.Analytics -> navigator.replaceAll(item.screen)
-                                BottomNavItem.Transactions -> rootNavigator.push(TransactionScreen())
-                                BottomNavItem.Profile -> navigator.replaceAll(item.screen)
-                            }
                         },
                         onFabClick = {
                             rootNavigator.push(AIChatScreen())
                         }
                     )
                 },
+
                 content = { paddingValues ->
-                    Column(
+                    Box(
                         modifier = Modifier
+                            .fillMaxSize()
                             .padding(paddingValues)
-                            .background(MaterialTheme.colorScheme.background)
                     ) {
-                        CurrentScreen()
+                        items[selectedItem].screen.Content()
                     }
                 }
             )
         }
     }
-
 }
-
 
 @Composable
 fun BottomAppBarWithFAB(
     items: List<BottomNavItem>,
     selectedItem: Int,
     onItemSelected: (Int, BottomNavItem) -> Unit,
-    onFabClick: () -> Unit
+    onFabClick: () -> Unit,
 ) {
     Box {
-        // Bottom navigation bar
+        // 底部导航栏
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.surface,
-            tonalElevation = 4.dp,
+            contentColor = MaterialTheme.colorScheme.primary,
+//            tonalElevation = 2.dp,
             modifier = Modifier
                 .height(56.dp)
                 .align(Alignment.BottomCenter)
+
+
         ) {
             items.forEachIndexed { index, item ->
-                // Insert a spacer at the middle index to leave space for the FAB
+                // insert a spacer in the middle of the navigation bar for the FAB
                 if (index == items.size / 2) {
                     Spacer(modifier = Modifier.weight(1f))
                 }
                 NavigationBarItem(
                     icon = {
                         Icon(
-                            imageVector = when (item) {
-                                BottomNavItem.Dashboard -> Icons.Filled.Home
-                                BottomNavItem.Analytics -> Icons.Filled.PieChart
-                                BottomNavItem.Transactions -> Icons.Filled.SwapHoriz
-                                BottomNavItem.Profile -> Icons.Filled.Person
-                                else -> Icons.Filled.Home
-                            },
+                            imageVector = item.icon,
                             contentDescription = stringResource(item.titleStringResource)
                         )
                     },
@@ -146,15 +121,15 @@ fun BottomAppBarWithFAB(
             }
         }
 
-        // Floating action button
+        // 悬浮操作按钮
         FloatingActionButton(
             onClick = onFabClick,
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
             elevation = FloatingActionButtonDefaults.elevation(8.dp),
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .offset(y = (-28).dp) // Adjust the offset to position the FAB above the bar
+                .align(Alignment.BottomCenter)
+                .offset(y = (-28).dp) // offset the FAB to be above the navigation bar
         ) {
             Icon(
                 imageVector = Icons.Default.Add,

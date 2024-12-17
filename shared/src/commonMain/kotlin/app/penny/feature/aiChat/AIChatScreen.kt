@@ -38,10 +38,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import co.touchlab.kermit.Logger
 
 class AIChatScreen : Screen {
+
     @Composable
     override fun Content() {
+        Logger.d { "AIChatScreen Content composed" }
         val rootNavigator = LocalNavigator.currentOrThrow
         val viewModel = koinScreenModel<AIChatViewModel>()
         val uiState by viewModel.uiState.collectAsState()
@@ -124,6 +127,11 @@ class AIChatScreen : Screen {
             }
         }
     }
+
+//    @Composable
+//    override fun Content() {
+//        Text("fuck")
+//    }
 }
 
 @Composable

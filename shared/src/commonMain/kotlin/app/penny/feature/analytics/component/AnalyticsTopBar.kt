@@ -23,11 +23,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.core.utils.localDateNow
 import app.penny.feature.analytics.AnalyticTab
 import app.penny.feature.analytics.AnalyticUiState
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.LocalDate
 
 
@@ -47,6 +50,7 @@ fun AnalyticsTopBar(
             onTabSelected = onTabSelected,
             onLedgerSelectionClick = onLedgerSelectionClick
         )
+
         when (uiState.selectedTab) {
             AnalyticTab.Monthly -> {
                 MonthlyTabContent(
@@ -84,18 +88,13 @@ fun TopTabRow(
     onTabSelected: (AnalyticTab) -> Unit,
     onLedgerSelectionClick: () -> Unit
 ) {
-    val tabs = listOf(
-        AnalyticTab.Recent,
-        AnalyticTab.Monthly,
-        AnalyticTab.Yearly,
-        AnalyticTab.Custom
-    )
+    val tabs = AnalyticTab.entries
 
     Surface(
-        tonalElevation = 4.dp,
         shadowElevation = 4.dp,
-        shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.fillMaxWidth()
+        shape = RectangleShape,
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row(
             modifier = Modifier
@@ -113,7 +112,7 @@ fun TopTabRow(
                     Tab(
                         selected = selectedTab == tab,
                         onClick = { onTabSelected(tab) },
-                        text = { Text(tab.name) }
+                        text = { Text(stringResource(tab.displayNameStringResource)) }
                     )
                 }
             }
@@ -123,7 +122,7 @@ fun TopTabRow(
             ) {
                 Icon(
                     imageVector = Icons.Filled.NoteAlt,
-                    contentDescription = "切换账本",
+                    contentDescription = stringResource(SharedRes.strings.switch_ledger),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -162,8 +161,6 @@ fun MonthlyTabContent(
             modifier = Modifier.padding(16.dp).weight(7f)
         ) {
             LazyRow(
-//                modifier = Modifier.weight(7f) //TAKES ME 3DAYS to find this bug!!! weight can't be used in LazyRow
-
             ) {
                 items(yearMonths) { yearMonth ->
                     YearMonthItem(
@@ -190,7 +187,7 @@ fun YearMonthItem(yearMonth: YearMonth, isSelected: Boolean, onClick: () -> Unit
     ) {
         Text(
             text = month.toString(),
-//            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(4.dp)
         )
     }
@@ -237,14 +234,17 @@ fun CustomTabContent(
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
         // 开始日期选择
-        Text(text = "Start Date")
+        Text(
+            text =
+            stringResource(SharedRes.strings.start_date)
+        )
         DatePicker(
             selectedDate = startDate,
             onDateSelected = onStartDateSelected
         )
         Spacer(modifier = Modifier.height(8.dp))
         // 结束日期选择
-        Text(text = "End Date")
+        Text(text = stringResource(SharedRes.strings.end_date))
         DatePicker(
             selectedDate = endDate,
             onDateSelected = onEndDateSelected

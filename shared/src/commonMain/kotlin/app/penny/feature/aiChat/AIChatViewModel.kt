@@ -1,5 +1,7 @@
 package app.penny.feature.aiChat
 
+//TODO:resize all the images,they are too big for their usage
+
 import app.penny.core.data.model.MESSAGE_TYPE
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
@@ -42,18 +44,16 @@ class AIChatViewModel(
 
     private lateinit var currentUser: UserModel
 
-    private val actionHandlers: Map<String, ActionHandler>
+    private val actionHandlers: Map<String, ActionHandler> = mapOf(
+        Action.InsertLedger::class.simpleName!! to InsertLedgerHandler(ledgerRepository),
+        Action.InsertTransaction::class.simpleName!! to InsertTransactionHandler(
+            transactionRepository,
+            ledgerRepository,
+            userDataRepository
+        )
+    )
 
     init {
-        actionHandlers = mapOf(
-            Action.InsertLedger::class.simpleName!! to InsertLedgerHandler(ledgerRepository),
-            Action.InsertTransaction::class.simpleName!! to InsertTransactionHandler(
-                transactionRepository,
-                ledgerRepository,
-                userDataRepository
-            )
-        )
-
         screenModelScope.launch {
             currentUser = userRepository.findByUuid(userDataRepository.getUserUuid())
                 ?: throw IllegalStateException("User not found")

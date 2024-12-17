@@ -1,5 +1,6 @@
 package app.penny
 
+import androidx.compose.runtime.ProvidedValue
 import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
@@ -8,23 +9,26 @@ import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.koin.dsl.KoinAppDeclaration
 
-interface Platform {
-    val name: String
+abstract class Platform(
+
+) {
+    abstract val name: String
+    abstract val version: String
+
+    override fun toString(): String {
+        return "Platform(name='$name', version='$version')"
+    }
 }
 
 expect fun getPlatform(): Platform
 
-expect class
-ApplicationInitializer(
+expect class ApplicationInitializer(
     application: Any? = null
-) : KoinComponent {
+) {
     // init logic with expect-actual
     fun initKoin(appDeclaration: KoinAppDeclaration = {}): ApplicationInitializer
-
 
 }
 
@@ -32,8 +36,8 @@ ApplicationInitializer(
 // initSession: 通用逻辑，返回 ApplicationInitializer 本身
 fun ApplicationInitializer.initSession(
 ): ApplicationInitializer {
-    val userDataRepository: UserDataRepository by inject()
-    val tokenManager: TokenManager by inject()
+    val userDataRepository = getKoinInstance<UserDataRepository>()
+    val tokenManager = getKoinInstance<TokenManager>()
     val authRepository = getKoinInstance<AuthRepository>()
 
     CoroutineScope(Dispatchers.Default).launch {
@@ -63,3 +67,6 @@ fun ApplicationInitializer.initSession(
 fun ApplicationInitializer.initialize(): ApplicationInitializer {
     return this.initKoin().initSession()
 }
+expect fun disableUiKitOverscroll()
+
+expect fun provideNullAndroidOverscrollConfiguration(): Array<ProvidedValue<*>>

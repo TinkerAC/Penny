@@ -2,19 +2,32 @@
 package app.penny.feature.transactions
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.feature.transactions.component.CalendarViewContent
 import app.penny.feature.transactions.component.GroupByBottomAppBar
 import app.penny.feature.transactions.component.ListViewContent
+import app.penny.presentation.ui.contentColorFor
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -68,7 +81,13 @@ class TransactionScreen : Screen {
                                 contentDescription = stringResource(SharedRes.strings.toggle_view)
                             )
                         }
-                    }
+
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
                 )
             },
             bottomBar = {
@@ -84,7 +103,7 @@ class TransactionScreen : Screen {
                 modifier =
                 Modifier
                     .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(MaterialTheme.colorScheme.surfaceContainerLowest)
             ) {
                 if (isCalendarView) {
                     CalendarViewContent(

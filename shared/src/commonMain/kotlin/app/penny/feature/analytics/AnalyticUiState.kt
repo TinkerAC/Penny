@@ -3,8 +3,11 @@ package app.penny.feature.analytics
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.valueObject.YearMonth
+import app.penny.shared.SharedRes
 import com.aay.compose.donutChart.model.PieChartData
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
@@ -48,11 +51,13 @@ data class AnalyticUiState(
     }
 }
 
-enum class AnalyticTab {
-    Recent,
-    Monthly,
-    Yearly,
-    Custom
+enum class AnalyticTab(
+    val displayNameStringResource: StringResource
+) {
+    Recent(SharedRes.strings.summary_recent),
+    Monthly(SharedRes.strings.summary_monthly),
+    Yearly(SharedRes.strings.summary_yearly),
+    Custom(SharedRes.strings.summary_custom)
 }
 
 

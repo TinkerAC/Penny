@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
-
+    id("dev.icerock.mobile.multiplatform-resources") version "0.24.4"
 }
 
 kotlin {
@@ -20,25 +20,6 @@ kotlin {
         }
     }
 
-//    @OptIn(ExperimentalWasmDsl::class)
-//    wasmJs {
-//        moduleName = "composeApp"
-//        browser {
-//            val rootDirPath = project.rootDir.path
-//            val projectDirPath = project.projectDir.path
-//            commonWebpackConfig {
-//                outputFileName = "composeApp.js"
-//                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-//                    static = (static ?: mutableListOf()).apply {
-//                        // Serve sources to debug inside browser
-//                        add(rootDirPath)
-//                        add(projectDirPath)
-//                    }
-//                }
-//            }
-//        }
-//        binaries.executable()
-//    }
 
     jvm("desktop")
     iosX64 { binaries.framework { baseName = "ComposeApp" } }
@@ -154,4 +135,9 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+multiplatformResources {
+    resourcesClassName = "SharedRes"
+    resourcesPackage = "app.penny.shared"
+    iosBaseLocalizationRegion = "en"
 }

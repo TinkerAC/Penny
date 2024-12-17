@@ -251,7 +251,7 @@ fun AuthorInfoSurface() {
             )
             InfoSetting(
                 settingName = stringResource(SharedRes.strings.email),
-                info = "220110790202@zufe.edu"
+                info = "220110790202@zufe.edu.cn"
             )
 
             InfoSetting(

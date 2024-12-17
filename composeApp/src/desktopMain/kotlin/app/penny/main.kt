@@ -9,6 +9,8 @@ import dev.icerock.moko.resources.compose.stringResource
 //JVM entry point
 fun main() = application {
 
+    getPlatform()
+
     ApplicationInitializer(
         application = this
     )

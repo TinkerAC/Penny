@@ -60,5 +60,49 @@
     <string name="balance_abbr">Bal</string>
     <string name="income_expense_trend">Income vs Expense</string>
     <string name ="asset_daily_change">Daily Change</string>
+    <string name="summary_recent">Recent</string>
+    <string name="summary_monthly">Monthly</string>
+    <string name="summary_yearly">Yearly</string>
+    <string name="summary_custom">Custom</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="switch_ledger">Switch Ledger</string>
+    <string name="month_1">January</string>
+    <string name="month_2">February</string>
+    <string name="month_3">March</string>
+    <string name="month_4">April</string>
+    <string name="month_5">May</string>
+    <string name="month_6">June</string>
+    <string name="month_7">July</string>
+    <string name="month_8">August</string>
+    <string name="month_9">September</string>
+    <string name="month_10">October</string>
+    <string name="month_11">November</string>
+    <string name="month_12">December</string>
+    <string name="month_1_short">Jan</string>
+    <string name="month_2_short">Feb</string>
+    <string name="month_3_short">Mar</string>
+    <string name="month_4_short">Apr</string>
+    <string name="month_5_short">May</string>
+    <string name="month_6_short">Jun</string>
+    <string name="month_7_short">Jul</string>
+    <string name="month_8_short">Aug</string>
+    <string name="month_9_short">Sep</string>
+    <string name="month_10_short">Oct</string>
+    <string name="month_11_short">Nov</string>
+    <string name="month_12_short">Dec</string>
+    <string name="action_completed">Action completed</string>
+    <string name="action_completed_desc">Data inserted/updated successfully</string>
+    <string name="action_failed">Action failed</string>
+
+    <string name="action_cancelled">Action cancelled</string>
+    <string name="you_have_cancelled_the_action">You have cancelled the action</string>
+    <string name="select_date">Select Date</string>
+    <string name="please_select_date">Please select date</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+
+
+
 
 </resources>

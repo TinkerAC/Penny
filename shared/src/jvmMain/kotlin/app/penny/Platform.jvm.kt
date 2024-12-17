@@ -1,14 +1,20 @@
 package app.penny
 
+import androidx.compose.runtime.ProvidedValue
 import org.koin.core.component.KoinComponent
 import org.koin.dsl.KoinAppDeclaration
 
-class JVMPlatform : Platform {
-    override val name: String = "Java ${System.getProperty("java.version")}"
+class JVMPlatform() : Platform() {
+    override val name: String = "Java"
+    override val version: String = { System.getProperty("java.version") }.toString()
 }
 
 
-actual fun getPlatform(): Platform = JVMPlatform()
+actual fun getPlatform(): Platform {
+    println("getPlatform: ${JVMPlatform()}")
+
+    return JVMPlatform()
+}
 
 actual class ApplicationInitializer actual constructor(
     val application: Any?
@@ -22,3 +28,9 @@ actual class ApplicationInitializer actual constructor(
 
 }
 
+actual fun provideNullAndroidOverscrollConfiguration(): Array<ProvidedValue<*>> {
+    return emptyArray<ProvidedValue<*>>()
+}
+
+actual fun disableUiKitOverscroll() {
+}

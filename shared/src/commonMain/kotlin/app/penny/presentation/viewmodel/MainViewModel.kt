@@ -23,10 +23,13 @@ class MainViewModel(
 
 
     init {
+
         screenModelScope.launch {
             fetchLedgers()
         }
+
     }
+
 
 
     @OptIn(ExperimentalUuidApi::class)

@@ -41,12 +41,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.penny.feature.debugBoard.DebugScreen
 import app.penny.feature.setting.SettingScreen
 import app.penny.presentation.ui.components.RegisterAndLoginBottomSheet
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
 
 class ProfileScreen : Screen {
@@ -103,7 +105,7 @@ fun TopBar() {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "Profile",
+                text = stringResource(SharedRes.strings.profile),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -141,7 +143,9 @@ fun UserInfoSection(
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = when {
-                uiState.isLoggedIn -> uiState.username ?: uiState.email ?: stringResource(SharedRes.strings.default_username)
+                uiState.isLoggedIn -> uiState.username ?: uiState.email
+                ?: stringResource(SharedRes.strings.default_username)
+
                 else -> stringResource(SharedRes.strings.tap_to_login)
             },
             style = MaterialTheme.typography.titleMedium,
@@ -180,7 +184,7 @@ fun StatisticItem(number: Int, label: String) {
 @Composable
 fun FunctionGrid() {
 
-    val rootNavigator = LocalNavigator.current?.parent
+    val rootNavigator = LocalNavigator.currentOrThrow
     val features = listOf(
         FeatureItem(
             stringResource(SharedRes.strings.notification),
@@ -192,7 +196,8 @@ fun FunctionGrid() {
         ),
         FeatureItem(
             stringResource(SharedRes.strings.pennys_box),
-            Icons.Default.HomeRepairService
+            Icons.Default.HomeRepairService,
+            DebugScreen(),
         ),
         FeatureItem(
             stringResource(SharedRes.strings.settings),
@@ -212,7 +217,7 @@ fun FunctionGrid() {
                     .padding(8.dp)
                     .clickable {
                         feature.screen?.let {
-                            rootNavigator?.push(it)
+                            rootNavigator.push(it)
                         }
                     },
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -245,13 +250,16 @@ fun MenuList() {
     val menuItems = listOf(
         MenuItem(
             stringResource(SharedRes.strings.help),
-            Icons.AutoMirrored.Filled.Help),
+            Icons.AutoMirrored.Filled.Help
+        ),
         MenuItem(
             stringResource(SharedRes.strings.feedback),
-            Icons.Default.Feedback),
+            Icons.Default.Feedback
+        ),
         MenuItem(
             stringResource(SharedRes.strings.about),
-            Icons.Default.Info)
+            Icons.Default.Info
+        )
     )
     Column(
         modifier = Modifier

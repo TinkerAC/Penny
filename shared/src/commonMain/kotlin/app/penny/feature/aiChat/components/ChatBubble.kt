@@ -59,6 +59,7 @@ import app.penny.servershared.FieldType
 import app.penny.servershared.enumerate.Action
 import app.penny.shared.SharedRes
 import dev.icerock.moko.resources.compose.painterResource
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -82,7 +83,6 @@ fun ChatBubble(
         horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
     ) {
         if (!isUser) {
-            // AI Avatar
             Image(
                 painter = painterResource(SharedRes.images.avatar_penny),
                 contentDescription = null,
@@ -93,6 +93,7 @@ fun ChatBubble(
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
+
         Card(
             shape = MaterialTheme.shapes.medium.copy(
                 bottomStart = CornerSize(16.dp),
@@ -107,15 +108,14 @@ fun ChatBubble(
             },
             modifier = Modifier.widthIn(max = 240.dp)
         ) {
-            // 普通文本
             Text(
                 text = message.content ?: "",
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (isUser) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(8.dp)
             )
+
             if (message.action !== null) {
-                // 有action的消息，根据status来展示不同的UI
                 when (message.actionStatus) {
                     ActionStatus.Pending -> {
                         ActionPendingContent(
@@ -142,7 +142,6 @@ fun ChatBubble(
                     }
 
                     else -> {
-                        // 理论上不会出现
                         Text(
                             text = "未知状态",
                             modifier = Modifier.padding(8.dp)
@@ -151,13 +150,14 @@ fun ChatBubble(
                 }
             }
         }
+
         if (isUser) {
             Spacer(modifier = Modifier.width(8.dp))
 
+            // 使用remember在第一次组合时就确定头像的选择，不会在每次重组时变动
+
             Image(
-                painter = painterResource(
-                    if (Random.nextBoolean()) SharedRes.images.avatar_girl else SharedRes.images.avatar_boy
-                ),
+                painter = painterResource(SharedRes.images.avatar_boy),
                 contentDescription = null,
                 modifier = Modifier
                     .size(40.dp)
@@ -167,6 +167,16 @@ fun ChatBubble(
         }
     }
 }
+
+//
+//@Composable
+//fun ChatBubble(
+//    message: ChatMessage,
+//    onActionConfirm: (ChatMessage, Map<String, String?>) -> Unit,
+//    onActionDismiss: (ChatMessage) -> Unit
+//){
+//    Text("Test")
+//}
 
 @Composable
 private fun ActionPendingContent(
@@ -270,14 +280,16 @@ private fun ActionCompletedContent(
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
-            text = "操作已完成: ${action?.actionName}",
+            text = stringResource(SharedRes.strings.action_completed) + ": ${action?.actionName}",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(8.dp))
         // 可根据需要展示最终数据
         Text(
-            text = "数据已成功插入/更新。",
+            text =
+            stringResource(SharedRes.strings.action_completed_desc),
+
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -290,20 +302,22 @@ private fun ActionCancelledContent(
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
-            text = "操作已取消: ${action?.actionName}",
+            text =
+            stringResource(SharedRes.strings.action_cancelled) + ": " + { action?.actionName },
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "您已取消此操作。",
+            text =
+            stringResource(SharedRes.strings.you_have_cancelled_the_action),
+
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
 
-// 以下为辅助字段编辑组件的代码（未改动逻辑，保持与原始类似）
 
 @Composable
 private fun EditableTextField(
@@ -365,14 +379,15 @@ private fun DatePickerField(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = if (date.isNotBlank()) date else "请选择日期",
+                    text = if (date.isNotBlank()) date else
+                        stringResource(SharedRes.strings.please_select_date),
                     style = MaterialTheme.typography.bodyLarge,
                     color = if (date.isNotBlank()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Default.CalendarToday,
-                    contentDescription = "选择日期",
+                    contentDescription = stringResource(SharedRes.strings.select_date),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -399,12 +414,16 @@ private fun DatePickerField(
                             expanded = false
                         }
                     ) {
-                        Text("确定")
+                        Text(
+                            stringResource(SharedRes.strings.confirm)
+                        )
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { expanded = false }) {
-                        Text("取消")
+                        Text(
+                            stringResource(SharedRes.strings.cancel)
+                        )
                     }
                 }
             ) {

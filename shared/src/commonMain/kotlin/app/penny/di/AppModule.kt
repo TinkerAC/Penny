@@ -45,7 +45,8 @@ import app.penny.core.network.clients.UserApiClient
 import app.penny.database.PennyDatabase
 import app.penny.feature.aiChat.AIChatViewModel
 import app.penny.feature.analytics.AnalyticViewModel
-import app.penny.feature.dashboard.DebugViewModel
+import app.penny.feature.dashBoard.DashboardViewModel
+import app.penny.feature.debugBoard.DebugViewModel
 import app.penny.feature.myLedger.MyLedgerViewModel
 import app.penny.feature.newLedger.NewLedgerViewModel
 import app.penny.feature.newTransaction.NewTransactionViewModel
@@ -195,6 +196,8 @@ fun commonModule() = module {
     factory { NewLedgerViewModel(get(), get()) }
 
     factory { AIChatViewModel(get(), get(), get(), get(), get()) }
+    factory { DashboardViewModel() }
+
 
 
 }
