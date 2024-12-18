@@ -1,25 +1,32 @@
 package app.penny.core.data.repository.impl
 
+import app.penny.core.data.database.LedgerLocalDataSource
+import app.penny.core.data.database.UserLocalDataSource
 import app.penny.core.data.kvstore.UserDataManager
+import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.data.repository.UserRepository
+import app.penny.core.domain.model.LedgerModel
+import app.penny.core.domain.model.UserModel
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class UserDataRepositoryImpl(
-    private val userDataManager: UserDataManager
+    private val userDataManager: UserDataManager,
+    private val ledgerLocalDataSource: LedgerLocalDataSource,
+    private val userLocalDataRepository: UserLocalDataSource,
 ) : UserDataRepository {
-    @OptIn(ExperimentalUuidApi::class)
-    override suspend fun getRecentLedgerUuidOrNull(): Uuid? {
-        return userDataManager.getStringOrNull(UserDataManager.RECENT_LEDGER_UUID)?.let {
-            Uuid.parse(it)
-        }
-
+    override suspend fun getDefaultLedger(): LedgerModel {
+        val defaultLedgerUuid = userDataManager.getStringOrNull(UserDataManager.DEFAULT_LEDGER_UUID)
+        return ledgerLocalDataSource.findByUuid(
+            uuid = defaultLedgerUuid!!
+        )!!.toModel()
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    override suspend fun setRecentLedgerUuid(ledgerUuid: Uuid) {
-        userDataManager.putString(UserDataManager.RECENT_LEDGER_UUID, ledgerUuid.toString())
+    override suspend fun setDefaultLedger(ledger: LedgerModel) {
+        userDataManager.putString(UserDataManager.DEFAULT_LEDGER_UUID, ledger.uuid.toString())
     }
 
 
@@ -32,13 +39,16 @@ class UserDataRepositoryImpl(
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    override suspend fun getUserUuid(): Uuid {
-        val userUuid = userDataManager.getStringOrNull(UserDataManager.USER_UUID)
-        return userUuid?.let { Uuid.parse(it) } ?: error("User UUID is null")
+    override suspend fun getUser(): UserModel {
+        val userUuid = userDataManager.getStringOrNull(UserDataManager.USER_UUID)!!
+        return userLocalDataRepository.findByUuid(
+            uuid = userUuid
+        )!!.toModel()
     }
 
-    override suspend fun setUserUuid(uuid: String) {
-        userDataManager.putString(UserDataManager.USER_UUID, uuid)
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun setUser(user: UserModel) {
+        userDataManager.putString(UserDataManager.USER_UUID, user.uuid.toString())
     }
 
     override suspend fun getLastSyncedAt(): Instant? {

@@ -1,6 +1,8 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/dashboard/DashboardUiState.kt
 package app.penny.feature.dashBoard
 
+import app.penny.core.domain.model.TransactionModel
+
 enum class RefreshIndicatorState(
     val message: String
 ) {
@@ -12,5 +14,9 @@ enum class RefreshIndicatorState(
 data class DashboardUiState(
     val scrollOffset: Float = 0f,                       // 整体内容的滚动偏移量
     val isRefreshing: Boolean = false,                  // 是否正在刷新
-    val refreshIndicatorState: RefreshIndicatorState = RefreshIndicatorState.None
+    val refreshIndicatorState: RefreshIndicatorState = RefreshIndicatorState.None,
+
+
+
+    val recentTransactions: List<TransactionModel> = emptyList(),
 )

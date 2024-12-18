@@ -119,4 +119,9 @@ class TransactionLocalDataSourceImpl(
             userUuid, startEpochSeconds, endEpochSeconds
         ).executeAsList()
     }
+
+
+    override fun findRecentByLedgerUuid(ledgerUuid: String, limit: Long): List<TransactionEntity> {
+        return transactionsQueries.findRecentByLedgerUuid(ledgerUuid,limit).executeAsList()
+    }
 }

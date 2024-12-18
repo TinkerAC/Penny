@@ -23,15 +23,15 @@ class ChatMessageLocalDataSourceImpl(
     }
 
     override fun upsertByUuid(chatMessageEntity: ChatMessageEntity) {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override fun findByUuid(uuid: String): ChatMessageEntity? {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override fun findAll(): List<ChatMessageEntity> {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override fun findByUserUuid(userUuid: String): List<ChatMessageEntity> {
@@ -55,7 +55,7 @@ class ChatMessageLocalDataSourceImpl(
     }
 
     override fun deleteByUuid(uuid: String) {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
 

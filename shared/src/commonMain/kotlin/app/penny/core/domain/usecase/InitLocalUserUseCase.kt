@@ -27,18 +27,20 @@ class InitLocalUserUseCase(
 
 
         val userUuid = Uuid.random()
-
+        val newLocalUser = UserModel(
+            uuid = userUuid,
+            username = "PennyPal",
+            createdAt = Clock.System.now(),
+            updatedAt = Clock.System.now()
+        )
         userRepository.insert(
-            UserModel(
-                uuid = userUuid,
-                username = "PennyPal",
-                createdAt = Clock.System.now(),
-                updatedAt = Clock.System.now()
-            )
+            userModel = newLocalUser
         )
 
 
-        userDataRepository.setUserUuid(userUuid.toString())
+        userDataRepository.setUser(
+            user = newLocalUser
+        )
         userDataRepository.setIsFirstTime(false)
 
         Logger.d("Local User initialized")

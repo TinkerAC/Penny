@@ -45,24 +45,11 @@ class AnalyticViewModel(
             findUserLedgers()
             _uiState.value = _uiState.value.copy(isLoading = false)
             Logger.d("ledgers: ${_uiState.value.ledgers}")
-            val recentLedgerId = userDataRepository.getRecentLedgerUuidOrNull()
+            val recentLedger = userDataRepository.getDefaultLedger()
+            Logger.d("get recentLedger $recentLedger")
+            selectLedger(recentLedger)
+            prepareDataForCharts()
 
-            if (recentLedgerId != null) {
-                val recentLedger = _uiState.value.ledgers.find { it.uuid == recentLedgerId }
-                Logger.d("get recentLedger $recentLedger")
-
-                if (recentLedger != null) {
-                    selectLedger(recentLedger)
-                } else {
-                    // 如果没有最近使用的账本，显示账本选择对话框
-//                    showLedgerSelectionDialog()
-                }
-                prepareDataForCharts()
-
-            } else {
-                // 如果没有最近使用的账本，显示账本选择对话框
-                showLedgerSelectionDialog()
-            }
         }
         selectTab(AnalyticTab.Recent)
     }
@@ -210,10 +197,10 @@ class AnalyticViewModel(
 
 
     private suspend fun findUserLedgers() {
-        val activeUser = userDataRepository.getUserUuid()
-        val ledgers = ledgerRepository.findByUserUuid(activeUser)
+        val user = userDataRepository.getUser()
+        val ledgers = ledgerRepository.findByUserUuid(user.uuid)
 
-        Logger.d("User $activeUser has ledgers: $ledgers")
+        Logger.d("User $user has ledgers: $ledgers")
 
         _uiState.value = _uiState.value.copy(ledgers = ledgers)
     }
@@ -222,7 +209,7 @@ class AnalyticViewModel(
         Logger.d("Now Using Ledger: $ledger")
         _uiState.value = _uiState.value.copy(selectedLedger = ledger)
         screenModelScope.launch {
-            userDataRepository.setRecentLedgerUuid(ledger.uuid)
+            userDataRepository.setDefaultLedger(ledger = ledger)
             Logger.d("Save recentLedgerUuid: ${ledger.uuid}")
             dismissLedgerSelectionDialog()
         }

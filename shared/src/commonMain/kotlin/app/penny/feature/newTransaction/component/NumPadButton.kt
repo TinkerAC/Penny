@@ -1,6 +1,6 @@
 // NumPadButton.kt
 
-package app.penny.presentation.ui.components.numPad
+package app.penny.feature.newTransaction.component
 
 sealed class NumPadButton(
     val text: String
@@ -20,4 +20,12 @@ sealed class NumPadButton(
     // other buttons
     data object Decimal : NumPadButton(".")
     data object Backspace : NumPadButton("DEL")
+}
+
+enum class DoneButtonState(
+    val displayText: String
+) {
+    CANCEL("Cancel"),
+    COMPLETE("Done"),
+    EQUAL("=")
 }

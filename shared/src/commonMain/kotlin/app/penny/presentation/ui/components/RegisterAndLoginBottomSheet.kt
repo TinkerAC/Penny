@@ -55,7 +55,7 @@ fun RegisterAndLoginBottomSheet(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // 切换登录/注册模式的Toggle按钮
-        ToggleButton(
+        LoginRegisterToggle(
             isLoginMode = uiState.value.modalInLoginMode,
             onToggle = {
                 viewModel.handleIntent(ProfileIntent.ToggleModalMode)

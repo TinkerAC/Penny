@@ -1,535 +1,632 @@
 package app.penny.core.domain.enum
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AccountBalance
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.Brush
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.BusinessCenter
+import androidx.compose.material.icons.filled.Casino
+import androidx.compose.material.icons.filled.Computer
+import androidx.compose.material.icons.filled.ContentCut
+import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.material.icons.filled.DeliveryDining
+import androidx.compose.material.icons.filled.DirectionsBus
+import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.EmojiPeople
+import androidx.compose.material.icons.filled.Fastfood
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Grid4x4
+import androidx.compose.material.icons.filled.HealthAndSafety
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Interests
+import androidx.compose.material.icons.filled.LocalCafe
+import androidx.compose.material.icons.filled.LocalGasStation
+import androidx.compose.material.icons.filled.LocalHospital
+import androidx.compose.material.icons.filled.LocalParking
+import androidx.compose.material.icons.filled.LocalPharmacy
+import androidx.compose.material.icons.filled.MonetizationOn
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.Power
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Spa
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.Stream
+import androidx.compose.material.icons.filled.Subscriptions
+import androidx.compose.material.icons.filled.TagFaces
+import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material.icons.filled.VideogameAsset
+import androidx.compose.material.icons.filled.Work
+import androidx.compose.ui.graphics.vector.ImageVector
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.StringResource
 
 enum class Category(
     val parentCategory: Category?,
-    val categoryName: String,
-    val categoryIcon: String,
+    val categoryName: StringResource,
+    val categoryIcon: ImageVector,
     val description: String
 ) {
     // 顶级分类
-    INCOME(null, "Income", "ic_category_income", "All types of income"),
-    EXPENSE(null, "Expense", "ic_category_expense", "All types of expenses"),
+    INCOME(
+        null,
+        SharedRes.strings.category_income,
+        Icons.Filled.Grid4x4,
+        "All types of income"
+    ),
+    EXPENSE(
+        null,
+        SharedRes.strings.category_expense,
+        Icons.Filled.Grid4x4,
+        "All types of expenses"
+    ),
 
-    // 支出一级分类 (约10个)
-    EXPENSE_HOUSING(EXPENSE, "Housing", "ic_category_housing", "Housing related expenses"),
+    // 支出一级分类 (Expense Primary Categories)
+    EXPENSE_HOUSING(
+        EXPENSE,
+        SharedRes.strings.category_housing,
+        Icons.Filled.Home,
+        "Housing related expenses"
+    ),
     EXPENSE_TRANSPORTATION(
         EXPENSE,
-        "Transportation",
-        "ic_category_transportation",
+        SharedRes.strings.category_transportation,
+        Icons.Filled.DirectionsCar,
         "Transportation related expenses"
     ),
-    EXPENSE_FOOD(EXPENSE, "Food", "ic_category_food", "Food and dining expenses"),
-    EXPENSE_HEALTH(EXPENSE, "Health", "ic_category_health", "Health and medical expenses"),
+    EXPENSE_FOOD(
+        EXPENSE,
+        SharedRes.strings.category_food,
+        Icons.Filled.Fastfood,
+        "Food and dining expenses"
+    ),
+    EXPENSE_HEALTH(
+        EXPENSE,
+        SharedRes.strings.category_health,
+        Icons.Filled.HealthAndSafety,
+        "Health and medical expenses"
+    ),
     EXPENSE_PERSONAL_CARE(
         EXPENSE,
-        "Personal Care",
-        "ic_category_personal_care",
+        SharedRes.strings.category_personal_care,
+        Icons.Filled.Spa,
         "Personal care and grooming"
     ),
     EXPENSE_ENTERTAINMENT(
         EXPENSE,
-        "Entertainment",
-        "ic_category_entertainment",
+        SharedRes.strings.category_entertainment,
+        Icons.Filled.Movie,
         "Movies, music, games, and more"
     ),
     EXPENSE_EDUCATION(
         EXPENSE,
-        "Education",
-        "ic_category_education",
+        SharedRes.strings.category_education,
+        Icons.Filled.School,
         "Tuition and educational expenses"
     ),
-    EXPENSE_INSURANCE(EXPENSE, "Insurance", "ic_category_insurance", "Various insurance payments"),
+    EXPENSE_INSURANCE(
+        EXPENSE,
+        SharedRes.strings.category_insurance,
+        Icons.Filled.Shield,
+        "Various insurance payments"
+    ),
     EXPENSE_FINANCIAL(
         EXPENSE,
-        "Financial",
-        "ic_category_financial",
+        SharedRes.strings.category_financial,
+        Icons.Filled.AccountBalance,
         "Loan, credit, and investment expenses"
     ),
     EXPENSE_MISCELLANEOUS(
         EXPENSE,
-        "Miscellaneous",
-        "ic_category_miscellaneous",
+        SharedRes.strings.category_miscellaneous,
+        Icons.Filled.MoreHoriz,
         "Other general expenses"
     ),
 
     // 支出二级分类 - Housing
     EXPENSE_HOUSING_MORTGAGE(
         EXPENSE_HOUSING,
-        "Mortgage or Rent",
-        "ic_category_housing_mortgage",
+        SharedRes.strings.category_housing_mortgage_or_rent,
+        Icons.Filled.Home,
         "Home mortgage or rent payments"
     ),
     EXPENSE_HOUSING_UTILITIES(
         EXPENSE_HOUSING,
-        "Utilities",
-        "ic_category_housing_utilities",
+        SharedRes.strings.category_housing_utilities,
+        Icons.Filled.Power,
         "Electricity, water, gas, etc."
     ),
     EXPENSE_HOUSING_MAINTENANCE(
         EXPENSE_HOUSING,
-        "Maintenance",
-        "ic_category_housing_maintenance",
+        SharedRes.strings.category_housing_maintenance,
+        Icons.Filled.Build,
         "Home repairs and maintenance"
     ),
     EXPENSE_HOUSING_PROPERTY_TAX(
         EXPENSE_HOUSING,
-        "Property Tax",
-        "ic_category_housing_property_tax",
+        SharedRes.strings.category_housing_property_tax,
+        Icons.Filled.AccountBalance,
         "Annual property tax payments"
     ),
     EXPENSE_HOUSING_OTHER(
         EXPENSE_HOUSING,
-        "Other",
-        "ic_category_housing_other",
+        SharedRes.strings.category_housing_other,
+        Icons.Filled.MoreHoriz,
         "Other housing expenses"
     ),
 
     // 支出二级分类 - Transportation
     EXPENSE_TRANSPORTATION_FUEL(
         EXPENSE_TRANSPORTATION,
-        "Fuel",
-        "ic_category_transportation_fuel",
+        SharedRes.strings.category_transportation_fuel,
+        Icons.Filled.LocalGasStation,
         "Gasoline or diesel for vehicles"
     ),
     EXPENSE_TRANSPORTATION_PUBLIC_TRANSPORT(
         EXPENSE_TRANSPORTATION,
-        "Public Transport",
-        "ic_category_transportation_public_transport",
+        SharedRes.strings.category_transportation_public_transport,
+        Icons.Filled.DirectionsBus,
         "Bus, train, subway fares"
     ),
     EXPENSE_TRANSPORTATION_PARKING(
         EXPENSE_TRANSPORTATION,
-        "Parking",
-        "ic_category_transportation_parking",
+        SharedRes.strings.category_transportation_parking,
+        Icons.Filled.LocalParking,
         "Parking fees and tolls"
     ),
     EXPENSE_TRANSPORTATION_VEHICLE_MAINTENANCE(
         EXPENSE_TRANSPORTATION,
-        "Vehicle Maintenance",
-        "ic_category_transportation_vehicle_maintenance",
+        SharedRes.strings.category_transportation_vehicle_maintenance,
+        Icons.Filled.Build,
         "Car repairs and servicing"
     ),
     EXPENSE_TRANSPORTATION_OTHER(
         EXPENSE_TRANSPORTATION,
-        "Other",
-        "ic_category_transportation_other",
+        SharedRes.strings.category_transportation_other,
+        Icons.Filled.MoreHoriz,
         "Other transportation expenses"
     ),
 
     // 支出二级分类 - Food
     EXPENSE_FOOD_GROCERIES(
         EXPENSE_FOOD,
-        "Groceries",
-        "ic_category_food_groceries",
+        SharedRes.strings.category_food_groceries,
+        Icons.Filled.ShoppingCart,
         "Household food purchases"
     ),
     EXPENSE_FOOD_DINING_OUT(
         EXPENSE_FOOD,
-        "Dining Out",
-        "ic_category_food_dining_out",
+        SharedRes.strings.category_food_dining_out,
+        Icons.Filled.Restaurant,
         "Restaurant and café expenses"
     ),
     EXPENSE_FOOD_SNACKS_COFFEE(
         EXPENSE_FOOD,
-        "Snacks & Coffee",
-        "ic_category_food_snacks_coffee",
+        SharedRes.strings.category_food_snacks_and_coffee,
+        Icons.Filled.LocalCafe,
         "Quick bites and coffee runs"
     ),
     EXPENSE_FOOD_DELIVERY(
         EXPENSE_FOOD,
-        "Delivery",
-        "ic_category_food_delivery",
+        SharedRes.strings.category_food_delivery,
+        Icons.Filled.DeliveryDining,
         "Food delivery services"
     ),
     EXPENSE_FOOD_OTHER(
         EXPENSE_FOOD,
-        "Other",
-        "ic_category_food_other",
+        SharedRes.strings.category_food_other,
+        Icons.Filled.MoreHoriz,
         "Other food-related expenses"
     ),
 
     // 支出二级分类 - Health
     EXPENSE_HEALTH_INSURANCE(
         EXPENSE_HEALTH,
-        "Health Insurance",
-        "ic_category_health_insurance",
+        SharedRes.strings.category_health_health_insurance,
+        Icons.Filled.HealthAndSafety,
         "Health insurance premiums"
     ),
     EXPENSE_HEALTH_MEDICAL_BILLS(
         EXPENSE_HEALTH,
-        "Medical Bills",
-        "ic_category_health_medical_bills",
+        SharedRes.strings.category_health_medical_bills,
+        Icons.Filled.LocalHospital,
         "Doctor visits, hospital bills"
     ),
     EXPENSE_HEALTH_PHARMACY(
         EXPENSE_HEALTH,
-        "Pharmacy",
-        "ic_category_health_pharmacy",
+        SharedRes.strings.category_health_pharmacy,
+        Icons.Filled.LocalPharmacy,
         "Medications and supplements"
     ),
     EXPENSE_HEALTH_DENTAL_CARE(
         EXPENSE_HEALTH,
-        "Dental Care",
-        "ic_category_health_dental_care",
+        SharedRes.strings.category_health_dental_care,
+        Icons.Filled.EmojiPeople,
         "Dental check-ups and procedures"
     ),
     EXPENSE_HEALTH_OTHER(
         EXPENSE_HEALTH,
-        "Other",
-        "ic_category_health_other",
+        SharedRes.strings.category_health_other,
+        Icons.Filled.MoreHoriz,
         "Other health expenses"
     ),
 
     // 支出二级分类 - Personal Care
     EXPENSE_PERSONAL_CARE_CLOTHING(
         EXPENSE_PERSONAL_CARE,
-        "Clothing",
-        "ic_category_personal_care_clothing",
+        SharedRes.strings.category_personal_care_clothing,
+        Icons.Filled.ShoppingBag,
         "Apparel and footwear"
     ),
     EXPENSE_PERSONAL_CARE_HAIR_BEAUTY(
         EXPENSE_PERSONAL_CARE,
-        "Hair & Beauty",
-        "ic_category_personal_care_hair_beauty",
+        SharedRes.strings.category_personal_care_hair_and_beauty,
+        Icons.Filled.ContentCut,
         "Salon, spa treatments"
     ),
     EXPENSE_PERSONAL_CARE_FITNESS(
         EXPENSE_PERSONAL_CARE,
-        "Fitness",
-        "ic_category_personal_care_fitness",
+        SharedRes.strings.category_personal_care_fitness,
+        Icons.Filled.FitnessCenter,
         "Gym memberships, fitness classes"
     ),
     EXPENSE_PERSONAL_CARE_COSMETICS(
         EXPENSE_PERSONAL_CARE,
-        "Cosmetics",
-        "ic_category_personal_care_cosmetics",
+        SharedRes.strings.category_personal_care_cosmetics,
+        Icons.Filled.Brush,
         "Makeup, skincare products"
     ),
     EXPENSE_PERSONAL_CARE_OTHER(
         EXPENSE_PERSONAL_CARE,
-        "Other",
-        "ic_category_personal_care_other",
+        SharedRes.strings.category_personal_care_other,
+        Icons.Filled.MoreHoriz,
         "Other personal care expenses"
     ),
 
     // 支出二级分类 - Entertainment
     EXPENSE_ENTERTAINMENT_MOVIES_SHOWS(
         EXPENSE_ENTERTAINMENT,
-        "Movies & Shows",
-        "ic_category_entertainment_movies_shows",
+        SharedRes.strings.category_entertainment_movies_and_shows,
+        Icons.Filled.Movie,
         "Cinema tickets, theater shows"
     ),
     EXPENSE_ENTERTAINMENT_MUSIC_CONCERTS(
         EXPENSE_ENTERTAINMENT,
-        "Music & Concerts",
-        "ic_category_entertainment_music_concerts",
+        SharedRes.strings.category_entertainment_music_and_concerts,
+        Icons.Filled.MusicNote,
         "Concert tickets, music events"
     ),
     EXPENSE_ENTERTAINMENT_GAMES_APPS(
         EXPENSE_ENTERTAINMENT,
-        "Games & Apps",
-        "ic_category_entertainment_games_apps",
+        SharedRes.strings.category_entertainment_games_and_apps,
+        Icons.Filled.VideogameAsset,
         "Video games, mobile apps"
     ),
     EXPENSE_ENTERTAINMENT_STREAMING(
         EXPENSE_ENTERTAINMENT,
-        "Streaming Services",
-        "ic_category_entertainment_streaming",
+        SharedRes.strings.category_entertainment_streaming_services,
+        Icons.Filled.Stream,
         "Monthly fees for Netflix, etc."
     ),
     EXPENSE_ENTERTAINMENT_OTHER(
         EXPENSE_ENTERTAINMENT,
-        "Other",
-        "ic_category_entertainment_other",
+        SharedRes.strings.category_entertainment_other,
+        Icons.Filled.MoreHoriz,
         "Other entertainment expenses"
     ),
 
     // 支出二级分类 - Education
     EXPENSE_EDUCATION_TUITION(
         EXPENSE_EDUCATION,
-        "Tuition",
-        "ic_category_education_tuition",
+        SharedRes.strings.category_education_tuition,
+        Icons.Filled.School,
         "School and university fees"
     ),
     EXPENSE_EDUCATION_BOOKS_SUPPLIES(
         EXPENSE_EDUCATION,
-        "Books & Supplies",
-        "ic_category_education_books_supplies",
+        SharedRes.strings.category_education_books_and_supplies,
+        Icons.Filled.Book,
         "Textbooks, stationery"
     ),
     EXPENSE_EDUCATION_ONLINE_COURSES(
         EXPENSE_EDUCATION,
-        "Online Courses",
-        "ic_category_education_online_courses",
+        SharedRes.strings.category_education_online_courses,
+        Icons.Filled.Computer,
         "E-learning and courses"
     ),
     EXPENSE_EDUCATION_STUDENT_LOANS(
         EXPENSE_EDUCATION,
-        "Student Loans",
-        "ic_category_education_student_loans",
+        SharedRes.strings.category_education_student_loans,
+        Icons.Filled.AccountBalance,
         "Student loan repayments"
     ),
     EXPENSE_EDUCATION_OTHER(
         EXPENSE_EDUCATION,
-        "Other",
-        "ic_category_education_other",
+        SharedRes.strings.category_education_other,
+        Icons.Filled.MoreHoriz,
         "Other educational expenses"
     ),
 
     // 支出二级分类 - Insurance
     EXPENSE_INSURANCE_AUTO_INSURANCE(
         EXPENSE_INSURANCE,
-        "Auto Insurance",
-        "ic_category_insurance_auto",
+        SharedRes.strings.category_insurance_auto_insurance,
+        Icons.Filled.DirectionsCar,
         "Car insurance premiums"
     ),
     EXPENSE_INSURANCE_HEALTH_INSURANCE(
         EXPENSE_INSURANCE,
-        "Health Insurance",
-        "ic_category_insurance_health",
+        SharedRes.strings.category_insurance_health_insurance,
+        Icons.Filled.HealthAndSafety,
         "Health insurance premiums"
     ),
     EXPENSE_INSURANCE_HOME_INSURANCE(
         EXPENSE_INSURANCE,
-        "Home Insurance",
-        "ic_category_insurance_home",
+        SharedRes.strings.category_insurance_home_insurance,
+        Icons.Filled.Home,
         "Homeowner’s insurance"
     ),
     EXPENSE_INSURANCE_LIFE_INSURANCE(
         EXPENSE_INSURANCE,
-        "Life Insurance",
-        "ic_category_insurance_life",
+        SharedRes.strings.category_insurance_life_insurance,
+        Icons.Filled.Favorite,
         "Life insurance premiums"
     ),
     EXPENSE_INSURANCE_OTHER(
         EXPENSE_INSURANCE,
-        "Other",
-        "ic_category_insurance_other",
+        SharedRes.strings.category_insurance_other,
+        Icons.Filled.MoreHoriz,
         "Other insurance expenses"
     ),
 
     // 支出二级分类 - Financial
     EXPENSE_FINANCIAL_LOAN_PAYMENTS(
         EXPENSE_FINANCIAL,
-        "Loan Payments",
-        "ic_category_financial_loan_payments",
+        SharedRes.strings.category_financial_loan_payments,
+        Icons.Filled.AttachMoney,
         "Mortgage, personal loan repayments"
     ),
     EXPENSE_FINANCIAL_CREDIT_CARD_PAYMENTS(
         EXPENSE_FINANCIAL,
-        "Credit Card Payments",
-        "ic_category_financial_credit_card",
+        SharedRes.strings.category_financial_credit_card_payments,
+        Icons.Filled.CreditCard,
         "Credit card bill payments"
     ),
     EXPENSE_FINANCIAL_INVESTMENTS(
         EXPENSE_FINANCIAL,
-        "Investments",
-        "ic_category_financial_investments",
+        SharedRes.strings.category_financial_investments,
+        Icons.Filled.TrendingUp,
         "Stocks, bonds, and other investments"
     ),
     EXPENSE_FINANCIAL_BANKING_FEES(
         EXPENSE_FINANCIAL,
-        "Banking Fees",
-        "ic_category_financial_banking_fees",
+        SharedRes.strings.category_financial_banking_fees,
+        Icons.Filled.AccountBalance,
         "Bank account and ATM fees"
     ),
     EXPENSE_FINANCIAL_OTHER(
         EXPENSE_FINANCIAL,
-        "Other",
-        "ic_category_financial_other",
+        SharedRes.strings.category_financial_other,
+        Icons.Filled.MoreHoriz,
         "Other financial expenses"
     ),
 
     // 支出二级分类 - Miscellaneous
     EXPENSE_MISCELLANEOUS_GIFTS(
         EXPENSE_MISCELLANEOUS,
-        "Gifts",
-        "ic_category_miscellaneous_gifts",
+        SharedRes.strings.category_miscellaneous_gifts,
+        Icons.Filled.TagFaces,
         "Presents for others"
     ),
     EXPENSE_MISCELLANEOUS_DONATIONS(
         EXPENSE_MISCELLANEOUS,
-        "Donations",
-        "ic_category_miscellaneous_donations",
+        SharedRes.strings.category_miscellaneous_donations,
+        Icons.Filled.Favorite,
         "Charitable contributions"
     ),
     EXPENSE_MISCELLANEOUS_SUBSCRIPTIONS(
         EXPENSE_MISCELLANEOUS,
-        "Subscriptions",
-        "ic_category_miscellaneous_subscriptions",
+        SharedRes.strings.category_miscellaneous_subscriptions,
+        Icons.Filled.Subscriptions,
         "Monthly or yearly service fees"
     ),
     EXPENSE_MISCELLANEOUS_PET_CARE(
         EXPENSE_MISCELLANEOUS,
-        "Pet Care",
-        "ic_category_miscellaneous_pet_care",
+        SharedRes.strings.category_miscellaneous_pet_care,
+        Icons.Filled.Pets,
         "Pet food, vet bills"
     ),
     EXPENSE_MISCELLANEOUS_OTHER(
         EXPENSE_MISCELLANEOUS,
-        "Other",
-        "ic_category_miscellaneous_other",
+        SharedRes.strings.category_miscellaneous_other,
+        Icons.Filled.MoreHoriz,
         "Other miscellaneous expenses"
     ),
 
-
-    // 收入一级分类 (约5个)
-    INCOME_SALARY(INCOME, "Salary", "ic_category_salary", "Regular salary and wages"),
+    // 收入一级分类 (Income Primary Categories)
+    INCOME_SALARY(
+        INCOME,
+        SharedRes.strings.category_salary,
+        Icons.Filled.AccountBalance,
+        "Regular salary and wages"
+    ),
     INCOME_BUSINESS(
         INCOME,
-        "Business",
-        "ic_category_business",
+        SharedRes.strings.category_business,
+        Icons.Filled.Store,
         "Business or self-employment income"
     ),
-    INCOME_INVESTMENT(INCOME, "Investment", "ic_category_investment", "Income from investments"),
-    INCOME_FREELANCE(INCOME, "Freelance", "ic_category_freelance", "Income from freelance work"),
+    INCOME_INVESTMENT(
+        INCOME,
+        SharedRes.strings.category_investment,
+        Icons.Filled.TrendingUp,
+        "Income from investments"
+    ),
+    INCOME_FREELANCE(
+        INCOME,
+        SharedRes.strings.category_freelance,
+        Icons.Filled.Work,
+        "Income from freelance work"
+    ),
     INCOME_MISCELLANEOUS(
         INCOME,
-        "Miscellaneous",
-        "ic_category_income_miscellaneous",
+        SharedRes.strings.category_income_miscellaneous,
+        Icons.Filled.MoreHoriz,
         "Other sources of income"
     ),
 
     // 收入二级分类 - Salary
     INCOME_SALARY_BASIC_SALARY(
         INCOME_SALARY,
-        "Basic Salary",
-        "ic_category_salary_basic",
+        SharedRes.strings.category_salary_basic_salary,
+        Icons.Filled.AttachMoney,
         "Base salary income"
     ),
     INCOME_SALARY_BONUS(
         INCOME_SALARY,
-        "Bonus",
-        "ic_category_salary_bonus",
+        SharedRes.strings.category_salary_bonus,
+        Icons.Filled.Star,
         "Performance-based bonuses"
     ),
     INCOME_SALARY_OVERTIME(
         INCOME_SALARY,
-        "Overtime",
-        "ic_category_salary_overtime",
+        SharedRes.strings.category_salary_overtime,
+        Icons.Filled.AccessTime,
         "Overtime pay"
     ),
     INCOME_SALARY_COMMISSIONS(
         INCOME_SALARY,
-        "Commissions",
-        "ic_category_salary_commissions",
+        SharedRes.strings.category_salary_commissions,
+        Icons.Filled.MonetizationOn,
         "Sales or performance commissions"
     ),
     INCOME_SALARY_OTHER(
         INCOME_SALARY,
-        "Other",
-        "ic_category_salary_other",
+        SharedRes.strings.category_salary_other,
+        Icons.Filled.MoreHoriz,
         "Other salary-related income"
     ),
 
     // 收入二级分类 - Business
     INCOME_BUSINESS_SALES(
         INCOME_BUSINESS,
-        "Sales",
-        "ic_category_business_sales",
+        SharedRes.strings.category_business_sales,
+        Icons.Filled.ShoppingCart,
         "Income from product sales"
     ),
     INCOME_BUSINESS_SERVICES(
         INCOME_BUSINESS,
-        "Services",
-        "ic_category_business_services",
+        SharedRes.strings.category_business_services,
+        Icons.Filled.Build,
         "Income from provided services"
     ),
     INCOME_BUSINESS_ROYALTIES(
         INCOME_BUSINESS,
-        "Royalties",
-        "ic_category_business_royalties",
+        SharedRes.strings.category_business_royalties,
+        Icons.Filled.MonetizationOn,
         "Royalty income"
     ),
     INCOME_BUSINESS_OTHER(
         INCOME_BUSINESS,
-        "Other",
-        "ic_category_business_other",
+        SharedRes.strings.category_business_other,
+        Icons.Filled.MoreHoriz,
         "Other business income"
     ),
 
     // 收入二级分类 - Investment
     INCOME_INVESTMENT_DIVIDENDS(
         INCOME_INVESTMENT,
-        "Dividends",
-        "ic_category_investment_dividends",
+        SharedRes.strings.category_investment_dividends,
+        Icons.Filled.PieChart,
         "Dividend income from stocks"
     ),
     INCOME_INVESTMENT_INTEREST(
         INCOME_INVESTMENT,
-        "Interest",
-        "ic_category_investment_interest",
+        SharedRes.strings.category_investment_interest,
+        Icons.Filled.Interests,
         "Interest from savings or bonds"
     ),
     INCOME_INVESTMENT_CAPITAL_GAINS(
         INCOME_INVESTMENT,
-        "Capital Gains",
-        "ic_category_investment_capital_gains",
+        SharedRes.strings.category_investment_capital_gains,
+        Icons.AutoMirrored.Filled.TrendingUp,
         "Profit from selling investments"
     ),
     INCOME_INVESTMENT_RENTAL_INCOME(
         INCOME_INVESTMENT,
-        "Rental Income",
-        "ic_category_investment_rental_income",
+        SharedRes.strings.category_investment_rental_income,
+        Icons.Filled.Home,
         "Income from renting properties"
     ),
     INCOME_INVESTMENT_OTHER(
         INCOME_INVESTMENT,
-        "Other",
-        "ic_category_investment_other",
+        SharedRes.strings.category_investment_other,
+        Icons.Filled.MoreHoriz,
         "Other investment income"
     ),
 
     // 收入二级分类 - Freelance
     INCOME_FREELANCE_PROJECTS(
         INCOME_FREELANCE,
-        "Projects",
-        "ic_category_freelance_projects",
+        SharedRes.strings.category_freelance_projects,
+        Icons.Filled.Work,
         "Project-based freelance work"
     ),
     INCOME_FREELANCE_CONSULTING(
         INCOME_FREELANCE,
-        "Consulting",
-        "ic_category_freelance_consulting",
+        SharedRes.strings.category_freelance_consulting,
+        Icons.Filled.BusinessCenter,
         "Consulting or advisory services"
     ),
     INCOME_FREELANCE_TIPS(
         INCOME_FREELANCE,
-        "Tips",
-        "ic_category_freelance_tips",
+        SharedRes.strings.category_freelance_tips,
+        Icons.Filled.AttachMoney,
         "Gratuities from clients"
     ),
     INCOME_FREELANCE_OTHER(
         INCOME_FREELANCE,
-        "Other",
-        "ic_category_freelance_other",
+        SharedRes.strings.category_freelance_other,
+        Icons.Filled.MoreHoriz,
         "Other freelance income"
     ),
 
     // 收入二级分类 - Miscellaneous
     INCOME_MISCELLANEOUS_GIFTS(
         INCOME_MISCELLANEOUS,
-        "Gifts",
-        "ic_category_income_miscellaneous_gifts",
+        SharedRes.strings.category_income_miscellaneous_gifts,
+        Icons.Filled.TagFaces,
         "Monetary gifts received"
     ),
     INCOME_MISCELLANEOUS_GOVERNMENT_BENEFITS(
         INCOME_MISCELLANEOUS,
-        "Government Benefits",
-        "ic_category_income_miscellaneous_benefits",
+        SharedRes.strings.category_income_miscellaneous_government_benefits,
+        Icons.Filled.AccountBalance,
         "Social security, unemployment benefits"
     ),
     INCOME_MISCELLANEOUS_LOTTERY_WINNINGS(
         INCOME_MISCELLANEOUS,
-        "Lottery Winnings",
-        "ic_category_income_miscellaneous_lottery",
+        SharedRes.strings.category_income_miscellaneous_lottery_winnings,
+        Icons.Filled.Casino,
         "Income from lotteries or gambling"
     ),
     INCOME_MISCELLANEOUS_OTHER(
         INCOME_MISCELLANEOUS,
-        "Other",
-        "ic_category_income_miscellaneous_other",
+        SharedRes.strings.category_income_miscellaneous_other,
+        Icons.Filled.MoreHoriz,
         "Other miscellaneous income"
     );
 
@@ -561,8 +658,10 @@ enum class Category(
         }
 
         // 根据名称获取分类
-        fun fromCategoryName(categoryName: String): Category? {
-            return entries.find { it.categoryName == categoryName }
+        fun fromCategoryName(name: String): Category? {
+            return entries.find {
+                it.name == name
+            }
         }
 
         fun getLevel(category: Category): Int {
@@ -703,105 +802,9 @@ and the output should be:
     override fun toString(): String {
         return super.toString()
     }
+
 }
 
-//enum class Category(
-//    val parentCategory: Category?,
-//    val categoryName: String,
-//    val categoryIcon: String,
-//    val description: String
-//) {
-//    // Top-level Categories
-//    INCOME(null, "Income", "ic_category_income", "All types of income"),
-//    EXPENSE(null, "Expense", "ic_category_expense", "All types of expenses"),
-//
-//    // Income First-Level Categories
-//    INCOME_SALARY(INCOME, "Salary", "ic_category_salary", "Regular salary or wages"),
-//    INCOME_SALARY_BONUS(INCOME_SALARY, "Bonus", "ic_category_salary_bonus", "Additional compensation or bonuses"),
-//    INCOME_SALARY_OVERTIME(INCOME_SALARY, "Overtime", "ic_category_salary_overtime", "Earnings from overtime work"),
-//    INCOME_SALARY_OTHER(INCOME_SALARY, "Other", "ic_category_income_other", "Other types of salary income"),
-//
-//    INCOME_BUSINESS(INCOME, "Business", "ic_category_business", "Income from business activities"),
-//    INCOME_BUSINESS_SALES(INCOME_BUSINESS, "Sales", "ic_category_business_sales", "Revenue from sales"),
-//    INCOME_BUSINESS_SERVICES(INCOME_BUSINESS, "Services", "ic_category_business_services", "Income from services rendered"),
-//    INCOME_BUSINESS_OTHER(INCOME_BUSINESS, "Other", "ic_category_income_other", "Other types of business income"),
-//
-//    INCOME_INVESTMENT(INCOME, "Investment", "ic_category_investment", "Income from investments"),
-//    INCOME_INVESTMENT_DIVIDENDS(INCOME_INVESTMENT, "Dividends", "ic_category_investment_dividends", "Income from dividends"),
-//    INCOME_INVESTMENT_INTEREST(INCOME_INVESTMENT, "Interest", "ic_category_investment_interest", "Income from interest"),
-//    INCOME_INVESTMENT_CAPITAL_GAINS(INCOME_INVESTMENT, "Capital Gains", "ic_category_investment_capital_gains", "Income from capital gains"),
-//    INCOME_INVESTMENT_OTHER(INCOME_INVESTMENT, "Other", "ic_category_income_other", "Other types of investment income"),
-//
-//    INCOME_GIFTS(INCOME, "Gifts", "ic_category_gifts", "Income from gifts"),
-//    INCOME_GIFTS_PRESENTIAL(INCOME_GIFTS, "Presentational", "ic_category_gifts_presentational", "Gifts received in person"),
-//    INCOME_GIFTS_MONETARY(INCOME_GIFTS, "Monetary", "ic_category_gifts_monetary", "Monetary gifts"),
-//    INCOME_GIFTS_OTHER(INCOME_GIFTS, "Other", "ic_category_income_other", "Other types of gift income"),
-//
-//    INCOME_OTHER(INCOME, "Other", "ic_category_income_other", "Other types of income"),
-//
-//    // Expense First-Level Categories
-//    EXPENSE_HOUSING(EXPENSE, "Housing", "ic_category_housing", "Expenses related to housing"),
-//    EXPENSE_HOUSING_RENT(EXPENSE_HOUSING, "Rent", "ic_category_housing_rent", "Monthly rent payments"),
-//    EXPENSE_HOUSING_MORTGAGE(EXPENSE_HOUSING, "Mortgage", "ic_category_housing_mortgage", "Mortgage payments"),
-//    EXPENSE_HOUSING_PROPERTY_TAX(EXPENSE_HOUSING, "Property Tax", "ic_category_housing_property_tax", "Property tax payments"),
-//    EXPENSE_HOUSING_UTILITIES(EXPENSE_HOUSING, "Utilities", "ic_category_housing_utilities", "Utility bills"),
-//    EXPENSE_HOUSING_OTHER(EXPENSE_HOUSING, "Other", "ic_category_expense_other", "Other housing expenses"),
-//
-//    EXPENSE_TRANSPORTATION(EXPENSE, "Transportation", "ic_category_transportation", "Expenses related to transportation"),
-//    EXPENSE_TRANSPORTATION_FUEL(EXPENSE_TRANSPORTATION, "Fuel", "ic_category_transportation_fuel", "Fuel expenses"),
-//    EXPENSE_TRANSPORTATION_PUBLIC_TRANSIT(EXPENSE_TRANSPORTATION, "Public Transit", "ic_category_transportation_public_transit", "Public transportation costs"),
-//    EXPENSE_TRANSPORTATION_INSURANCE(EXPENSE_TRANSPORTATION, "Insurance", "ic_category_transportation_insurance", "Transportation insurance"),
-//    EXPENSE_TRANSPORTATION_MAINTENANCE(EXPENSE_TRANSPORTATION, "Maintenance", "ic_category_transportation_maintenance", "Vehicle maintenance and repairs"),
-//    EXPENSE_TRANSPORTATION_OTHER(EXPENSE_TRANSPORTATION, "Other", "ic_category_expense_other", "Other transportation expenses"),
-//
-//    EXPENSE_FOOD(EXPENSE, "Food", "ic_category_food", "Expenses related to food"),
-//    EXPENSE_FOOD_GROCERIES(EXPENSE_FOOD, "Groceries", "ic_category_food_groceries", "Grocery store purchases"),
-//    EXPENSE_FOOD_RESTAURANTS(EXPENSE_FOOD, "Restaurants", "ic_category_food_restaurants", "Dining out at restaurants"),
-//    EXPENSE_FOOD_CAFES(EXPENSE_FOOD, "Cafes", "ic_category_food_cafes", "Expenses at cafes and coffee shops"),
-//    EXPENSE_FOOD_OTHER(EXPENSE_FOOD, "Other", "ic_category_expense_other", "Other food-related expenses"),
-//
-//    EXPENSE_UTILITIES(EXPENSE, "Utilities", "ic_category_utilities", "Utility expenses"),
-//    EXPENSE_UTILITIES_ELECTRICITY(EXPENSE_UTILITIES, "Electricity", "ic_category_utilities_electricity", "Electricity bills"),
-//    EXPENSE_UTILITIES_WATER(EXPENSE_UTILITIES, "Water", "ic_category_utilities_water", "Water bills"),
-//    EXPENSE_UTILITIES_GAS(EXPENSE_UTILITIES, "Gas", "ic_category_utilities_gas", "Gas bills"),
-//    EXPENSE_UTILITIES_INTERNET(EXPENSE_UTILITIES, "Internet", "ic_category_utilities_internet", "Internet service bills"),
-//    EXPENSE_UTILITIES_OTHER(EXPENSE_UTILITIES, "Other", "ic_category_expense_other", "Other utility expenses"),
-//
-//    EXPENSE_ENTERTAINMENT(EXPENSE, "Entertainment", "ic_category_entertainment", "Expenses for entertainment"),
-//    EXPENSE_ENTERTAINMENT_MOVIES(EXPENSE_ENTERTAINMENT, "Movies", "ic_category_entertainment_movies", "Movie tickets and rentals"),
-//    EXPENSE_ENTERTAINMENT_CONCERTS(EXPENSE_ENTERTAINMENT, "Concerts", "ic_category_entertainment_concerts", "Concert tickets and events"),
-//    EXPENSE_ENTERTAINMENT_STREAMING(EXPENSE_ENTERTAINMENT, "Streaming", "ic_category_entertainment_streaming", "Streaming service subscriptions"),
-//    EXPENSE_ENTERTAINMENT_GAMES(EXPENSE_ENTERTAINMENT, "Games", "ic_category_entertainment_games", "Video and board games"),
-//    EXPENSE_ENTERTAINMENT_OTHER(EXPENSE_ENTERTAINMENT, "Other", "ic_category_expense_other", "Other entertainment expenses"),
-//
-//    EXPENSE_HEALTHCARE(EXPENSE, "Healthcare", "ic_category_healthcare", "Healthcare-related expenses"),
-//    EXPENSE_HEALTHCARE_INSURANCE(EXPENSE_HEALTHCARE, "Insurance", "ic_category_healthcare_insurance", "Health insurance premiums"),
-//    EXPENSE_HEALTHCARE_MEDICATION(EXPENSE_HEALTHCARE, "Medication", "ic_category_healthcare_medication", "Prescription and over-the-counter medications"),
-//    EXPENSE_HEALTHCARE_DOCTORS(EXPENSE_HEALTHCARE, "Doctors", "ic_category_healthcare_doctors", "Doctor and specialist visits"),
-//    EXPENSE_HEALTHCARE_DENTAL(EXPENSE_HEALTHCARE, "Dental", "ic_category_healthcare_dental", "Dental care expenses"),
-//    EXPENSE_HEALTHCARE_OTHER(EXPENSE_HEALTHCARE, "Other", "ic_category_expense_other", "Other healthcare expenses"),
-//
-//    EXPENSE_PERSONAL(EXPENSE, "Personal", "ic_category_personal", "Personal expenses"),
-//    EXPENSE_PERSONAL_CLOTHING(EXPENSE_PERSONAL, "Clothing", "ic_category_personal_clothing", "Clothing and accessories"),
-//    EXPENSE_PERSONAL_TOILETRIES(EXPENSE_PERSONAL, "Toiletries", "ic_category_personal_toiletries", "Personal hygiene products"),
-//    EXPENSE_PERSONAL_HAIRCUT(EXPENSE_PERSONAL, "Haircut", "ic_category_personal_haircut", "Haircut and salon services"),
-//    EXPENSE_PERSONAL_OTHER(EXPENSE_PERSONAL, "Other", "ic_category_expense_other", "Other personal expenses"),
-//
-//    EXPENSE_EDUCATION(EXPENSE, "Education", "ic_category_education", "Education-related expenses"),
-//    EXPENSE_EDUCATION_TUITION(EXPENSE_EDUCATION, "Tuition", "ic_category_education_tuition", "Tuition fees for education"),
-//    EXPENSE_EDUCATION_BOOKS(EXPENSE_EDUCATION, "Books", "ic_category_education_books", "Educational materials and books"),
-//    EXPENSE_EDUCATION_COURSES(EXPENSE_EDUCATION, "Courses", "ic_category_education_courses", "Online or in-person courses"),
-//    EXPENSE_EDUCATION_OTHER(EXPENSE_EDUCATION, "Other", "ic_category_expense_other", "Other education expenses"),
-//
-//    EXPENSE_INSURANCE(EXPENSE, "Insurance", "ic_category_insurance", "Insurance-related expenses"),
-//    EXPENSE_INSURANCE_HEALTH(EXPENSE_INSURANCE, "Health", "ic_category_insurance_health", "Health insurance payments"),
-//    EXPENSE_INSURANCE_AUTO(EXPENSE_INSURANCE, "Auto", "ic_category_insurance_auto", "Auto insurance premiums"),
-//    EXPENSE_INSURANCE_HOME(EXPENSE_INSURANCE, "Home", "ic_category_insurance_home", "Home insurance payments"),
-//    EXPENSE_INSURANCE_LIFE(EXPENSE_INSURANCE, "Life", "ic_category_insurance_life", "Life insurance premiums"),
-//    EXPENSE_INSURANCE_OTHER(EXPENSE_INSURANCE, "Other", "ic_category_expense_other", "Other insurance expenses"),
-//
-//    EXPENSE_OTHER(EXPENSE, "Other", "ic_category_expense_other", "Other types of expenses");
-//}
 
 
 

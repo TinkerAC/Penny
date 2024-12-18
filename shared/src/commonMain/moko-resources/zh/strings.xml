@@ -97,6 +97,148 @@
     <string name="please_select_date">请选择日期</string>
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
+    <string name="toggle_group_by">切换分组方式</string>
+    <!-- 顶级分类 -->
+    <string name="category_income">收入</string>
+    <string name="category_expense">支出</string>
+
+    <!-- 支出一级分类 -->
+    <string name="category_housing">住房</string>
+    <string name="category_transportation">交通</string>
+    <string name="category_food">食物</string>
+    <string name="category_health">健康</string>
+    <string name="category_personal_care">个人护理</string>
+    <string name="category_entertainment">娱乐</string>
+    <string name="category_education">教育</string>
+    <string name="category_insurance">保险</string>
+    <string name="category_financial">财务</string>
+    <string name="category_miscellaneous">杂项</string>
+
+    <!-- 支出二级分类 - Housing -->
+    <string name="category_housing_mortgage_or_rent">抵押贷款或租金</string>
+    <string name="category_housing_utilities">公用事业</string>
+    <string name="category_housing_maintenance">维护</string>
+    <string name="category_housing_property_tax">财产税</string>
+    <string name="category_housing_other">住房其他</string>
+
+    <!-- 支出二级分类 - Transportation -->
+    <string name="category_transportation_fuel">燃料</string>
+    <string name="category_transportation_public_transport">公共交通</string>
+    <string name="category_transportation_parking">停车费</string>
+    <string name="category_transportation_vehicle_maintenance">车辆维护</string>
+    <string name="category_transportation_other">交通其他</string>
+
+    <!-- 支出二级分类 - Food -->
+    <string name="category_food_groceries">杂货</string>
+    <string name="category_food_dining_out">外出就餐</string>
+    <string name="category_food_snacks_and_coffee">零食和咖啡</string>
+    <string name="category_food_delivery">送餐</string>
+    <string name="category_food_other">食物其他</string>
+
+    <!-- 支出二级分类 - Health -->
+    <string name="category_health_health_insurance">健康保险</string>
+    <string name="category_health_medical_bills">医疗账单</string>
+    <string name="category_health_pharmacy">药房</string>
+    <string name="category_health_dental_care">牙科护理</string>
+    <string name="category_health_other">健康其他</string>
+
+    <!-- 支出二级分类 - Personal Care -->
+    <string name="category_personal_care_clothing">服装</string>
+    <string name="category_personal_care_hair_and_beauty">美发和美容</string>
+    <string name="category_personal_care_fitness">健身</string>
+    <string name="category_personal_care_cosmetics">化妆品</string>
+    <string name="category_personal_care_other">个人护理其他</string>
+
+    <!-- 支出二级分类 - Entertainment -->
+    <string name="category_entertainment_movies_and_shows">电影和演出</string>
+    <string name="category_entertainment_music_and_concerts">音乐和音乐会</string>
+    <string name="category_entertainment_games_and_apps">游戏和应用</string>
+    <string name="category_entertainment_streaming_services">流媒体服务</string>
+    <string name="category_entertainment_other">娱乐其他</string>
+
+    <!-- 支出二级分类 - Education -->
+    <string name="category_education_tuition">学费</string>
+    <string name="category_education_books_and_supplies">书籍和用品</string>
+    <string name="category_education_online_courses">在线课程</string>
+    <string name="category_education_student_loans">学生贷款</string>
+    <string name="category_education_other">教育其他</string>
+
+    <!-- 支出二级分类 - Insurance -->
+    <string name="category_insurance_auto_insurance">汽车保险</string>
+    <string name="category_insurance_health_insurance">健康保险</string>
+    <string name="category_insurance_home_insurance">家庭保险</string>
+    <string name="category_insurance_life_insurance">人寿保险</string>
+    <string name="category_insurance_other">保险其他</string>
+
+    <!-- 支出二级分类 - Financial -->
+    <string name="category_financial_loan_payments">贷款还款</string>
+    <string name="category_financial_credit_card_payments">信用卡还款</string>
+    <string name="category_financial_investments">投资</string>
+    <string name="category_financial_banking_fees">银行费用</string>
+    <string name="category_financial_other">财务其他</string>
+
+    <!-- 支出二级分类 - Miscellaneous -->
+    <string name="category_miscellaneous_gifts">礼物</string>
+    <string name="category_miscellaneous_donations">捐赠</string>
+    <string name="category_miscellaneous_subscriptions">订阅</string>
+    <string name="category_miscellaneous_pet_care">宠物护理</string>
+    <string name="category_miscellaneous_other">杂项其他</string>
+
+    <!-- 收入一级分类 (Income Primary Categories) -->
+    <string name="category_salary">薪水</string>
+    <string name="category_business">业务</string>
+    <string name="category_investment">投资</string>
+    <string name="category_freelance">自由职业</string>
+    <string name="category_income_miscellaneous">其他收入</string>
+
+    <!-- 收入二级分类 - Salary -->
+    <string name="category_salary_basic_salary">基本薪资</string>
+    <string name="category_salary_bonus">奖金</string>
+    <string name="category_salary_overtime">加班费</string>
+    <string name="category_salary_commissions">佣金</string>
+    <string name="category_salary_other">其他薪资</string>
+
+    <!-- 收入二级分类 - Business -->
+    <string name="category_business_sales">销售</string>
+    <string name="category_business_services">服务</string>
+    <string name="category_business_royalties">版税</string>
+    <string name="category_business_other">商业其他</string>
+
+    <!-- 收入二级分类 - Investment -->
+    <string name="category_investment_dividends">股息</string>
+    <string name="category_investment_interest">利息</string>
+    <string name="category_investment_capital_gains">资本利得</string>
+    <string name="category_investment_rental_income">租金收入</string>
+    <string name="category_investment_other">投资其他</string>
+
+    <!-- 收入二级分类 - Freelance -->
+    <string name="category_freelance_projects">项目</string>
+    <string name="category_freelance_consulting">咨询</string>
+    <string name="category_freelance_tips">小费</string>
+    <string name="category_freelance_other">自由职业其他</string>
+
+    <!-- 收入二级分类 - Miscellaneous -->
+    <string name="category_income_miscellaneous_gifts">礼物</string>
+    <string name="category_income_miscellaneous_government_benefits">政府福利</string>
+    <string name="category_income_miscellaneous_lottery_winnings">彩票中奖</string>
+    <string name="category_income_miscellaneous_other">其他收入</string>
 
 
+    <string name="unknown_status">未知状态</string>
+    <string name="pending_action">待处理操作</string>
+    <string name="please_select_category">请选择类别</string>
+    <string name="select_category">选择类别</string>
+    <string name="primary_category">一级分类</string>
+    <string name="secondary_category">二级分类</string>
+    <string name="no_options">无选项</string>
+    <string name="please_select_currency">请选择货币</string>
+    <string name="select_currency">选择货币</string>
+
+
+    <string name="show_numpad">显示数字键盘</string>
+    <string name="hide_numpad">隐藏数字键盘</string>
+    <string name="numpad">数字键盘</string>
+    <string name="tap_to_add_remarks">点击添加备注</string>
+    <string name="select_ledger">选择账本</string>
+    <string name="select_ledger_description">临时切换到另一个账本</string>
 </resources>

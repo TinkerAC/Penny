@@ -6,6 +6,7 @@ import app.penny.core.data.model.toDto
 import app.penny.core.data.model.toEntity
 import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.TransactionRepository
+import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.core.network.ApiClient
@@ -165,5 +166,14 @@ class TransactionRepositoryImpl(
         return transactionLocalDataSource.findByUserUuidAndTransactionDateBetween(
             userUuid.toString(), startEpochSeconds, endEpochSeconds
         ).map { it.toModel() }
+    }
+
+
+    override suspend fun findRecentByLedger(
+        ledger: LedgerModel,
+        limit: Long
+    ): List<TransactionModel> {
+        return transactionLocalDataSource.findRecentByLedgerUuid(ledger.uuid.toString(), limit)
+            .map { it.toModel() }
     }
 }

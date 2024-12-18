@@ -203,7 +203,7 @@ class ProfileViewModel(
     private suspend fun fetchProfileStatistics() {
         _uiState.value = _uiState.value.copy(isLoading = true)
         _uiState.value = _uiState.value.copy(
-            userUuid = userDataRepository.getUserUuid(),
+            userUuid = userDataRepository.getUser().uuid,
             email = userDataRepository.getUserEmailOrNull(),
             username = userDataRepository.getUserNameOrNull(),
             continuousCheckInDays = 5,   // TODO: 从业务逻辑中获取实际数据

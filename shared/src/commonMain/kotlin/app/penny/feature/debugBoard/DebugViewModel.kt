@@ -96,8 +96,7 @@ class DebugViewModel(
             val lastSyncedAt = userDataRepository.getLastSyncedAt()
             _uiState.value = _uiState.value.copy(lastSyncedAt = lastSyncedAt)
 
-            val userUuid = userDataRepository.getUserUuid()
-            val user = userRepository.findByUuid(userUuid)
+            val user = userDataRepository.getUser()
             _uiState.value = _uiState.value.copy(activeUser = user)
 
         }

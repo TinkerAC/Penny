@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
@@ -35,82 +33,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.TransactionModel
 import app.penny.feature.transactions.GroupedTransaction
+import app.penny.presentation.ui.components.TransactionItem
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-@Composable
-fun TransactionItem(transaction: TransactionModel) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 8.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // 图标或文字说明
-            Icon(
-                imageVector = when (transaction.category.categoryName) {
-                    "工资收入" -> Icons.Default.ArrowDownward // 示例图标，可根据需求更换
-                    else -> Icons.Default.ArrowUpward
-                },
-                contentDescription = transaction.category.categoryName,
-                tint = if (transaction.amount > BigDecimal.ZERO) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = transaction.category.categoryName, // 交易类型或名称
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = formatTransactionTime(transaction.transactionInstant),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            Text(
-                text = formatAmount(transaction.amount),
-                style = MaterialTheme.typography.titleMedium,
-                color = if (transaction.amount > BigDecimal.ZERO) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.error
-            )
-        }
-    }
-}
 
-private fun formatTransactionTime(timestamp: kotlinx.datetime.Instant): String {
-    val localDateTime = timestamp.toLocalDateTime(TimeZone.currentSystemDefault())
-    return "${localDateTime.year}-${
-        localDateTime.monthNumber.toString().padStart(2, '0')
-    }-${localDateTime.dayOfMonth.toString().padStart(2, '0')} " +
-            "${localDateTime.hour.toString().padStart(2, '0')}:${
-                localDateTime.minute.toString().padStart(2, '0')
-            }"
-}
 
-private fun formatAmount(amount: BigDecimal): String {
-    return if (amount > BigDecimal.ZERO) {
-        "+${amount.toPlainString()}"
-    } else {
-        "-${amount.abs().toPlainString()}"
-    }
-}
 
 @Composable
 fun TransactionGroup(group: GroupedTransaction) {

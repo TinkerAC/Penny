@@ -2,6 +2,7 @@ package app.penny.core.domain.usecase
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.domain.model.LedgerModel
 import kotlin.uuid.ExperimentalUuidApi
 
 class DeleteLedgerUseCase(
@@ -9,13 +10,15 @@ class DeleteLedgerUseCase(
     private val ledgerRepository: LedgerRepository
 ) {
     @OptIn(ExperimentalUuidApi::class)
-    suspend operator fun invoke() {
-        val userUuid = userDataRepository.getUserUuid()
+    suspend operator fun invoke(ledger: LedgerModel) {
+        val user = userDataRepository.getUser()
 
-        if (ledgerRepository.countByUserUuid(userUuid) == 1L) {
+        if (ledgerRepository.countByUserUuid(user.uuid) == 1L) {
             throw IllegalStateException("Cannot delete the only ledger")
         }
-        ledgerRepository.deleteByUuid(userUuid)
+        ledgerRepository.deleteByUuid(
+            ledgerUuid = ledger.uuid
+        )
     }
 
 

@@ -16,13 +16,13 @@ class UploadUnsyncedLedgerUseCase(
 ) {
     suspend operator fun invoke() {
 
-        val userUuid = userDataRepository.getUserUuid()
+        val user = userDataRepository.getUser()
         // 获取上次同步的时间
         val lastSyncedAt: Instant? = userDataRepository.getLastSyncedAt()
 
         // 获取在上次同步后更新的所有账本
         val ledgers: List<LedgerModel> = ledgerRepository.findByUserUuidAndUpdatedAtAfter(
-            userUuid = userUuid,
+            userUuid = user.uuid,
             timeStamp = lastSyncedAt ?: Instant.DISTANT_PAST
         )
 

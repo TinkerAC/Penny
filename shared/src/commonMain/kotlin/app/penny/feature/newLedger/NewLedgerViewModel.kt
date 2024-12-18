@@ -66,7 +66,7 @@ class NewLedgerViewModel(
             try {
                 val newLedger = LedgerModel(
                     uuid = Uuid.random(),
-                    userUuid = userDataRepository.getUserUuid(),
+                    userUuid = userDataRepository.getUser().uuid,
                     name = _uiState.value.ledgerName,
                     currency = _uiState.value.currency,
                     cover = _uiState.value.ledgerCover,
@@ -75,7 +75,7 @@ class NewLedgerViewModel(
                 ledgerRepository.insert(newLedger)
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 _eventFlow.emit(NewLedgerUiEvent.ShowSnackBar("账本创建成功!"))
-                _eventFlow.emit(NewLedgerUiEvent.OnFinishInsert(newLedger.uuid))
+                _eventFlow.emit(NewLedgerUiEvent.OnFinishInsert(newLedger))
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 _eventFlow.emit(NewLedgerUiEvent.ShowSnackBar(e.message ?: "创建账本失败"))

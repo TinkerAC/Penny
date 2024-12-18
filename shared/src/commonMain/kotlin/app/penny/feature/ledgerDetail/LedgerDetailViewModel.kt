@@ -36,7 +36,9 @@ class LedgerDetailViewModel(
     private fun deleteLedger() {
         screenModelScope.launch {
             try {
-                deleteLedgerUseCase()
+                deleteLedgerUseCase(
+                    ledger = ledgerModel
+                )
             } catch (e: IllegalStateException) {
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 Logger.d { "Cannot delete the only ledger" }

@@ -123,7 +123,7 @@ fun TableCell(
             color = if (isBalance) {
                 if (text.toBigDecimal() >= BigDecimal.ZERO)
                 // 收入
-                    Color(0xFF4CAF50)//TODO: use MaterialTheme
+                    Color(0xFF4CAF50)
                 else
                 // 支出
                     Color(0xFFF44336)

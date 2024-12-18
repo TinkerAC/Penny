@@ -38,7 +38,7 @@ class MyLedgerViewModel(
         screenModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             val ledgers = ledgerRepository.findByUserUuid(
-                userUuid = userDataRepository.getUserUuid()
+                userUuid = userDataRepository.getUser().uuid
             )
             _uiState.value = _uiState.value.copy(ledgers = ledgers, isLoading = false)
         }

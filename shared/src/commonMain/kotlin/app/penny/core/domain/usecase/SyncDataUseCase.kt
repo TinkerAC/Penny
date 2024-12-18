@@ -20,7 +20,7 @@ class SyncDataUseCase(
 
     suspend operator fun invoke() {
 
-        val userUuid = userDataRepository.getUserUuid()
+        val user= userDataRepository.getUser()
 
         val countUnsyncedDataResult = countUnsyncedDataUseCase()
 
@@ -33,14 +33,14 @@ class SyncDataUseCase(
                 //1.Prepare local changes
                 val ledgerLocalChanges: List<LedgerModel> =
                     ledgerRepository.findByUserUuidAndUpdatedAtAfter(
-                        userUuid = userUuid,
+                        userUuid = user.uuid,
                         timeStamp = lastSyncedAt
 
                     )
 
                 val transactionLocalChanges: List<TransactionModel> =
                     transactionRepository.findByUserUuidAndUpdatedAtAfter(
-                        userUuid = userUuid,
+                        userUuid = user.uuid,
                         timeStamp = lastSyncedAt
                     )
 

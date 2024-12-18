@@ -35,7 +35,7 @@ class TokenManager(
     }
 
     // 清除内存中的 Access Token
-    fun clearAccessToken() {
+    private fun clearAccessToken() {
         accessToken = null
         Logger.d { "Access Token cleared from memory" }
     }
@@ -47,12 +47,12 @@ class TokenManager(
     }
 
     // 从持久化存储中获取 Refresh Token
-    fun getRefreshToken(): String? {
+    private fun getRefreshToken(): String? {
         return settings.getStringOrNull(REFRESH_TOKEN_KEY)
     }
 
     // 清除 Refresh Token
-    fun clearRefreshToken() {
+    private fun clearRefreshToken() {
         settings.remove(REFRESH_TOKEN_KEY)
         Logger.d { "Refresh Token cleared from persistent storage" }
     }
@@ -69,7 +69,7 @@ class TokenManager(
             Logger.d { "Access Token refreshed successfully" }
             return accessToken
         }
-        throw IllegalStateException("Access Token not found, and refresh token failed, user must login again")//TODO: guide user to login again
+        throw IllegalStateException("Access Token not found, and refresh token failed, user must login again")
     }
 
     // 调用 ApiClient 刷新 Token

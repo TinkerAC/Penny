@@ -52,7 +52,7 @@ class MainScreen : Screen {
 
         SafeAreaBackgrounds(
             topColor = items[selectedItem].statusBarColor(),
-            bottomColor = MaterialTheme.colorScheme.surface
+            bottomColor = MaterialTheme.colorScheme.surfaceContainer
         ) {
             Scaffold(
                 bottomBar = {
@@ -92,7 +92,7 @@ fun BottomAppBarWithFAB(
     Box {
         // 底部导航栏
         NavigationBar(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
             contentColor = MaterialTheme.colorScheme.primary,
 //            tonalElevation = 2.dp,
             modifier = Modifier

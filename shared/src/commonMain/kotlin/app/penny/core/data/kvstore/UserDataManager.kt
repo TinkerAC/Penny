@@ -37,7 +37,7 @@ class UserDataManager(
 
 
     companion object {
-        const val RECENT_LEDGER_UUID = "recent_ledger_uuid"
+        const val DEFAULT_LEDGER_UUID = "recent_ledger_uuid"
         const val CONTINUOUS_CHECK_IN_DAYS = "continuous_check_in_days"
         const val USER_UUID = "user_uuid"
         const val LAST_SYNCED_AT = "last_synced_at"

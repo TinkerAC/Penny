@@ -71,7 +71,7 @@ class LoginUseCase(
             userRepository.upsertByUuid(userModel)
 
             // Set user data
-            userDataRepository.setUserUuid(userModel.uuid.toString())
+            userDataRepository.setUser(userModel)
             userModel.email?.let { userDataRepository.setUserEmail(it) }
 
         } catch (e: Exception) {

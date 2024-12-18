@@ -67,7 +67,10 @@ class OnboardingStep4InitLedger : OnboardingStepScreen {
                     is NewLedgerUiEvent.OnFinishInsert -> {
                         val userDataRepository = getKoinInstance<UserDataRepository>()
 
-                        userDataRepository.setRecentLedgerUuid(event.newLedgerUuid)
+                        userDataRepository.setDefaultLedger(
+                            ledger = event.newLedger
+                        )
+
                         rootNavigator.replaceAll(MainScreen())
 
                     }

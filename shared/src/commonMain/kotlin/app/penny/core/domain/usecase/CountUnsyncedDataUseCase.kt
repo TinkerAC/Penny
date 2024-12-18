@@ -17,18 +17,18 @@ class CountUnsyncedDataUseCase(
 ) {
     suspend operator fun invoke(): CountUnsyncedDataResult {
 
-        val userUuid = userDataRepository.getUserUuid()
+        val user = userDataRepository.getUser()
 
         val lastSyncedAt: Instant? = userDataRepository.getLastSyncedAt()
 
         val unsyncedLedgerCount = ledgerRepository.countByUserUuidAndUpdatedAtAfter(
-            userUuid = userUuid,
+            userUuid = user.uuid,
             timeStamp = lastSyncedAt ?: Instant.DISTANT_PAST
         )
 
 
         val unsyncedTransactionCount = transactionRepository.countByUserUuidAndUpdatedAtAfter(
-            userUuid = userUuid,
+            userUuid = user.uuid,
             timeStamp = lastSyncedAt ?: Instant.DISTANT_PAST
         )
 
@@ -51,8 +51,8 @@ class CountUnsyncedDataUseCase(
         }
 
         return CountUnsyncedDataResult(
-            unsyncedLocalLedgerCount = unsyncedLedgerCount.toLong(),
-            unsyncedLocalTransactionCount = unsyncedTransactionCount.toLong(),
+            unsyncedLocalLedgerCount = unsyncedLedgerCount,
+            unsyncedLocalTransactionCount = unsyncedTransactionCount,
             unsyncedRemoteLedgerCount = unsyncedRemoteLedgerCount,
             unsyncedRemoteTransactionCount = unsyncedRemoteTransactionCount
         )

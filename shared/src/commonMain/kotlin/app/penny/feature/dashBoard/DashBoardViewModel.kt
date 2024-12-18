@@ -1,25 +1,46 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/dashboard/DashboardViewModel.kt
 package app.penny.feature.dashBoard
 
+import app.penny.core.data.repository.TransactionRepository
+import app.penny.core.data.repository.UserDataRepository
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DashboardViewModel : ScreenModel {
+class DashboardViewModel(
+    private val transactionRepository: TransactionRepository,
+    private val userDataRepository: UserDataRepository,
+) : ScreenModel {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
     // 下拉刷新触发阈值（可根据实际需求调整）
     private val refreshThreshold = 80f
+
+
+    init {
+
+        screenModelScope.launch {
+
+
+            val recentTransactions = transactionRepository.findRecentByLedger(
+                ledger = userDataRepository.getDefaultLedger(),
+                limit = 10
+            )
+
+            // 初始化数据
+            _uiState.update {
+                it.copy(recentTransactions = recentTransactions)
+            }
+        }
+
+    }
 
     fun handleScroll(delta: Float) {
         _uiState.update { state ->
@@ -43,7 +64,7 @@ class DashboardViewModel : ScreenModel {
     }
 
     fun handleRelease() {
-        coroutineScope.launch {
+        screenModelScope.launch {
             val currentState = _uiState.value
             if (currentState.refreshIndicatorState == RefreshIndicatorState.ReleaseToRefresh) {
                 // 达到释放刷新条件，触发刷新

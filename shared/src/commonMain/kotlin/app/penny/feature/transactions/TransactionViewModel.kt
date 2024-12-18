@@ -47,7 +47,7 @@ class TransactionViewModel(
                 fetchTransactions()
 
                 // 默认选择分组选项，例如按天分组
-                handleIntent(TransactionIntent.SelectGroupByOption(GroupBy.Time.Day))
+                handleIntent(TransactionIntent.SelectGroupByOption(GroupByType.items[0].options[0]))
             } catch (e: Exception) {
                 Logger.e("Initialization error: ${e.message}")
                 _uiState.update { it.copy(errorMessage = e.message ?: "未知错误") }
@@ -60,9 +60,7 @@ class TransactionViewModel(
      */
     fun handleIntent(intent: TransactionIntent) {
         when (intent) {
-            is TransactionIntent.ShowSharedDropdown -> showSharedDropdown(intent.groupByType)
-            is TransactionIntent.SelectGroupByOption -> selectGroupByOption(intent.groupBy)
-            is TransactionIntent.DismissSharedDropdown -> dismissSharedDropdown()
+            is TransactionIntent.SelectGroupByOption -> selectGroupByOption(intent.groupByOption)
             is TransactionIntent.ToggleView -> toggleView()
             is TransactionIntent.SelectDate -> selectDate(intent.date)
         }
@@ -89,37 +87,23 @@ class TransactionViewModel(
         Logger.d("Selected date: $date")
     }
 
-    /**
-     * 显示分组下拉菜单
-     */
-    private fun showSharedDropdown(groupByType: GroupByType) {
-        val options = GroupByType.getGroupByOptions(groupByType)
-        _uiState.update {
-            it.copy(
-                groupByOptions = options,
-                sharedPopUpVisible = options.isNotEmpty()
-            )
-        }
-        Logger.d("Show shared dropdown with options: $options")
-    }
 
     /**
      * 选择分组选项
      */
-    private fun selectGroupByOption(groupBy: GroupBy) {
+    private fun selectGroupByOption(groupByOption: GroupByType.GroupOption) {
         _uiState.update {
             it.copy(
-                selectedGroupByOption = groupBy,
-                selectedGroupByType = when (groupBy) {
-                    is GroupBy.Time -> GroupByType.Time
-                    is GroupBy.Category -> GroupByType.Category
-                    GroupBy.Ledger -> GroupByType.Ledger
-                },
-                sharedPopUpVisible = false
+                selectedGroupByOption = groupByOption,
+                selectedGroupByType = when (groupByOption) {
+                    is GroupByType.Time.GroupOption -> GroupByType.Time
+                    is GroupByType.Category.GroupOption -> GroupByType.Category
+                }
+
             )
         }
-        doGroupBy(groupBy)
-        Logger.d("Selected group by option: $groupBy")
+        doGroupBy(groupByOption)
+        Logger.d("Selected group by option: $groupByOption")
     }
 
     /**
@@ -204,39 +188,41 @@ class TransactionViewModel(
     /**
      * 执行分组操作
      */
-    private fun doGroupBy(groupBy: GroupBy) {
-        val grouped = when (groupBy) {
-            is GroupBy.Time -> groupByTime(groupBy)
-            is GroupBy.Category -> groupByCategory(groupBy)
-            GroupBy.Ledger -> groupByLedger()
+    private fun doGroupBy(groupByOption: GroupByType.GroupOption) {
+        val grouped = when (groupByOption) {
+            is GroupByType.Time.GroupOption -> groupByTime(groupByOption)
+            is GroupByType.Category.GroupOption -> groupByCategory(groupByOption)
+
         }
         _uiState.update { it.copy(groupedTransactions = grouped) }
-        Logger.d("Grouped transactions by $groupBy, resulting in ${grouped.size} groups")
+        Logger.d("Grouped transactions by $groupByOption")
     }
 
     /**
      * 按时间分组
      */
-    private fun groupByTime(groupBy: GroupBy.Time): List<GroupedTransaction> {
+    private fun groupByTime(groupBy: GroupByType.Time.GroupOption): List<GroupedTransaction> {
         val transactions = _uiState.value.transactions
         val groupedMap = transactions.groupBy { transaction ->
             val zonedDateTime =
                 transaction.transactionInstant.toLocalDateTime(TimeZone.currentSystemDefault())
             when (groupBy) {
-                GroupBy.Time.Day -> "${zonedDateTime.year}-${
-                    zonedDateTime.monthNumber.toString().padStart(2, '0')
-                }-${zonedDateTime.dayOfMonth.toString().padStart(2, '0')}"
+                GroupByType.Time.GroupOption.Day ->
+                    "${zonedDateTime.year}-${
+                        zonedDateTime.monthNumber.toString().padStart(2, '0')
+                    }-${zonedDateTime.dayOfMonth.toString().padStart(2, '0')}"
 
-                GroupBy.Time.Week -> {
+                GroupByType.Time.GroupOption.Week -> {
                     val weekOfYear = ((zonedDateTime.dayOfYear - 1) / 7) + 1
                     "${zonedDateTime.year}-W${weekOfYear.toString().padStart(2, '0')}"
                 }
 
-                GroupBy.Time.Month -> "${zonedDateTime.year}-${
-                    zonedDateTime.monthNumber.toString().padStart(2, '0')
-                }"
+                GroupByType.Time.GroupOption.Month ->
+                    "${zonedDateTime.year}-${
+                        zonedDateTime.monthNumber.toString().padStart(2, '0')
+                    }"
 
-                GroupBy.Time.Season -> {
+                GroupByType.Time.GroupOption.Season -> {
                     val season = when (zonedDateTime.monthNumber) {
                         in 1..3 -> "Q1"
                         in 4..6 -> "Q2"
@@ -246,7 +232,7 @@ class TransactionViewModel(
                     "${zonedDateTime.year}-$season"
                 }
 
-                GroupBy.Time.Year -> "${zonedDateTime.year}"
+                GroupByType.Time.GroupOption.Year -> "${zonedDateTime.year}"
             }
         }
 
@@ -265,12 +251,15 @@ class TransactionViewModel(
     /**
      * 按类别分组
      */
-    private fun groupByCategory(groupBy: GroupBy.Category): List<GroupedTransaction> {
+    private fun groupByCategory(groupBy: GroupByType.Category.GroupOption): List<GroupedTransaction> {
         val transactions = _uiState.value.transactions
         val groupedMap = transactions.groupBy { transaction ->
             when (groupBy) {
-                GroupBy.Category.Level1 -> transaction.category.getLevel1Category().categoryName
-                GroupBy.Category.Level2 -> transaction.category.categoryName
+                GroupByType.Category.GroupOption.Primary
+                    -> transaction.category.getLevel1Category().name
+
+                GroupByType.Category.GroupOption.Secondary
+                    -> transaction.category.name
             }
         }
 

@@ -3,10 +3,10 @@
 package app.penny.presentation.ui.screens
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ReceiptLong
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.automirrored.outlined.ReceiptLong
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PieChart
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -29,7 +29,7 @@ sealed class BottomNavItem(
     data object Dashboard :
         BottomNavItem(
             {},
-            Icons.Filled.Home,
+            Icons.Outlined.Home,
             SharedRes.strings.dashboard,
             DashboardScreen(),
             { MaterialTheme.colorScheme.primaryContainer }
@@ -38,7 +38,7 @@ sealed class BottomNavItem(
     data object Analytics :
         BottomNavItem(
             {},
-            Icons.Filled.PieChart,
+            Icons.Outlined.PieChart,
             SharedRes.strings.analytics,
             AnalyticScreen(),
             { MaterialTheme.colorScheme.surfaceVariant }
@@ -46,7 +46,7 @@ sealed class BottomNavItem(
 
     data object Profile : BottomNavItem(
         {},
-        Icons.Filled.Person,
+        Icons.Outlined.Person,
         SharedRes.strings.profile,
         ProfileScreen(),
         { MaterialTheme.colorScheme.surface }
@@ -55,10 +55,10 @@ sealed class BottomNavItem(
     data object Transactions :
         BottomNavItem(
             {},
-            Icons.AutoMirrored.Filled.ReceiptLong,
+            Icons.AutoMirrored.Outlined.ReceiptLong,
             SharedRes.strings.transaction,
             TransactionScreen(),
-            { MaterialTheme.colorScheme.surfaceVariant}
+            { MaterialTheme.colorScheme.surfaceVariant }
         )
 
     companion object {

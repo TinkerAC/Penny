@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.NoteAlt
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -94,7 +96,7 @@ fun TopTabRow(
         shadowElevation = 4.dp,
         shape = RectangleShape,
         modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = MaterialTheme.colorScheme.surfaceContainer
     ) {
         Row(
             modifier = Modifier
@@ -106,7 +108,9 @@ fun TopTabRow(
             ScrollableTabRow(
                 selectedTabIndex = tabs.indexOf(selectedTab),
                 edgePadding = 0.dp,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                contentColor = MaterialTheme.colorScheme.primary
             ) {
                 tabs.forEach { tab ->
                     Tab(
@@ -121,7 +125,7 @@ fun TopTabRow(
                 modifier = Modifier.size(48.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Filled.NoteAlt,
+                    imageVector = Icons.Outlined.AccountBalanceWallet,
                     contentDescription = stringResource(SharedRes.strings.switch_ledger),
                     tint = MaterialTheme.colorScheme.primary
                 )

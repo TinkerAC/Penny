@@ -1,21 +1,22 @@
 package app.penny.core.data.repository
 
+import app.penny.core.domain.model.LedgerModel
+import app.penny.core.domain.model.UserModel
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 
 @OptIn(ExperimentalUuidApi::class)
 interface UserDataRepository {
 
-    suspend fun setRecentLedgerUuid(ledgerUuid: Uuid)
-    suspend fun getRecentLedgerUuidOrNull(): Uuid?
+    suspend fun setDefaultLedger(ledger: LedgerModel)
+    suspend fun getDefaultLedger(): LedgerModel
 
     suspend fun setContinuousCheckInDays(days: Int)
     suspend fun getContinuousCheckInDays(): Int
 
-    suspend fun getUserUuid(): Uuid
-    suspend fun setUserUuid(uuid: String)
+    suspend fun getUser(): UserModel
+    suspend fun setUser(user: UserModel)
 
     suspend fun getLastSyncedAt(): Instant?
     suspend fun setLastSyncedAt(lastSyncedAt: Instant)

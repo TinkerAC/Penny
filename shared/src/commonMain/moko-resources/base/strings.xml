@@ -59,7 +59,7 @@
     <string name="expense_abbr">Exp</string>
     <string name="balance_abbr">Bal</string>
     <string name="income_expense_trend">Income vs Expense</string>
-    <string name ="asset_daily_change">Daily Change</string>
+    <string name="asset_daily_change">Daily Change</string>
     <string name="summary_recent">Recent</string>
     <string name="summary_monthly">Monthly</string>
     <string name="summary_yearly">Yearly</string>
@@ -101,8 +101,150 @@
     <string name="please_select_date">Please select date</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="toggle_group_by">Toggle Group By</string>
+    <!-- 顶级分类 -->
+    <string name="category_income">Income</string>
+    <string name="category_expense">Expense</string>
+
+    <!-- 支出一级分类 -->
+    <string name="category_housing">Hsg.</string>
+    <string name="category_transportation">Trans.</string>
+    <string name="category_food">Food</string>
+    <string name="category_health">Health</string>
+    <string name="category_personal_care">P.Care</string>
+    <string name="category_entertainment">Entmt.</string>
+    <string name="category_education">Edu.</string>
+    <string name="category_insurance">Ins.</string>
+    <string name="category_financial">Fin.</string>
+    <string name="category_miscellaneous">Misc.</string>
+
+    <!-- 支出二级分类 - Housing -->
+    <string name="category_housing_mortgage_or_rent">Mortgage or Rent</string>
+    <string name="category_housing_utilities">Utilities</string>
+    <string name="category_housing_maintenance">Maintenance</string>
+    <string name="category_housing_property_tax">Property Tax</string>
+    <string name="category_housing_other">Housing Other</string>
+
+    <!-- 支出二级分类 - Transportation -->
+    <string name="category_transportation_fuel">Fuel</string>
+    <string name="category_transportation_public_transport">Public Transport</string>
+    <string name="category_transportation_parking">Parking</string>
+    <string name="category_transportation_vehicle_maintenance">Vehicle Maintenance</string>
+    <string name="category_transportation_other">Transportation Other</string>
+
+    <!-- 支出二级分类 - Food -->
+    <string name="category_food_groceries">Groceries</string>
+    <string name="category_food_dining_out">Dining Out</string>
+    <string name="category_food_snacks_and_coffee">Snacks &amp; Coffee</string>
+    <string name="category_food_delivery">Delivery</string>
+    <string name="category_food_other">Food Other</string>
+
+    <!-- 支出二级分类 - Health -->
+    <string name="category_health_health_insurance">Health Insurance</string>
+    <string name="category_health_medical_bills">Medical Bills</string>
+    <string name="category_health_pharmacy">Pharmacy</string>
+    <string name="category_health_dental_care">Dental Care</string>
+    <string name="category_health_other">Health Other</string>
+
+    <!-- 支出二级分类 - Personal Care -->
+    <string name="category_personal_care_clothing">Clothing</string>
+    <string name="category_personal_care_hair_and_beauty">Hair &amp; Beauty</string>
+    <string name="category_personal_care_fitness">Fitness</string>
+    <string name="category_personal_care_cosmetics">Cosmetics</string>
+    <string name="category_personal_care_other">Personal Care Other</string>
+
+    <!-- 支出二级分类 - Entertainment -->
+    <string name="category_entertainment_movies_and_shows">Movies &amp; Shows</string>
+    <string name="category_entertainment_music_and_concerts">Music &amp; Concerts</string>
+    <string name="category_entertainment_games_and_apps">Games &amp; Apps</string>
+    <string name="category_entertainment_streaming_services">Streaming Services</string>
+    <string name="category_entertainment_other">Entertainment Other</string>
+
+    <!-- 支出二级分类 - Education -->
+    <string name="category_education_tuition">Tuition</string>
+    <string name="category_education_books_and_supplies">Books &amp; Supplies</string>
+    <string name="category_education_online_courses">Online Courses</string>
+    <string name="category_education_student_loans">Student Loans</string>
+    <string name="category_education_other">Education Other</string>
+
+    <!-- 支出二级分类 - Insurance -->
+    <string name="category_insurance_auto_insurance">Auto Insurance</string>
+    <string name="category_insurance_health_insurance">Health Insurance</string>
+    <string name="category_insurance_home_insurance">Home Insurance</string>
+    <string name="category_insurance_life_insurance">Life Insurance</string>
+    <string name="category_insurance_other">Insurance Other</string>
+
+    <!-- 支出二级分类 - Financial -->
+    <string name="category_financial_loan_payments">Loan Payments</string>
+    <string name="category_financial_credit_card_payments">Credit Card Payments</string>
+    <string name="category_financial_investments">Investments</string>
+    <string name="category_financial_banking_fees">Banking Fees</string>
+    <string name="category_financial_other">Financial Other</string>
+
+    <!-- 支出二级分类 - Miscellaneous -->
+    <string name="category_miscellaneous_gifts">Gifts</string>
+    <string name="category_miscellaneous_donations">Donations</string>
+    <string name="category_miscellaneous_subscriptions">Subscriptions</string>
+    <string name="category_miscellaneous_pet_care">Pet Care</string>
+    <string name="category_miscellaneous_other">Miscellaneous Other</string>
+
+    <!-- 收入一级分类 (Income Primary Categories) -->
+    <string name="category_salary">Salary</string>
+    <string name="category_business">Business</string>
+    <string name="category_investment">Investment</string>
+    <string name="category_freelance">Freelance</string>
+    <string name="category_income_miscellaneous">Miscellaneous</string>
+
+    <!-- 收入二级分类 - Salary -->
+    <string name="category_salary_basic_salary">Basic Salary</string>
+    <string name="category_salary_bonus">Bonus</string>
+    <string name="category_salary_overtime">Overtime</string>
+    <string name="category_salary_commissions">Commissions</string>
+    <string name="category_salary_other">Salary Other</string>
+
+    <!-- 收入二级分类 - Business -->
+    <string name="category_business_sales">Sales</string>
+    <string name="category_business_services">Services</string>
+    <string name="category_business_royalties">Royalties</string>
+    <string name="category_business_other">Business Other</string>
+
+    <!-- 收入二级分类 - Investment -->
+    <string name="category_investment_dividends">Dividends</string>
+    <string name="category_investment_interest">Interest</string>
+    <string name="category_investment_capital_gains">Capital Gains</string>
+    <string name="category_investment_rental_income">Rental Income</string>
+    <string name="category_investment_other">Investment Other</string>
+
+    <!-- 收入二级分类 - Freelance -->
+    <string name="category_freelance_projects">Projects</string>
+    <string name="category_freelance_consulting">Consulting</string>
+    <string name="category_freelance_tips">Tips</string>
+    <string name="category_freelance_other">Freelance Other</string>
+
+    <!-- 收入二级分类 - Miscellaneous -->
+    <string name="category_income_miscellaneous_gifts">Gifts</string>
+    <string name="category_income_miscellaneous_government_benefits">Government Benefits</string>
+    <string name="category_income_miscellaneous_lottery_winnings">Lottery Winnings</string>
+    <string name="category_income_miscellaneous_other">Miscellaneous Other</string>
+
+    <string name="unknown_status">Unknown status</string>
+    <string name="pending_action">Pending action</string>
+    <string name="please_select_category">Please select category</string>
+    <string name="select_category">Select Category</string>
+    <string name="primary_category">Primary Category</string>
+    <string name="secondary_category">Secondary Category</string>
+    <string name="no_options">No options</string>
+    <string name="please_select_currency">Please select currency</string>
+    <string name="select_currency">Select Currency</string>
+
+    <string name="show_numpad">Show Numpad</string>
+    <string name="hide_numpad">Hide Numpad</string>
+    <string name="numpad">Numpad</string>
 
 
-
+    <string name="tap_to_add_remarks">Tap to add remark</string>
+    <string name="select_ledger">Select Ledger</string>
+    <string name="select_ledger_description">Temporary switch to another ledger</string>
+    <string name="ledger">Ledger</string>
 
 </resources>

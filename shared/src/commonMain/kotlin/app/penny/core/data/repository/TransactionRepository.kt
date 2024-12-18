@@ -1,6 +1,7 @@
 package app.penny.core.data.repository
 
 
+import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.servershared.dto.responseDto.DownloadTransactionResponse
@@ -56,6 +57,11 @@ interface TransactionRepository {
     suspend fun findByUserUuidAndYearMonth(
         userUuid: Uuid,
         yearMonth: YearMonth
+    ): List<TransactionModel>
+
+    suspend fun findRecentByLedger(
+        ledger: LedgerModel,
+        limit: Long
     ): List<TransactionModel>
 
 }

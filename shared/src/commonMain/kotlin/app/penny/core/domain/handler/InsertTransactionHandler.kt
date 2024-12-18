@@ -35,7 +35,7 @@ class InsertTransactionHandler(
 
         // 确保 ledgerUuid 和 currencyCode 已设置
         dto.ledgerUuid =
-            userDataRepository.getRecentLedgerUuidOrNull()?.toString() ?: dto.ledgerUuid
+            userDataRepository.getDefaultLedger()?.toString() ?: dto.ledgerUuid
         dto.currencyCode =
             ledgerRepository.findByUuid(Uuid.parse(dto.ledgerUuid))?.currency?.currencyCode
                 ?: throw IllegalArgumentException("Currency code not found for ledger")

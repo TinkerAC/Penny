@@ -114,7 +114,7 @@ fun commonModule() = module {
 
     single<LedgerRepository> { LedgerRepositoryImpl(get(), get()) }
 
-    single<UserDataRepository> { UserDataRepositoryImpl(get()) }
+    single<UserDataRepository> { UserDataRepositoryImpl(get(), get(), get()) }
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
 
@@ -196,8 +196,11 @@ fun commonModule() = module {
     factory { NewLedgerViewModel(get(), get()) }
 
     factory { AIChatViewModel(get(), get(), get(), get(), get()) }
-    factory { DashboardViewModel() }
-
+    factory {
+        DashboardViewModel(
+            get(), get()
+        )
+    }
 
 
 }

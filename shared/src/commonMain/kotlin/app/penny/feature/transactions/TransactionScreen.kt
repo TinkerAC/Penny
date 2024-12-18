@@ -1,21 +1,11 @@
-// File: shared/src/commonMain/kotlin/app/penny/feature/transactions/TransactionScreen.kt
+// file: shared/src/commonMain/kotlin/app/penny/feature/transactions/TransactionScreen.kt
 package app.penny.feature.transactions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,27 +15,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.feature.transactions.component.CalendarViewContent
-import app.penny.feature.transactions.component.GroupByBottomAppBar
 import app.penny.feature.transactions.component.ListViewContent
-import app.penny.presentation.ui.contentColorFor
+import app.penny.feature.transactions.component.TransactionTopBar
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 
-
 class TransactionScreen : Screen {
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val viewModel = koinScreenModel<TransactionViewModel>()
         val uiState by viewModel.uiState.collectAsState()
-        val rootNavigator = LocalNavigator.currentOrThrow
         var isCalendarView by remember { mutableStateOf(false) }
 
         val currentMonth = remember {
@@ -59,51 +43,24 @@ class TransactionScreen : Screen {
 
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            stringResource(SharedRes.strings.transaction)
-                        )
-                    },
-                    actions = {
-                        //navigation icon
-
-                        IconButton(onClick = { rootNavigator.pop() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
-                                contentDescription = stringResource(SharedRes.strings.back)
-                            )
-                        }
-
-                        IconButton(onClick = { isCalendarView = !isCalendarView }) {
-                            Icon(
-                                imageVector = if (isCalendarView) Icons.AutoMirrored.Filled.List else Icons.Filled.CalendarToday,
-                                contentDescription = stringResource(SharedRes.strings.toggle_view)
-                            )
-                        }
-
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
+                TransactionTopBar(
+                    isCalendarView = isCalendarView,
+                    onToggleView = { isCalendarView = !isCalendarView },
+                    selectedGroupByType = uiState.selectedGroupByType,
+                    selectedGroupByOption = uiState.selectedGroupByOption
+                        ?: GroupByType.Time.GroupOption.Month,
+                    onGroupByOptionSelected = { groupByType, groupOption ->
+                        viewModel.handleIntent(TransactionIntent.SelectGroupByOption(groupOption))
+                    }
                 )
             },
-            bottomBar = {
-                if (!isCalendarView) {
-                    GroupByBottomAppBar(
-                        uiState = uiState,
-                        viewModel = viewModel
-                    )
-                }
-            }
+            // 移除BottomBar
         ) { innerPadding ->
             Box(
                 modifier =
                 Modifier
                     .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+                    .background(MaterialTheme.colorScheme.surface)
             ) {
                 if (isCalendarView) {
                     CalendarViewContent(
@@ -114,7 +71,6 @@ class TransactionScreen : Screen {
                         },
                         onMonthChange = { offset ->
                             currentMonth.value = currentMonth.value.plusMonths(offset)
-//                            viewModel.fetchTransactionsForMonth(currentMonth.value)
                         }
                     )
                 } else {

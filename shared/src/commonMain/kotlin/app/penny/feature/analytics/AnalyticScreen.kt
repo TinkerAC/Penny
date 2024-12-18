@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import app.penny.feature.analytics.chartAndTable.CategoryPieChart
 import app.penny.feature.analytics.component.AssetChangeTable
 import app.penny.feature.analytics.component.IncomeExpenseTrendChartCard
-import app.penny.presentation.ui.components.LedgerSelectionDialog
+import app.penny.presentation.ui.components.LedgerSelectDialog
 import app.penny.presentation.ui.components.LoadingScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -85,15 +85,15 @@ class AnalyticScreen : Screen {
         }
 
         if (uiState.ledgerSelectionDialogVisible) {
-            LedgerSelectionDialog(
-                ledgers = uiState.ledgers,
-                selectedLedger = uiState.selectedLedger,
+            LedgerSelectDialog(
                 onLedgerSelected = { ledger ->
                     viewModel.handleIntent(AnalyticIntent.SelectLedger(ledger))
                 },
-                onDismiss = {
+                onDismissRequest = {
                     viewModel.handleIntent(AnalyticIntent.DismissLedgerSelectionDialog)
-                }
+                },
+                allLedgers = uiState.ledgers,
+                currentLedger = uiState.selectedLedger!!
             )
         }
     }

@@ -10,13 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import app.penny.feature.myLedger.component.LedgerCard
 import app.penny.feature.newLedger.NewLedgerScreen
-import app.penny.presentation.ui.components.LedgerCard
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.compose.stringResource
 
 class MyLedgerScreen : Screen {
 
@@ -34,7 +36,7 @@ class MyLedgerScreen : Screen {
         Scaffold(
             topBar = {
                 SingleNavigateBackTopBar(
-                    title = "我的账本",
+                    title = stringResource(SharedRes.strings.my_ledger),
                     onNavigateBack = {
                         rootNavigator.pop()
                     }
@@ -52,7 +54,7 @@ class MyLedgerScreen : Screen {
                             ))
                         }
                     ) {
-                        Text("新建账本")
+                        Text("New Ledger")
                     }
                 }
             }

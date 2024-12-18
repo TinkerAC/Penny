@@ -48,4 +48,10 @@ interface TransactionLocalDataSource {
         endEpochSeconds: Long
     ): List<TransactionEntity>
 
+
+    fun findRecentByLedgerUuid(
+        ledgerUuid: String, limit: Long
+    ): List<TransactionEntity>
+
+
 }

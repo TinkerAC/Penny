@@ -55,8 +55,7 @@ class AIChatViewModel(
 
     init {
         screenModelScope.launch {
-            currentUser = userRepository.findByUuid(userDataRepository.getUserUuid())
-                ?: throw IllegalStateException("User not found")
+            currentUser = userDataRepository.getUser()
             handleIntent(AIChatIntent.LoadChatHistory)
         }
     }

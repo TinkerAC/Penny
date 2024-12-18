@@ -4,24 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material3.*
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,12 +32,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,7 +55,6 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
@@ -108,44 +95,45 @@ fun ChatBubble(
             },
             modifier = Modifier.widthIn(max = 240.dp)
         ) {
-            Text(
-                text = message.content ?: "",
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (isUser) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(8.dp)
-            )
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    text = message.content ?: "",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (isUser) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                )
 
-            if (message.action !== null) {
-                when (message.actionStatus) {
-                    ActionStatus.Pending -> {
-                        ActionPendingContent(
-                            message = message,
-                            onConfirm = {
-                                onActionConfirm(message, it)
-                            },
-                            onDismiss = {
-                                onActionDismiss(message)
-                            }
-                        )
-                    }
+                if (message.action != null) {
+                    when (message.actionStatus) {
+                        ActionStatus.Pending -> {
+                            ActionPendingContent(
+                                message = message,
+                                onConfirm = { editedFields ->
+                                    onActionConfirm(message, editedFields)
+                                },
+                                onDismiss = {
+                                    onActionDismiss(message)
+                                }
+                            )
+                        }
 
-                    ActionStatus.Completed -> {
-                        ActionCompletedContent(
-                            action = message.action,
-                        )
-                    }
+                        ActionStatus.Completed -> {
+                            ActionCompletedContent(
+                                action = message.action,
+                            )
+                        }
 
-                    ActionStatus.Cancelled -> {
-                        ActionCancelledContent(
-                            action = message.action
-                        )
-                    }
+                        ActionStatus.Cancelled -> {
+                            ActionCancelledContent(
+                                action = message.action
+                            )
+                        }
 
-                    else -> {
-                        Text(
-                            text = "未知状态",
-                            modifier = Modifier.padding(8.dp)
-                        )
+                        else -> {
+                            Text(
+                                text = stringResource(SharedRes.strings.unknown_status),
+                                modifier = Modifier.padding(8.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -168,16 +156,6 @@ fun ChatBubble(
     }
 }
 
-//
-//@Composable
-//fun ChatBubble(
-//    message: ChatMessage,
-//    onActionConfirm: (ChatMessage, Map<String, String?>) -> Unit,
-//    onActionDismiss: (ChatMessage) -> Unit
-//){
-//    Text("Test")
-//}
-
 @Composable
 private fun ActionPendingContent(
     message: ChatMessage,
@@ -185,6 +163,7 @@ private fun ActionPendingContent(
     onDismiss: () -> Unit
 ) {
     val fields: List<EditableField> = message.action?.dto?.getEditableFields() ?: emptyList()
+    // 更新 fieldStates 为保存 Category? 类型
     val fieldStates = remember(fields) {
         fields.associate { it.name to mutableStateOf(it.value ?: "") }.toMutableMap()
     }
@@ -195,7 +174,7 @@ private fun ActionPendingContent(
             .fillMaxWidth()
     ) {
         Text(
-            text = "准备执行操作: ${message.action?.actionName}",
+            text = stringResource(SharedRes.strings.pending_action) + ": ${message.action?.actionName}",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -224,11 +203,21 @@ private fun ActionPendingContent(
                 }
 
                 FieldType.CATEGORY -> {
+                    // 更新为使用 Category 而非 String
+                    val selectedCategory = fieldStates[field.name]?.value
+                    val currentCategory = remember {
+                        // 尝试将字符串转换为 Category
+                        try {
+                            Category.valueOf(selectedCategory ?: "")
+                        } catch (e: IllegalArgumentException) {
+                            null
+                        }
+                    }
                     CategorySelectorField(
                         label = field.label,
-                        selectedCategory = fieldStates[field.name]!!.value,
-                        onCategorySelected = { selectedCategory ->
-                            fieldStates[field.name]?.value = selectedCategory
+                        selectedCategory = currentCategory,
+                        onCategorySelected = { selectedCategoryEnum ->
+                            fieldStates[field.name]?.value = selectedCategoryEnum.name
                         }
                     )
                 }
@@ -259,7 +248,7 @@ private fun ActionPendingContent(
                     contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                Text("取消")
+                Text(stringResource(SharedRes.strings.cancel))
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(
@@ -268,7 +257,7 @@ private fun ActionPendingContent(
                     onConfirm(editedFields)
                 }
             ) {
-                Text("确认")
+                Text(stringResource(SharedRes.strings.confirm))
             }
         }
     }
@@ -303,7 +292,7 @@ private fun ActionCancelledContent(
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text =
-            stringResource(SharedRes.strings.action_cancelled) + ": " + { action?.actionName },
+            stringResource(SharedRes.strings.action_cancelled) + ": ${action?.actionName}",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -317,7 +306,6 @@ private fun ActionCancelledContent(
         )
     }
 }
-
 
 @Composable
 private fun EditableTextField(
@@ -354,9 +342,7 @@ private fun DatePickerField(
         if (selectedDateEpoch > 0) {
             val instant = Instant.fromEpochSeconds(selectedDateEpoch)
             val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-            "${localDateTime.year}-${
-                localDateTime.monthNumber.toString().padStart(2, '0')
-            }-${localDateTime.dayOfMonth.toString().padStart(2, '0')}"
+            "${localDateTime.year}-${localDateTime.monthNumber.toString().padStart(2, '0')}-${localDateTime.dayOfMonth.toString().padStart(2, '0')}"
         } else {
             ""
         }
@@ -386,7 +372,7 @@ private fun DatePickerField(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
-                    imageVector = Icons.Default.CalendarToday,
+                    imageVector = Icons.Outlined.CalendarMonth,
                     contentDescription = stringResource(SharedRes.strings.select_date),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -436,28 +422,25 @@ private fun DatePickerField(
 @Composable
 private fun CategorySelectorField(
     label: String,
-    selectedCategory: String,
-    onCategorySelected: (String) -> Unit
+    selectedCategory: Category?,
+    onCategorySelected: (Category) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedLevel1 by remember { mutableStateOf("") }
-    var selectedLevel2 by remember { mutableStateOf("") }
+    val selectedLevel1 = remember { mutableStateOf<Category?>(null) }
+    val selectedLevel2 = remember { mutableStateOf<Category?>(null) }
 
     LaunchedEffect(selectedCategory) {
-        if (selectedCategory.isNotBlank()) {
-            try {
-                val category = Category.valueOf(selectedCategory)
-                category.parentCategory?.let { parent ->
-                    selectedLevel1 = parent.categoryName
-                    selectedLevel2 = category.categoryName
-                } ?: run {
-                    selectedLevel1 = ""
-                    selectedLevel2 = ""
-                }
-            } catch (e: IllegalArgumentException) {
-                selectedLevel1 = ""
-                selectedLevel2 = ""
+        if (selectedCategory != null) {
+            selectedCategory.parentCategory?.let { parent ->
+                selectedLevel1.value = parent
+                selectedLevel2.value = selectedCategory
+            } ?: run {
+                selectedLevel1.value = null
+                selectedLevel2.value = null
             }
+        } else {
+            selectedLevel1.value = null
+            selectedLevel2.value = null
         }
     }
 
@@ -468,10 +451,10 @@ private fun CategorySelectorField(
         TransactionType.INCOME -> Category.getIncomeCategories()
     }
 
-    val level2Categories = remember(selectedLevel1) {
-        if (selectedLevel1.isNotBlank()) {
-            val parent = Category.fromCategoryName(selectedLevel1)
-            parent?.let { Category.getSubCategories(it) } ?: emptyList()
+    val level2Categories = remember(selectedLevel1.value) {
+        if (selectedLevel1.value != null) {
+            val parent = selectedLevel1.value
+            Category.getSubCategories(parent!!)
         } else {
             emptyList()
         }
@@ -494,14 +477,14 @@ private fun CategorySelectorField(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = if (selectedCategory.isNotBlank()) selectedCategory else "请选择分类",
+                    text = selectedCategory?.let { stringResource(it.categoryName) } ?: stringResource(SharedRes.strings.please_select_category),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = if (selectedCategory.isNotBlank()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (selectedCategory != null) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "选择分类",
+                    contentDescription = stringResource(SharedRes.strings.select_category),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -510,28 +493,29 @@ private fun CategorySelectorField(
         if (expanded) {
             AlertDialog(
                 onDismissRequest = { expanded = false },
-                title = { Text(text = "选择分类") },
+                title = { Text(text = stringResource(SharedRes.strings.select_category)) },
                 text = {
                     Column {
                         DropdownMenuItemList(
-                            items = level1Categories.map { it.categoryName },
-                            onItemSelected = { categoryName ->
-                                selectedLevel1 = categoryName
-                                selectedLevel2 = ""
+                            items = level1Categories,
+                            onItemSelected = { category ->
+                                selectedLevel1.value = category
+                                selectedLevel2.value = null
                             },
-                            label = "一级分类",
-                            selectedItem = selectedLevel1
+                            label = stringResource(SharedRes.strings.primary_category),
+                            selectedItem = selectedLevel1.value,
+                            enabled = true
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         DropdownMenuItemList(
-                            items = level2Categories.map { it.categoryName },
-                            onItemSelected = { categoryName ->
-                                selectedLevel2 = categoryName
-                                onCategorySelected(categoryName)
+                            items = level2Categories,
+                            onItemSelected = { category ->
+                                selectedLevel2.value = category
+                                onCategorySelected(category)
                                 expanded = false
                             },
-                            label = "二级分类",
-                            selectedItem = selectedLevel2,
+                            label = stringResource(SharedRes.strings.secondary_category),
+                            selectedItem = selectedLevel2.value,
                             enabled = level2Categories.isNotEmpty()
                         )
                     }
@@ -545,10 +529,10 @@ private fun CategorySelectorField(
 
 @Composable
 private fun DropdownMenuItemList(
-    items: List<String>,
-    onItemSelected: (String) -> Unit,
+    items: List<Category>,
+    onItemSelected: (Category) -> Unit,
     label: String,
-    selectedItem: String,
+    selectedItem: Category?,
     enabled: Boolean = true
 ) {
     Column {
@@ -560,20 +544,18 @@ private fun DropdownMenuItemList(
         Spacer(modifier = Modifier.height(4.dp))
         if (items.isEmpty()) {
             Text(
-                text = "暂无选项",
+                text = stringResource(SharedRes.strings.no_options),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         } else {
             items.forEach { item ->
-                Text(
-                    text = item,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(enabled = enabled) { onItemSelected(item) }
-                        .padding(vertical = 8.dp),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                DropdownMenuItem(
+                    text = { Text(stringResource(item.categoryName)) },
+                    onClick = {
+                        onItemSelected(item)
+                    },
+                    enabled = enabled
                 )
             }
         }
@@ -606,14 +588,14 @@ private fun CurrencySelectorField(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = if (selectedCurrency.isNotBlank()) selectedCurrency else "请选择货币",
+                    text = if (selectedCurrency.isNotBlank()) selectedCurrency else stringResource(SharedRes.strings.please_select_currency),
                     style = MaterialTheme.typography.bodyLarge,
                     color = if (selectedCurrency.isNotBlank()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "选择货币",
+                    contentDescription = stringResource(SharedRes.strings.select_currency),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }

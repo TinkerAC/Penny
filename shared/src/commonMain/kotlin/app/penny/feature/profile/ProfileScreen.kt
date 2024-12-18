@@ -17,13 +17,13 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
+import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Feedback
 import androidx.compose.material.icons.filled.HomeRepairService
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.penny.feature.debugBoard.DebugScreen
+import app.penny.feature.myLedger.MyLedgerScreen
 import app.penny.feature.setting.SettingScreen
 import app.penny.presentation.ui.components.RegisterAndLoginBottomSheet
 import app.penny.shared.SharedRes
@@ -192,7 +193,8 @@ fun FunctionGrid() {
         ),
         FeatureItem(
             stringResource(SharedRes.strings.my_ledger),
-            Icons.Default.WorkspacePremium
+            Icons.Filled.AccountBalanceWallet,
+            MyLedgerScreen()
         ),
         FeatureItem(
             stringResource(SharedRes.strings.pennys_box),

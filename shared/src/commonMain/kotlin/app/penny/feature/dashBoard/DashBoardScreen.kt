@@ -56,10 +56,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.penny.feature.newTransaction.NewTransactionScreen
 import app.penny.presentation.ui.components.PennyLogo
+import app.penny.presentation.ui.components.TransactionItem
 import app.penny.provideNullAndroidOverscrollConfiguration
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 class DashboardScreen : Screen {
@@ -112,17 +116,17 @@ class DashboardScreen : Screen {
 
         Box(
             modifier = Modifier.fillMaxSize().pointerInput(Unit) {
-                    detectVerticalDragGestures(onVerticalDrag = { change, dragAmount ->
-                        if (dragAmount > 0 || listState.firstVisibleItemIndex == 0) { // 只在顶部或下拉时处理
-                            change.consumeAllChanges()
-                            viewModel.handleScroll(dragAmount)
-                        }
-                    }, onDragEnd = {
-                        viewModel.handleRelease()
-                    })
-                }.background(
-                    MaterialTheme.colorScheme.surfaceContainerLowest
-                )
+                detectVerticalDragGestures(onVerticalDrag = { change, dragAmount ->
+                    if (dragAmount > 0 || listState.firstVisibleItemIndex == 0) { // 只在顶部或下拉时处理
+                        change.consumeAllChanges()
+                        viewModel.handleScroll(dragAmount)
+                    }
+                }, onDragEnd = {
+                    viewModel.handleRelease()
+                })
+            }.background(
+                MaterialTheme.colorScheme.surface
+            )
         ) {
             CompositionLocalProvider(*provideNullAndroidOverscrollConfiguration()) {
 
@@ -150,8 +154,10 @@ class DashboardScreen : Screen {
                         )
                     }
 
-                    items(20) { index ->
-                        BillItem(index = index + 1)
+                    uiState.recentTransactions.forEach { transaction ->
+                        item {
+                            TransactionItem(transaction)
+                        }
                     }
 
                     item {
@@ -167,6 +173,7 @@ class DashboardScreen : Screen {
     fun TopSection(scale: Float, yOffset: Dp) {
         val topSurfaceHeight = 250.dp
         val cardHeight = 210.dp
+        val rootNavigator = LocalNavigator.currentOrThrow
 
         Box(
             modifier = Modifier.fillMaxWidth().height(topSurfaceHeight),
@@ -192,7 +199,7 @@ class DashboardScreen : Screen {
                 incomeOfMonth = BigDecimal.fromInt(1000),
                 expenseOfMonth = BigDecimal.fromInt(500),
                 onAddTransactionClick = {
-                    println("Add transaction clicked")
+                    rootNavigator.push(NewTransactionScreen())
                 }
 
             )
@@ -219,17 +226,6 @@ class DashboardScreen : Screen {
         }
     }
 
-    @Composable
-    fun BillItem(index: Int) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)
-                .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
-                .padding(16.dp)
-        ) {
-            Text("账单条目 $index", style = MaterialTheme.typography.bodyMedium)
-        }
-    }
-
 
     @Composable
     fun BottomSection(
@@ -250,7 +246,7 @@ class DashboardScreen : Screen {
                 )
             }
             Text(
-                "近3日账单",
+                text = "recent transactions",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
             )

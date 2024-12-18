@@ -1,23 +1,16 @@
 package app.penny.presentation.ui.components
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -41,12 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.exception.LoginException
 import app.penny.core.domain.exception.RegisterException
@@ -89,7 +79,10 @@ fun RegisterAndLoginModal(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Toggle between Login and Register
-                    ToggleButton(isLoginMode = isLoginMode) { isLoginMode = !isLoginMode }
+                    LoginRegisterToggle(
+                        isLoginMode = isLoginMode,
+                        onToggle = { isLoginMode = !isLoginMode }
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -236,77 +229,6 @@ fun RegisterAndLoginModal(
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ToggleButton(
-    isLoginMode: Boolean, onToggle: () -> Unit
-) {
-    val toggleState = if (isLoginMode) 0f else 1f
-    val positionFraction by animateFloatAsState(
-        targetValue = toggleState, animationSpec = tween(durationMillis = 300)
-    )
-
-    Box(modifier = Modifier
-        .width(160.dp)
-        .height(40.dp)
-        .background(
-            color = MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape
-        ).clickable { onToggle() }) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // 滑块宽度为容器宽度的一半
-            val sliderWidth = remember { mutableStateOf(0f) }
-            val totalWidth = remember { mutableStateOf(0f) }
-
-            Box(modifier = Modifier.fillMaxSize().onGloballyPositioned { coordinates ->
-                totalWidth.value = coordinates.size.width.toFloat()
-                sliderWidth.value = totalWidth.value / 2f
-            }) {
-                // 滑块
-                Box(
-                    modifier = Modifier.width(with(LocalDensity.current) { (sliderWidth.value).toDp() })
-                        .fillMaxHeight().offset {
-                            IntOffset(
-                                x = (positionFraction * sliderWidth.value).toInt(), y = 0
-                            )
-                        }.background(
-                            color = MaterialTheme.colorScheme.primary, shape = CircleShape
-                        ), contentAlignment = Alignment.Center
-                ) {
-
-                }
-
-                // 标签
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Box(
-                        modifier = Modifier.weight(1f).fillMaxHeight(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "登录",
-                            color = if (isLoginMode) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    Box(
-                        modifier = Modifier.weight(1f).fillMaxHeight(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "注册",
-                            color = if (!isLoginMode) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
                 }
             }
         }

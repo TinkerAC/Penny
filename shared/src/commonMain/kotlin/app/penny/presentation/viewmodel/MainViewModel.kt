@@ -38,7 +38,7 @@ class MainViewModel(
         screenModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 ledgers = ledgerRepository.findByUserUuid(
-                    userUuid = userDataRepository.getUserUuid()
+                    userUuid = userDataRepository.getUser().uuid
                 )
             )
         }
