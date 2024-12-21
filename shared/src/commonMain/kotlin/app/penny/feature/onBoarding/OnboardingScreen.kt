@@ -1,8 +1,10 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/onBoarding/OnboardingNavigatorScreen.kt
 package app.penny.feature.onBoarding
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import app.penny.presentation.ui.MainScreen
+import app.penny.presentation.ui.components.SafeAreaBackgrounds
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -24,12 +26,16 @@ class OnboardingNavigatorScreen : Screen {
             OnboardingStep3Login(),
             OnboardingStep4InitLedger()
         )
-
-        // 初始化子Navigator
-        CurrentOnboardingFlow(onboardingScreens = onboardingScreens, onFinish = {
-            // 当用户完成Onboarding后，导航至主界面
-            rootNavigator.replaceAll(MainScreen())
-        })
+        SafeAreaBackgrounds(
+            topColor = MaterialTheme.colorScheme.surface,
+            bottomColor = MaterialTheme.colorScheme.surface
+        ) {
+            // 初始化子Navigator
+            CurrentOnboardingFlow(onboardingScreens = onboardingScreens, onFinish = {
+                // 当用户完成Onboarding后，导航至主界面
+                rootNavigator.replaceAll(MainScreen())
+            })
+        }
     }
 }
 

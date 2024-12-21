@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 // 自定义字体（如果需要）
-//val app.penny.presentation.ui.theme.getAppFontFamily = FontFamily(
+//val app.penny.presentation.ui.appTheme.getAppFontFamily = FontFamily(
 //    Font("font/Roboto-Medium.ttf", weight = FontWeight.Medium),
 //    Font("font/Roboto-Bold.ttf", weight = FontWeight.Bold)
 //)

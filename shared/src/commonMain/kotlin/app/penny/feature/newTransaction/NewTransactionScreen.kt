@@ -4,6 +4,8 @@ package app.penny.feature.newTransaction
 
 import NewTransactionTopBar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +28,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import app.penny.core.domain.enum.Category
 import app.penny.core.domain.enum.TransactionType
 import app.penny.feature.newTransaction.component.CategorySelector
@@ -51,6 +56,9 @@ class NewTransactionScreen : Screen, ScreenTransition {
 
     @Composable
     override fun Content() {
+
+        val keyboardController = LocalSoftwareKeyboardController.current//for hiding keyboard on IOS
+
         val viewModel = koinScreenModel<NewTransactionViewModel>()
         val navigator = LocalNavigator.currentOrThrow
         val uiState by viewModel.uiState.collectAsState()
@@ -75,6 +83,13 @@ class NewTransactionScreen : Screen, ScreenTransition {
         }
 
         Scaffold(
+            modifier = Modifier.pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        keyboardController?.hide()
+                    }
+                )
+            },
             snackbarHost = { SnackbarHost(hostState = uiState.snackBarHostState) },
             topBar = {
                 NewTransactionTopBar(
@@ -97,9 +112,12 @@ class NewTransactionScreen : Screen, ScreenTransition {
                     modifier = Modifier
                         .padding(paddingValues)
                         .background(MaterialTheme.colorScheme.background)
-                        .fillMaxSize()
+                        .fillMaxSize(),
 
-                ) {
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top,
+
+                    ) {
                     when (uiState.selectedTab) {
                         NewTransactionTab.EXPENSE -> {
                             val parentCategories = Category.getSubCategories(Category.EXPENSE)

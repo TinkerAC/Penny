@@ -1,8 +1,10 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/dashboard/DashboardViewModel.kt
 package app.penny.feature.dashBoard
 
+import app.penny.core.data.repository.StatisticRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.domain.model.valueObject.YearMonth
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -15,32 +17,50 @@ import kotlinx.coroutines.launch
 class DashboardViewModel(
     private val transactionRepository: TransactionRepository,
     private val userDataRepository: UserDataRepository,
+    private val statisticRepository: StatisticRepository,
 ) : ScreenModel {
+
+
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState
-
 
     // 下拉刷新触发阈值（可根据实际需求调整）
     private val refreshThreshold = 80f
 
 
-    init {
+    fun refreshData() {
+
+        Logger.d { "reloading data of dashboard" }
 
         screenModelScope.launch {
 
+            val defaultLedger = userDataRepository.getDefaultLedger()
 
             val recentTransactions = transactionRepository.findRecentByLedger(
-                ledger = userDataRepository.getDefaultLedger(),
+                ledger = defaultLedger,
                 limit = 10
             )
 
-            // 初始化数据
+            val summary = statisticRepository.getSummary(
+                ledgers = listOf(defaultLedger),
+                startInstant = YearMonth.now().getStartInstant(),
+                endInstant = YearMonth.now().getEndInstant()
+            )
+
+            Logger.d("summary: $summary")
+
+
             _uiState.update {
-                it.copy(recentTransactions = recentTransactions)
+                it.copy(
+                    recentTransactions = recentTransactions,
+                    incomeOfMonth = summary.totalIncome,
+                    expenseOfMonth = summary.totalExpense,
+                    balanceOfMonth = summary.totalBalance
+                )
             }
         }
-
     }
+
 
     fun handleScroll(delta: Float) {
         _uiState.update { state ->

@@ -2,6 +2,7 @@ package app.penny.presentation.viewmodel
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.presentation.ui.screens.BottomNavItem
 import app.penny.presentation.uiState.MainUiState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -23,13 +24,10 @@ class MainViewModel(
 
 
     init {
-
         screenModelScope.launch {
             fetchLedgers()
         }
-
     }
-
 
 
     @OptIn(ExperimentalUuidApi::class)
@@ -42,6 +40,23 @@ class MainViewModel(
                 )
             )
         }
+    }
+
+
+    fun handleIntent(intent: MainIntent) {
+        when (intent) {
+            is MainIntent.SelectBottomNavigationItem -> selectBottomNavigationItem(intent.bottomNavItem)
+        }
+    }
+
+
+    private fun selectBottomNavigationItem(
+        navigationItem: BottomNavItem
+    ) {
+        _uiState.value = _uiState.value.copy(
+            selectedNavigationItem = navigationItem
+        )
+
     }
 
 

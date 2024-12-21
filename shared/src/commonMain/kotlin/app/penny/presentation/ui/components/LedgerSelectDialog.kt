@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import app.penny.core.domain.model.LedgerModel
@@ -94,7 +95,7 @@ fun LedgerSelectDialog(
 }
 
 @Composable
-private fun LedgerItem(
+fun LedgerItem(
     ledger: LedgerModel,
     isSelected: Boolean,
     onClick: () -> Unit
@@ -116,7 +117,7 @@ private fun LedgerItem(
         shape = RoundedCornerShape(12.dp),
         border = ButtonDefaults.outlinedButtonBorder.copy(
             width = 1.dp,
-            brush = androidx.compose.ui.graphics.SolidColor(borderColor)
+            brush = SolidColor(borderColor)
         ),
         colors = CardDefaults.cardColors(containerColor = containerColor),
         modifier = Modifier

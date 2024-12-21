@@ -38,7 +38,8 @@
     <string name="display_mode_dark">Dark</string>
     <string name="display_mode_system">System</string>
     <string name="currency_code">Currency Code</string>
-    <string name="constraint">Constraint</string>
+
+    <string name="contrast">Contrast</string>
     <string name="preference_setting_description">Customize Penny</string>
     <string name="constraint_high">High</string>
     <string name="constraint_medium">Medium</string>
@@ -107,16 +108,28 @@
     <string name="category_expense">Expense</string>
 
     <!-- 支出一级分类 -->
-    <string name="category_housing">Hsg.</string>
-    <string name="category_transportation">Trans.</string>
+    <string name="category_housing_abbr">Housing</string>
+    <string name="category_transportation_abbr">Trans.</string>
+    <string name="category_food_abbr">Food</string>
+    <string name="category_health_abbr">Health</string>
+    <string name="category_personal_care_abbr">P.Care</string>
+    <string name="category_entertainment_abbr">Entmt.</string>
+    <string name="category_education_abbr">Edu.</string>
+    <string name="category_insurance_abbr">Ins.</string>
+    <string name="category_financial_abbr">Fin.</string>
+    <string name="category_miscellaneous_abbr">Misc.</string>
+
+    <string name="category_housing">Housing</string>
+    <string name="category_transportation">Transportation</string>
     <string name="category_food">Food</string>
     <string name="category_health">Health</string>
-    <string name="category_personal_care">P.Care</string>
-    <string name="category_entertainment">Entmt.</string>
-    <string name="category_education">Edu.</string>
-    <string name="category_insurance">Ins.</string>
-    <string name="category_financial">Fin.</string>
-    <string name="category_miscellaneous">Misc.</string>
+    <string name="category_personal_care">Personal Care</string>
+    <string name="category_entertainment">Entertainment</string>
+    <string name="category_education">Education</string>
+    <string name="category_insurance">Insurance</string>
+    <string name="category_financial">Financial</string>
+    <string name="category_miscellaneous">Miscellaneous</string>
+
 
     <!-- 支出二级分类 - Housing -->
     <string name="category_housing_mortgage_or_rent">Mortgage or Rent</string>
@@ -195,6 +208,14 @@
     <string name="category_freelance">Freelance</string>
     <string name="category_income_miscellaneous">Miscellaneous</string>
 
+
+    <string name="category_salary_abbr">Sal.</string>
+    <string name="category_business_abbr">Biz.</string>
+    <string name="category_investment_abbr">Inv.</string>
+    <string name="category_freelance_abbr">Freel.</string>
+    <string name="category_income_miscellaneous_abbr">Misc.</string>
+
+
     <!-- 收入二级分类 - Salary -->
     <string name="category_salary_basic_salary">Basic Salary</string>
     <string name="category_salary_bonus">Bonus</string>
@@ -246,5 +267,36 @@
     <string name="select_ledger">Select Ledger</string>
     <string name="select_ledger_description">Temporary switch to another ledger</string>
     <string name="ledger">Ledger</string>
+
+
+    <string name="monthly_income">Monthly Inc.</string>
+    <string name="monthly_expense">Monthly Expense</string>
+    <string name="monthly_balance">Monthly Bal.</string>
+
+    <string name="no_transaction_notice">Oops, no transactions found!\nReady to log your first one
+        and start tracking?
+    </string>
+
+
+    <string name="recent_transactions">Recent Transactions</string>
+    <string name="total_income">Total Income</string>
+    <string name="total_expense">Total Expense</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="balance_summary">Balance Summary</string>
+
+
+    <string name="ledger_details">Ledger Details</string>
+    <string name="save">Save</string>
+    <string name="delete_ledger">Delete Ledger</string>
+    <string name="delete">Delete</string>
+
+    <string name="basic_info">Basic Info</string>
+    <string name="ledger_name">Ledger Name</string>
+    <string name="terracotta_red_theme">Terracotta</string>
+    <string name="apple_green_theme">Apple</string>
+    <string name="sky_blue_theme">Sky</string>
+    <string name="lemon_yellow_theme">Lemon</string>
+    <string name="custom_theme">Custom</string>
+    <string name ="set_to_default">Set to default</string>
 
 </resources>

@@ -16,6 +16,7 @@ import app.penny.core.data.kvstore.UserPreferenceManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
+import app.penny.core.data.repository.StatisticRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserPreferenceRepository
@@ -23,13 +24,17 @@ import app.penny.core.data.repository.UserRepository
 import app.penny.core.data.repository.impl.AuthRepositoryImpl
 import app.penny.core.data.repository.impl.ChatRepositoryImpl
 import app.penny.core.data.repository.impl.LedgerRepositoryImpl
+import app.penny.core.data.repository.impl.StatisticRepositoryImpl
 import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
 import app.penny.core.data.repository.impl.UserPreferenceRepositoryImpl
 import app.penny.core.data.repository.impl.UserRepositoryImpl
+import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.usecase.CountUnsyncedDataUseCase
+import app.penny.core.domain.usecase.DeleteLedgerUseCase
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.GetAllLedgerUseCase
+import app.penny.core.domain.usecase.GetSummaryUseCase
 import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.LoginUseCase
@@ -47,6 +52,7 @@ import app.penny.feature.aiChat.AIChatViewModel
 import app.penny.feature.analytics.AnalyticViewModel
 import app.penny.feature.dashBoard.DashboardViewModel
 import app.penny.feature.debugBoard.DebugViewModel
+import app.penny.feature.ledgerDetail.LedgerDetailViewModel
 import app.penny.feature.myLedger.MyLedgerViewModel
 import app.penny.feature.newLedger.NewLedgerViewModel
 import app.penny.feature.newTransaction.NewTransactionViewModel
@@ -61,7 +67,9 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 fun commonModule() = module {
 
     // 提供 PennyDatabase
@@ -93,8 +101,6 @@ fun commonModule() = module {
     //SettingManager
     single { UserDataManager(get()) }
 
-    //TokenProvider(Impl by TokenManager)
-
 
     //module-apiClient
     single { AuthApiClient(get()) }
@@ -123,6 +129,9 @@ fun commonModule() = module {
     single<ChatRepository> { ChatRepositoryImpl(get(), get(), get()) }
 
     single<UserPreferenceRepository> { UserPreferenceRepositoryImpl(get()) }
+
+
+    single<StatisticRepository> { StatisticRepositoryImpl(get()) }
 
 
     //注入ApiClient
@@ -161,12 +170,20 @@ fun commonModule() = module {
         )
     }
 
+    factory { DeleteLedgerUseCase(
+        get(),get()
+    ) }
+
+    factory { GetSummaryUseCase(get()) }
+
     factory { AIChatViewModel(get(), get(), get(), get(), get()) }
 
 
     // 注入 ViewModel
 
     factory { SettingViewModel(get()) }
+    factory { (ledger: LedgerModel) -> LedgerDetailViewModel(ledger,get(),get()) }
+
 
     factory { NewTransactionViewModel(get(), get(), get()) }
 
@@ -198,7 +215,7 @@ fun commonModule() = module {
     factory { AIChatViewModel(get(), get(), get(), get(), get()) }
     factory {
         DashboardViewModel(
-            get(), get()
+            get(), get(), get()
         )
     }
 

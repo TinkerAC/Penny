@@ -94,3 +94,6 @@ WHERE ledgerEntity.user_uuid = ? AND transactionEntity.transaction_date BETWEEN 
 
 findRecentByLedgerUuid:
 SELECT * FROM transactionEntity WHERE ledger_uuid = ? ORDER BY transaction_date DESC LIMIT ?;
+
+findByLedgerUuids:
+SELECT * FROM transactionEntity WHERE ledger_uuid IN ?;

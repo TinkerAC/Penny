@@ -2,6 +2,7 @@
 package app.penny.feature.dashBoard
 
 import app.penny.core.domain.model.TransactionModel
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 enum class RefreshIndicatorState(
     val message: String
@@ -16,7 +17,8 @@ data class DashboardUiState(
     val isRefreshing: Boolean = false,                  // 是否正在刷新
     val refreshIndicatorState: RefreshIndicatorState = RefreshIndicatorState.None,
 
-
-
+    val incomeOfMonth: BigDecimal = BigDecimal.ZERO,      // 本月收入
+    val expenseOfMonth: BigDecimal = BigDecimal.ZERO,     // 本月支出
+    val balanceOfMonth: BigDecimal = BigDecimal.ZERO,     // 本月结余
     val recentTransactions: List<TransactionModel> = emptyList(),
 )

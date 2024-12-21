@@ -1,19 +1,25 @@
 package app.penny.core.data.repository
 
+import app.penny.core.domain.enum.AppDisplayMode
+import app.penny.core.domain.enum.AppThemeContrast
 import app.penny.feature.setting.Language
-import app.penny.presentation.ui.theme.DisplayMode
-import app.penny.presentation.ui.theme.ThemeColor
-import app.penny.presentation.ui.theme.ThemeConstraint
+import app.penny.presentation.ui.theme.AppTheme
 
 interface UserPreferenceRepository {
-    fun getThemeColor(): ThemeColor
-    fun setThemeColor(themeColor: ThemeColor)
 
-    fun getConstraints(): ThemeConstraint
-    fun setConstraints(themeConstraint: ThemeConstraint)
 
-    fun getDisplayMode(): DisplayMode
-    fun setDisplayMode(displayMode: DisplayMode)
+
+    fun getAppTheme(): AppTheme
+    fun setAppTheme(appTheme: AppTheme)
+
+    fun getStoredDynamicTheme(): AppTheme.DynamicAppTheme
+
+
+    fun getConstraints(): AppThemeContrast
+    fun setConstraints(themeContrast: AppThemeContrast)
+
+    fun getDisplayMode(): AppDisplayMode
+    fun setDisplayMode(displayMode: AppDisplayMode)
 
     fun setLanguage(language: Language)
     fun getLanguage(): Language

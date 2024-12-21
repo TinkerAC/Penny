@@ -6,7 +6,6 @@ import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 
 
-@OptIn(ExperimentalUuidApi::class)
 interface UserDataRepository {
 
     suspend fun setDefaultLedger(ledger: LedgerModel)

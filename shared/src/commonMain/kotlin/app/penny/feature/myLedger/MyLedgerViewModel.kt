@@ -2,6 +2,7 @@ package app.penny.feature.myLedger
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.domain.model.LedgerModel
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,27 +21,35 @@ class MyLedgerViewModel(
     private val _uiState = MutableStateFlow(MyLedgerUiState())
     val uiState: StateFlow<MyLedgerUiState> = _uiState.asStateFlow()
 
-    init {
-        getLedgers()
-    }
-
 
     fun handleIntent(intent: MyLedgerIntent) {
         when (intent) {
-            MyLedgerIntent.RefreshLedgers -> getLedgers()
+            is MyLedgerIntent.SetDefaultLedger -> setDefaultLedger(intent.ledger)
+        }
+    }
 
+    private fun setDefaultLedger(ledger: LedgerModel) {
+        screenModelScope.launch {
+            userDataRepository.setDefaultLedger(ledger)
+            refreshData()
         }
     }
 
 
-    private fun getLedgers() {
+    fun refreshData() {
         // 通过协程获取数据
         screenModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             val ledgers = ledgerRepository.findByUserUuid(
                 userUuid = userDataRepository.getUser().uuid
             )
-            _uiState.value = _uiState.value.copy(ledgers = ledgers, isLoading = false)
+
+            val defaultLedger = userDataRepository.getDefaultLedger()
+            _uiState.value = _uiState.value.copy(
+                defaultLedger = defaultLedger,
+                ledgers = ledgers,
+                isLoading = false
+            )
         }
     }
 

@@ -1,8 +1,10 @@
 package app.penny.feature.myLedger
 
+import app.penny.core.domain.model.LedgerModel
+
 sealed class MyLedgerIntent {
 
-    data object RefreshLedgers : MyLedgerIntent()
+    class SetDefaultLedger(val ledger: LedgerModel) : MyLedgerIntent()
 
 
 }

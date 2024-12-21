@@ -21,8 +21,11 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +36,7 @@ import app.penny.feature.setting.component.ExposedDropDownSetting
 import app.penny.feature.setting.component.SettingSection
 import app.penny.feature.setting.component.ThemeColorOptionContent
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
+import app.penny.presentation.ui.theme.AppTheme
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -47,6 +51,13 @@ class SettingScreen : Screen {
         val rootNavigator = LocalNavigator.currentOrThrow
         val viewModel = koinScreenModel<SettingViewModel>()
         val uiState by viewModel.uiState.collectAsState()
+
+
+
+        LaunchedEffect(Unit) {
+            viewModel.refreshData()
+        }
+
 
         Scaffold(
             topBar = {
@@ -97,8 +108,8 @@ class SettingScreen : Screen {
 
                                     ExpendSetting(
                                         settingName = stringResource(SharedRes.strings.theme_color),
-                                        currentValue = uiState.theme,
-                                        options = uiState.themes,
+                                        currentValue = uiState.appTheme,
+                                        options = uiState.appThemes!!,
                                         onValueChange = {
                                             viewModel.handleIntent(
                                                 SettingIntent.SetTheme(it)
@@ -124,7 +135,7 @@ class SettingScreen : Screen {
                                         displayMapper = { it.name }
                                     )
                                     ExposedDropDownSetting(
-                                        settingName = stringResource(SharedRes.strings.constraint),
+                                        settingName = stringResource(SharedRes.strings.contrast),
                                         items = uiState.constraints,
                                         selectedItem = uiState.constraint,
                                         onItemSelected = {
@@ -162,6 +173,24 @@ class SettingScreen : Screen {
                         }
                     }
                 }
+            }
+
+
+            if (uiState.showColorPicker) {
+                ColorPickerDialog(
+                    onDismissRequest = { viewModel.handleIntent(SettingIntent.HideColorPicker) },
+                    onConfirmed = { color ->
+                        viewModel.handleIntent(
+                            SettingIntent.SetDynamicTheme(
+                                AppTheme.DynamicAppTheme(
+                                    color
+                                )
+                            )
+                        )
+                        viewModel.handleIntent(SettingIntent.HideColorPicker)
+                    },
+                    onCancel = { viewModel.handleIntent(SettingIntent.HideColorPicker) }
+                )
             }
         }
     }

@@ -1,6 +1,7 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/onBoarding/OnboardingStep4InitLedger.kt
 package app.penny.feature.onBoarding
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import app.penny.core.data.repository.UserDataRepository
@@ -51,7 +54,7 @@ class OnboardingStep4InitLedger : OnboardingStepScreen {
         val viewModel: NewLedgerViewModel = koinScreenModel()
         val uiState by viewModel.uiState.collectAsState()
         val coroutineScope = rememberCoroutineScope()
-        val rootNavigator = LocalNavigator.currentOrThrow
+        val rootNavigator = LocalNavigator.currentOrThrow.parent
         // 处理 NewLedgerViewModel 事件流
         LaunchedEffect(Unit) {
             viewModel.eventFlow.collect { event ->
@@ -70,9 +73,7 @@ class OnboardingStep4InitLedger : OnboardingStepScreen {
                         userDataRepository.setDefaultLedger(
                             ledger = event.newLedger
                         )
-
-                        rootNavigator.replaceAll(MainScreen())
-
+                        rootNavigator?.replaceAll(MainScreen())
                     }
                 }
             }
@@ -96,6 +97,8 @@ fun OnboardingInitLedgerPage(
     onIntent: (NewLedgerIntent) -> Unit,
     viewModel: NewLedgerViewModel
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current//for hiding keyboard on IOS
+
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = uiState.snackbarHostState) }
     ) { paddingValues ->
@@ -103,7 +106,14 @@ fun OnboardingInitLedgerPage(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            keyboardController?.hide()
+                        }
+                    )
+                },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))

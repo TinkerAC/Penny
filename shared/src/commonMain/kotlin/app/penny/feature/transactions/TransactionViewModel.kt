@@ -31,17 +31,34 @@ class TransactionViewModel(
     private val _uiState = MutableStateFlow(TransactionUiState())
     val uiState: StateFlow<TransactionUiState> = _uiState.asStateFlow()
 
+
+
+    fun refreshData() {
+        screenModelScope.launch {
+            try {
+                // 获取当前用户
+                val user = userRepository.findCurrentUser()
+                _uiState.update { it.copy(user = user) }
+                // 获取交易数据
+                fetchTransactions()
+                // 默认选择分组选项，例如按天分组
+                handleIntent(TransactionIntent.SelectGroupByOption(GroupByType.items[0].options[0]))
+            } catch (e: Exception) {
+                Logger.e("Initialization error: ${e.message}")
+                _uiState.update { it.copy(errorMessage = e.message ?: "未知错误") }
+            }
+        }
+    }
+
+
+
+
     init {
         screenModelScope.launch {
             try {
                 // 获取当前用户
                 val user = userRepository.findCurrentUser()
                 _uiState.update { it.copy(user = user) }
-
-                // 获取当前月份
-
-                val currentYearMonth = YearMonth.now()
-//                _uiState.update { it.copy(currentYearMonth = currentYearMonth) }//TODO
 
                 // 获取交易数据
                 fetchTransactions()
@@ -160,7 +177,7 @@ class TransactionViewModel(
                 val userUuid = _uiState.value.user?.uuid
                 if (userUuid != null) {
                     val transactions =
-                        transactionRepository.findByUserUuidAndYearMonth(userUuid, yearMonth)
+                        transactionRepository.findByUserAndYearMonth(userUuid, yearMonth)
                     _uiState.update { it.copy(transactions = transactions, isLoading = false) }
                     Logger.d("Fetched ${transactions.size} transactions for $yearMonth")
 

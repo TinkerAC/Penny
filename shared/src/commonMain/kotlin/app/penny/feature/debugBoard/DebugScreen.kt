@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.feature.myLedger.MyLedgerScreen
 import app.penny.feature.newTransaction.NewTransactionScreen
-import app.penny.presentation.ui.DisplayColorScheme
+import app.penny.presentation.ui.components.DisplayColorScheme
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -66,7 +66,7 @@ class DebugScreen : Screen {
                 item {
                     Button(
                         onClick = {
-                            rootNavigator?.push(NewTransactionScreen())
+                            rootNavigator.push(NewTransactionScreen())
                         }
                     ) {
                         Text("Add Transaction")
@@ -75,7 +75,7 @@ class DebugScreen : Screen {
 
                     Button(
                         onClick = {
-                            rootNavigator?.push(MyLedgerScreen())
+                            rootNavigator.push(MyLedgerScreen())
                         }
                     ) {
                         Text("My Ledger")
@@ -149,6 +149,8 @@ class DebugScreen : Screen {
 
                     Text("Active User: ${debugViewModel.uiState.value.activeUser ?: "No Active User"})")
                     Text(uiState.value.message ?: "")
+
+                    Text("Default Ledger: ${debugViewModel.uiState.value.defaultLedger ?: "No Default Ledger"})")
 
                 }
 

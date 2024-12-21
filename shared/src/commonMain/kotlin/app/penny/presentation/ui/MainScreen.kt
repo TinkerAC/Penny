@@ -1,7 +1,6 @@
 // MainScreen.kt
 package app.penny.presentation.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,15 +19,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.feature.aiChat.AIChatScreen
 import app.penny.presentation.ui.components.SafeAreaBackgrounds
 import app.penny.presentation.ui.screens.BottomNavItem
+import app.penny.presentation.viewmodel.MainIntent
 import app.penny.presentation.viewmodel.MainViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -43,24 +40,19 @@ class MainScreen : Screen {
 
         val viewModel = koinScreenModel<MainViewModel>()
         val uiState by viewModel.uiState.collectAsState()
-
         val rootNavigator = LocalNavigator.currentOrThrow
 
-        val items = BottomNavItem.items
-
-        var selectedItem by remember { mutableStateOf(0) }
-
         SafeAreaBackgrounds(
-            topColor = items[selectedItem].statusBarColor(),
+            topColor = uiState.selectedNavigationItem.statusBarColor(),
             bottomColor = MaterialTheme.colorScheme.surfaceContainer
         ) {
             Scaffold(
                 bottomBar = {
                     BottomAppBarWithFAB(
-                        items = items,
-                        selectedItem = selectedItem,
-                        onItemSelected = { index, item ->
-                            selectedItem = index
+                        items = uiState.navigationItems,
+                        selectedItem = uiState.selectedNavigationItem,
+                        onItemSelected = { _, item ->
+                            viewModel.handleIntent(MainIntent.SelectBottomNavigationItem(item))
                         },
                         onFabClick = {
                             rootNavigator.push(AIChatScreen())
@@ -74,7 +66,7 @@ class MainScreen : Screen {
                             .fillMaxSize()
                             .padding(paddingValues)
                     ) {
-                        items[selectedItem].screen.Content()
+                        uiState.selectedNavigationItem.screen.Content()
                     }
                 }
             )
@@ -85,7 +77,7 @@ class MainScreen : Screen {
 @Composable
 fun BottomAppBarWithFAB(
     items: List<BottomNavItem>,
-    selectedItem: Int,
+    selectedItem: BottomNavItem,
     onItemSelected: (Int, BottomNavItem) -> Unit,
     onFabClick: () -> Unit,
 ) {
@@ -102,10 +94,11 @@ fun BottomAppBarWithFAB(
 
         ) {
             items.forEachIndexed { index, item ->
-                // insert a spacer in the middle of the navigation bar for the FAB
                 if (index == items.size / 2) {
                     Spacer(modifier = Modifier.weight(1f))
                 }
+
+                println(item)
                 NavigationBarItem(
                     icon = {
                         Icon(
@@ -113,7 +106,7 @@ fun BottomAppBarWithFAB(
                             contentDescription = stringResource(item.titleStringResource)
                         )
                     },
-                    selected = selectedItem == index,
+                    selected = item == selectedItem,
                     onClick = {
                         onItemSelected(index, item)
                     }

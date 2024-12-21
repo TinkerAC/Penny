@@ -10,12 +10,15 @@ interface TransactionLocalDataSource {
     fun upsertByUuid(transaction: TransactionEntity)
 
     fun findByUuid(uuid: String): TransactionEntity?
+
+
     fun findByUserUuid(userUuid: String): List<TransactionEntity>
 
 
     fun findAll(): List<TransactionEntity>
 
     fun findByLedgerUuid(ledgerUuid: String): List<TransactionEntity>
+
 
     fun findByLedgerUuidAndTransactionDateBetween(
         ledgerUuid: String,
@@ -52,6 +55,13 @@ interface TransactionLocalDataSource {
     fun findRecentByLedgerUuid(
         ledgerUuid: String, limit: Long
     ): List<TransactionEntity>
+
+    fun findByLedgerUuids(ledgerUuids: List<String>): List<TransactionEntity>
+
+
+
+
+
 
 
 }

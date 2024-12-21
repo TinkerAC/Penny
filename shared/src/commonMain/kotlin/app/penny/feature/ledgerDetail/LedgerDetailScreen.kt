@@ -1,149 +1,153 @@
+// file: src/commonMain/kotlin/app/penny/feature/ledgerDetail/LedgerDetailScreen.kt
 package app.penny.feature.ledgerDetail
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.penny.core.domain.model.LedgerModel
+import app.penny.feature.ledgerDetail.component.BalanceSummarySection
+import app.penny.feature.ledgerDetail.component.BasicInfoSection
+import app.penny.feature.ledgerDetail.component.LedgerCard
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import dev.icerock.moko.resources.compose.painterResource
+import dev.icerock.moko.resources.compose.stringResource
+import org.koin.core.parameter.parametersOf
 import kotlin.uuid.ExperimentalUuidApi
 
-class LedgerDetailScreen(
-    private val ledgerModel: LedgerModel
+
+//TODO:refactor LedgerDetailScreen UI
+@OptIn(ExperimentalUuidApi::class)
+class LedgerDetailScreen constructor(
+    private val ledger: LedgerModel
 ) : Screen {
 
-    @OptIn(ExperimentalUuidApi::class)
-    override val key: ScreenKey = "ledger_detail_${ledgerModel.uuid}"
+    override val key: ScreenKey = "ledger_detail_${ledger.uuid}"
 
     @Composable
     override fun Content() {
-        val viewModel = koinScreenModel<LedgerDetailViewModel>()
-        val uiState = viewModel.uiState.collectAsState()
+        val viewModel = koinScreenModel<LedgerDetailViewModel> {
+            parametersOf(ledger)
+        }
+
+        val uiState by viewModel.uiState.collectAsState()
 
         val rootNavigator = LocalNavigator.currentOrThrow
-
 
         Scaffold(
             topBar = {
                 SingleNavigateBackTopBar(
-                    title = "账本详情",
-                    onNavigateBack = {
-                        rootNavigator.pop()
-                    }
+                    title = stringResource(SharedRes.strings.ledger_details),
+                    onNavigateBack = { rootNavigator.pop() }
                 )
-            }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier.padding(innerPadding)
-            ) {
-
-                Card {
-                    Row(
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(ledgerModel.cover.drawable),
-                            contentDescription = null,
-                            modifier = Modifier.width(50.dp).weight(3f)
+            },
+            content = { innerPadding ->
+                LedgerDetailContent(
+                    uiState = uiState,
+                    onNameChange = { newName ->
+                        viewModel.handleIntent(
+                            LedgerDetailIntent.ChangeName(newName)
                         )
+                    },
 
-                        Column(
-                            modifier = Modifier.weight(7f)
-                        ) {
-                            Text(
-                                text = "账本名称",
-                                fontSize = 20.sp,
-                                modifier = Modifier
+                    modifier = Modifier.padding(innerPadding)
+                )
+
+            },
+
+            bottomBar = {
+                Row(
+                    modifier =
+                    Modifier.fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp) // 添加按钮间的间距
+
+                ) {
+                    Button(
+                        onClick = {
+                            rootNavigator.pop()
+                            //TODO: save ledger
+
+                        },
+                        modifier = Modifier.weight(1f) // 使用 weight 让按钮平分宽度
+                    ) {
+                        Text(stringResource(SharedRes.strings.save))
+                    }
+                    Button(
+                        onClick = {
+                            rootNavigator.pop()//TODO: delete ledger
+
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error.copy(
+                                alpha = 0.8f
                             )
-                            Row(
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                TextField(
-                                    value = uiState.value.ledger.name,
-                                    onValueChange = { /*TODO*/ },
-                                    label = {
-                                    },
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .weight(9f)
-                                )
-
-
-//                                IconButton(
-//                                    onClick = {
-//                                    modifier = Modifier.weight(1f)
-//                                ) {
-//                                    Icon(
-//                                        Icons.Filled.Edit,
-//                                        contentDescription = null
-//                                    )
-//                                }
-
-
-                            }
-
-                        }
-
-
+                        ),
+                        modifier = Modifier.weight(1f) // 使用 weight 让按钮平分宽度
+                    ) {
+                        Text(
+                            stringResource(SharedRes.strings.delete),
+                            color = MaterialTheme.colorScheme.onError
+                        )
                     }
                 }
-
-
-
-                Text("Basic Info")
-
-
-                Text("Balance: ${ledgerModel.balance}")
-                Text("Count: ${ledgerModel.count}")
-
-                Text("Currency: ${ledgerModel.currency}")
-
-
-
-
-                Button(
-                    onClick = {
-                        rootNavigator.pop()
-                    }
-                ) {
-                    Text("保存")
-                }
-                Button(
-                    onClick = {
-
-                        viewModel.handleIntent(LedgerDetailIntent.DeleteLedger)
-
-                        rootNavigator.pop()
-                    }
-                ) {
-                    Text("删除Ledger")
-                }
-
-
             }
 
 
-        }
+        )
+    }
+}
+
+@Composable
+fun LedgerDetailContent(
+    uiState: LedgerDetailUiState,
+    onNameChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        LedgerCard(
+            ledger = uiState.ledger,
+            name = uiState.ledger.name,
+            entryCount = uiState.ledger.count,
+            onNameChange = onNameChange
+        )
+
+        BalanceSummarySection(
+            totalIncome = uiState.totalIncome,
+            totalExpense = uiState.totalExpense,
+            balance = uiState.balance
+        )
+
+
+        BasicInfoSection(
+            currency = uiState.ledger.currency
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
 
 
     }
-
-
 }

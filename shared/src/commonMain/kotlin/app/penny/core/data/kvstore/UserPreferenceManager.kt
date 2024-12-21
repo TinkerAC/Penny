@@ -15,7 +15,9 @@ class UserPreferenceManager(
 
 
     companion object {
-        const val THEME_NAME = "theme_name"
+        const val THEME_MODE = "theme_mode" //STATIC, DYNAMIC
+        const val STATIC_THEME_NAME = "static_theme_name"
+        const val DYNAMIC_THEME_SEED_COLOR_ARGB = "dynamic_theme_seed_color_argb"
         const val CONSTRAINTS = "constraints"//LOW, MEDIUM, HIGH
         const val DARK_MODE = "dark_mode" //SYSTEM, LIGHT, DARK
         const val LANGUAGE = "language" //ENGLISH, CHINESE

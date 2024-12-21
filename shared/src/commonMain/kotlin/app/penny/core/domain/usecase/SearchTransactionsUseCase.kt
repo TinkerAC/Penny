@@ -22,7 +22,6 @@ class SearchTransactionsUseCase(
     ): List<TransactionModel> {
         val transactionsByLedger = transactionRepository.findByLedgerUuid(ledgerUuid)
 
-
         //the timeStamp of 00:00:00 of the startDate
         val startTimeStamp = startDate.atStartOfDayIn(TimeZone.currentSystemDefault()).epochSeconds
 

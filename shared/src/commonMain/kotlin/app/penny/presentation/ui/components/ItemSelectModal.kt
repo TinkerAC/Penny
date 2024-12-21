@@ -71,7 +71,7 @@ fun CurrencySelectorModal(
                             onDismiss()
                         }
                     )
-                    Divider()
+                    HorizontalDivider()
                 }
             }
         }

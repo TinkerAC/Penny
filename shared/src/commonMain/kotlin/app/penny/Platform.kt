@@ -1,6 +1,8 @@
 package app.penny
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidedValue
+import androidx.compose.ui.unit.Dp
 import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
@@ -27,6 +29,8 @@ expect fun getPlatform(): Platform
 expect class ApplicationInitializer(
     application: Any? = null
 ) {
+
+
     // init logic with expect-actual
     fun initKoin(appDeclaration: KoinAppDeclaration = {}): ApplicationInitializer
 
@@ -65,8 +69,28 @@ fun ApplicationInitializer.initSession(
 
 // initialize: 链式调用 initKoin 和 initSession
 fun ApplicationInitializer.initialize(): ApplicationInitializer {
-    return this.initKoin().initSession()
+    return this.printDeviceInfo().initKoin().initSession()
 }
+
+
+fun ApplicationInitializer.printDeviceInfo(): ApplicationInitializer {
+    println(
+        "Platform: ${getPlatform()}"
+    )
+    return this
+}
+
 expect fun disableUiKitOverscroll()
 
 expect fun provideNullAndroidOverscrollConfiguration(): Array<ProvidedValue<*>>
+
+
+@Composable
+expect fun getScreenWidthDp(): Dp
+
+@Composable
+expect fun getScreenHeightDp(): Dp
+
+
+
+

@@ -5,6 +5,8 @@ android-minSdk = "24"
 android-targetSdk = "34"
 coilCompose = "3.0.4"
 coilNetworkOkhttp = "3.0.4"
+coilSvgVersion = "3.0.4"
+colorpickerCompose = "1.1.2"
 compose-multiplatform = "1.7.0"
 
 androidx-activityCompose = "1.9.2"
@@ -28,6 +30,7 @@ kotlinxSerializationJson = "1.5.1"
 ktorSerializationKotlinxJsonJvm = "2.3.10"
 ktorServerContentNegotiationJvm = "2.3.10"
 ktorUtils = "3.0.0"
+materialKolor = "2.0.0"
 multiplatformSettings = "1.1.1"
 jdbcDriver = "2.0.2"
 junit = "4.13.2"
@@ -56,15 +59,20 @@ resourcesGenerator = "0.24.4"
 sqlDelight = "2.0.2"
 sqliteXX4Dialect = "2.0.2"
 uuid = "0.8.4"
+voyagerLifecycleKmp = "1.1.0-beta03"
 voyagerVersion = "1.1.0-beta02"
 logback = "1.5.11"
 uiToolingPreviewDesktop = "1.7.0"
+coilSvg = "1.3.0"
+
 [libraries]
 # Koin 依赖，版本统一为 3
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
+coil3-coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coilSvgVersion" }
+colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpickerCompose" }
 composable-table = { module = "io.github.sunny-chung:composable-table", version.ref = "composableTable" }
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedVersion" }
 exposed-crypt = { module = "org.jetbrains.exposed:exposed-crypt", version.ref = "exposedVersion" }
@@ -82,7 +90,7 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-core-ext = { module = "io.insert-koin:koin-core-ext", version.ref = "koin-core-ext" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-android" }
 koin-android-ext = { module = "io.insert-koin:koin-android-ext", version.ref = "koin-android-ext" }
-
+coil-svg ={ module="io.coil-kt:coil-svg", version.ref="coilSvg" }
 # SQLDelight 驱动
 android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "jdbcDriver" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
@@ -94,6 +102,7 @@ ktor-server-auth = { module = "io.ktor:ktor-server-auth" }
 ktor-server-auth-jwt = { module = " io.ktor:ktor-server-auth-jwt" }
 ktor-server-content-negotiation-jvm = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktorServerContentNegotiationJvm" }
 ktor-utils = { module = "io.ktor:ktor-utils", version.ref = "ktorUtils" }
+material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 mysql-connector-java = { module = "mysql:mysql-connector-java", version.ref = "mysqlConnectorJava" }
 native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "jdbcDriver" }
 openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openaiClient" }
@@ -111,6 +120,7 @@ ui-tooling-preview-desktop = { module = "org.jetbrains.compose.ui:ui-tooling-pre
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyagerVersion" }
 cafe-voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyagerVersion" }
+voyager-lifecycle-kmp = { module = "cafe.adriel.voyager:voyager-lifecycle-kmp", version.ref = "voyagerLifecycleKmp" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyagerVersion" }
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyagerVersion" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyagerVersion" }

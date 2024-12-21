@@ -3,11 +3,14 @@ package app.penny.feature.myLedger
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PostAdd
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import app.penny.feature.myLedger.component.LedgerCard
@@ -19,19 +22,21 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
+import kotlin.uuid.ExperimentalUuidApi
 
 class MyLedgerScreen : Screen {
 
-
+    @OptIn(ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
         val rootNavigator = LocalNavigator.currentOrThrow
-
         val viewModel = koinScreenModel<MyLedgerViewModel>()
-
         val uiState = viewModel.uiState.collectAsState()
 
 
+        LaunchedEffect(Unit) {
+            viewModel.refreshData()
+        }
 
         Scaffold(
             topBar = {
@@ -42,22 +47,18 @@ class MyLedgerScreen : Screen {
                     }
                 )
             },
-            bottomBar = {
-                BottomAppBar(
-                ) {
-                    Button(
-                        onClick = {
-                            rootNavigator.push(NewLedgerScreen(
-                                callBack = {
-                                    viewModel.handleIntent(MyLedgerIntent.RefreshLedgers)
-                                }
-                            ))
-                        }
-                    ) {
-                        Text("New Ledger")
-                    }
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        rootNavigator.push(NewLedgerScreen())
+                    }) {
+                    Icon(
+                        imageVector = Icons.Filled.PostAdd,
+                        contentDescription = stringResource(SharedRes.strings.show_numpad)
+                    )
                 }
-            }
+            },
+            floatingActionButtonPosition = FabPosition.End
         )
         { paddingValues ->
             LazyColumn(
@@ -65,7 +66,14 @@ class MyLedgerScreen : Screen {
             ) {
                 items(uiState.value.ledgers) { ledger ->
                     LedgerCard(
-                        ledgerModel = ledger
+                        ledgerModel = ledger,
+                        rootNavigator = rootNavigator,
+                        isDefault = uiState.value.defaultLedger?.uuid == ledger.uuid,
+                        onSetDefault = {
+                            viewModel.handleIntent(
+                                MyLedgerIntent.SetDefaultLedger(it)
+                            )
+                        }
                     )
                 }
             }

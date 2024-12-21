@@ -42,7 +42,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import dev.icerock.moko.resources.compose.painterResource
 
 class NewLedgerScreen(
-    private val callBack: (() -> Unit)
 ) : Screen {
 
     @Composable
@@ -63,7 +62,6 @@ class NewLedgerScreen(
                     }
 
                     is NewLedgerUiEvent.OnFinishInsert -> {
-                        callBack()
                         navigator?.pop()
                     }
                 }
@@ -75,7 +73,6 @@ class NewLedgerScreen(
                 SingleNavigateBackTopBar(
                     title = "新建账本",
                     onNavigateBack = {
-                        callBack()
                         navigator?.pop()
                     }
                 )

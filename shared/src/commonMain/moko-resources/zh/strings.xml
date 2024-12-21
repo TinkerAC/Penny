@@ -24,7 +24,7 @@
     <string name="amount">金额</string>
     <string name="date">日期</string>
     <string name="remarks">备注</string>
-    <string name="add_transaction">添加交易</string>
+    <string name="add_transaction">记一笔</string>
     <string name="notification">通知</string>
     <string name="settings">设置</string>
     <string name="language">语言</string>
@@ -38,7 +38,7 @@
     <string name="display_mode_dark">暗色</string>
     <string name="display_mode_system">系统</string>
     <string name="currency_code">货币代码</string>
-    <string name="constraint">约束</string>
+    <string name="contrast">对比度</string>
     <string name="preference_setting_description">自定义Penny</string>
     <string name="constraint_high">高</string>
     <string name="constraint_medium">中</string>
@@ -113,6 +113,18 @@
     <string name="category_insurance">保险</string>
     <string name="category_financial">财务</string>
     <string name="category_miscellaneous">杂项</string>
+    //中文和不缩写一致即可
+
+    <string name="category_housing_abbr">住房</string>
+    <string name="category_transportation_abbr">交通</string>
+    <string name="category_food_abbr">食物</string>
+    <string name="category_health_abbr">健康</string>
+    <string name="category_personal_care_abbr">个人护理</string>
+    <string name="category_entertainment_abbr">娱乐</string>
+    <string name="category_education_abbr">教育</string>
+    <string name="category_insurance_abbr">保险</string>
+    <string name="category_financial_abbr">财务</string>
+    <string name="category_miscellaneous_abbr">杂项</string>
 
     <!-- 支出二级分类 - Housing -->
     <string name="category_housing_mortgage_or_rent">抵押贷款或租金</string>
@@ -241,4 +253,31 @@
     <string name="tap_to_add_remarks">点击添加备注</string>
     <string name="select_ledger">选择账本</string>
     <string name="select_ledger_description">临时切换到另一个账本</string>
+
+
+    <string name="monthly_income">本月收入</string>
+    <string name="monthly_expense">本月支出</string>
+    <string name="monthly_balance">月结余</string>
+    <string name="no_transaction_notice">没有最近的交易记录\n试着记一笔～"</string>
+    <string name="recent_transactions">最近账单</string>
+    <string name="total_income">总收入</string>
+    <string name="total_expense">总支出</string>
+    <string name="total_balance">总结余</string>
+    <string name="balance_summary">收支总览</string>
+
+    <string name="ledger_details">账本详情</string>
+    <string name="save">保存</string>
+    <string name="delete">删除</string>
+    <string name="basic_info">基本信息</string>
+    <string name="ledger_name">账本名称</string>
+    <string name="ledger_name">Ledger Name</string>
+
+    <string name="terracotta_red_theme">赤陶红</string>
+    <string name="apple_green_theme">青苹果绿</string>
+    <string name="sky_blue_theme">晴空蓝</string>
+    <string name="lemon_yellow_theme">柠檬黄</string>
+    <string name="custom_theme">自定义</string>
+    <string name="set_to_default">设置为默认</string>
+
+
 </resources>

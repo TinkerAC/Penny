@@ -40,6 +40,8 @@ kotlin {
             dependencies {
                 // 公共依赖项
                 api(libs.resources.compose) // 如果使用 Compose Multiplatform
+                implementation(libs.material.kolor)
+                implementation(libs.colorpicker.compose)
 
                 implementation(libs.ktor.utils)
                 api(libs.multiplatformSettings.noArg)
@@ -66,6 +68,10 @@ kotlin {
 //                implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.androidx.lifecycle.viewmodel)
+//                implementation(libs.coil.svg)
+                implementation(libs.voyager.lifecycle.kmp)
+                implementation(libs.coil3.coil.svg)
+
                 implementation(libs.thechance101.chart)
                 implementation(libs.kermit)
                 implementation(libs.kermit.koin)

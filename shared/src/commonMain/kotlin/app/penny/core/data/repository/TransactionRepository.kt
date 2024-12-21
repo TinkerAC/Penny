@@ -54,7 +54,7 @@ interface TransactionRepository {
     suspend fun findByUserUuid(userUuid: Uuid): List<TransactionModel>
 
 
-    suspend fun findByUserUuidAndYearMonth(
+    suspend fun findByUserAndYearMonth(
         userUuid: Uuid,
         yearMonth: YearMonth
     ): List<TransactionModel>
@@ -62,6 +62,13 @@ interface TransactionRepository {
     suspend fun findRecentByLedger(
         ledger: LedgerModel,
         limit: Long
+    ): List<TransactionModel>
+
+
+    suspend fun findByLedgerAndTransactionDateBetween(
+        ledgerUuid: Uuid,
+        startInstant: Instant,
+        endInstant: Instant
     ): List<TransactionModel>
 
 }

@@ -1,17 +1,18 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/analytics/AnalyticScreen.kt
 package app.penny.feature.analytics
 
-import AnalyticsTopBar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.penny.feature.analytics.chartAndTable.CategoryPieChart
+import app.penny.feature.analytics.component.AnalyticsTopBar
+import app.penny.feature.analytics.component.CategoryPieChart
 import app.penny.feature.analytics.component.AssetChangeTable
 import app.penny.feature.analytics.component.IncomeExpenseTrendChartCard
 import app.penny.presentation.ui.components.LedgerSelectDialog
@@ -25,6 +26,11 @@ class AnalyticScreen : Screen {
     override fun Content() {
         val viewModel = koinScreenModel<AnalyticViewModel>()
         val uiState by viewModel.uiState.collectAsState()
+
+
+        LaunchedEffect(Unit) {
+            viewModel.refreshData()
+        }
 
         Column(modifier = Modifier.fillMaxSize()) {
             AnalyticsTopBar(

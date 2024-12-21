@@ -22,17 +22,16 @@ import cafe.adriel.voyager.transitions.SlideTransition
 
 @Composable
 fun App() {
-
     val userPreferenceRepository = getKoinInstance<UserPreferenceRepository>()
     val language = userPreferenceRepository.getLanguage()
     // 设置语言
-     LanguageManager.setLocaleTo(language)
+    LanguageManager.setLocaleTo(language)
 
     // 当前主题状态
     var themeState by remember {
         mutableStateOf(
             ThemeState(
-                themeConfig = userPreferenceRepository.getThemeColor().themeConfig,
+                appTheme = userPreferenceRepository.getAppTheme(),
                 displayMode = userPreferenceRepository.getDisplayMode(),
                 constraints = userPreferenceRepository.getConstraints()
             )
@@ -47,6 +46,7 @@ fun App() {
         // 加载首次启动状态
         isFirstTime = userDataRepository.getIsFirstTime()
 
+
         // 监听主题变化事件
         ThemeManager.themeChanges.collect { newThemeState ->
             themeState = newThemeState // 更新主题状态
@@ -59,9 +59,9 @@ fun App() {
     } else {
         // 应用主题并加载主内容
         AppTheme(
-            themeConfig = themeState.themeConfig,
-            darkTheme = themeState.displayMode,
-            constraints = themeState.constraints
+            appTheme = themeState.appTheme,
+            appDisplayMode = themeState.displayMode,
+            appThemeContrast = themeState.constraints
         ) {
             // root Navigator，用于管理屏幕导航
             Navigator(

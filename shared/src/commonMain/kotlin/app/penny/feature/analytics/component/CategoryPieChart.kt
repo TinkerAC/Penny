@@ -1,5 +1,5 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/analytics/chartAndTable/CategoryPieChart.kt
-package app.penny.feature.analytics.chartAndTable
+package app.penny.feature.analytics.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,9 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.penny.presentation.ui.components.SliderToggleButton
+import app.penny.shared.SharedRes
 import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.donutChart.PieChart
 import com.aay.compose.donutChart.model.PieChartData
+import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun CategoryPieChart(
@@ -49,21 +52,14 @@ fun CategoryPieChart(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
             ) {
-                Text(
-                    text = "显示: ",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                SegmentedButton(
-                    selected = isIncome,
-                    onSelected = { isIncome = true },
-                    text = "收入"
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                SegmentedButton(
-                    selected = !isIncome,
-                    onSelected = { isIncome = false },
-                    text = "支出"
+                SliderToggleButton(
+                    options = listOf(
+                        stringResource(SharedRes.strings.income),
+                        stringResource(SharedRes.strings.expense)
+                    ), selectedIndex = if (isIncome) 0 else 1,
+                    onToggle = {
+                        isIncome = it == 0
+                    }
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))

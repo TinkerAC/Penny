@@ -57,9 +57,8 @@ class TransactionLocalDataSourceImpl(
         endTimestamp: Long
     ): List<TransactionEntity> {
         return transactionsQueries.findByLedgerUuidAndTransactionDateBetween(
-            ledger_uuid = ledgerUuid,
-            transaction_date_ = startTimestamp,
-            transaction_date = endTimestamp
+            ledgerUuid, startTimestamp, endTimestamp
+
         ).executeAsList()
     }
 
@@ -122,6 +121,12 @@ class TransactionLocalDataSourceImpl(
 
 
     override fun findRecentByLedgerUuid(ledgerUuid: String, limit: Long): List<TransactionEntity> {
-        return transactionsQueries.findRecentByLedgerUuid(ledgerUuid,limit).executeAsList()
+        return transactionsQueries.findRecentByLedgerUuid(ledgerUuid, limit).executeAsList()
+    }
+
+
+
+    override fun findByLedgerUuids(ledgerUuids: List<String>): List<TransactionEntity> {
+        return transactionsQueries.findByLedgerUuids(ledgerUuids).executeAsList()
     }
 }

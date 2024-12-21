@@ -1,4 +1,4 @@
-package app.penny.presentation.ui
+package app.penny.presentation.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

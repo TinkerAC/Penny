@@ -81,7 +81,7 @@ fun TransactionGroup(group: GroupedTransaction) {
             Spacer(
                 modifier = Modifier.height(8.dp)
             )
-            // Summary Information
+            // app.penny.core.domain.model.Summary Information
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween

@@ -99,6 +99,8 @@ class DebugViewModel(
             val user = userDataRepository.getUser()
             _uiState.value = _uiState.value.copy(activeUser = user)
 
+            val defaultLedger = userDataRepository.getDefaultLedger()
+            _uiState.value = _uiState.value.copy(defaultLedger = defaultLedger)
         }
     }
 

@@ -3,63 +3,70 @@ package app.penny.presentation.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import app.penny.core.domain.enum.AppThemeContrast
+import app.penny.core.domain.enum.AppDisplayMode
 import app.penny.presentation.ui.theme.theme1.AppTypography
-import app.penny.presentation.ui.theme.theme1.Theme1
-import app.penny.presentation.ui.theme.theme2.Theme2
-
+import com.materialkolor.DynamicMaterialTheme
 
 @Composable
 fun AppTheme(
-    themeConfig: ThemeConfig,
-    darkTheme: DisplayMode,
-    constraints: ThemeConstraint,
-    content: @Composable() () -> Unit
+    appTheme: AppTheme,
+    appThemeContrast: AppThemeContrast,
+    appDisplayMode: AppDisplayMode,
+    content: @Composable () -> Unit
 ) {
-    val useDarkTheme: Boolean = when (darkTheme) {
-        DisplayMode.SYSTEM -> isSystemInDarkTheme()
-        DisplayMode.LIGHT -> false
-        DisplayMode.DARK -> true
+    val useDarkTheme = when (appDisplayMode) {
+        AppDisplayMode.SYSTEM -> isSystemInDarkTheme()
+        AppDisplayMode.LIGHT -> false
+        AppDisplayMode.DARK -> true
     }
 
-    val colorScheme = when (useDarkTheme) {
-        true -> when (constraints) {
-            ThemeConstraint.HIGH -> themeConfig.highContrastDarkColorTheme
-            ThemeConstraint.MEDIUM -> themeConfig.mediumContrastDarkColorTheme
-            ThemeConstraint.LOW -> themeConfig.darkTheme
+
+    when (
+        appTheme
+    ) {
+        is AppTheme.Static -> {
+            val colorScheme = when (appThemeContrast) {
+                AppThemeContrast.HIGH -> {
+                    when (useDarkTheme) {
+                        true -> appTheme.highContrastDarkColorTheme
+                        false -> appTheme.highContrastLightColorTheme
+                    }
+                }
+
+                AppThemeContrast.MEDIUM -> {
+                    when (useDarkTheme) {
+                        true -> appTheme.mediumContrastDarkColorTheme
+                        false -> appTheme.mediumContrastLightColorTheme
+                    }
+                }
+
+                AppThemeContrast.LOW -> {
+                    when (useDarkTheme) {
+                        true -> appTheme.darkTheme
+                        false -> appTheme.lightTheme
+                    }
+                }
+            }
+            MaterialTheme(
+                colorScheme = colorScheme,
+                typography = AppTypography,
+                content = content
+            )
         }
 
-        false -> when (constraints) {
-            ThemeConstraint.HIGH -> themeConfig.highContrastLightColorTheme
-            ThemeConstraint.MEDIUM -> themeConfig.mediumContrastLightColorTheme
-            ThemeConstraint.LOW -> themeConfig.lightTheme
+        is AppTheme.DynamicAppTheme -> {
+            DynamicMaterialTheme(
+                seedColor = appTheme.seedColor,
+                useDarkTheme = useDarkTheme,
+                animate = true,
+                content = content
+            )
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        content = content
-    )
-}
-
-enum class ThemeConstraint {
-    HIGH,
-    MEDIUM,
-    LOW
 }
 
 
-enum class DisplayMode {
-    SYSTEM,
-    LIGHT,
-    DARK
-}
 
 
-enum class ThemeColor(
-    val themeConfig: ThemeConfig
-) {
-    THEME1(Theme1),
-    THEME2(Theme2);
-
-}

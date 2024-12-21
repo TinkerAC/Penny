@@ -1,13 +1,17 @@
 package app.penny.feature.setting
 
-import app.penny.presentation.ui.theme.DisplayMode
-import app.penny.presentation.ui.theme.ThemeColor
-import app.penny.presentation.ui.theme.ThemeConstraint
+import app.penny.core.domain.enum.AppDisplayMode
+import app.penny.core.domain.enum.AppThemeContrast
+import app.penny.presentation.ui.theme.AppTheme
+
 
 sealed class SettingIntent {
-    data class SetTheme(val themeName: ThemeColor) : SettingIntent()
-    data class SetConstraints(val constraints: ThemeConstraint) : SettingIntent()
-    data class SetDisplayMode(val darkMode: DisplayMode) : SettingIntent()
+    data class SetTheme(val appTheme: AppTheme) : SettingIntent()
+    data class SetConstraints(val constraints: AppThemeContrast) : SettingIntent()
+    data class SetDisplayMode(val darkMode: AppDisplayMode) : SettingIntent()
+    data class SetDynamicTheme(val appTheme: AppTheme.DynamicAppTheme) : SettingIntent()
+    data object ShowColorPicker : SettingIntent()
+    data object HideColorPicker : SettingIntent()
     data class SetLanguage(val language: Language) : SettingIntent()
 }
 

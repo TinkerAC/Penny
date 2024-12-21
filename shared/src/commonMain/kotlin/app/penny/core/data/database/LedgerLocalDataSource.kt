@@ -25,4 +25,5 @@ interface LedgerLocalDataSource {
 
     fun findByUserUuidAndUpdatedAtAfter(userUuid: String, timestamp: Long): List<LedgerEntity>
     fun countByUserUuidAndUpdatedAtAfter(toString: String, epochSeconds: Long): Long
+
 }

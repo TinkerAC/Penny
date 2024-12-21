@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -70,6 +71,7 @@ fun SliderToggleButton(
     Box(
         modifier = modifier
             .height(40.dp)
+            .clip(shape)
             .background(
                 color = selectedBackgroundColor,
                 shape = shape
@@ -96,7 +98,7 @@ fun SliderToggleButton(
                         sliderWidth = totalWidth / options.size
                     }
             ) {
-                // 滑块
+                // The slider
                 Box(
                     modifier = Modifier
                         .width(with(LocalDensity.current) { sliderWidth.toDp() })
@@ -111,7 +113,6 @@ fun SliderToggleButton(
                             color = sliderColor,
                             shape = shape
                         )
-                    // 移除了 .align(Alignment.Center) 以防止偏移错误
                 )
 
                 // 标签

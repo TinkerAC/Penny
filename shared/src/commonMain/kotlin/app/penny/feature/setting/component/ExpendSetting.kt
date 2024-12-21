@@ -32,7 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.penny.presentation.ui.theme.ThemeColor
+import app.penny.presentation.ui.theme.AppTheme
+import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun <T> ExpendSetting(
@@ -123,11 +124,12 @@ fun <T> ExpendSetting(
 
 @Composable
 fun ThemeColorOptionContent(
-    themeColor: ThemeColor,
+    appTheme: AppTheme,
     isSelected: Boolean,
     modifier: Modifier = Modifier
 ) {
     // 始终为带有圆角的正方形，通过aspectRatio(1f)确保正方形比例
+
     Column(
         modifier = modifier
             .aspectRatio(1f)
@@ -136,22 +138,26 @@ fun ThemeColorOptionContent(
                 if (isSelected) MaterialTheme.colorScheme.primaryContainer
                 else MaterialTheme.colorScheme.surface
             )
-            .padding(8.dp), // 内边距稍小，让内容有空间
+            .padding(6.dp), // 内边距稍小，让内容有空间
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         // 色块，依然使用正方形且有圆角
         Box(
             modifier = Modifier
-                .size(24.dp)
+                .size(36.dp)
                 .clip(RoundedCornerShape(4.dp))
-                .background(themeColor.themeConfig.lightTheme.primary)
+                .background(
+                    appTheme.primaryColor,
+                    shape = RoundedCornerShape(4.dp)
+                )
+
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = themeColor.name,
+            text = stringResource(appTheme.nameStringResource),
             style = MaterialTheme.typography.bodySmall,
             color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
             else MaterialTheme.colorScheme.onSurface,

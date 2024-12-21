@@ -58,14 +58,15 @@ enum class Category(
     val parentCategory: Category?,
     val categoryName: StringResource,
     val categoryIcon: ImageVector,
-    val description: String
+    val description: String,
+    val categoryNameAbbr: StringResource? = null,
 ) {
     // 顶级分类
     INCOME(
         null,
         SharedRes.strings.category_income,
         Icons.Filled.Grid4x4,
-        "All types of income"
+        "All types of income",
     ),
     EXPENSE(
         null,
@@ -79,61 +80,71 @@ enum class Category(
         EXPENSE,
         SharedRes.strings.category_housing,
         Icons.Filled.Home,
-        "Housing related expenses"
+        "Housing related expenses",
+        SharedRes.strings.category_housing_abbr
     ),
     EXPENSE_TRANSPORTATION(
         EXPENSE,
         SharedRes.strings.category_transportation,
         Icons.Filled.DirectionsCar,
-        "Transportation related expenses"
+        "Transportation related expenses",
+        SharedRes.strings.category_transportation_abbr
     ),
     EXPENSE_FOOD(
         EXPENSE,
         SharedRes.strings.category_food,
         Icons.Filled.Fastfood,
-        "Food and dining expenses"
+        "Food and dining expenses",
+        SharedRes.strings.category_food_abbr
     ),
     EXPENSE_HEALTH(
         EXPENSE,
         SharedRes.strings.category_health,
         Icons.Filled.HealthAndSafety,
-        "Health and medical expenses"
+        "Health and medical expenses",
+        SharedRes.strings.category_health_abbr
     ),
     EXPENSE_PERSONAL_CARE(
         EXPENSE,
         SharedRes.strings.category_personal_care,
         Icons.Filled.Spa,
-        "Personal care and grooming"
+        "Personal care and grooming",
+        SharedRes.strings.category_personal_care_abbr
     ),
     EXPENSE_ENTERTAINMENT(
         EXPENSE,
         SharedRes.strings.category_entertainment,
         Icons.Filled.Movie,
-        "Movies, music, games, and more"
+        "Movies, music, games, and more",
+        SharedRes.strings.category_entertainment_abbr
     ),
     EXPENSE_EDUCATION(
         EXPENSE,
         SharedRes.strings.category_education,
         Icons.Filled.School,
-        "Tuition and educational expenses"
+        "Tuition and educational expenses",
+        SharedRes.strings.category_education_abbr
     ),
     EXPENSE_INSURANCE(
         EXPENSE,
         SharedRes.strings.category_insurance,
         Icons.Filled.Shield,
-        "Various insurance payments"
+        "Various insurance payments",
+        SharedRes.strings.category_insurance_abbr
     ),
     EXPENSE_FINANCIAL(
         EXPENSE,
         SharedRes.strings.category_financial,
         Icons.Filled.AccountBalance,
-        "Loan, credit, and investment expenses"
+        "Loan, credit, and investment expenses",
+        SharedRes.strings.category_financial_abbr
     ),
     EXPENSE_MISCELLANEOUS(
         EXPENSE,
         SharedRes.strings.category_miscellaneous,
         Icons.Filled.MoreHoriz,
-        "Other general expenses"
+        "Other general expenses",
+        SharedRes.strings.category_miscellaneous_abbr
     ),
 
     // 支出二级分类 - Housing
@@ -461,31 +472,36 @@ enum class Category(
         INCOME,
         SharedRes.strings.category_salary,
         Icons.Filled.AccountBalance,
-        "Regular salary and wages"
+        "Regular salary and wages",
+        SharedRes.strings.category_salary_abbr
     ),
     INCOME_BUSINESS(
         INCOME,
         SharedRes.strings.category_business,
         Icons.Filled.Store,
-        "Business or self-employment income"
+        "Business or self-employment income",
+        SharedRes.strings.category_business_abbr
     ),
     INCOME_INVESTMENT(
         INCOME,
         SharedRes.strings.category_investment,
-        Icons.Filled.TrendingUp,
-        "Income from investments"
+        Icons.AutoMirrored.Filled.TrendingUp,
+        "Income from investments",
+        SharedRes.strings.category_investment_abbr
     ),
     INCOME_FREELANCE(
         INCOME,
         SharedRes.strings.category_freelance,
         Icons.Filled.Work,
-        "Income from freelance work"
+        "Income from freelance work",
+        SharedRes.strings.category_freelance_abbr
     ),
     INCOME_MISCELLANEOUS(
         INCOME,
         SharedRes.strings.category_income_miscellaneous,
         Icons.Filled.MoreHoriz,
-        "Other sources of income"
+        "Other sources of income",
+        SharedRes.strings.category_income_miscellaneous_abbr
     ),
 
     // 收入二级分类 - Salary
@@ -707,8 +723,6 @@ enum class Category(
          * 根据所有分类动态生成一个用于LLM的提示词框架，帮助LLM根据自然语言从中提取结构化信息。
          */
         fun generateLLMPrompt(
-            text: String,
-            userLocalDate: String
         ): String {
             val incomeCategories = getSubCategories(INCOME).joinToString("\n") { parent ->
                 val subs =

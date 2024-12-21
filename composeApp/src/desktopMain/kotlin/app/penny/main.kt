@@ -9,12 +9,14 @@ import dev.icerock.moko.resources.compose.stringResource
 //JVM entry point
 fun main() = application {
 
-    getPlatform()
-
-    ApplicationInitializer(
+    val appInitializer = ApplicationInitializer(
         application = this
     )
-        .initialize()
+
+    appInitializer.printDeviceInfo()
+
+    appInitializer.initialize()
+
 
 
     Window(
