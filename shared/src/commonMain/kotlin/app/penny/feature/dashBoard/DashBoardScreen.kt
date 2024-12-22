@@ -1,7 +1,7 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/dashboard/DashboardScreen.kt
 package app.penny.feature.dashBoard
 
-import TopSection
+import app.penny.feature.dashBoard.component.TopSection
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box

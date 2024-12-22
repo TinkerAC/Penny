@@ -13,10 +13,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aay.compose.baseComponents.model.LegendPosition
-import com.aay.compose.lineChart.LineChart
-import com.aay.compose.lineChart.model.LineParameters
-import com.aay.compose.lineChart.model.LineType
+import app.penny.presentation.ui.components.aayChart.baseComponents.model.LegendPosition
+import app.penny.presentation.ui.components.aayChart.lineChart.LineChart
+import app.penny.presentation.ui.components.aayChart.lineChart.model.LineParameters
+import app.penny.presentation.ui.components.aayChart.lineChart.model.LineType
 
 @Composable
 fun AssetTrendChart(

@@ -7,7 +7,9 @@ import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.di.getKoinInstance
+import app.penny.presentation.ui.LocaleManager
 import co.touchlab.kermit.Logger
+import dev.icerock.moko.resources.StringResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -92,5 +94,8 @@ expect fun getScreenWidthDp(): Dp
 expect fun getScreenHeightDp(): Dp
 
 
-
-
+/**
+ * 直接返回原始字符串资源的 API
+ */
+expect fun getRawStringResource(stringResource: StringResource, localeString: String=LocaleManager.currentLocale
+): String

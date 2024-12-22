@@ -2,6 +2,7 @@ package app.penny.feature.setting
 
 import app.penny.core.domain.enum.AppDisplayMode
 import app.penny.core.domain.enum.AppThemeContrast
+import app.penny.core.domain.enum.Language
 import app.penny.presentation.ui.theme.AppTheme
 
 
@@ -13,13 +14,4 @@ sealed class SettingIntent {
     data object ShowColorPicker : SettingIntent()
     data object HideColorPicker : SettingIntent()
     data class SetLanguage(val language: Language) : SettingIntent()
-}
-
-enum class Language(
-    val locale: String
-) {
-
-    ENGLISH("en"),
-    CHINESE("zh")
-
 }

@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
 import org.koin.core.component.KoinComponent
 import org.koin.dsl.KoinAppDeclaration
+import java.util.Locale
 
 class JVMPlatform() : Platform() {
     override val name: String = "Java"
@@ -53,3 +54,10 @@ actual fun getScreenHeightDp(): Dp {
     return LocalWindowInfo.current.containerSize.height.dp
 }
 
+actual fun getRawStringResource(
+    stringResource: StringResource,
+    localeString: String
+): String {
+    val locale = Locale(localeString)
+    return stringResource.localized(locale)
+}

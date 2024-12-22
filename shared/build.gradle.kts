@@ -72,7 +72,7 @@ kotlin {
                 implementation(libs.voyager.lifecycle.kmp)
                 implementation(libs.coil3.coil.svg)
 
-                implementation(libs.thechance101.chart)
+//                implementation(libs.thechance101.chart)
                 implementation(libs.kermit)
                 implementation(libs.kermit.koin)
                 implementation(compose.materialIconsExtended)

@@ -2,7 +2,7 @@
 // file: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/newTransaction/NewTransactionScreen.kt
 package app.penny.feature.newTransaction
 
-import NewTransactionTopBar
+import app.penny.feature.newTransaction.component.NewTransactionTopBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement

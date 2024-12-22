@@ -3,7 +3,7 @@ package app.penny.di
 import app.cash.sqldelight.db.SqlDriver
 import app.penny.core.data.database.ChatMessageLocalDataSource
 import app.penny.core.data.database.LedgerLocalDataSource
-import app.penny.core.data.database.LedgerLocalDataSourceImpl
+import app.penny.core.data.database.dataSourceImpl.LedgerLocalDataSourceImpl
 import app.penny.core.data.database.TransactionLocalDataSource
 import app.penny.core.data.database.UserLocalDataSource
 import app.penny.core.data.database.dataSourceImpl.ChatMessageLocalDataSourceImpl

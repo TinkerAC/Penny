@@ -65,8 +65,8 @@
     <string name="summary_monthly">Monthly</string>
     <string name="summary_yearly">Yearly</string>
     <string name="summary_custom">Custom</string>
-    <string name="start_date">Start Date</string>
-    <string name="end_date">End Date</string>
+    <string name="start_date">From</string>
+    <string name="end_date">To</string>
     <string name="switch_ledger">Switch Ledger</string>
     <string name="month_1">January</string>
     <string name="month_2">February</string>
@@ -298,5 +298,8 @@
     <string name="lemon_yellow_theme">Lemon</string>
     <string name="custom_theme">Custom</string>
     <string name ="set_to_default">Set to default</string>
+    <string name ="select_year">Select Year</string>
+    <string name ="select_month">Select Month</string>
+    <string name ="select_date_range">Select Date Range</string>
 
 </resources>

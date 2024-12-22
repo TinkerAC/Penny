@@ -22,10 +22,8 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -103,7 +101,7 @@ class SettingScreen : Screen {
                                                 SettingIntent.SetLanguage(it)
                                             )
                                         },
-                                        displayMapper = { it.name }
+                                        displayMapper = { it.displayName }
                                     )
 
                                     ExpendSetting(
@@ -132,7 +130,7 @@ class SettingScreen : Screen {
                                                 SettingIntent.SetDisplayMode(it)
                                             )
                                         },
-                                        displayMapper = { it.name }
+                                        displayMapper = { stringResource(it.displayName) }
                                     )
                                     ExposedDropDownSetting(
                                         settingName = stringResource(SharedRes.strings.contrast),
@@ -143,7 +141,7 @@ class SettingScreen : Screen {
                                                 SettingIntent.SetConstraints(it)
                                             )
                                         },
-                                        displayMapper = { it.name }
+                                        displayMapper = { stringResource(it.displayName) }
                                     )
                                 }
                             )

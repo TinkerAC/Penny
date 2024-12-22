@@ -1,5 +1,6 @@
-package app.penny.core.data.database
+package app.penny.core.data.database.dataSourceImpl
 
+import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.database.LedgerEntity
 import app.penny.database.LedgerQueries
 

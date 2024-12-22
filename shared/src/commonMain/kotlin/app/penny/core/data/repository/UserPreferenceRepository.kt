@@ -2,7 +2,7 @@ package app.penny.core.data.repository
 
 import app.penny.core.domain.enum.AppDisplayMode
 import app.penny.core.domain.enum.AppThemeContrast
-import app.penny.feature.setting.Language
+import app.penny.core.domain.enum.Language
 import app.penny.presentation.ui.theme.AppTheme
 
 interface UserPreferenceRepository {

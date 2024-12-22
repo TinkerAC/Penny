@@ -17,11 +17,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.penny.presentation.ui.components.aayChart.baseComponents.model.LegendPosition
+import app.penny.presentation.ui.components.aayChart.lineChart.LineChart
+import app.penny.presentation.ui.components.aayChart.lineChart.model.LineParameters
+import app.penny.presentation.ui.components.aayChart.lineChart.model.LineType
 import app.penny.shared.SharedRes
-import com.aay.compose.baseComponents.model.LegendPosition
-import com.aay.compose.lineChart.LineChart
-import com.aay.compose.lineChart.model.LineParameters
-import com.aay.compose.lineChart.model.LineType
 import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
@@ -89,11 +89,12 @@ fun IncomeExpenseTrendChartCard(
                     xAxisData = xAxisData,
                     legendPosition = LegendPosition.TOP,
                     isGrid = true,
+                    animateChart = true,
                     gridColor = Color.LightGray,
                     yAxisStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
                     xAxisStyle = TextStyle(
                         color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
                     ),
                     descriptionStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
                     showGridWithSpacer = true,

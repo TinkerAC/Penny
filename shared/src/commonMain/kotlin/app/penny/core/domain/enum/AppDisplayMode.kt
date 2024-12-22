@@ -1,8 +1,18 @@
 package app.penny.core.domain.enum
 
-enum class AppDisplayMode {
-    SYSTEM,
-    LIGHT,
-    DARK;
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.StringResource
 
+enum class AppDisplayMode(
+    val displayName: StringResource
+) {
+    SYSTEM(
+        displayName = SharedRes.strings.display_mode_system
+    ),
+    LIGHT(
+        displayName = SharedRes.strings.display_mode_light
+    ),
+    DARK(
+        displayName = SharedRes.strings.display_mode_dark
+    )
 }

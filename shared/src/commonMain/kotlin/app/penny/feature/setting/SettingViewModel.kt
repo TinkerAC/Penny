@@ -1,7 +1,7 @@
 package app.penny.feature.setting
 
 import app.penny.core.data.repository.UserPreferenceRepository
-import app.penny.presentation.ui.LanguageManager
+import app.penny.presentation.ui.LocaleManager
 import app.penny.presentation.ui.ThemeManager
 import app.penny.presentation.ui.ThemeState
 import app.penny.presentation.ui.theme.AppTheme
@@ -114,7 +114,7 @@ class SettingViewModel(
                     try {
                         userPreferenceRepository.setLanguage(intent.language)
                         _uiState.value = _uiState.value.copy(language = intent.language)
-                        LanguageManager.setLocaleTo(intent.language)
+                        LocaleManager.setLocaleTo(intent.language)
                         Logger.d { "Language set to ${intent.language}" }
                         // 确保 UI 刷新以反映语言更改
                         // 可以触发应用重启或相关组件的重新组合

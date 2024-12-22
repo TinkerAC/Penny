@@ -37,7 +37,7 @@ fun <T> ExposedDropDownSetting(
     items: List<T>,
     selectedItem: T,
     onItemSelected: (T) -> Unit,
-    displayMapper: (T) -> String // Function to get the display text from T
+    displayMapper: @Composable (T) -> String // Function to get the display text from T
 ) {
     var expanded by remember { mutableStateOf(false) } // Controls the dropdown menu state
 

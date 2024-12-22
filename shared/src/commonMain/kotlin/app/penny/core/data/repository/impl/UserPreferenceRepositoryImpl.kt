@@ -6,8 +6,8 @@ import app.penny.core.data.kvstore.UserPreferenceManager
 import app.penny.core.data.repository.UserPreferenceRepository
 import app.penny.core.domain.enum.AppDisplayMode
 import app.penny.core.domain.enum.AppThemeContrast
+import app.penny.core.domain.enum.Language
 import app.penny.core.domain.enum.ThemeMode
-import app.penny.feature.setting.Language
 import app.penny.presentation.ui.theme.AppTheme
 import kotlin.random.Random
 

@@ -4,10 +4,9 @@ import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.shared.SharedRes
-import com.aay.compose.donutChart.model.PieChartData
+import app.penny.presentation.ui.components.aayChart.donutChart.model.PieChartData
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate

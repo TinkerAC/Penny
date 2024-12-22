@@ -16,5 +16,4 @@ enum class Currency(
     CNY("CNY", "Chinese Yuan", "¥", SharedRes.images.flag_cn),
     RUB("RUB", "Russian Ruble", "₽", SharedRes.images.flag_ru),
 
-
 }
