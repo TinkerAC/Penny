@@ -12,7 +12,7 @@ import kotlin.uuid.Uuid
 data class TransactionModel(
     var uuid: Uuid = Uuid.parse("00000000-0000-0000-0000-000000000000"),
     var ledgerUuid: Uuid = Uuid.parse("00000000-0000-0000-0000-000000000000"),
-    val transactionInstant: Instant,
+    val transactionInstant: Instant = Instant.DISTANT_PAST,
     val category: Category = Category.EXPENSE,
     val transactionType: TransactionType = TransactionType.EXPENSE,
     var amount: BigDecimal = BigDecimal.ZERO,

@@ -59,9 +59,9 @@ interface TransactionLocalDataSource {
     fun findByLedgerUuids(ledgerUuids: List<String>): List<TransactionEntity>
 
 
+    fun findEarliestByUserUuid(userUuid: String): TransactionEntity?
 
-
-
+    fun findLatestByUserUuid(userUuid: String): TransactionEntity?
 
 
 }

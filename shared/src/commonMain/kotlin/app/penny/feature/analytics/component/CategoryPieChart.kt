@@ -1,7 +1,6 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/analytics/chartAndTable/CategoryPieChart.kt
 package app.penny.feature.analytics.component
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.presentation.ui.components.SliderToggleButton
 import app.penny.presentation.ui.components.aayChart.baseComponents.model.LegendPosition
-import app.penny.presentation.ui.components.aayChart.donutChart.PieChart
+import app.penny.presentation.ui.components.aayChart.donutChart.DonutChart
 import app.penny.presentation.ui.components.aayChart.donutChart.model.PieChartData
 import app.penny.shared.SharedRes
 import dev.icerock.moko.resources.compose.stringResource
@@ -68,13 +66,18 @@ fun CategoryPieChart(
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            PieChart(
+            DonutChart(
                 modifier = Modifier
                     .width(400.dp)
                     .height(300.dp)
                     .padding(8.dp),
                 pieChartData = if (isIncome) incomePieChartData else expensePieChartData,
-                legendPosition = LegendPosition.BOTTOM
+                legendPosition = LegendPosition.BOTTOM,
+                centerTitle = if (isIncome) stringResource(SharedRes.strings.income) else stringResource(
+                    SharedRes.strings.expense
+                )
+
+
             )
         }
 

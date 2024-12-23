@@ -1,11 +1,14 @@
 // file: shared/src/commonMain/kotlin/app/penny/feature/transactions/TransactionViewModel.kt
 package app.penny.feature.transactions
 
+import app.penny.core.data.repository.StatisticRepository
 import app.penny.core.data.repository.TransactionRepository
+import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.model.GroupIdentifier
+import app.penny.core.domain.model.Summary
 import app.penny.core.domain.model.TransactionModel
-import app.penny.core.domain.model.valueObject.YearMonth
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -15,8 +18,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -25,24 +33,31 @@ import kotlin.uuid.ExperimentalUuidApi
  */
 class TransactionViewModel(
     private val transactionRepository: TransactionRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val statisticRepository: StatisticRepository,
+    private val userDataRepository: UserDataRepository
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(TransactionUiState())
     val uiState: StateFlow<TransactionUiState> = _uiState.asStateFlow()
 
 
-
     fun refreshData() {
         screenModelScope.launch {
             try {
                 // 获取当前用户
-                val user = userRepository.findCurrentUser()
+                val user = userDataRepository.getUser()
+
                 _uiState.update { it.copy(user = user) }
                 // 获取交易数据
                 fetchTransactions()
                 // 默认选择分组选项，例如按天分组
                 handleIntent(TransactionIntent.SelectGroupByOption(GroupByType.items[0].options[0]))
+
+                _uiState.value = _uiState.value.copy(
+                    totalSummary = statisticRepository.getUserTotalSummary(user),
+                )
+
             } catch (e: Exception) {
                 Logger.e("Initialization error: ${e.message}")
                 _uiState.update { it.copy(errorMessage = e.message ?: "未知错误") }
@@ -51,25 +66,8 @@ class TransactionViewModel(
     }
 
 
-
-
     init {
-        screenModelScope.launch {
-            try {
-                // 获取当前用户
-                val user = userRepository.findCurrentUser()
-                _uiState.update { it.copy(user = user) }
-
-                // 获取交易数据
-                fetchTransactions()
-
-                // 默认选择分组选项，例如按天分组
-                handleIntent(TransactionIntent.SelectGroupByOption(GroupByType.items[0].options[0]))
-            } catch (e: Exception) {
-                Logger.e("Initialization error: ${e.message}")
-                _uiState.update { it.copy(errorMessage = e.message ?: "未知错误") }
-            }
-        }
+        refreshData()
     }
 
     /**
@@ -99,9 +97,36 @@ class TransactionViewModel(
     /**
      * 选择日期
      */
+    @OptIn(ExperimentalUuidApi::class)
     private fun selectDate(date: LocalDate) {
-        _uiState.update { it.copy(selectedDate = date) }
-        Logger.d("Selected date: $date")
+        screenModelScope.launch { //fetch transactions for the selected date
+            _uiState.value = _uiState.value.copy(
+                selectedDate = date,
+                calendarViewSummaryByDate = _uiState.value.transactions.groupBy {
+                    it.transactionInstant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+                }.mapValues { entry ->
+                    val income = entry.value.filter { it.amount > BigDecimal.ZERO }
+                        .fold(BigDecimal.ZERO) { acc, transaction -> acc + transaction.amount }
+                    val expense = entry.value.filter { it.amount < BigDecimal.ZERO }
+                        .fold(BigDecimal.ZERO) { acc, transaction -> acc + transaction.amount.abs() }
+
+                    Summary(
+                        income = income,
+                        expense = expense,
+                        balance = income - expense
+                    )
+                },
+
+
+                calendarViewTransactionOfDate = transactionRepository.findByUser(
+                    user = userDataRepository.getUser()
+                ).filter {
+                    it.transactionInstant.toLocalDateTime(TimeZone.currentSystemDefault()).date == date
+                }
+            )
+
+
+        }
     }
 
 
@@ -111,8 +136,7 @@ class TransactionViewModel(
     private fun selectGroupByOption(groupByOption: GroupByType.GroupOption) {
         _uiState.update {
             it.copy(
-                selectedGroupByOption = groupByOption,
-                selectedGroupByType = when (groupByOption) {
+                selectedGroupByOption = groupByOption, selectedGroupByType = when (groupByOption) {
                     is GroupByType.Time.GroupOption -> GroupByType.Time
                     is GroupByType.Category.GroupOption -> GroupByType.Category
                 }
@@ -139,26 +163,22 @@ class TransactionViewModel(
         screenModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
             try {
-                val userUuid = _uiState.value.user?.uuid
-                if (userUuid != null) {
-                    val transactions = transactionRepository.findByUserUuid(userUuid)
-                    _uiState.update { it.copy(transactions = transactions, isLoading = false) }
-                    Logger.d("Fetched ${transactions.size} transactions")
-
-                    // 计算总收入、支出和结余
-                    calculateTotals(transactions)
-
-                    // 如果已选择分组选项，则重新分组
-                    _uiState.value.selectedGroupByOption?.let { doGroupBy(it) }
-                } else {
-                    _uiState.update { it.copy(isLoading = false, errorMessage = "用户未登录") }
-                    Logger.e("User UUID is null")
+                val transactions = transactionRepository.findByUser(
+                    user = userDataRepository.getUser()
+                )
+                _uiState.update {
+                    it.copy(
+                        transactions = transactions,
+                        isLoading = false
+                    )
                 }
+                Logger.d("Fetched ${transactions.size} transactions")
+                _uiState.value.selectedGroupByOption?.let { doGroupBy(it) }
+
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
-                        isLoading = false,
-                        errorMessage = e.message ?: "数据获取失败"
+                        isLoading = false, errorMessage = e.message ?: "数据获取失败"
                     )
                 }
                 Logger.e("Error fetching transactions: ${e.message}")
@@ -166,41 +186,6 @@ class TransactionViewModel(
         }
     }
 
-    /**
-     * 获取指定月份的交易数据
-     */
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun fetchTransactionsForMonth(yearMonth: YearMonth) {
-        screenModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = "") }
-            try {
-                val userUuid = _uiState.value.user?.uuid
-                if (userUuid != null) {
-                    val transactions =
-                        transactionRepository.findByUserAndYearMonth(userUuid, yearMonth)
-                    _uiState.update { it.copy(transactions = transactions, isLoading = false) }
-                    Logger.d("Fetched ${transactions.size} transactions for $yearMonth")
-
-                    // 计算总收入、支出和结余
-                    calculateTotals(transactions)
-
-                    // 重新分组
-                    _uiState.value.selectedGroupByOption?.let { doGroupBy(it) }
-                } else {
-                    _uiState.update { it.copy(isLoading = false, errorMessage = "用户未登录") }
-                    Logger.e("User UUID is null")
-                }
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = e.message ?: "数据获取失败"
-                    )
-                }
-                Logger.e("Error fetching transactions for month: ${e.message}")
-            }
-        }
-    }
 
     /**
      * 执行分组操作
@@ -216,99 +201,122 @@ class TransactionViewModel(
     }
 
     /**
-     * 按时间分组
+     * 按时间维度进行分组
      */
     private fun groupByTime(groupBy: GroupByType.Time.GroupOption): List<GroupedTransaction> {
         val transactions = _uiState.value.transactions
+
+        // 1) 根据交易的时间和分组方式 (Day, Week, Month, Season, Year)，
+        //    调用工厂方法创建 "TimeGroupIdentifier" 来作为分组键
         val groupedMap = transactions.groupBy { transaction ->
-            val zonedDateTime =
+            val zonedDateTime: LocalDateTime =
                 transaction.transactionInstant.toLocalDateTime(TimeZone.currentSystemDefault())
             when (groupBy) {
-                GroupByType.Time.GroupOption.Day ->
-                    "${zonedDateTime.year}-${
-                        zonedDateTime.monthNumber.toString().padStart(2, '0')
-                    }-${zonedDateTime.dayOfMonth.toString().padStart(2, '0')}"
+                GroupByType.Time.GroupOption.Day -> {
+                    GroupIdentifier.TimeGroupIdentifier(
+                        groupOption = groupBy,
+                        year = zonedDateTime.year,
+                        month = zonedDateTime.monthNumber,
+                        day = zonedDateTime.dayOfMonth
+                    )
+                }
 
                 GroupByType.Time.GroupOption.Week -> {
-                    val weekOfYear = ((zonedDateTime.dayOfYear - 1) / 7) + 1
-                    "${zonedDateTime.year}-W${weekOfYear.toString().padStart(2, '0')}"
+                    GroupIdentifier.TimeGroupIdentifier(
+                        groupOption = groupBy,
+                        year = zonedDateTime.year,
+                        weekOfYear = zonedDateTime.weekOfYear(),
+                    )
                 }
 
-                GroupByType.Time.GroupOption.Month ->
-                    "${zonedDateTime.year}-${
-                        zonedDateTime.monthNumber.toString().padStart(2, '0')
-                    }"
+                GroupByType.Time.GroupOption.Month -> {
+                    GroupIdentifier.TimeGroupIdentifier(
+                        groupOption = groupBy,
+                        year = zonedDateTime.year,
+                        month = zonedDateTime.monthNumber
+                    )
+                }
 
                 GroupByType.Time.GroupOption.Season -> {
-                    val season = when (zonedDateTime.monthNumber) {
-                        in 1..3 -> "Q1"
-                        in 4..6 -> "Q2"
-                        in 7..9 -> "Q3"
-                        else -> "Q4"
-                    }
-                    "${zonedDateTime.year}-$season"
+                    GroupIdentifier.TimeGroupIdentifier(
+                        groupOption = groupBy,
+                        year = zonedDateTime.year,
+                        quarter = (zonedDateTime.monthNumber - 1) / 3 + 1
+                    )
                 }
 
-                GroupByType.Time.GroupOption.Year -> "${zonedDateTime.year}"
+                GroupByType.Time.GroupOption.Year -> {
+                    GroupIdentifier.TimeGroupIdentifier(
+                        groupOption = groupBy, year = zonedDateTime.year
+                    )
+                }
             }
         }
 
-        val sortedGroups = groupedMap.entries.sortedByDescending { it.key }
-        return sortedGroups.map { (key, transactions) ->
+        // 2) 排序。这里示例中只是简单地根据 "displayString" 做倒序；你也可以改成先 year 再 month 再 day 的多级排序
+        val sortedGroups = groupedMap.entries.sortedByDescending { it.key.displayString }
+
+        // 3) 构造成 GroupedTransaction
+        return sortedGroups.map { (groupIdentifier, listOfTx) ->
+            // groupIdentifier 就是 "TimeGroupIdentifier"
+            // 如果你用工厂方法，类型是 GroupIdentifier，但其实际子类型是 TimeGroupIdentifier
             GroupedTransaction(
-                groupKey = key,
-                transactions = transactions.sortedByDescending { it.transactionInstant },
-                balance = calculateBalance(transactions),
-                income = calculateIncome(transactions),
-                expense = calculateExpense(transactions)
+                groupIdentifier = groupIdentifier,
+                transactions = listOfTx.sortedByDescending { it.transactionInstant },
+                summary = Summary(
+                    balance = calculateBalance(listOfTx),
+                    income = calculateIncome(listOfTx),
+                    expense = calculateExpense(listOfTx)
+                )
             )
         }
     }
+
 
     /**
      * 按类别分组
      */
-    private fun groupByCategory(groupBy: GroupByType.Category.GroupOption): List<GroupedTransaction> {
+    private fun groupByCategory(
+        groupBy: GroupByType.Category.GroupOption
+    ): List<GroupedTransaction> {
         val transactions = _uiState.value.transactions
+
+        // 1) 分组依据：根据 groupBy 来确定“一级类别”还是“二级类别”
         val groupedMap = transactions.groupBy { transaction ->
             when (groupBy) {
-                GroupByType.Category.GroupOption.Primary
-                    -> transaction.category.getLevel1Category().name
+                GroupByType.Category.GroupOption.Primary ->
+                    // 比如 getLevel1Category() 返回的是一个 Category 对象
+                    transaction.category.getLevel1Category()
 
-                GroupByType.Category.GroupOption.Secondary
-                    -> transaction.category.name
+                GroupByType.Category.GroupOption.Secondary ->
+                    // 自身 category
+                    transaction.category
             }
         }
 
-        val sortedGroups = groupedMap.entries.sortedByDescending { it.key }
-        return sortedGroups.map { (key, transactions) ->
-            GroupedTransaction(
-                groupKey = key,
-                transactions = transactions.sortedByDescending { it.transactionInstant },
-                balance = calculateBalance(transactions),
-                income = calculateIncome(transactions),
-                expense = calculateExpense(transactions)
-            )
+        // 2) 排序：根据分组后的“Category 对象”进行排序，
+        //    这里示例中使用 categoryName 做倒序排列
+        val sortedGroups = groupedMap.entries.sortedByDescending { entry ->
+            entry.key.name
         }
-    }
 
-    /**
-     * 按账本分组
-     */
-    @OptIn(ExperimentalUuidApi::class)
-    private fun groupByLedger(): List<GroupedTransaction> {
-        val transactions = _uiState.value.transactions
-        val groupedMap = transactions.groupBy { it.ledgerUuid.toString() }
-        val sortedGroups = groupedMap.entries.sortedByDescending { it.key }
-        return sortedGroups.map { (key, transactions) ->
+        // 3) 构建 GroupedTransaction：
+        //    - 使用 CategoryGroupIdentifier 来存储分组信息
+        return sortedGroups.map { (categoryObj, groupedTransactions) ->
             GroupedTransaction(
-                groupKey = key,
-                transactions = transactions.sortedByDescending { it.transactionInstant },
-                balance = calculateBalance(transactions),
-                income = calculateIncome(transactions),
-                expense = calculateExpense(transactions)
+                groupIdentifier = GroupIdentifier.CategoryGroupIdentifier(
+                    groupOption = groupBy, category = categoryObj
+                ),
+                transactions = groupedTransactions.sortedByDescending { it.transactionInstant },
+                summary = Summary(
+                    balance = calculateBalance(groupedTransactions),
+                    income = calculateIncome(groupedTransactions),
+                    expense = calculateExpense(groupedTransactions)
+                )
             )
         }
+
+
     }
 
     /**
@@ -340,21 +348,39 @@ class TransactionViewModel(
             }
     }
 
-    /**
-     * 计算整体总收入、总支出和结余
-     */
-    private fun calculateTotals(transactions: List<TransactionModel>) {
-        val totalIncome = calculateIncome(transactions)
-        val totalExpense = calculateExpense(transactions)
-        val totalBalance = totalIncome - totalExpense
+}
 
-        _uiState.update {
-            it.copy(
-                totalIncome = totalIncome,
-                totalExpense = totalExpense,
-                totalBalance = totalBalance
+
+/**
+ * 扩展函数：获取 LocalDateTime 对应年份中的第几周
+ */
+fun LocalDateTime.weekOfYear(): Int {
+    val firstDayOfYear = LocalDate(this.year, 1, 1) // 获取该年的第一天
+    val firstDayOfWeek = firstDayOfYear.dayOfWeek // 获取该年的第一天是星期几
+
+    // 计算该年的第一周的起始日期
+    val firstWeekStart = if (firstDayOfWeek == DayOfWeek.MONDAY) {
+        firstDayOfYear
+    } else {
+        // 找到第一个周一
+        firstDayOfYear.plus(
+            DatePeriod(
+                days = 8 - firstDayOfWeek.ordinal
             )
-        }
-        Logger.d("Calculated totals - Income: $totalIncome, Expense: $totalExpense, Balance: $totalBalance")
+        )
     }
+
+    // 当前日期的 LocalDate
+    val currentDate = this.date
+
+    // 如果当前日期早于第一周起始日期，则属于上一年的最后一周
+    if (currentDate < firstWeekStart) {
+        return 0 // 可以视为第 0 周，或根据需求调整
+    }
+
+    // 计算当前日期和第一周起始日期之间的天数差
+    val daysSinceFirstWeekStart = firstWeekStart.daysUntil(currentDate)
+
+    // 天数差除以 7，并加 1，计算出第几周
+    return (daysSinceFirstWeekStart / 7) + 1
 }

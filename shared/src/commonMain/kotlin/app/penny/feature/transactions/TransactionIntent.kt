@@ -7,6 +7,6 @@ import kotlinx.datetime.LocalDate
  */
 sealed class TransactionIntent {
     data class SelectGroupByOption(val groupByOption: GroupByType.GroupOption) : TransactionIntent()
-    object ToggleView : TransactionIntent()  // 切换视图（列表/日历）
+    data object ToggleView : TransactionIntent()  // 切换视图（列表/日历）
     data class SelectDate(val date: LocalDate) : TransactionIntent()  // 选择日期
 }

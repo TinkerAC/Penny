@@ -18,10 +18,8 @@ import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.feature.transactions.component.CalendarViewContent
 import app.penny.feature.transactions.component.ListViewContent
 import app.penny.feature.transactions.component.TransactionTopBar
-import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
-import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
@@ -71,18 +69,16 @@ class TransactionScreen : Screen {
             ) {
                 if (isCalendarView) {
                     CalendarViewContent(
-                        transactions = uiState.transactions,
                         currentYearMonth = currentMonth.value,
                         onDateSelected = { date ->
                             viewModel.handleIntent(TransactionIntent.SelectDate(date))
                         },
                         onMonthChange = { offset ->
                             currentMonth.value = currentMonth.value.plusMonths(offset)
-                        }
+                        }, uiState = uiState
                     )
                 } else {
                     ListViewContent(
-                        viewModel = viewModel,
                         uiState = uiState,
                     )
                 }

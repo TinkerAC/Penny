@@ -278,9 +278,13 @@
     <string name="lemon_yellow_theme">柠檬黄</string>
     <string name="custom_theme">自定义</string>
     <string name="set_to_default">设置为默认</string>
-    <string name ="select_year">选择年份</string>
-    <string name ="select_month">选择月份</string>
-    <string name ="select_date_range">选择日期范围</string>
+    <string name="select_year">选择年份</string>
+    <string name="select_month">选择月份</string>
+    <string name="select_date_range">选择日期范围</string>
 
-
+    <string name="ledgers">账本</string>
+    <string name="days">天</string>
+    <string name="transactions">记账笔数</string>
+    <string name="ledger_deleted_successfully">账本已成功删除</string>
+    <string name="can_not_delete_default_ledger">无法删除默认账本</string>
 </resources>

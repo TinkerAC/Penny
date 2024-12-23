@@ -10,7 +10,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import app.penny.presentation.ui.aay.aayChart.baseComponents.ChartDescription
 import app.penny.presentation.ui.components.aayChart.donutChart.model.PieChartData
-import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 internal fun PieChartDescriptionComposable(
@@ -31,7 +30,7 @@ internal fun PieChartDescriptionComposable(
         items(pieChartData) { details ->
             ChartDescription(
                 chartColor = details.color,
-                chartName =details.partName,
+                chartName = details.partName,
                 descriptionStyle = descriptionStyle,
             )
         }

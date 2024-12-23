@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,6 +64,14 @@ class ProfileScreen : Screen {
         val bottomSheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = true
         )
+
+
+
+        LaunchedEffect(Unit){
+            viewModel.refreshData()
+        }
+
+
 
         if (uiState.value.loggingModalVisible) {
             ModalBottomSheet(
@@ -157,15 +166,15 @@ fun UserInfoSection(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            StatisticItem(number = uiState.continuousCheckInDays, label = "Total Amount")
-            StatisticItem(number = uiState.totalTransactionDays, label = "Days")
-            StatisticItem(number = uiState.totalTransactionCount, label = "Transactions")
+            StatisticItem(number = uiState.ledgerCount, label = stringResource(SharedRes.strings.ledgers))
+            StatisticItem(number = uiState.totalTransactionDateSpan, label = stringResource(SharedRes.strings.days))
+            StatisticItem(number = uiState.totalTransactionCount, label = stringResource(SharedRes.strings.transactions))
         }
     }
 }
 
 @Composable
-fun StatisticItem(number: Int, label: String) {
+fun StatisticItem(number: Long, label: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

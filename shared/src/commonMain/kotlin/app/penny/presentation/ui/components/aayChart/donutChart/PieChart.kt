@@ -2,14 +2,12 @@ package app.penny.presentation.ui.components.aayChart.donutChart
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -18,34 +16,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.penny.presentation.ui.components.aayChart.baseComponents.model.LegendPosition
 import app.penny.presentation.ui.components.aayChart.donutChart.component.PieChartDescriptionComposable
 import app.penny.presentation.ui.components.aayChart.donutChart.component.draPieCircle
 import app.penny.presentation.ui.components.aayChart.donutChart.component.drawPedigreeChart
 import app.penny.presentation.ui.components.aayChart.donutChart.model.ChartTypes
 import app.penny.presentation.ui.components.aayChart.donutChart.model.PieChartData
+import kotlin.math.min
+import androidx.compose.animation.core.*
+import androidx.compose.ui.text.*
+import app.penny.presentation.ui.components.aayChart.baseComponents.model.LegendPosition
 import app.penny.presentation.ui.components.aayChart.utils.ChartDefaultValues
 import app.penny.presentation.ui.components.aayChart.utils.checkIfDataIsNegative
-import kotlin.math.min
-
 
 /**
  * Composable function to render a pie chart with an optional legend.
  *
  * @param modifier Modifier for configuring the layout and appearance of the pie chart.
  * @param pieChartData List of data for the pie chart, including labels and values.
- * @param animation Animation specification for the pie chart transitions (默认3秒线性动画).
- * @param textRatioStyle TextStyle for ratio text labels (默认 fontSize = 12sp).
- * @param outerCircularColor Color of the outer circular border (默认 Gray).
- * @param ratioLineColor Color of the lines connecting ratio labels to chart segments (默认 Gray).
- * @param descriptionStyle TextStyle for the legend text.
- * @param legendPosition Position of the legend (默认 LegendPosition.TOP) - 新增 RATIO_SIDE。
+ * @param animation Animation specification for the pie chart transitions (default is a 3-second linear animation).
+ * @param textRatioStyle TextStyle for configuring the appearance of ratio text labels (default font size is 12sp).
+ * @param outerCircularColor Color of the outer circular border of the pie chart (default is Gray).
+ * @param ratioLineColor Color of the lines connecting ratio labels to chart segments (default is Gray).
+ * @param descriptionStyle TextStyle for configuring the appearance of the chart description (legend) text.
+ * @param legendPosition Position of the legend within the chart (default is [LegendPosition.TOP]).
+ *
+ * @see PieChartData
+ * @see LegendPosition
  */
+
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun PieChart(
@@ -56,22 +58,23 @@ fun PieChart(
     outerCircularColor: Color = Color.Gray,
     ratioLineColor: Color = Color.Gray,
     descriptionStyle: TextStyle = TextStyle.Default,
-    legendPosition: LegendPosition = ChartDefaultValues.legendPosition, // 可能是 TOP, BOTTOM, DISAPPEAR, RATIO_SIDE
+    legendPosition: LegendPosition = ChartDefaultValues.legendPosition,
 ) {
-    // 计算每段比例 + 总和
     var totalSum = 0.0f
+    val pieValueWithRatio = mutableListOf<Float>()
     pieChartData.forEach {
         totalSum += it.data.toFloat()
     }
-    val pieValueWithRatio = pieChartData.map { 360 * it.data.toFloat() / totalSum }.toMutableList()
+    pieChartData.forEachIndexed { index, part ->
+        pieValueWithRatio.add(index, 360 * part.data.toFloat() / totalSum)
+    }
 
     val textMeasure = rememberTextMeasurer()
 
-    // 数据检查
-    checkIfDataIsNegative(data = pieChartData.map { it.data })
 
-    // 动画
-    val transitionProgress = remember(pieValueWithRatio) { Animatable(0F) }
+    checkIfDataIsNegative(data = pieChartData.map { it.data })
+    val transitionProgress = remember(pieValueWithRatio) { Animatable(initialValue = 0F) }
+
     LaunchedEffect(pieChartData) {
         transitionProgress.animateTo(1F, animationSpec = animation)
     }
@@ -83,13 +86,10 @@ fun PieChart(
     ) {
         when (legendPosition) {
             LegendPosition.TOP -> {
-                // 图例在上方
                 PieChartDescriptionComposable(
                     pieChartData = pieChartData,
                     descriptionStyle = descriptionStyle,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.5f)
+                    modifier = Modifier.fillMaxWidth().weight(0.5f)
                 )
                 drawPieChart(
                     modifier = Modifier.weight(1.5f),
@@ -100,13 +100,11 @@ fun PieChart(
                     pieValueWithRatio = pieValueWithRatio,
                     totalSum = totalSum,
                     transitionProgress = transitionProgress,
-                    textMeasure = textMeasure,
-                    showSideLegend = false // 该参数后面解释
+                    textMeasure = textMeasure
                 )
             }
 
             LegendPosition.BOTTOM -> {
-                // 图例在下方
                 drawPieChart(
                     modifier = Modifier.weight(1.5f),
                     pieChartData = pieChartData,
@@ -116,21 +114,17 @@ fun PieChart(
                     pieValueWithRatio = pieValueWithRatio,
                     totalSum = totalSum,
                     transitionProgress = transitionProgress,
-                    textMeasure = textMeasure,
-                    showSideLegend = false
+                    textMeasure = textMeasure
                 )
 
                 PieChartDescriptionComposable(
                     pieChartData = pieChartData,
                     descriptionStyle = descriptionStyle,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.5f)
+                    modifier = Modifier.fillMaxWidth().weight(0.5f)
                 )
             }
 
-            LegendPosition.DISAPPEAR -> {
-                // 不显示图例
+            else -> {
                 drawPieChart(
                     modifier = Modifier.weight(1.5f),
                     pieChartData = pieChartData,
@@ -140,31 +134,15 @@ fun PieChart(
                     pieValueWithRatio = pieValueWithRatio,
                     totalSum = totalSum,
                     transitionProgress = transitionProgress,
-                    textMeasure = textMeasure,
-                    showSideLegend = false
-                )
-            }
-
-            LegendPosition.RATIO_SIDE -> {
-                drawPieChart(
-                    modifier = Modifier
-                        .weight(1f), // 你可根据UI需求调整
-                    pieChartData = pieChartData,
-                    textRatioStyle = textRatioStyle,
-                    outerCircularColor = outerCircularColor,
-                    ratioLineColor = ratioLineColor,
-                    pieValueWithRatio = pieValueWithRatio,
-                    totalSum = totalSum,
-                    transitionProgress = transitionProgress,
-                    textMeasure = textMeasure,
-                    showSideLegend = true // 开启边上图例模式
+                    textMeasure = textMeasure
                 )
             }
         }
     }
+
 }
 
-
+@OptIn(ExperimentalTextApi::class)
 @Composable
 private fun drawPieChart(
     modifier: Modifier = Modifier,
@@ -176,21 +154,18 @@ private fun drawPieChart(
     totalSum: Float,
     transitionProgress: Animatable<Float, AnimationVector1D>,
     textMeasure: TextMeasurer,
-    showSideLegend: Boolean // 新增参数，是否把图例显示在百分比旁边
 ) {
-    val labelColor  = MaterialTheme.colorScheme.onSurface
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
             .drawBehind {
                 val canvasWidth = size.width
                 val canvasHeight = size.height
                 val minValue = min(canvasWidth, canvasHeight)
                     .coerceAtMost(canvasHeight / 2)
                     .coerceAtMost(canvasWidth / 2)
-                val arcWidth = (size.minDimension.dp.toPx() * 0.13f).coerceAtMost(minValue / 4)
+                val arcWidth =
+                    (size.minDimension.dp.toPx() * 0.13f).coerceAtMost(minValue / 4)
 
-                // 主体：绘制饼图(内含比例文字)
                 drawPedigreeChart(
                     pieValueWithRatio = pieValueWithRatio,
                     pieChartData = pieChartData,
@@ -201,16 +176,14 @@ private fun drawPieChart(
                     ratioLineColor = ratioLineColor,
                     arcWidth = arcWidth,
                     minValue = minValue,
-                    pieChart = ChartTypes.PIE_CHART,
-                    showSideLegend = showSideLegend,// 传给内部绘制逻辑,
-                    labelColor = labelColor
+                    pieChart = ChartTypes.PIE_CHART
                 )
-
-                // 外圈
+                //draw outer circle
                 draPieCircle(
                     circleColor = outerCircularColor,
                     radiusRatioCircle = (minValue / 2) + (arcWidth / 1.5f)
                 )
-            }
-    )
+
+            })
+
 }

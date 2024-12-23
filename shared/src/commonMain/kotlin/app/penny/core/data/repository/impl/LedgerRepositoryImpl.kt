@@ -6,6 +6,7 @@ import app.penny.core.data.model.toLedgerDto
 import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.LedgerModel
+import app.penny.core.domain.model.UserModel
 import app.penny.core.network.ApiClient
 import app.penny.servershared.dto.responseDto.UploadLedgerResponse
 import kotlinx.datetime.Instant
@@ -93,8 +94,8 @@ class LedgerRepositoryImpl(
         return ledgerLocalDataSource.findByUserUuid(userUuid.toString()).map { it.toModel() }
     }
 
-    override suspend fun countByUserUuid(userUuid: Uuid): Long {
-        return ledgerLocalDataSource.countByUserUuid(userUuid.toString())
+    override suspend fun countByUser(user: UserModel): Long {
+        return ledgerLocalDataSource.countByUserUuid(user.uuid.toString())
     }
 
     override suspend fun findByUserUuidAndUpdatedAtAfter(

@@ -97,3 +97,20 @@ SELECT * FROM transactionEntity WHERE ledger_uuid = ? ORDER BY transaction_date 
 
 findByLedgerUuids:
 SELECT * FROM transactionEntity WHERE ledger_uuid IN ?;
+
+
+findEarliestByUserUuid:
+SELECT transactionEntity.* FROM transactionEntity
+JOIN ledgerEntity ON transactionEntity.ledger_uuid = ledgerEntity.uuid
+WHERE ledgerEntity.user_uuid = ?
+ORDER BY transaction_date ASC
+LIMIT 1;
+
+
+
+findLatestByUserUuid:
+SELECT transactionEntity.* FROM transactionEntity
+JOIN ledgerEntity ON transactionEntity.ledger_uuid = ledgerEntity.uuid
+WHERE ledgerEntity.user_uuid = ?
+ORDER BY transaction_date DESC
+LIMIT 1;

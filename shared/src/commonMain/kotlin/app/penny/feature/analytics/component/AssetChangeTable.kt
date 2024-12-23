@@ -122,10 +122,10 @@ fun TableCell(
                 MaterialTheme.typography.bodyMedium,
             color = if (isBalance) {
                 if (text.toBigDecimal() >= BigDecimal.ZERO)
-                // 收入
+                // 收入颜色
                     Color(0xFF4CAF50)
                 else
-                // 支出
+                // 支出颜色
                     Color(0xFFF44336)
             } else {
 

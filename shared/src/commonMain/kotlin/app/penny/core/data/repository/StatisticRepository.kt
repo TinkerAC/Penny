@@ -2,7 +2,7 @@ package app.penny.core.data.repository
 
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.Summary
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import app.penny.core.domain.model.UserModel
 import kotlinx.datetime.Instant
 
 interface StatisticRepository {
@@ -11,15 +11,20 @@ interface StatisticRepository {
     suspend fun getTotalExpenseOfUser(userUuid: String): Double
 
 
-    suspend fun getTotalTransactionCount(): Int
+    suspend fun getTotalTransactionCountByUser(user:UserModel): Long
 
-    suspend fun getTransactionDateSpan(): Pair<String, String>
+    suspend fun getTransactionDateSpanDays(user: UserModel): Long
 
     suspend fun getSummary(
         ledgers: List<LedgerModel>?,
         startInstant: Instant? = null,
         endInstant: Instant? = null
     ): Summary
+
+    suspend fun getUserTotalSummary(user: UserModel): Summary
+
+
+
 
 
 }

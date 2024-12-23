@@ -3,10 +3,10 @@ package app.penny.di
 import app.cash.sqldelight.db.SqlDriver
 import app.penny.core.data.database.ChatMessageLocalDataSource
 import app.penny.core.data.database.LedgerLocalDataSource
-import app.penny.core.data.database.dataSourceImpl.LedgerLocalDataSourceImpl
 import app.penny.core.data.database.TransactionLocalDataSource
 import app.penny.core.data.database.UserLocalDataSource
 import app.penny.core.data.database.dataSourceImpl.ChatMessageLocalDataSourceImpl
+import app.penny.core.data.database.dataSourceImpl.LedgerLocalDataSourceImpl
 import app.penny.core.data.database.dataSourceImpl.TransactionLocalDataSourceImpl
 import app.penny.core.data.database.dataSourceImpl.UserLocalDataSourceImpl
 import app.penny.core.data.kvstore.TokenManager
@@ -58,6 +58,7 @@ import app.penny.feature.newLedger.NewLedgerViewModel
 import app.penny.feature.newTransaction.NewTransactionViewModel
 import app.penny.feature.profile.ProfileViewModel
 import app.penny.feature.setting.SettingViewModel
+import app.penny.feature.transactionDetail.TransactionDetailViewModel
 import app.penny.feature.transactions.TransactionViewModel
 import app.penny.presentation.viewmodel.MainViewModel
 import io.ktor.client.HttpClient
@@ -68,6 +69,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 fun commonModule() = module {
@@ -131,7 +133,7 @@ fun commonModule() = module {
     single<UserPreferenceRepository> { UserPreferenceRepositoryImpl(get()) }
 
 
-    single<StatisticRepository> { StatisticRepositoryImpl(get()) }
+    single<StatisticRepository> { StatisticRepositoryImpl(get(), get()) }
 
 
     //注入ApiClient
@@ -141,12 +143,10 @@ fun commonModule() = module {
     single {
         HttpClient(CIO) {
             install(ContentNegotiation) {
-                json(
-                    Json {
-                        ignoreUnknownKeys = true // 忽略未知字段
-                        isLenient = true // 宽松模式，支持非标准 JSON
-                    }
-                )
+                json(Json {
+                    ignoreUnknownKeys = true // 忽略未知字段
+                    isLenient = true // 宽松模式，支持非标准 JSON
+                })
             }
         }
     }
@@ -170,9 +170,11 @@ fun commonModule() = module {
         )
     }
 
-    factory { DeleteLedgerUseCase(
-        get(),get()
-    ) }
+    factory {
+        DeleteLedgerUseCase(
+            get(), get()
+        )
+    }
 
     factory { GetSummaryUseCase(get()) }
 
@@ -182,7 +184,7 @@ fun commonModule() = module {
     // 注入 ViewModel
 
     factory { SettingViewModel(get()) }
-    factory { (ledger: LedgerModel) -> LedgerDetailViewModel(ledger,get(),get()) }
+    factory { (ledger: LedgerModel) -> LedgerDetailViewModel(ledger, get(), get(), get()) }
 
 
     factory { NewTransactionViewModel(get(), get(), get()) }
@@ -201,12 +203,13 @@ fun commonModule() = module {
     }
 
 
+
     factory { AnalyticViewModel(get(), get(), get()) }
-    factory { TransactionViewModel(get(), get()) }
+    factory { TransactionViewModel(get(), get(), get(), get()) }
     factory { MainViewModel(get(), get()) }
     factory { MyLedgerViewModel(get(), get()) }
     factory { NewLedgerViewModel(get(), get()) }
-    factory { ProfileViewModel(get(), get(), get(), get(), get()) }
+    factory { ProfileViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 
     factory { MyLedgerViewModel(get(), get()) }
 
@@ -218,6 +221,8 @@ fun commonModule() = module {
             get(), get(), get()
         )
     }
+
+    factory { (transactionUuid: Uuid) -> TransactionDetailViewModel(transactionUuid, get()) }
 
 
 }

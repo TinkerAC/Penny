@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
@@ -21,20 +22,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.core.utils.getDaysInMonth
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import app.penny.feature.transactions.TransactionUiState
+import app.penny.presentation.ui.components.TransactionItem
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun CalendarViewContent(
-    transactions: List<TransactionModel>,
     currentYearMonth: YearMonth,
     onDateSelected: (LocalDate) -> Unit,
-    onMonthChange: (Long) -> Unit
+    onMonthChange: (Long) -> Unit,
+    uiState: TransactionUiState,
 ) {
     // 正确获取当月的总天数
     val daysInMonth = getDaysInMonth(currentYearMonth)
@@ -44,7 +43,7 @@ fun CalendarViewContent(
     val firstDayOfThisMonth = LocalDate(currentYearMonth.year, currentYearMonth.month, 1)
     val firstDayOfWeek = firstDayOfThisMonth.dayOfWeek.ordinal // Monday=0 ... Sunday=6
 
-    val dates = buildList<LocalDate?> {
+    val dates = buildList {
         repeat(firstDayOfWeek) { add(null) }
         for (day in 1..daysInMonth) {
             add(LocalDate(currentYearMonth.year, currentYearMonth.month, day))
@@ -54,15 +53,8 @@ fun CalendarViewContent(
         }
     }
 
-    val incomeExpensesByDate = transactions.groupBy {
-        it.transactionInstant.toLocalDateTime(TimeZone.currentSystemDefault()).date
-    }.mapValues { entry ->
-        val income = entry.value.filter { it.amount > BigDecimal.ZERO }
-            .fold(BigDecimal.ZERO) { acc, transaction -> acc + transaction.amount }
-        val expense = entry.value.filter { it.amount < BigDecimal.ZERO }
-            .fold(BigDecimal.ZERO) { acc, transaction -> acc + transaction.amount.abs() }
-        income to expense
-    }
+
+    val transactionOfSelectedDate = uiState.calendarViewTransactionOfDate
 
     Column(modifier = Modifier.fillMaxWidth()) {
         // 移动 CalendarHeader 到这里，确保每次 CalendarViewContent 都有头部
@@ -96,7 +88,6 @@ fun CalendarViewContent(
                         contentAlignment = Alignment.Center
                     ) {
                         if (date != null) {
-                            val incomeExpense = incomeExpensesByDate[date]
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center
@@ -106,14 +97,19 @@ fun CalendarViewContent(
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
-                                if (incomeExpense != null) {
+                                uiState.calendarViewSummaryByDate[date]?.income?.let {
                                     Text(
-                                        text = "收:${incomeExpense.first.toPlainString()}",
+                                        text =
+                                        it.toPlainString(),
+
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
+                                }
+                                uiState.calendarViewSummaryByDate[date]?.expense?.let {
                                     Text(
-                                        text = "支:${incomeExpense.second.toPlainString()}",
+                                        text =
+                                        it.toPlainString(),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -124,7 +120,21 @@ fun CalendarViewContent(
                 }
             }
         }
+        LazyColumn {
+            uiState.calendarViewTransactionOfDate.forEach { transaction ->
+                item {
+                    TransactionItem(
+                        transaction = transaction,
+                        onClick = {
+                            //todo:navigate to detail page
+                        }
+                    )
+                }
+            }
+        }
     }
+
+
 }
 
 @Composable

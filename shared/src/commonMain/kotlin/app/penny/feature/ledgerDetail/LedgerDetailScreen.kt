@@ -12,16 +12,22 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.LedgerModel
 import app.penny.feature.ledgerDetail.component.BalanceSummarySection
 import app.penny.feature.ledgerDetail.component.BasicInfoSection
 import app.penny.feature.ledgerDetail.component.LedgerCard
+import app.penny.getRawStringResource
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
@@ -44,15 +50,36 @@ class LedgerDetailScreen constructor(
 
     @Composable
     override fun Content() {
+        val snackbarHostState = remember { SnackbarHostState() }
+
         val viewModel = koinScreenModel<LedgerDetailViewModel> {
             parametersOf(ledger)
         }
+
 
         val uiState by viewModel.uiState.collectAsState()
 
         val rootNavigator = LocalNavigator.currentOrThrow
 
+        LaunchedEffect(Unit) {
+            viewModel.eventFlow.collect { event ->
+                when (event) {
+                    is LedgerDetailUiEvent.ShowSnackBar ->
+                        snackbarHostState.showSnackbar(
+                            message = getRawStringResource(event.message),
+                            duration = SnackbarDuration.Short
+                        )
+                }
+            }
+        }
+
         Scaffold(
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier = Modifier.padding(16.dp)
+                )
+            },
             topBar = {
                 SingleNavigateBackTopBar(
                     title = stringResource(SharedRes.strings.ledger_details),
@@ -83,9 +110,8 @@ class LedgerDetailScreen constructor(
                 ) {
                     Button(
                         onClick = {
+                            viewModel.handleIntent(LedgerDetailIntent.SaveLedger)
                             rootNavigator.pop()
-                            //TODO: save ledger
-
                         },
                         modifier = Modifier.weight(1f) // 使用 weight 让按钮平分宽度
                     ) {
@@ -93,8 +119,7 @@ class LedgerDetailScreen constructor(
                     }
                     Button(
                         onClick = {
-                            rootNavigator.pop()//TODO: delete ledger
-
+                            viewModel.handleIntent(LedgerDetailIntent.DeleteLedger)
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.error.copy(

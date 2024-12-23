@@ -35,9 +35,7 @@ class NewTransactionViewModel(
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(
-        NewTransactionUiState(
-
-        )
+        NewTransactionUiState()
     )
     val uiState: StateFlow<NewTransactionUiState> = _uiState.asStateFlow()
 
@@ -49,8 +47,8 @@ class NewTransactionViewModel(
     private val decimalMode =
         DecimalMode(20, roundingMode = RoundingMode.ROUND_HALF_CEILING, scale = 2)
 
-    init {
 
+    fun refreshData() {
         screenModelScope.launch {
             fetchLedgers()
             _uiState.value = _uiState.value.copy(
@@ -63,6 +61,12 @@ class NewTransactionViewModel(
                 }
             )
         }
+    }
+
+
+    init {
+
+        refreshData()
 
     }
 
@@ -75,6 +79,13 @@ class NewTransactionViewModel(
             is NewTransactionIntent.SelectParentCategory -> selectParentCategory(intent.category)
             is NewTransactionIntent.SelectSubCategory -> selectSubCategory(intent.category)
             NewTransactionIntent.ShowLedgerSelectDialog -> toggleLedgerSelectDialog()
+            NewTransactionIntent.HideNumPad -> {
+                _uiState.value = _uiState.value.copy(showNumPad = false)
+            }
+
+            NewTransactionIntent.ShowNumPad -> {
+                _uiState.value = _uiState.value.copy(showNumPad = true)
+            }
         }
     }
 
@@ -151,7 +162,7 @@ class NewTransactionViewModel(
     }
 
     private suspend fun fetchLedgers() {
-        val user= userDataRepository.getUser()
+        val user = userDataRepository.getUser()
         val ledgers = ledgerRepository.findByUserUuid(user.uuid)
         _uiState.value = _uiState.value.copy(ledgers = ledgers)
 
@@ -185,7 +196,10 @@ class NewTransactionViewModel(
                     insertTransaction()
                     _uiState.value = _uiState.value.copy(transactionCompleted = true)
                     screenModelScope.launch {
+                        // Show snackbar
                         _eventFlow.emit(NewTransactionUiEvent.ShowSnackBar("Transaction completed"))
+                        // hide num pad
+                        _uiState.value = _uiState.value.copy(showNumPad = false)
                         _eventFlow.emit(NewTransactionUiEvent.NavigateBack)
                     }
                 }

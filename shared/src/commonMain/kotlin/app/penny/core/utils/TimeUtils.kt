@@ -9,9 +9,12 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.nanoseconds
 
 object TimeUtils {
 
@@ -89,4 +92,11 @@ fun generateMonthSequence(startDate: LocalDate, endDate: LocalDate): List<YearMo
         }
     }
     return months
+}
+
+
+fun LocalDate.atEndOfDayIn(timeZone: TimeZone): Instant {
+    return this.atStartOfDayIn(timeZone).plus(
+        1.days
+    ).minus(1.nanoseconds)
 }

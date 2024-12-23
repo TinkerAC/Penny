@@ -56,9 +56,9 @@
     <string name="version">Version</string>
     <string name="github">GitHub</string>
     <string name="no_data">No data</string>
-    <string name="income_abbr">Inc</string>
-    <string name="expense_abbr">Exp</string>
-    <string name="balance_abbr">Bal</string>
+    <string name="income_abbr">Inc.</string>
+    <string name="expense_abbr">Exp.</string>
+    <string name="balance_abbr">Bal.</string>
     <string name="income_expense_trend">Income vs Expense</string>
     <string name="asset_daily_change">Daily Change</string>
     <string name="summary_recent">Recent</string>
@@ -297,9 +297,15 @@
     <string name="sky_blue_theme">Sky</string>
     <string name="lemon_yellow_theme">Lemon</string>
     <string name="custom_theme">Custom</string>
-    <string name ="set_to_default">Set to default</string>
-    <string name ="select_year">Select Year</string>
-    <string name ="select_month">Select Month</string>
-    <string name ="select_date_range">Select Date Range</string>
+    <string name="set_to_default">Set to default</string>
+    <string name="select_year">Select Year</string>
+    <string name="select_month">Select Month</string>
+    <string name="select_date_range">Select Date Range</string>
+    <string name="ledgers">Ledgers</string>
+    <string name="days">Days</string>
+    <string name="transactions">Transactions</string>
+
+    <string name="ledger_deleted_successfully">Ledger deleted successfully</string>
+    <string name="can_not_delete_default_ledger">Can not delete default ledger</string>
 
 </resources>

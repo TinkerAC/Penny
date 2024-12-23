@@ -1,5 +1,6 @@
 package app.penny.presentation.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,16 +22,21 @@ import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.TransactionModel
 import app.penny.presentation.utils.formatAmount
 import app.penny.presentation.utils.formatTransactionTime
-
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
-fun TransactionItem(transaction: TransactionModel) {
+fun TransactionItem(
+    transaction: TransactionModel,
+    onClick: () -> Unit = { }
+
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 8.dp),
+            .padding(vertical = 4.dp, horizontal = 8.dp).clickable(
+                onClick = onClick
+            ),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant

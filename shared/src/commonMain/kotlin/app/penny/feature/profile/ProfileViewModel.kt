@@ -1,6 +1,9 @@
 package app.penny.feature.profile
 
 import app.penny.core.data.repository.AuthRepository
+import app.penny.core.data.repository.LedgerRepository
+import app.penny.core.data.repository.StatisticRepository
+import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.exception.LoginException
@@ -24,8 +27,12 @@ class ProfileViewModel(
     private val registerUseCase: RegisterUseCase,
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
+    private val statisticRepository: StatisticRepository,
+    private val transactionRepository: TransactionRepository,
+    private val ledgerRepository: LedgerRepository
 
-    ) : ScreenModel {
+
+) : ScreenModel {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
@@ -35,10 +42,18 @@ class ProfileViewModel(
         screenModelScope.launch {
             fetchProfileStatistics()
             _uiState.value = _uiState.value.copy(
-                isLoggedIn = authRepository.isLoggedIn()
+                isLoggedIn = authRepository.isLoggedIn(),
             )
         }
     }
+
+
+    fun refreshData() {
+        screenModelScope.launch {
+            fetchProfileStatistics()
+        }
+    }
+
 
     fun handleIntent(intent: ProfileIntent) {
         when (intent) {
@@ -192,6 +207,7 @@ class ProfileViewModel(
         )
     }
 
+
     private fun dismissLoginModal() {
         _uiState.value = _uiState.value.copy(
             loggingModalVisible = false,
@@ -199,16 +215,17 @@ class ProfileViewModel(
         )
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     private suspend fun fetchProfileStatistics() {
         _uiState.value = _uiState.value.copy(isLoading = true)
+
+        val user = userDataRepository.getUser()
         _uiState.value = _uiState.value.copy(
-            userUuid = userDataRepository.getUser().uuid,
+            user = user,
             email = userDataRepository.getUserEmailOrNull(),
             username = userDataRepository.getUserNameOrNull(),
-            continuousCheckInDays = 5,   // TODO: 从业务逻辑中获取实际数据
-            totalTransactionDays = 30,   // TODO: 从业务逻辑中获取实际数据
-            totalTransactionCount = 100, // TODO: 从业务逻辑中获取实际数据
+            totalTransactionDateSpan = statisticRepository.getTransactionDateSpanDays(user),
+            ledgerCount = ledgerRepository.countByUser(user),
+            totalTransactionCount = statisticRepository.getTotalTransactionCountByUser(user),
             isLoading = false
         )
     }

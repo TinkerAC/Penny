@@ -125,8 +125,19 @@ class TransactionLocalDataSourceImpl(
     }
 
 
-
     override fun findByLedgerUuids(ledgerUuids: List<String>): List<TransactionEntity> {
         return transactionsQueries.findByLedgerUuids(ledgerUuids).executeAsList()
     }
+
+
+    override fun findEarliestByUserUuid(userUuid: String): TransactionEntity? {
+        return transactionsQueries.findEarliestByUserUuid(userUuid).executeAsOneOrNull()
+    }
+
+    override fun findLatestByUserUuid(userUuid: String): TransactionEntity? {
+        return transactionsQueries.findLatestByUserUuid(userUuid).executeAsOneOrNull()
+    }
 }
+
+
+

@@ -1,6 +1,7 @@
 package app.penny.core.data.repository
 
 import app.penny.core.domain.model.LedgerModel
+import app.penny.core.domain.model.UserModel
 import app.penny.servershared.dto.responseDto.UploadLedgerResponse
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
@@ -20,7 +21,7 @@ interface LedgerRepository {
     suspend fun findByUserUuid(userUuid: Uuid): List<LedgerModel>
 
 
-    suspend fun countByUserUuid(userUuid: Uuid): Long
+    suspend fun countByUser(user:UserModel): Long
 
     suspend fun countByUserUuidAndUpdatedAtAfter(
         userUuid: Uuid,

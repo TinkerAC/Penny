@@ -27,7 +27,6 @@ class AnalyticScreen : Screen {
         val viewModel = koinScreenModel<AnalyticViewModel>()
         val uiState by viewModel.uiState.collectAsState()
 
-
         LaunchedEffect(Unit) {
             viewModel.refreshData()
         }

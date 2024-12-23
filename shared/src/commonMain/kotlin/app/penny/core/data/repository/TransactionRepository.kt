@@ -3,6 +3,7 @@ package app.penny.core.data.repository
 
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
+import app.penny.core.domain.model.UserModel
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.servershared.dto.responseDto.DownloadTransactionResponse
 import kotlinx.datetime.Instant
@@ -51,7 +52,7 @@ interface TransactionRepository {
     ): DownloadTransactionResponse
 
 
-    suspend fun findByUserUuid(userUuid: Uuid): List<TransactionModel>
+    suspend fun findByUser(user:UserModel): List<TransactionModel>
 
 
     suspend fun findByUserAndYearMonth(
@@ -70,5 +71,8 @@ interface TransactionRepository {
         startInstant: Instant,
         endInstant: Instant
     ): List<TransactionModel>
+
+
+
 
 }

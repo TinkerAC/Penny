@@ -20,17 +20,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.penny.feature.dashBoard.DashboardUiState
 import app.penny.feature.dashBoard.RefreshIndicatorState
+import app.penny.feature.transactionDetail.TransactionDetailScreen
 import app.penny.presentation.ui.components.TransactionItem
 import app.penny.shared.SharedRes
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
+import org.koin.core.parameter.parametersOf
+import kotlin.uuid.ExperimentalUuidApi
 
-
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun BottomSection(
     uiState: DashboardUiState,
     modifier: Modifier = Modifier
 ) {
+
+    val rootNavigator = LocalNavigator.currentOrThrow
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -83,7 +90,17 @@ fun BottomSection(
         } else {
             // 显示交易列表
             uiState.recentTransactions.forEach { transaction ->
-                TransactionItem(transaction)
+                TransactionItem(
+                    transaction = transaction,
+                    onClick = {
+                        rootNavigator.push(
+                            TransactionDetailScreen(
+                                transactionUuid = transaction.uuid
+                            )
+                        )
+                    }
+                )
+
             }
         }
     }

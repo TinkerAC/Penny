@@ -8,6 +8,7 @@ import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
+import app.penny.core.domain.model.UserModel
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.core.network.ApiClient
 import app.penny.servershared.dto.responseDto.DownloadTransactionResponse
@@ -130,8 +131,8 @@ class TransactionRepositoryImpl(
     }
 
 
-    override suspend fun findByUserUuid(userUuid: Uuid): List<TransactionModel> {
-        return transactionLocalDataSource.findByUserUuid(userUuid.toString())
+    override suspend fun findByUser(user: UserModel): List<TransactionModel> {
+        return transactionLocalDataSource.findByUserUuid(user.uuid.toString())
             .map { it.toModel() }
     }
 

@@ -202,7 +202,6 @@ private fun ActionPendingContent(
                         }
                     )
                 }
-
                 FieldType.DATE -> {
                     DatePickerField(
                         label = field.label,

@@ -268,10 +268,10 @@ class AnalyticViewModel(
             AnalyticTab.Custom -> {
                 // 自定义时间范围，根据跨度智能选择
                 val days = startDate.daysUntil(endDate)
-                when {
-                    days in 0..15 -> GroupingStrategy.DAILY
-                    days in 16..31 -> GroupingStrategy.BI_DAILY
-                    days in 32..365 -> GroupingStrategy.MONTHLY
+                when (days) {
+                    in 0..15 -> GroupingStrategy.DAILY
+                    in 16..31 -> GroupingStrategy.BI_DAILY
+                    in 32..365 -> GroupingStrategy.MONTHLY
                     else -> GroupingStrategy.YEARLY
                 }
             }

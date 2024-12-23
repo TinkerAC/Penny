@@ -2,7 +2,6 @@
 // file: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/newTransaction/NewTransactionScreen.kt
 package app.penny.feature.newTransaction
 
-import app.penny.feature.newTransaction.component.NewTransactionTopBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -25,9 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -35,6 +31,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import app.penny.core.domain.enum.Category
 import app.penny.core.domain.enum.TransactionType
 import app.penny.feature.newTransaction.component.CategorySelector
+import app.penny.feature.newTransaction.component.NewTransactionTopBar
 import app.penny.feature.newTransaction.component.NumPad
 import app.penny.presentation.ui.components.LedgerSelectDialog
 import app.penny.shared.SharedRes
@@ -66,7 +63,6 @@ class NewTransactionScreen : Screen, ScreenTransition {
         val tabs = TransactionType.entries.map { it.name }
         Logger.d { "Tabs: $tabs" }
 
-        var showNumPad by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
             viewModel.eventFlow.collect { event ->
@@ -100,7 +96,9 @@ class NewTransactionScreen : Screen, ScreenTransition {
             },
 
             floatingActionButton = {
-                FloatingActionButton(onClick = { showNumPad = true }) {
+                FloatingActionButton(onClick = {
+                    viewModel.handleIntent(NewTransactionIntent.ShowNumPad)
+                }) {
                     Icon(
                         imageVector = Icons.Default.Keyboard,
                         contentDescription = stringResource(SharedRes.strings.show_numpad)
@@ -155,9 +153,11 @@ class NewTransactionScreen : Screen, ScreenTransition {
 
 
         // 使用 ModalBottomSheet 来展示 Numpad
-        if (showNumPad) {
+        if (uiState.showNumPad) {
             ModalBottomSheet(
-                onDismissRequest = { showNumPad = false },
+                onDismissRequest = {
+                    viewModel.handleIntent(NewTransactionIntent.HideNumPad)
+                },
                 sheetState = rememberModalBottomSheetState(
                     skipPartiallyExpanded = true
                 ),
@@ -170,7 +170,9 @@ class NewTransactionScreen : Screen, ScreenTransition {
                     onRemarkChanged = viewModel::onRemarkChanged,
                     onNumPadButtonClicked = viewModel::onNumPadButtonClicked,
                     onDoneButtonClicked = viewModel::onDoneButtonClicked,
-                    onCloseClicked = { showNumPad = false }
+                    onCloseClicked = {
+                        viewModel.handleIntent(NewTransactionIntent.HideNumPad)
+                    }
                 )
             }
         }

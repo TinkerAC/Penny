@@ -53,9 +53,9 @@ class DashboardViewModel(
             _uiState.update {
                 it.copy(
                     recentTransactions = recentTransactions,
-                    incomeOfMonth = summary.totalIncome,
-                    expenseOfMonth = summary.totalExpense,
-                    balanceOfMonth = summary.totalBalance
+                    incomeOfMonth = summary.income,
+                    expenseOfMonth = summary.expense,
+                    balanceOfMonth = summary.balance
                 )
             }
         }

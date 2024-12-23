@@ -27,6 +27,10 @@ data class NewTransactionUiState(
     val selectedSubCategory: Category? = null,
 
     // 添加 NumPad 的状态属性
+
+    var showNumPad: Boolean = false,
+
+
     val operand1: String = "0.00",
     val operator: String = "",
     val operand2: String = "",

@@ -11,4 +11,5 @@ data class LedgerDetailUiState(
     val totalIncome: BigDecimal = BigDecimal.ZERO,
     val totalExpense: BigDecimal = BigDecimal.ZERO,
     val balance: BigDecimal = BigDecimal.ZERO,
+    val ledgerName: String = ledger.name
 )

@@ -11,4 +11,6 @@ sealed class NewTransactionIntent {
     data object ShowLedgerSelectDialog : NewTransactionIntent()
     data class SelectParentCategory(val category: Category) : NewTransactionIntent()
     data class SelectSubCategory(val category: Category) : NewTransactionIntent()
+    data object ShowNumPad : NewTransactionIntent()
+    data object HideNumPad : NewTransactionIntent()
 }

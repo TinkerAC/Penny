@@ -1,6 +1,8 @@
 // File: shared/src/commonMain/kotlin/app/penny/feature/transactions/TransactionUiState.kt
 package app.penny.feature.transactions
 
+import app.penny.core.domain.model.GroupIdentifier
+import app.penny.core.domain.model.Summary
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.UserModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
@@ -19,13 +21,19 @@ data class TransactionUiState(
     val sharedPopUpVisible: Boolean = false,
     val groupByOptions: List<GroupByType> = GroupByType.items,
     val groupedTransactions: List<GroupedTransaction> = emptyList(),
-    val isCalendarView: Boolean = false, // 是否为日历视图
-    val selectedDate: LocalDate? = null, // 当前选中的日期
+    val isCalendarView: Boolean = false,
+    val selectedDate: LocalDate? = null,
+    val calendarViewTransactionOfDate: List<TransactionModel> = emptyList(),
+    val calendarViewSummaryByDate: Map<LocalDate, Summary> = emptyMap(),
 
     // 新增字段
-    val totalIncome: BigDecimal = BigDecimal.ZERO,
-    val totalExpense: BigDecimal = BigDecimal.ZERO,
-    val totalBalance: BigDecimal = totalIncome - totalExpense
+    var totalSummary: Summary = Summary(
+        balance = BigDecimal.ZERO,
+        income = BigDecimal.ZERO,
+        expense = BigDecimal.ZERO
+    )
+
+
 )
 
 sealed class GroupByType(val displayName: String) {
@@ -33,6 +41,7 @@ sealed class GroupByType(val displayName: String) {
 
     data object Time : GroupByType("Time") {
         sealed class GroupOption(displayText: String) : GroupByType.GroupOption(displayText) {
+
             data object Day : GroupOption("Day")
             data object Week : GroupOption("Week")
             data object Month : GroupOption("Month")
@@ -69,9 +78,18 @@ sealed class GroupByType(val displayName: String) {
 }
 
 data class GroupedTransaction(
-    val groupKey:String,
+    val groupIdentifier: GroupIdentifier,
     val transactions: List<TransactionModel>,
-    val balance: BigDecimal,
-    val income: BigDecimal,
-    val expense: BigDecimal
+    val summary: Summary
 )
+
+
+sealed class GroupKey {
+    data class Time(
+        val groupByOption: GroupByType.Time.GroupOption,
+    ) : GroupKey()
+
+    data class Category(
+        val category: app.penny.core.domain.enum.Category
+    ) : GroupKey()
+}

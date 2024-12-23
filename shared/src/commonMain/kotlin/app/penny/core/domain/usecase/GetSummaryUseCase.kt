@@ -39,9 +39,9 @@ class GetSummaryUseCase(
 
 
         return Summary(
-            totalIncome = totalIncome,
-            totalExpense = totalExpense,
-            totalBalance = totalIncome - totalExpense
+            income = totalIncome,
+            expense = totalExpense,
+            balance = totalIncome - totalExpense
         )
 
     }

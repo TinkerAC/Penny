@@ -2,7 +2,6 @@ package app.penny.presentation.ui.components.aayChart.donutChart
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +20,7 @@ import app.penny.presentation.ui.components.aayChart.donutChart.model.PieChartDa
 import app.penny.presentation.ui.components.aayChart.donutChart.model.ChartTypes
 import app.penny.presentation.ui.components.aayChart.utils.ChartDefaultValues
 import app.penny.presentation.ui.components.aayChart.utils.checkIfDataIsNegative
+
 import kotlin.math.min
 /**
  * Composable function to render a donut chart with an optional legend.
@@ -148,7 +148,9 @@ fun DonutChart(
                 )
             }
 
-            LegendPosition.RATIO_SIDE -> throw IllegalArgumentException("Donut chart does not support RATIO_SIDE legend position")
+            LegendPosition.RATIO_SIDE -> {
+                throw NotImplementedError("LegendPosition.RATIO_SIDE is not implemented yet")
+            }
         }
 
 
@@ -173,8 +175,6 @@ private fun drawDonutChart(
     totalSum: Float,
     transitionProgress: Animatable<Float, AnimationVector1D>,
 ) {
-
-    val labelColor = MaterialTheme.colorScheme.onSurface
     Box(
         modifier = modifier.fillMaxSize()
             .drawBehind {
@@ -204,8 +204,7 @@ private fun drawDonutChart(
                     ratioLineColor = ratioLineColor,
                     arcWidth = arcWidth,
                     minValue = minValue,
-                    pieChart = ChartTypes.DONUT_CHART,
-                    labelColor = labelColor
+                    pieChart = ChartTypes.DONUT_CHART
                 )
                 //draw outer circle
                 draPieCircle(
