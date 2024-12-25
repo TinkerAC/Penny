@@ -172,7 +172,8 @@ class NewTransactionScreen : Screen, ScreenTransition {
                     onDoneButtonClicked = viewModel::onDoneButtonClicked,
                     onCloseClicked = {
                         viewModel.handleIntent(NewTransactionIntent.HideNumPad)
-                    }
+                    },
+                    currentLedger = uiState.selectedLedger!!,
                 )
             }
         }

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material3.DropdownMenu
@@ -103,7 +102,7 @@ fun GroupFilterChipsRow(
             .background(MaterialTheme.colorScheme.surfaceVariant),
         horizontalArrangement = Arrangement.Start,
 
-    ) {
+        ) {
         GroupByType.items.forEach { groupByType ->
             Box {
                 FilterChip(
@@ -114,11 +113,14 @@ fun GroupFilterChipsRow(
                     },
                     label = {
                         Text(
-                            text = if (selectedGroupByType == groupByType) {
-                                selectedGroupByOption.displayText
-                            } else {
-                                groupByType.displayName
-                            },
+                            text =
+                            stringResource(
+                                if (selectedGroupByType == groupByType) {
+                                    selectedGroupByOption.displayText
+                                } else {
+                                    groupByType.displayName
+                                }
+                            ),
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
@@ -161,7 +163,7 @@ fun GroupFilterChipsRow(
                                             modifier = Modifier.padding(end = 8.dp)
                                         )
                                     }
-                                    Text(text = option.displayText)
+                                    Text(text = stringResource(option.displayText))
                                 }
                             },
                             onClick = {

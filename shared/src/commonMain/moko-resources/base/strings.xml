@@ -307,5 +307,29 @@
 
     <string name="ledger_deleted_successfully">Ledger deleted successfully</string>
     <string name="can_not_delete_default_ledger">Can not delete default ledger</string>
+    <string name="transaction_details">Transaction Details</string>
+
+    <string name="time">Time</string>
+    <string name="transaction_type">Transaction Type</string>
+    <string name="transaction_saved_successfully">Transaction saved successfully</string>
+    <string name="transaction_deleted_successfully">Transaction deleted successfully</string>
+    <string name="failed_to_save_transaction">Failed to save transaction</string>
+    <string name="failed_to_delete_transaction">Failed to delete transaction</string>
+    <string name="time_field_is_read_only">Time field is read only</string>
+    <string name="ledger_field_is_read_only">Ledger field is read only</string>
+    <string name="invalid_amount_format">Invalid Amount Format</string>
+    <string name="amount_must_be_positive">Amount must be positive</string>
+
+    <string name="group_by_time">Time</string>
+    <string name="group_by_category">Category</string>
+    <string name="group_by_day">Day</string>
+    <string name="group_by_month">Month</string>
+    <string name="group_by_year">Year</string>
+    <string name="group_by_week">Week</string>
+    <string name="group_by_season">Season</string>
+
+    <string name="group_by_primary_category">Primary</string>
+    <string name="group_by_secondary_category">Secondary</string>
+
 
 </resources>

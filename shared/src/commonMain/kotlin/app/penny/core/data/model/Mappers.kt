@@ -79,6 +79,7 @@ fun TransactionModel.toEntity(): TransactionEntity {
 @OptIn(ExperimentalUuidApi::class)
 fun TransactionEntity.toModel(): TransactionModel {
     return TransactionModel(
+        uuid = Uuid.parse(uuid),
         ledgerUuid = Uuid.parse(ledger_uuid),
         transactionInstant = Instant.fromEpochSeconds(transaction_date),
         category = Category.valueOf(category_name),

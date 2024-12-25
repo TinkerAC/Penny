@@ -222,7 +222,7 @@ fun commonModule() = module {
         )
     }
 
-    factory { (transactionUuid: Uuid) -> TransactionDetailViewModel(transactionUuid, get()) }
+    factory { (transactionUuid: Uuid) -> TransactionDetailViewModel(transactionUuid, get(), get()) }
 
 
 }

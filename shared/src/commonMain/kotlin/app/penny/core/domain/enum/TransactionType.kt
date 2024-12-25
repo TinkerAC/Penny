@@ -1,8 +1,15 @@
 package app.penny.core.domain.enum
 
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.StringResource
+
 enum class TransactionType(
-    val value: String,
+    val displayName: StringResource
 ) {
-    EXPENSE("EXPENSE"),
-    INCOME("INCOME"),
+    EXPENSE(
+        SharedRes.strings.expense
+    ),
+    INCOME(
+        SharedRes.strings.income
+    ),
 }

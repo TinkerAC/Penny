@@ -287,4 +287,32 @@
     <string name="transactions">记账笔数</string>
     <string name="ledger_deleted_successfully">账本已成功删除</string>
     <string name="can_not_delete_default_ledger">无法删除默认账本</string>
+    <string name="transaction_details">交易详情</string>
+
+    <string name="time">时间</string>
+    <string name="transaction_type">交易类型</string>
+
+    <string name="transaction_saved_successfully">交易已成功保存</string>
+    <string name="transaction_deleted_successfully">交易已成功删除</string>
+    <string name="failed_to_save_transaction">无法保存交易</string>
+    <string name="failed_to_delete_transaction">无法删除交易</string>
+    <string name="time_field_is_read_only">时间字段只读</string>
+    <string name="ledger_field_is_read_only">账本字段只读</string>
+
+    <string name="invalid_amount_format">金额格式无效</string>
+    <string name="amount_must_be_positive">金额必须为正数</string>
+
+
+    <string name="group_by_time">时间</string>
+    <string name="group_by_category">分类</string>
+    <string name="group_by_day">日</string>
+    <string name="group_by_month">月</string>
+    <string name="group_by_year">年</string>
+    <string name="group_by_week">周</string>
+    <string name="group_by_season">季度</string>
+
+    <string name="group_by_primary_category">一级分类</string>
+    <string name="group_by_secondary_category">二级分类</string>
+
+
 </resources>

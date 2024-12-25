@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Backspace
 import androidx.compose.material.icons.filled.KeyboardHide
@@ -32,12 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.penny.core.domain.model.LedgerModel
 import app.penny.shared.SharedRes
 import dev.icerock.moko.resources.compose.stringResource
 
 
 @Composable
 fun NumPad(
+    currentLedger: LedgerModel,
     amountText: String,
     remarkText: String,
     doneButtonState: DoneButtonState,
@@ -80,7 +81,7 @@ fun NumPad(
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "CNY $amountText",
+                text = "${currentLedger.currency.currencyCode} $amountText",
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.End

@@ -5,7 +5,9 @@ import app.penny.core.domain.model.GroupIdentifier
 import app.penny.core.domain.model.Summary
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.UserModel
+import app.penny.shared.SharedRes
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import dev.icerock.moko.resources.StringResource
 import kotlinx.datetime.LocalDate
 
 /**
@@ -36,17 +38,22 @@ data class TransactionUiState(
 
 )
 
-sealed class GroupByType(val displayName: String) {
+sealed class GroupByType(
+    val displayName: StringResource
+) {
     abstract val options: List<GroupOption>
 
-    data object Time : GroupByType("Time") {
-        sealed class GroupOption(displayText: String) : GroupByType.GroupOption(displayText) {
+    data object Time : GroupByType(SharedRes.strings.group_by_time) {
+        sealed class GroupOption(
+            displayText:
+            StringResource
+        ) : GroupByType.GroupOption(displayText) {
 
-            data object Day : GroupOption("Day")
-            data object Week : GroupOption("Week")
-            data object Month : GroupOption("Month")
-            data object Season : GroupOption("Season")
-            data object Year : GroupOption("Year")
+            data object Day : GroupOption(SharedRes.strings.group_by_day)
+            data object Week : GroupOption(SharedRes.strings.group_by_week)
+            data object Month : GroupOption(SharedRes.strings.group_by_month)
+            data object Season : GroupOption(SharedRes.strings.group_by_season)
+            data object Year : GroupOption(SharedRes.strings.group_by_year)
 
             companion object {
                 val items = listOf(Day, Week, Month, Season, Year)
@@ -56,10 +63,11 @@ sealed class GroupByType(val displayName: String) {
         override val options: List<GroupOption> = GroupOption.items
     }
 
-    data object Category : GroupByType("Category") {
-        sealed class GroupOption(displayText: String) : GroupByType.GroupOption(displayText) {
-            data object Primary : GroupOption("Primary")
-            data object Secondary : GroupOption("Secondary")
+    data object Category : GroupByType(SharedRes.strings.group_by_category) {
+        sealed class GroupOption(displayText: StringResource) :
+            GroupByType.GroupOption(displayText) {
+            data object Primary : GroupOption(SharedRes.strings.group_by_primary_category)
+            data object Secondary : GroupOption(SharedRes.strings.group_by_secondary_category)
 
             companion object {
                 val items = listOf(Primary, Secondary)
@@ -70,7 +78,7 @@ sealed class GroupByType(val displayName: String) {
     }
 
     //base GroupOption class, inherited by GroupOption of each GroupByType
-    sealed class GroupOption(val displayText: String)
+    sealed class GroupOption(val displayText: StringResource)
 
     companion object {
         val items: List<GroupByType> = listOf(Time, Category)

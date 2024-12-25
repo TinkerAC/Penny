@@ -53,12 +53,12 @@ class TransactionRepositoryImpl(
         )
     }
 
-    override suspend fun updateByUuid(transactionUuid: Uuid, transaction: TransactionModel) {
-        TODO("Not yet implemented")
+    override suspend fun update(transaction: TransactionModel) {
+        transactionLocalDataSource.updateByUuid(transaction.toEntity())
     }
 
     override suspend fun deleteByUuid(transactionUuid: Uuid) {
-        TODO("Not yet implemented")
+        transactionLocalDataSource.deleteByUuid(transactionUuid.toString())
     }
 
     override suspend fun findByLedgerUuid(ledgerUuid: Uuid): List<TransactionModel> {

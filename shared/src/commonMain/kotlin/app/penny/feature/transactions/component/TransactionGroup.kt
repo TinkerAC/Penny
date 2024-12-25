@@ -2,6 +2,7 @@
 package app.penny.feature.transactions.component
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -67,10 +69,18 @@ fun TransactionGroup(group: GroupedTransaction) {
                 // 交易汇总 (收入、支出、余额)
                 Summary(group.summary)
 
+                Spacer(modifier = Modifier.width(16.dp))
+
                 Icon(
                     imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                     contentDescription = if (isExpanded) "Collapse" else "Expand",
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier
+                        .border(
+                            width = (1.5f).dp, // 边框宽度
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f), // 边框颜色
+                            shape = RoundedCornerShape(4.dp) // 边框形状，可根据需要调整
+                        )
                 )
             }
 
@@ -115,14 +125,16 @@ private fun TransactionGroupIdentifier(
                     //the upper part of the identifier (1st/Q1/W01)
                     Text(
                         text = formatTimeIdentifierPart1(identifier),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
 
                     Text(
                         text = identifier.year.toString(),
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
                 }
             }

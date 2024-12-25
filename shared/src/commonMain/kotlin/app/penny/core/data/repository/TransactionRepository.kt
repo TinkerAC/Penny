@@ -16,7 +16,7 @@ interface TransactionRepository {
     suspend fun findByUuid(transactionUuid: Uuid): TransactionModel?
     suspend fun findAll(): List<TransactionModel>
     suspend fun insert(transaction: TransactionModel)
-    suspend fun updateByUuid(transactionUuid: Uuid, transaction: TransactionModel)
+    suspend fun update(transaction: TransactionModel)
     suspend fun deleteByUuid(transactionUuid: Uuid)
     suspend fun findByLedgerUuid(ledgerUuid: Uuid): List<TransactionModel>
     suspend fun findByLedgerUuidAndUpdatedAtBetween(
