@@ -42,7 +42,8 @@ data class SystemMessage @ExperimentalUuidApi constructor(
     override val sender: UserModel = UserModel.System,
     val userIntent: UserIntent? = null,
     override var content: String? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val lastLog: String? = null
 ) : ChatMessage(uuid, user, sender, type, timestamp, content) {
 
 }

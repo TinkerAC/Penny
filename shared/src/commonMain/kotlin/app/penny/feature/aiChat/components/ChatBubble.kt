@@ -209,7 +209,7 @@ private fun IntentPendingContent(
 ) {
 
     if (message.userIntent !is DtoAssociated) {
-        return androidx.compose.material3.Text(
+        return Text(
             text = stringResource(SharedRes.strings.unknown_status),
             modifier = Modifier.padding(8.dp)
         )
@@ -220,11 +220,11 @@ private fun IntentPendingContent(
         fields.associate { it.name to mutableStateOf(it.value ?: "") }.toMutableMap()
     }
 
-    androidx.compose.foundation.layout.Column(
+    Column(
         modifier = Modifier.padding(16.dp).fillMaxWidth()
     ) {
-        androidx.compose.material3.Text(
-            text = stringResource(SharedRes.strings.pending_action) + ": ${message.userIntent?.intentName}",
+        Text(
+            text = stringResource(SharedRes.strings.pending_action) + ": ${stringResource(message.userIntent.displayText)}",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -304,14 +304,14 @@ private fun IntentPendingContent(
 private fun ActionCompletedContent(
     userIntent: UserIntent?,
 ) {
-    androidx.compose.foundation.layout.Column(modifier = Modifier.padding(16.dp)) {
-        androidx.compose.material3.Text(
-            text = stringResource(SharedRes.strings.action_completed) + ": ${userIntent?.intentName}",
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(
+            text = stringResource(SharedRes.strings.action_completed) + ": ${stringResource(userIntent!!.displayText)}",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(8.dp))
-        androidx.compose.material3.Text(
+        Text(
             text = stringResource(SharedRes.strings.action_completed_desc),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -324,14 +324,14 @@ private fun ActionCompletedContent(
 private fun ActionCancelledContent(
     userIntent: UserIntent?
 ) {
-    androidx.compose.foundation.layout.Column(modifier = Modifier.padding(16.dp)) {
-        androidx.compose.material3.Text(
-            text = stringResource(SharedRes.strings.action_cancelled) + ": ${userIntent?.intentName}",
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(
+            text = stringResource(SharedRes.strings.action_cancelled) + ": ${stringResource(userIntent!!.displayText)}",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(8.dp))
-        androidx.compose.material3.Text(
+        Text(
             text = stringResource(SharedRes.strings.you_have_cancelled_the_action),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -378,8 +378,8 @@ private fun DatePickerField(
         }
     }
 
-    androidx.compose.foundation.layout.Column {
-        androidx.compose.material3.Text(
+    Column {
+        Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -474,8 +474,8 @@ private fun CategorySelectorField(
         }
     }
 
-    androidx.compose.foundation.layout.Column {
-        androidx.compose.material3.Text(
+    Column {
+        Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -504,7 +504,7 @@ private fun CategorySelectorField(
             AlertDialog(onDismissRequest = { expanded = false },
                 title = { Text(text = stringResource(SharedRes.strings.select_category)) },
                 text = {
-                    androidx.compose.foundation.layout.Column {
+                    Column {
                         DropdownMenuItemList(
                             items = level1Categories,
                             onItemSelected = { category ->
@@ -542,8 +542,8 @@ private fun CurrencySelectorField(
     var expanded by remember { mutableStateOf(false) }
     val currencies = listOf("USD", "EUR", "CNY", "JPY")
 
-    androidx.compose.foundation.layout.Column {
-        androidx.compose.material3.Text(
+    Column {
+        Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -593,15 +593,15 @@ private fun DropdownMenuItemList(
     selectedItem: Category?,
     enabled: Boolean = true
 ) {
-    androidx.compose.foundation.layout.Column {
-        androidx.compose.material3.Text(
+    Column {
+        Text(
             text = label,
             style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(4.dp))
         if (items.isEmpty()) {
-            androidx.compose.material3.Text(
+            Text(
                 text = stringResource(SharedRes.strings.no_options),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

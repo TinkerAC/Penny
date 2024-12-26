@@ -6,6 +6,7 @@ CREATE TABLE ChatMessageEntity (
     content TEXT,
     user_intent TEXT, -- json string
     duration INTEGER,
+    last_log TEXT,
     timestamp INTEGER NOT NULL
 );
 
@@ -13,8 +14,8 @@ CREATE TABLE ChatMessageEntity (
 
 insert:
 INSERT INTO ChatMessageEntity (
-    uuid, user_uuid, sender_uuid, type, content, user_intent, duration, timestamp)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    uuid, user_uuid, sender_uuid, type, content, user_intent, duration, last_log, timestamp)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 findByUuid:
 SELECT * FROM ChatMessageEntity WHERE uuid = ?;
@@ -28,6 +29,6 @@ SELECT * FROM ChatMessageEntity WHERE user_uuid = ?;
 
 
 updateByUuid:
-UPDATE ChatMessageEntity SET user_uuid = ?, sender_uuid = ?, type = ?, content = ?, user_intent = ?, duration = ?, timestamp = ? WHERE uuid = ?;
+UPDATE ChatMessageEntity SET user_uuid = ?, sender_uuid = ?, type = ?, content = ?, user_intent = ?, duration = ?, last_log =?,timestamp = ? WHERE uuid = ?;
 
 

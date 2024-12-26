@@ -46,52 +46,15 @@ class AiService(
             return null
 
 
-        val actionName = getActionName(text)
+        val inferredUserIntent = inferUserIntent(text)
 
-        return when (actionName) {
-            "syncData" -> UserIntent.SyncData()
-            null -> null
-            else -> getActionDetail(
-                action = actionName,
-                text = text,
-                user = user,
-                invokeInstant = invokeInstant,
-                userTimeZoneId = userTimeZoneId
-            )
-        }
+        return inferredUserIntent
     }
-
     /**
      * Identifies the userIntent name from the user input text using OpenAI.
      */
-    private suspend fun getActionName(text: String): String? {
-        val prompt = """
-            [Role]
-            You are a financial assistant.
-            [Goal]
-            The user will input natural language to describe accounting tasks. 
-            Your goal is to identify the user's intent and return the corresponding method name listed below.
-            Supported methods:
-            - insertLedgerRecord (add a Ledger record)
-            - insertTransactionRecord (add a Transaction record)
-            - queryRecords (retrieve financial records)
-            - generateReport (create a financial report)
-            - exportRecords (export financial records)
-            - updateRecord (update an existing financial record)
-            - deleteRecord (delete a financial record)
-            - analyzeSpending (analyze spending habits)
-            - setReminder (set financial reminders)
-            - syncDate (sync app data)
-            - none (no userIntent required)
-            
-            [Examples]
-            - "Create a new ledger called 'Expenses' in USD" => insertLedgerRecord
-            - "I spent $50 at a supermarket today" => insertTransactionRecord
-            - "Show me the spending records for November" => queryRecords
-            - "Export my financial records from last month" => exportRecords
-            - "How is the weather today?" => none
-        """.trimIndent()
-
+    private suspend fun inferUserIntent(text: String): UserIntent? {
+        val prompt = UserIntent.generatePrompt()
 
         val chatCompletionRequest = ChatCompletionRequest(
             model = ModelId("gpt-4o-mini"), messages = listOf(
@@ -105,7 +68,13 @@ class AiService(
 
         val completion: ChatCompletion = openAiClient.chatCompletion(chatCompletionRequest)
 
-        return completion.choices.firstOrNull()?.message?.content?.trim()
+        val response = completion.choices.firstOrNull()?.message?.content?.trim()
+
+
+        //kotlin reflect not support in multiplatform
+        return UserIntent.fromKClassSimpleName(
+            response ?: ""
+        )
     }
 
     /**

@@ -17,6 +17,7 @@ class ChatMessageLocalDataSourceImpl(
             chatMessageEntity.content,
             chatMessageEntity.user_intent,
             chatMessageEntity.duration,
+            chatMessageEntity.last_log,
             chatMessageEntity.timestamp
         )
     }
@@ -46,9 +47,9 @@ class ChatMessageLocalDataSourceImpl(
             content = chatMessageEntity.content,
             user_intent = chatMessageEntity.user_intent,
             duration = chatMessageEntity.duration,
+            last_log = chatMessageEntity.last_log,
             timestamp = chatMessageEntity.timestamp,
-
-        )
+            )
     }
 
     override fun deleteByUuid(uuid: String) {

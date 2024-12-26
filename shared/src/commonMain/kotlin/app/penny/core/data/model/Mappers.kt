@@ -213,6 +213,7 @@ fun ChatMessage.toEntity(): ChatMessageEntity {
 //                audio_file_path = audioFilePath, //TODO: implement audio file path
 //                duration = duration,
                 user_intent = null,
+                last_log = null,
                 duration = null,
 
                 )
@@ -229,6 +230,7 @@ fun ChatMessage.toEntity(): ChatMessageEntity {
                 duration = null,
                 type = type.name,
                 user_intent = userIntent?.let { Json.encodeToString(it) },
+                last_log = lastLog
 
 
                 )

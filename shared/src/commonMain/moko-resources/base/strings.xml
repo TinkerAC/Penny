@@ -331,4 +331,14 @@
     <string name="group_by_primary_category">Primary</string>
     <string name="group_by_secondary_category">Secondary</string>
     <string name="chat_with_penny">Chat with Penny</string>
+
+
+    <string name="user_intent_insert_ledger">Insert Ledger</string>
+    <string name="user_intent_insert_transaction">Insert Transaction</string>
+    <string name="user_intent_just_talk">Just Talk</string>
+    <string name="user_intent_sync_data">Sync Data</string>
+    <string name="user_intent_query_records">Query Records</string>
+    <string name="user_intent_export_records">Export Records</string>
+    <string name="generate_report">Generate Report</string>
+
 </resources>

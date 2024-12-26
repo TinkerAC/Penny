@@ -24,7 +24,7 @@ class ConfirmPendingActionUseCase(
 
         val originalDto = (userIntent as? app.penny.servershared.enumerate.DtoAssociated)?.dto
         if (originalDto == null) {
-            Logger.e("Original DTO is null for userIntent: ${userIntent.intentName}")
+            Logger.e("Original DTO is null for userIntent: ${userIntent.displayText}")
             return Result.failure(IllegalStateException("Original DTO is null"))
         }
 
@@ -38,7 +38,7 @@ class ConfirmPendingActionUseCase(
 
         // 检查新的 DTO 是否完整
         if (!newDto.isCompleteFor(userIntent)) {
-            Logger.e("DTO is still incomplete after editing for userIntent: ${userIntent.intentName}")
+            Logger.e("DTO is still incomplete after editing for userIntent: ${userIntent.displayText}")
             // 返回标记为 Pending
             val incompleteMessage = message.copy(
                 userIntent = userIntent.copy(
@@ -53,9 +53,9 @@ class ConfirmPendingActionUseCase(
         return try {
             executeUserIntent(message, userIntent, newDto)
         } catch (e: Exception) {
-            Logger.e("Failed to execute userIntent: ${userIntent.intentName}", e)
+            Logger.e("Failed to execute userIntent: ${userIntent.displayText}", e)
             val failureMessage = message.copy(
-                content = "执行操作失败: ${userIntent.intentName}",
+                content = "执行操作失败: ${userIntent.displayText}",
                 userIntent = userIntent.copy(status = UserIntentStatus.Failed)
             )
             Result.failure(
@@ -71,20 +71,20 @@ class ConfirmPendingActionUseCase(
         dto: BaseEntityDto
     ): Result<SystemMessage> {
         val handler = userIntentHandlers[userIntent::class.simpleName]
-            ?: return Result.failure(Exception("No handler found for userIntent: ${userIntent.intentName}"))
+            ?: return Result.failure(Exception("No handler found for userIntent: ${userIntent.displayText}"))
 
         return try {
             handler.handle(userIntent, dto)
-            val successMessage = "成功执行操作: ${userIntent.intentName}"
+            val successMessage = "成功执行操作: ${userIntent.displayText}"
             val updatedMessage = message.copy(
                 content = successMessage,
                 userIntent = userIntent.copy(status = UserIntentStatus.Completed)
             )
             Result.success(updatedMessage)
         } catch (e: Exception) {
-            Logger.e("Failed to execute userIntent: ${userIntent.intentName}", e)
+            Logger.e("Failed to execute userIntent: ${userIntent.displayText}", e)
             val failureMessage = message.copy(
-                content = "执行操作失败: ${userIntent.intentName}",
+                content = "执行操作失败: ${userIntent.displayText}",
                 userIntent = userIntent.copy(status = UserIntentStatus.Failed)
             )
             Result.failure(Exception("Failed to execute user intent", e))

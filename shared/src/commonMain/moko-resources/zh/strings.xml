@@ -315,5 +315,13 @@
     <string name="group_by_secondary_category">二级分类</string>
     <string name="chat_with_penny">和Penny聊天</string>
 
+    <string name="user_intent_insert_ledger">插入账本</string>
+    <string name="user_intent_insert_transaction">插入交易记录</string>
+    <string name="user_intent_just_talk">随便聊聊</string>
+    <string name="user_intent_sync_data">同步数据</string>
+    <string name="user_intent_query_records">查询记录</string>
+    <string name="user_intent_export_records">导出记录</string>
+    <string name="generate_report">生成报告</string>
+
 
 </resources>
