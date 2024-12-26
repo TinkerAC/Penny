@@ -15,8 +15,7 @@ class ChatMessageLocalDataSourceImpl(
             chatMessageEntity.sender_uuid,
             chatMessageEntity.type,
             chatMessageEntity.content,
-            chatMessageEntity.action,
-            chatMessageEntity.audio_file_path,
+            chatMessageEntity.user_intent,
             chatMessageEntity.duration,
             chatMessageEntity.timestamp
         )
@@ -45,11 +44,9 @@ class ChatMessageLocalDataSourceImpl(
             sender_uuid = chatMessageEntity.sender_uuid,
             type = chatMessageEntity.type,
             content = chatMessageEntity.content,
-            action = chatMessageEntity.action,
-            audio_file_path = chatMessageEntity.audio_file_path,
+            user_intent = chatMessageEntity.user_intent,
             duration = chatMessageEntity.duration,
             timestamp = chatMessageEntity.timestamp,
-            action_status = chatMessageEntity.action_status
 
         )
     }

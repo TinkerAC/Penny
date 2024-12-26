@@ -438,6 +438,10 @@ fun TransactionEditSheet(
     }
 }
 
+
+
+
+
 /**
  * 金额编辑框：当焦点失去时，调用 onAmountValidate() 校验金额。
  * 这里注入 FocusRequester 来实现主动聚焦。

@@ -21,6 +21,7 @@ import app.penny.services.TransactionService
 import app.penny.services.UserService
 import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIHost
+import com.aallam.openai.client.ProxyConfig
 import com.typesafe.config.ConfigFactory
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -53,7 +54,8 @@ fun Application.module() {
     val userService = UserService(userRepository, jwtConfig)
     val openAiClient = OpenAI(
         token = config.getString("openai.apiKey"),
-        host = OpenAIHost(config.getString("openai.host"))
+        host = OpenAIHost(config.getString("openai.host")),
+        proxy = ProxyConfig.Http(config.getString("openai.proxy"))
         // Additional configurations if needed
     )
     val aiService = AiService(openAiClient, userService)

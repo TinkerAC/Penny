@@ -2,7 +2,7 @@ package app.penny.feature.aiChat
 
 //TODO:resize all the images,they are too big for their usage
 
-import app.penny.core.data.model.MESSAGE_TYPE
+import app.penny.core.data.model.MessageType
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
@@ -11,13 +11,16 @@ import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.handler.ActionHandler
 import app.penny.core.domain.handler.InsertLedgerHandler
 import app.penny.core.domain.handler.InsertTransactionHandler
-import app.penny.core.domain.model.ActionStatus
 import app.penny.core.domain.model.ChatMessage
+import app.penny.core.domain.model.SystemMessage
+import app.penny.core.domain.model.UserMessage
 import app.penny.core.domain.model.UserModel
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.TransactionDto
-import app.penny.servershared.enumerate.Action
+import app.penny.servershared.enumerate.DtoAssociated
+import app.penny.servershared.enumerate.UserIntent
+import app.penny.servershared.enumerate.UserIntentStatus
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -42,32 +45,27 @@ class AIChatViewModel(
     private val _uiState = MutableStateFlow(AIChatUiState())
     val uiState: StateFlow<AIChatUiState> = _uiState.asStateFlow()
 
-    private lateinit var currentUser: UserModel
-
-    private val actionHandlers: Map<String, ActionHandler> = mapOf(
-        Action.InsertLedger::class.simpleName!! to InsertLedgerHandler(ledgerRepository),
-        Action.InsertTransaction::class.simpleName!! to InsertTransactionHandler(
-            transactionRepository,
-            ledgerRepository,
-            userDataRepository
+    private val userIntentHandlers: Map<String, ActionHandler> = mapOf(
+        UserIntent.InsertLedger::class.simpleName!! to InsertLedgerHandler(ledgerRepository),
+        UserIntent.InsertTransaction::class.simpleName!! to InsertTransactionHandler(
+            transactionRepository, ledgerRepository, userDataRepository
         )
     )
 
     init {
         screenModelScope.launch {
-            currentUser = userDataRepository.getUser()
-            handleIntent(AIChatIntent.LoadChatHistory)
+            _uiState.value = _uiState.value.copy(
+                user = userDataRepository.getUser()
+            )
         }
     }
 
     fun handleIntent(intent: AIChatIntent) {
         when (intent) {
-            is AIChatIntent.LoadChatHistory -> loadChatHistory()
             is AIChatIntent.SendMessage -> sendMessage(intent.message)
             is AIChatIntent.SendAudio -> sendAudio(intent.audioFilePath, intent.duration)
             is AIChatIntent.ConfirmPendingAction -> confirmPendingAction(
-                intent.message,
-                intent.editableFields
+                intent.message, intent.editableFields
             )
 
             is AIChatIntent.DismissFunctionalMessage -> dismissFunctionalMessage(intent.message)
@@ -78,51 +76,47 @@ class AIChatViewModel(
         _uiState.update { it.copy(inputText = text) }
     }
 
-    private fun loadChatHistory() {
-        screenModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            try {
-                val messages = chatRepository.findChatHistoryByUserUuid(currentUser.uuid)
-                _uiState.update { it.copy(messages = messages, isLoading = false) }
-            } catch (e: Exception) {
-                Logger.e("Failed to load chat history", e)
-                _uiState.update { it.copy(isLoading = false) }
-            }
+    private suspend fun loadChatHistory() {
+
+        try {
+            val messages = chatRepository.findChatHistoryByUserUuid(_uiState.value.user.uuid)
+            _uiState.update { it.copy(messages = messages, isLoading = false) }
+        } catch (e: Exception) {
+            Logger.e("Failed to load chat history", e)
+            _uiState.update { it.copy(isLoading = false) }
         }
     }
 
-    private fun sendMessage(message: String) {
+    private fun sendMessage(messageText: String) {
         screenModelScope.launch {
             _uiState.update { it.copy(isSending = true) }
             try {
-                val userMessage = ChatMessage(
+
+                val userMessage = UserMessage(
+                    content = messageText,
+                    type = MessageType.TEXT,
                     uuid = Uuid.random(),
-                    type = MESSAGE_TYPE.TEXT,
-                    user = currentUser,
-                    sender = currentUser,
                     timestamp = Clock.System.now().epochSeconds,
-                    content = message
+                    user = _uiState.value.user,
+                    sender = _uiState.value.user,
                 )
                 addMessage(userMessage)
 
                 _uiState.update { it.copy(inputText = "", isSending = false) }
 
-                val aiReply = chatRepository.sendMessage(message = message)
+                val aiReply = chatRepository.sendMessage(message = messageText)
 
-                val aiMessage = ChatMessage(
+                val aiMessage = SystemMessage(
+                    type = MessageType.TEXT,
                     uuid = Uuid.random(),
-                    user = currentUser,
-                    type = MESSAGE_TYPE.TEXT,
-                    sender = UserModel.AI,
                     timestamp = Clock.System.now().epochSeconds,
-                    content = aiReply.message,
-                    action = aiReply.action,
-                    actionStatus = if (aiReply.action != null) ActionStatus.Pending else ActionStatus.Completed
+                    user = _uiState.value.user,
+                    sender = UserModel.System,
+                    userIntent = aiReply.userIntent,
+                    content = aiReply.content
                 )
                 addMessage(aiMessage)
-//                if (aiReply.success && aiReply.action != null) {
-//                    handleAction(aiMessage)
-//                }
+
             } catch (e: Exception) {
                 Logger.e("Failed to send message", e)
                 _uiState.update { it.copy(isSending = false) }
@@ -134,90 +128,76 @@ class AIChatViewModel(
         throw NotImplementedError("Audio messages are not supported yet")
     }
 
-    private fun handleAction(message: ChatMessage) {
-        screenModelScope.launch {
-            val action = message.action
-            val dto = action?.dto
+    private suspend fun executeAction(
+        message: SystemMessage, userIntent: UserIntent, dto: BaseEntityDto
+    ) {
 
-            if (action == null || dto == null) {
-                Logger.e("Action or DTO is null for message: ${message.uuid}")
-                return@launch
-            }
-
-            if (dto.isCompleteFor(action)) {
-                executeAction(message, action, dto)
-            } else {
-                // The action is pending, waiting for user input
-                // Already persisted as ChatMessage with ActionStatus.Pending
-                // UI will display the message and allow user to confirm or dismiss
-            }
-        }
-    }
-
-    private suspend fun executeAction(message: ChatMessage, action: Action, dto: BaseEntityDto) {
-        val handler = actionHandlers[action::class.simpleName]
+        val handler = userIntentHandlers[userIntent::class.simpleName]
         if (handler != null) {
             try {
-                handler.handle(action, dto)
-                val successMessage = "成功执行操作: ${action.actionName}"
-                val successChatMessage = message.copy(
-                    content = successMessage,
-                    actionStatus = ActionStatus.Completed
-                )
-                updateMessage(successChatMessage)
+                handler.handle(userIntent, dto)
+                val successMessage = "成功执行操作: ${userIntent.intentName}"
+                message.content = successMessage
+                message.userIntent!!.status = UserIntentStatus.Completed
+                updateMessage(message)
             } catch (e: Exception) {
-                Logger.e("Failed to execute action: ${action.actionName}", e)
-                val failureMessage = "执行操作失败: ${action.actionName}"
+                Logger.e("Failed to execute userIntent: ${userIntent.intentName}", e)
+                val failureMessage = "执行操作失败: ${userIntent.intentName}"
                 val failureChatMessage = message.copy(
                     content = failureMessage,
                 )
                 updateMessage(failureChatMessage)
             }
         } else {
-            Logger.e("No handler found for action: ${action.actionName}")
-            val unknownActionMessage = "未知的操作: ${action.actionName}"
-            val unknownChatMessage = message.copy(
-                content = unknownActionMessage,
-                actionStatus = ActionStatus.Cancelled
-            )
-            updateMessage(unknownChatMessage)
+            Logger.e("No handler found for userIntent: ${userIntent.intentName}")
+            val unknownActionMessage = "未知的操作: ${userIntent.intentName}"
+            message.content = unknownActionMessage
+            message.userIntent?.let { it.status = UserIntentStatus.Cancelled }
+            updateMessage(message)
         }
     }
 
-    private fun confirmPendingAction(message: ChatMessage, editedFields: Map<String, String?>) {
-        screenModelScope.launch {
-            val originalDto = message.action?.dto
-            if (originalDto == null) {
-                Logger.e("Original DTO is null for action: ${message.action?.actionName}")
-                return@launch
+    private fun confirmPendingAction(message: SystemMessage, editedFields: Map<String, String?>) {
+        when (message.userIntent) {
+            is DtoAssociated -> {
+                screenModelScope.launch {
+                    val originalDto = message.userIntent.dto
+                    if (originalDto == null) {
+                        Logger.e("Original DTO is null for userIntent: ${message.userIntent?.intentName}")
+                        return@launch
+                    }
+
+                    val newDto = rebuildDto(message.userIntent, originalDto, editedFields)
+                    if (newDto != null && newDto.isCompleteFor(message.userIntent)) {
+                        executeAction(message, message.userIntent, newDto)
+                        val updatedMessage = message.copy(
+                            userIntent = message.userIntent.copy(
+                                dto = newDto, status = UserIntentStatus.Completed
+                            )
+                        )
+                        updateMessage(updatedMessage)
+                    } else {
+                        Logger.e("DTO is still incomplete after editing")
+                        val updatedMessage =
+                            message.copy(userIntent = message.userIntent.copy(dto = newDto))
+                        updateMessage(updatedMessage)
+                    }
+                }
             }
 
-            val newDto = rebuildDto(message.action, originalDto, editedFields)
-            if (newDto != null && newDto.isCompleteFor(message.action)) {
-                executeAction(message, message.action, newDto)
-                val updatedMessage = message.copy(
-                    action = message.action,
-                    actionStatus = ActionStatus.Completed
-                )
-                updateMessage(updatedMessage)
-            } else {
-                Logger.e("DTO is still incomplete after editing")
-                val updatedMessage = message.copy(action = message.action.copy(dto = newDto))
-                updateMessage(updatedMessage)
-            }
+            else -> Logger.e("UserIntent does not implement DtoAssociated")
         }
+
     }
 
     private fun rebuildDto(
-        action: Action?,
-        originalDto: BaseEntityDto?,
-        editedFields: Map<String, String?>
+        userIntent: UserIntent?, originalDto: BaseEntityDto?, editedFields: Map<String, String?>
     ): BaseEntityDto? {
-        if (action == null || originalDto == null) return originalDto
-        return when (action.actionName) {
-            "InsertLedger" -> {
+        if (userIntent == null || originalDto == null) return originalDto
+        return when (userIntent) {
+            is UserIntent.InsertLedger -> {
                 val o = (originalDto as? LedgerDto) ?: LedgerDto(
-                    userUuid = currentUser.uuid.toString(),
+                    userUuid = uiState.value.user.uuid.toString(),
                     uuid = Uuid.random().toString(),
                     name = "",
                     currencyCode = "",
@@ -230,7 +210,7 @@ class AIChatViewModel(
                 )
             }
 
-            "InsertTransaction" -> {
+            is UserIntent.InsertTransaction -> {
                 val o = (originalDto as? TransactionDto) ?: TransactionDto(
                     userId = 0L,
                     uuid = Uuid.random().toString(),
@@ -260,12 +240,13 @@ class AIChatViewModel(
         }
     }
 
-    private fun dismissFunctionalMessage(message: ChatMessage) {
+    private fun dismissFunctionalMessage(message: SystemMessage) {
         screenModelScope.launch {
-            val updatedMessage = message.copy(actionStatus = ActionStatus.Cancelled)
-            updateMessage(updatedMessage)
+            message.userIntent?.let { it.status = UserIntentStatus.Cancelled }
+            updateMessage(message)
         }
     }
+
 
     /**
      * 辅助函数：添加消息到仓库并更新UI状态
@@ -281,11 +262,9 @@ class AIChatViewModel(
     private suspend fun updateMessage(updatedMessage: ChatMessage) {
         chatRepository.update(updatedMessage)
         _uiState.update {
-            it.copy(
-                messages = it.messages.map { message ->
-                    if (message.uuid == updatedMessage.uuid) updatedMessage else message
-                }
-            )
+            it.copy(messages = it.messages.map { message ->
+                if (message.uuid == updatedMessage.uuid) updatedMessage else message
+            })
         }
     }
 }

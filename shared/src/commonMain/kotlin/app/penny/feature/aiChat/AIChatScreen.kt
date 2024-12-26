@@ -32,7 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import app.penny.feature.aiChat.components.ChatBubble
+import app.penny.feature.aiChat.components.MessageBubble
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -49,37 +49,23 @@ class AIChatScreen : Screen {
         val viewModel = koinScreenModel<AIChatViewModel>()
         val uiState by viewModel.uiState.collectAsState()
 
-        Scaffold(
-            topBar = {
-                SingleNavigateBackTopBar(
-                    title = "Penny",
-                    onNavigateBack = {
-                        rootNavigator.pop()
-                    }
-                )
-            },
-            bottomBar = {
-                ChatInputBar(
-                    inputText = uiState.inputText,
-                    onTextChanged = { text ->
-                        viewModel.updateInputText(text)
-                    },
-                    onSendClicked = { message ->
-                        viewModel.handleIntent(AIChatIntent.SendMessage(message))
-                    },
-                    onAttachClicked = {
-                        // 附件功能留空
-                    },
-                    onAudioClicked = {
-                        // 语音功能留空
-                    }
-                )
-            }
-        ) { paddingValues ->
+        Scaffold(topBar = {
+            SingleNavigateBackTopBar(title = "Penny", onNavigateBack = {
+                rootNavigator.pop()
+            })
+        }, bottomBar = {
+            ChatInputBar(inputText = uiState.inputText, onTextChanged = { text ->
+                viewModel.updateInputText(text)
+            }, onSendClicked = { message ->
+                viewModel.handleIntent(AIChatIntent.SendMessage(message))
+            }, onAttachClicked = {
+                // 附件功能留空
+            }, onAudioClicked = {
+                // 语音功能留空
+            })
+        }) { paddingValues ->
             Box(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
+                modifier = Modifier.padding(paddingValues).fillMaxSize()
             ) {
                 // 应用自定义的聊天背景
 //                ChatBackground()
@@ -87,27 +73,22 @@ class AIChatScreen : Screen {
                 Column(modifier = Modifier.fillMaxSize()) {
                     if (uiState.isLoading) {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator()
                         }
                     } else {
                         LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(1f),
+                            modifier = Modifier.fillMaxSize().weight(1f),
                             reverseLayout = true,
                             contentPadding = PaddingValues(16.dp)
                         ) {
                             items(uiState.messages.reversed()) { message ->
-                                ChatBubble(
-                                    message = message,
+                                MessageBubble(message = message,
                                     onActionConfirm = { msg, editableFields ->
                                         viewModel.handleIntent(
                                             AIChatIntent.ConfirmPendingAction(
-                                                msg,
-                                                editableFields
+                                                message = msg, editableFields = editableFields
                                             )
                                         )
                                     },
@@ -117,8 +98,7 @@ class AIChatScreen : Screen {
                                                 m
                                             )
                                         )
-                                    }
-                                )
+                                    })
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
                         }
@@ -145,13 +125,10 @@ fun ChatInputBar(
     var textFieldValue by remember { mutableStateOf(TextFieldValue(inputText)) }
 
     Surface(
-        tonalElevation = 8.dp,
-        modifier = Modifier
-            .fillMaxWidth()
+        tonalElevation = 8.dp, modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 4.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onAttachClicked) {
@@ -164,9 +141,7 @@ fun ChatInputBar(
                     onTextChanged(it.text)
                 },
                 placeholder = { Text("Type a message") },
-                modifier = Modifier
-                    .weight(1f)
-                    .height(56.dp),
+                modifier = Modifier.weight(1f).height(56.dp),
 //                colors = TextFieldDefaults.colors(
 //                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
 //                    textColor = MaterialTheme.colorScheme.onSurface,
@@ -176,12 +151,10 @@ fun ChatInputBar(
             IconButton(onClick = onAudioClicked) {
                 Icon(Icons.Default.Mic, contentDescription = "Record Audio")
             }
-            IconButton(
-                onClick = {
-                    onSendClicked(textFieldValue.text)
-                    textFieldValue = TextFieldValue("")
-                }
-            ) {
+            IconButton(onClick = {
+                onSendClicked(textFieldValue.text)
+                textFieldValue = TextFieldValue("")
+            }) {
                 Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send Message")
             }
         }

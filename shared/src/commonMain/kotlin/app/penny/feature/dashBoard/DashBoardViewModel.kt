@@ -5,6 +5,7 @@ import app.penny.core.data.repository.StatisticRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.model.valueObject.YearMonth
+import app.penny.core.domain.usecase.SyncDataUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -18,6 +19,7 @@ class DashboardViewModel(
     private val transactionRepository: TransactionRepository,
     private val userDataRepository: UserDataRepository,
     private val statisticRepository: StatisticRepository,
+    private val syncDataUseCase: SyncDataUseCase
 ) : ScreenModel {
 
 
@@ -90,9 +92,7 @@ class DashboardViewModel(
                 // 达到释放刷新条件，触发刷新
                 _uiState.update { it.copy(isRefreshing = true) }
                 Logger.d { "执行数据同步……" }
-
-                delay(2000) // 模拟网络请求
-
+                syncDataUseCase()
                 // 刷新完成回到初始位置
                 animateScrollOffset(currentState.scrollOffset, 0f)
                 _uiState.update {

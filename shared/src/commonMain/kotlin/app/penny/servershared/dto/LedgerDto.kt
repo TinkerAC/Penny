@@ -3,7 +3,7 @@ package app.penny.servershared.dto
 
 import app.penny.servershared.EditableField
 import app.penny.servershared.FieldType
-import app.penny.servershared.enumerate.Action
+import app.penny.servershared.enumerate.UserIntent
 import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 import kotlin.uuid.ExperimentalUuidApi
@@ -23,9 +23,9 @@ data class LedgerDto(
     /**
      * 判断是否完成插入账本的动作。
      */
-    override fun isCompleteFor(action: Action): Boolean {
-        return when (action) {
-            is Action.InsertLedger -> {
+    override fun isCompleteFor(userIntent: UserIntent): Boolean {
+        return when (userIntent) {
+            is UserIntent.InsertLedger -> {
                 name.isNotBlank() && currencyCode.isNotBlank()
             }
             // 其他动作可在此添加判断逻辑

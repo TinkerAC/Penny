@@ -4,7 +4,7 @@ package app.penny.servershared.dto
 import app.penny.core.domain.enum.Category
 import app.penny.servershared.EditableField
 import app.penny.servershared.FieldType
-import app.penny.servershared.enumerate.Action
+import app.penny.servershared.enumerate.UserIntent
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,9 +25,9 @@ data class TransactionDto(
     /**
      * 判断是否完成插入交易的动作。
      */
-    override fun isCompleteFor(action: Action): Boolean {
-        return when (action) {
-            is Action.InsertTransaction -> {
+    override fun isCompleteFor(userIntent: UserIntent): Boolean {
+        return when (userIntent) {
+            is UserIntent.InsertTransaction -> {
                 transactionType.isNotBlank() &&
                         transactionDate > 0 &&
                         categoryName.isNotBlank() &&

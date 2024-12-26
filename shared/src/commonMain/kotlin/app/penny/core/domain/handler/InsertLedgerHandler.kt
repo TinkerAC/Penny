@@ -5,7 +5,7 @@ import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.LedgerDto
-import app.penny.servershared.enumerate.Action
+import app.penny.servershared.enumerate.UserIntent
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,12 +17,12 @@ class InsertLedgerHandler(
     private val ledgerRepository: LedgerRepository
 ) : ActionHandler {
 
-    override suspend fun handle(action: Action, dto: BaseEntityDto) {
-        if (action !is Action.InsertLedger) {
-            throw IllegalArgumentException("Unsupported action type")
+    override suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto) {
+        if (userIntent !is UserIntent.InsertLedger) {
+            throw IllegalArgumentException("Unsupported userIntent type")
         }
         if (dto !is LedgerDto) {
-            throw IllegalArgumentException("Invalid DTO type for InsertLedger action")
+            throw IllegalArgumentException("Invalid DTO type for InsertLedger userIntent")
         }
 
         // 插入账本

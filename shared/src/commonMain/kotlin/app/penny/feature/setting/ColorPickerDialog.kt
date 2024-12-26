@@ -58,7 +58,7 @@ fun ColorPickerDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Action Buttons (Cancel and Confirm)
+                // UserIntent Buttons (Cancel and Confirm)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -5,7 +5,7 @@ import app.penny.core.domain.enum.Category
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UserDto
-import app.penny.servershared.enumerate.Action
+import app.penny.servershared.enumerate.UserIntent
 import app.penny.utils.getAuthedUser
 import com.aallam.openai.api.chat.ChatCompletion
 import com.aallam.openai.api.chat.ChatCompletionRequest
@@ -36,21 +36,18 @@ class AiService(
     }
 
     /**
-     * Retrieves the action based on user input text.
+     * Retrieves the userIntent based on user input text.
      * The user is retrieved from the ApplicationCall attributes.
      */
-    suspend fun getAction(
+    suspend fun getUserIntent(
         call: ApplicationCall,
         text: String,
         invokeInstant: Long,
         userTimeZoneId: String
-
-    ): Action? {
+    ): UserIntent? {
         val user = call.getAuthedUser()
-        if (user == null) {
-            // Optionally handle the absence of a user, e.g., throw an exception
+            ?: // Optionally handle the absence of a user, e.g., throw an exception
             return null
-        }
 
         val actionName = getActionName(text)
 
@@ -68,7 +65,7 @@ class AiService(
     }
 
     /**
-     * Identifies the action name from the user input text using OpenAI.
+     * Identifies the userIntent name from the user input text using OpenAI.
      */
     private suspend fun getActionName(text: String): String? {
         val prompt = """
@@ -87,7 +84,7 @@ class AiService(
             - deleteRecord (delete a financial record)
             - analyzeSpending (analyze spending habits)
             - setReminder (set financial reminders)
-            - none (no action required)
+            - none (no userIntent required)
             
             [Examples]
             - "Create a new ledger called 'Expenses' in USD" => insertLedgerRecord
@@ -117,7 +114,7 @@ class AiService(
     }
 
     /**
-     * Retrieves detailed action information based on the action name.
+     * Retrieves detailed userIntent information based on the userIntent name.
      */
     private suspend fun getActionDetail(
         action: String,
@@ -125,7 +122,7 @@ class AiService(
         user: UserDto,
         invokeInstant: Long, //epoch seconds
         userTimeZoneId: String
-    ): Action? {
+    ): UserIntent? {
         return when (action) {
             "insertLedgerRecord" -> handleInsertLedgerAction(user, text)
             // Add handlers for other actions similarly
@@ -135,6 +132,8 @@ class AiService(
                 invokeInstant = invokeInstant,
                 userTimeZoneId = userTimeZoneId
             )
+            "justTalk" -> handleJustTalkAction(user, text)
+
             // "queryRecords" -> handleQueryRecordsAction(user, text)
             // ... other actions
             else -> null // Handle unknown or unsupported actions
@@ -142,12 +141,12 @@ class AiService(
     }
 
     /**
-     * Handles the 'insertLedgerRecord' action by extracting necessary details.
+     * Handles the 'insertLedgerRecord' userIntent by extracting necessary details.
      */
     private suspend fun handleInsertLedgerAction(
         user: UserDto,
         text: String
-    ): Action.InsertLedger? {
+    ): UserIntent.InsertLedger? {
         val prompt = """
             [Role]
             You are a helpful financial assistant 
@@ -207,7 +206,7 @@ class AiService(
 
 
 
-        return Action.InsertLedger(
+        return UserIntent.InsertLedger(
             dto = LedgerDto.create(
                 userUuid = user.uuid,
                 name = name ?: "",
@@ -223,7 +222,7 @@ class AiService(
         text: String,
         invokeInstant: Long, // epoch seconds
         userTimeZoneId: String
-    ): Action.InsertTransaction? {
+    ): UserIntent.InsertTransaction? {
 
         // 根据 userTimeZoneId 构建 TimeZone
         // 假设 userTimeZoneId 表示与 UTC 的小时偏移量（如UTC+8）
@@ -234,10 +233,8 @@ class AiService(
             .toLocalDateTime(userTimeZone)
             .date
 
-        val prompt = Category.generateLLMPrompt(
-            text = text,
-            userLocalDate = userLocalDate.toString()
-        )
+
+        val prompt = Category.generateLLMPrompt()
 
         println("prompt: $prompt")
         val input = "text:$text \n userLocalDate:$userLocalDate"
@@ -284,7 +281,7 @@ class AiService(
             userLocalDate.atStartOfDayIn(userTimeZone).epochSeconds
         }
 
-        return Action.InsertTransaction(
+        return UserIntent.InsertTransaction(
             dto = TransactionDto(
                 userId = user.id,
                 uuid = Uuid.random().toString(),
@@ -298,6 +295,47 @@ class AiService(
                 createdAt = Clock.System.now().toEpochMilliseconds(),
                 updatedAt = Clock.System.now().toEpochMilliseconds()
             )
+        )
+    }
+
+
+    private suspend fun handleJustTalkAction(
+        user: UserDto,
+        text: String
+    ): UserIntent.JustTalk? {
+        val prompt = """
+            [Role]
+            You are a friendly financial assistant who's name is Penny, a Diligent and cute fairy.
+            [Goal]
+            The user will input natural language to chat with you. Your task is to respond to the user's input in a friendly and helpful manner.
+            
+            [Examples]
+            - "How are you today?" => "I'm doing well, thank you for asking! How can I help you today?"
+            - "What's the weather like today?" => "I'm not sure about the weather, but I can help you with your finances!"
+            - "Tell me a joke" => "Sure! Why did the banker switch careers? He lost interest!"
+            - "What's the meaning of life?" => "The meaning of life is to enjoy the journey and make the most of every moment!"
+        """.trimIndent()
+
+        val chatCompletionRequest = ChatCompletionRequest(
+            model = ModelId("gpt-4o-mini"),
+            messages = listOf(
+                ChatMessage(
+                    role = ChatRole.System,
+                    content = prompt
+                ),
+                ChatMessage(
+                    role = ChatRole.User,
+                    content = text
+                )
+            )
+        )
+
+        val completion: ChatCompletion = openAiClient.chatCompletion(chatCompletionRequest)
+
+        val response = completion.choices.firstOrNull()?.message?.content?.trim()
+
+        return UserIntent.JustTalk(
+            message = response
         )
     }
 

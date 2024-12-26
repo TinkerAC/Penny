@@ -13,14 +13,14 @@ import kotlin.uuid.ExperimentalUuidApi
 class LoginUseCase(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-    private val userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository,
+    private val syncDataUseCase: SyncDataUseCase
 ) {
     @OptIn(ExperimentalUuidApi::class)
     suspend operator fun invoke(
         email: String,
         password: String
     ): LoginResponse {
-
 
         try {
             // Check if there is a local user (no email present)
@@ -36,6 +36,11 @@ class LoginUseCase(
             } else {
                 throw LoginException.InvalidCredentialsException
             }
+
+            // sync data
+
+            syncDataUseCase()
+
 
             return response
         } catch (e: IOException) {

@@ -1,30 +1,50 @@
 // file: shared/src/commonMain/kotlin/app/penny/core/domain/model/ChatMessage.kt
 package app.penny.core.domain.model
 
-import app.penny.core.data.model.MESSAGE_TYPE
-import app.penny.servershared.enumerate.Action
+import app.penny.core.data.model.MessageType
+import app.penny.servershared.enumerate.UserIntent
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-enum class ActionStatus {
-    Pending,
-    Completed,
-    Cancelled
+
+@OptIn(ExperimentalUuidApi::class)
+sealed class ChatMessage(
+    open val uuid: Uuid,
+    open val user: UserModel, // the belonging user,
+    open val sender: UserModel,
+    open val type: MessageType,
+    open val timestamp: Long,
+    open val content: String?
+) {
 }
 
 @OptIn(ExperimentalUuidApi::class)
-data class ChatMessage(
-    val type: MESSAGE_TYPE,
-    val uuid: Uuid,
-    val user: UserModel,
-    val sender: UserModel,
-    val timestamp: Long,
-    val content: String? = null,
-    val action: Action? = null,
+data class UserMessage @ExperimentalUuidApi constructor(
+    override val user: UserModel,
+    override val sender: UserModel,
+    override val type: MessageType,
+    override val uuid: Uuid,
+    override val timestamp: Long,
+    override val content: String? = null,
     val audioFilePath: String? = null,
-    val duration: Long? = null,
-    val actionStatus: ActionStatus? = null
-) {
-
+    val duration: Long? = null
+) : ChatMessage(uuid, user, user, type, timestamp, content) {
 
 }
+
+
+@OptIn(ExperimentalUuidApi::class)
+data class SystemMessage @ExperimentalUuidApi constructor(
+    override val user: UserModel,
+    override val type: MessageType,
+    override val uuid: Uuid,
+    override val timestamp: Long,
+    override val sender: UserModel = UserModel.System,
+    val userIntent: UserIntent? = null,
+    override var content: String? = null
+) : ChatMessage(uuid, user, sender, type, timestamp, content) {
+
+}
+
+
+

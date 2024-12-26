@@ -4,20 +4,17 @@ CREATE TABLE ChatMessageEntity (
     sender_uuid TEXT NOT NULL, -- 移除外键约束
     type TEXT NOT NULL ,
     content TEXT,
-    action TEXT, -- JSON string of action object
-    audio_file_path TEXT,
+    user_intent TEXT, -- json string
     duration INTEGER,
-    timestamp INTEGER NOT NULL,
-    action_status TEXT
+    timestamp INTEGER NOT NULL
 );
 
 
 
 insert:
 INSERT INTO ChatMessageEntity (
-    uuid, user_uuid, sender_uuid, type, content, action, audio_file_path, duration, timestamp
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-
+    uuid, user_uuid, sender_uuid, type, content, user_intent, duration, timestamp)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 findByUuid:
 SELECT * FROM ChatMessageEntity WHERE uuid = ?;
@@ -31,6 +28,6 @@ SELECT * FROM ChatMessageEntity WHERE user_uuid = ?;
 
 
 updateByUuid:
-UPDATE ChatMessageEntity SET  user_uuid = ?, sender_uuid = ?, type = ?, content = ?, action = ?, audio_file_path = ?, duration = ?, timestamp = ?, action_status = ? WHERE uuid = ?;
+UPDATE ChatMessageEntity SET user_uuid = ?, sender_uuid = ?, type = ?, content = ?, user_intent = ?, duration = ?, timestamp = ? WHERE uuid = ?;
 
 

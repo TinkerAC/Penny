@@ -1,21 +1,24 @@
 package app.penny.core.data.model
 
 
+import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.enum.Category
 import app.penny.core.domain.enum.Currency
 import app.penny.core.domain.enum.LedgerCover
 import app.penny.core.domain.enum.TransactionType
 import app.penny.core.domain.model.AchievementModel
-import app.penny.core.domain.model.ActionStatus
 import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.LedgerModel
+import app.penny.core.domain.model.SystemMessage
 import app.penny.core.domain.model.TransactionModel
+import app.penny.core.domain.model.UserMessage
 import app.penny.core.domain.model.UserModel
 import app.penny.database.AchievementEntity
 import app.penny.database.ChatMessageEntity
 import app.penny.database.LedgerEntity
 import app.penny.database.TransactionEntity
 import app.penny.database.UserEntity
+import app.penny.di.getKoinInstance
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UserDto
@@ -196,49 +199,74 @@ fun UserEntity.toModel(): UserModel {
 
 @OptIn(ExperimentalUuidApi::class)
 fun ChatMessage.toEntity(): ChatMessageEntity {
-    return ChatMessageEntity(
-        uuid = uuid.toString(),
-        user_uuid = user.uuid.toString(),
-        sender_uuid = sender.uuid.toString(),
-        type = MESSAGE_TYPE.TEXT.value,
-        content = content,
-        timestamp = timestamp,
-        audio_file_path = null,
-        duration = null,
-        action = action?.let { Json.encodeToString(it) },
-        action_status = actionStatus?.name
-    )
+    when (this) {
+        is UserMessage -> {
+            return ChatMessageEntity(
+                uuid = uuid.toString(),
+                type = type.name,
+                user_uuid = user.uuid.toString(),
+                sender_uuid = user.uuid.toString(),
+                content = content,
+                timestamp = timestamp,
+//                audio_file_path = audioFilePath, //TODO: implement audio file path
+//                duration = duration,
+                user_intent = null,
+                duration = null,
+
+                )
+        }
+
+        is SystemMessage -> {
+            return ChatMessageEntity(
+                uuid = uuid.toString(),
+                user_uuid = user.uuid.toString(),
+                sender_uuid = sender.uuid.toString(),
+                content = content,
+                timestamp = timestamp,
+//                audio_file_path = null,
+                duration = null,
+                type = type.name,
+                user_intent = userIntent?.let { Json.encodeToString(it) },
+
+
+                )
+        }
+    }
 
 
 }
 
+val userRepository = getKoinInstance<UserRepository>()
 
 @OptIn(ExperimentalUuidApi::class)
 fun ChatMessageEntity.toModel(): ChatMessage {
-    return ChatMessage(
-        uuid = Uuid.parse(uuid),
-        user = UserModel(
-            Uuid.parse(user_uuid),
-            "",
-            "",
-            Instant.fromEpochSeconds(0),
-            Instant.fromEpochSeconds(0)
-        ),
-        sender = UserModel(
-            Uuid.parse(sender_uuid),
-            "",
-            "",
-            Instant.fromEpochSeconds(0),
-            Instant.fromEpochSeconds(0)
-        ),
-        type = MESSAGE_TYPE.TEXT,
-        content = content,
-        timestamp = timestamp,
-        audioFilePath = audio_file_path,
-        duration = duration,
-        action = action?.let { Json.decodeFromString(it) },
-        actionStatus = action_status?.let { ActionStatus.valueOf(it) }
-    )
+    return when (sender_uuid) {
+        UserModel.System.uuid.toString() -> {
+            SystemMessage(
+                uuid = Uuid.parse(uuid),
+                user = UserModel(Uuid.parse(user_uuid), "", ""),
+                sender = UserModel.System,
+                type = MessageType.valueOf(type),
+                timestamp = timestamp,
+                content = content,
+                userIntent = null
+            )
+        }
+
+        else -> {
+            UserMessage(
+                uuid = Uuid.parse(uuid),
+                user = UserModel(Uuid.parse(user_uuid), "", ""),
+                sender = UserModel(Uuid.parse(sender_uuid), "", ""),
+                type = MessageType.valueOf(type),
+                timestamp = timestamp,
+                content = content,
+                audioFilePath = null,
+                duration = null
+            )
+        }
+
+    }
 }
 
 

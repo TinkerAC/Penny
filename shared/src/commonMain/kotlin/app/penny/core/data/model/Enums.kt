@@ -1,8 +1,7 @@
 package app.penny.core.data.model
 
 
-enum class MESSAGE_TYPE(
-    val value: String
+enum class MessageType(
 ) {
-    TEXT("text"),
+    TEXT
 }

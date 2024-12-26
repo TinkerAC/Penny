@@ -159,7 +159,7 @@ fun commonModule() = module {
     factory { InsertRandomTransactionUseCase(get(), get()) }
     factory { InitLocalUserUseCase(get(), get()) }
     factory { SearchTransactionsUseCase(get()) }
-    factory { LoginUseCase(get(), get(), get()) }
+    factory { LoginUseCase(get(), get(), get(), get()) }
     factory { UploadUnsyncedLedgerUseCase(get(), get()) }
     factory { RegisterUseCase(get()) }
     factory { DownloadUnsyncedLedgerUseCase(get(), get()) }
@@ -218,7 +218,7 @@ fun commonModule() = module {
     factory { AIChatViewModel(get(), get(), get(), get(), get()) }
     factory {
         DashboardViewModel(
-            get(), get(), get()
+            get(), get(), get(), get()
         )
     }
 

@@ -1,7 +1,7 @@
 package app.penny.servershared.dto
 
 import app.penny.servershared.EditableField
-import app.penny.servershared.enumerate.Action
+import app.penny.servershared.enumerate.UserIntent
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,7 +18,7 @@ data class UserDto(
         return emptyList()
     }
 
-    override fun isCompleteFor(action: Action): Boolean {
+    override fun isCompleteFor(userIntent: UserIntent): Boolean {
         return true
     }
 }

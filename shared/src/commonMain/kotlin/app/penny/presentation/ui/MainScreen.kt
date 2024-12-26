@@ -126,7 +126,7 @@ fun BottomAppBarWithFAB(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "New Action"
+                contentDescription = "New UserIntent"
             )
         }
     }

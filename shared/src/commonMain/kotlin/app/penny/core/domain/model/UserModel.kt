@@ -13,12 +13,17 @@ data class UserModel(
     val updatedAt: Instant = Instant.DISTANT_PAST
 ) {
     companion object {
-        val AI = UserModel(
+        val System = UserModel(
             uuid = Uuid.fromLongs(0, 0),
             username = "AI",
             email = "",
         )
 
+        val Uninitialized = UserModel(
+            uuid = Uuid.fromLongs(999, 999),
+            username = "UNINITIALIZED",
+            email = "",
+        )
 
     }
 }

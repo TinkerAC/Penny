@@ -3,7 +3,7 @@ package app.penny.routes
 
 import app.penny.servershared.dto.requestDto.GetAiReplyRequest
 import app.penny.servershared.dto.requestDto.GetAiReplyResponse
-import app.penny.servershared.enumerate.Action
+import app.penny.servershared.enumerate.UserIntent
 import app.penny.services.AiService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.auth.authenticate
@@ -19,25 +19,25 @@ fun Route.aiRoutes(
     route("/ai") {
         authenticate("access-jwt") {
             /**
-             * Endpoint to get AI-inferred action based on user input text.
+             * Endpoint to get AI-inferred userIntent based on user input text.
              */
             post("/get-reply") {
                 val request = call.receive<GetAiReplyRequest>()
 
-                val action: Action? = aiService.getAction(
+                val userIntent: UserIntent? = aiService.getUserIntent(
                     call = call,
                     text = request.text?.trim() ?: "",
                     invokeInstant = request.invokeInstant,
                     userTimeZoneId = request.userTimeZoneId
                 )
 
-                if (action != null) {
+                if (userIntent != null) {
                     call.respond(
                         HttpStatusCode.OK,
                         GetAiReplyResponse(
                             success = true,
-                            message = "Successfully retrieved action",
-                            action = action
+                            message = "Successfully retrieved userIntent",
+                            userIntent = userIntent
                         )
                     )
                 } else {
@@ -45,8 +45,8 @@ fun Route.aiRoutes(
                         HttpStatusCode.OK,
                         GetAiReplyResponse(
                             success = false,
-                            message = "Failed to retrieve action",
-                            content = "Failed to retrieve action"
+                            message = "Failed to retrieve userIntent",
+                            content = "Failed to retrieve userIntent"
                         )
                     )
                 }
