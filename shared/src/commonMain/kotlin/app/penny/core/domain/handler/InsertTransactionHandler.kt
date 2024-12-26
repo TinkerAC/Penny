@@ -23,7 +23,7 @@ class InsertTransactionHandler(
 ) : ActionHandler {
 
     @OptIn(ExperimentalUuidApi::class)
-    override suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto) {
+    override suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto?) {
         if (userIntent !is UserIntent.InsertTransaction) {
             throw IllegalArgumentException("Unsupported userIntent type")
         }

@@ -15,12 +15,10 @@ interface DtoAssociated {
     val dto: BaseEntityDto?
 }
 
-interface RequireConfirmation {
-    val requireConfirmation: Boolean
-}
+interface ConfirmRequired
 
 @Serializable
-sealed class UserIntent : RequireConfirmation {
+sealed class UserIntent : ConfirmRequired {
     abstract val displayText: StringResource
     abstract val description: String
     abstract var status: UserIntentStatus
@@ -38,7 +36,6 @@ sealed class UserIntent : RequireConfirmation {
         override val example: String = "Create a new ledger called 'Expenses' in USD => InsertLedgerRecord",
         override val dto: BaseEntityDto? = null,
         override var status: UserIntentStatus = UserIntentStatus.Pending,
-        override val requireConfirmation: Boolean = true
     ) : UserIntent(), DtoAssociated {
         override fun copy(
             dto: BaseEntityDto?, status: UserIntentStatus
@@ -48,7 +45,6 @@ sealed class UserIntent : RequireConfirmation {
                 example = this.example,
                 dto = dto ?: this.dto,
                 status = status,
-                requireConfirmation = this.requireConfirmation
             )
         }
     }
@@ -61,7 +57,6 @@ sealed class UserIntent : RequireConfirmation {
         override val example: String = "I spent \$50 at a supermarket today => InsertTransactionRecord",
         override val dto: BaseEntityDto? = null,
         override var status: UserIntentStatus = UserIntentStatus.Pending,
-        override val requireConfirmation: Boolean = true
     ) : UserIntent(), DtoAssociated {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): InsertTransaction {
             return InsertTransaction(
@@ -69,7 +64,6 @@ sealed class UserIntent : RequireConfirmation {
                 example = this.example,
                 dto = dto ?: this.dto,
                 status = status,
-                requireConfirmation = this.requireConfirmation
             )
         }
     }
@@ -82,7 +76,6 @@ sealed class UserIntent : RequireConfirmation {
         override val example: String = "How is the weather today? => JustTalk",
         override var status: UserIntentStatus = UserIntentStatus.Completed,
         val aiReplyText: String? = null,
-        override val requireConfirmation: Boolean = false,
     ) : UserIntent() {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): JustTalk {
             return JustTalk(
@@ -90,7 +83,6 @@ sealed class UserIntent : RequireConfirmation {
                 example = this.example,
                 status = status,
                 aiReplyText = this.aiReplyText,
-                requireConfirmation = this.requireConfirmation
             )
         }
     }
@@ -102,14 +94,12 @@ sealed class UserIntent : RequireConfirmation {
         override val description: String = "Sync data with the server",
         override val example: String = "Sync my data with the server => SyncData",
         override var status: UserIntentStatus = UserIntentStatus.Pending,
-        override val requireConfirmation: Boolean = false
     ) : UserIntent() {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): SyncData {
             return SyncData(
                 description = this.description,
                 example = this.example,
                 status = status,
-                requireConfirmation = this.requireConfirmation
             )
         }
     }
@@ -122,7 +112,6 @@ sealed class UserIntent : RequireConfirmation {
         override val example: String = "Show me the spending records for November => queryRecords",
         override val dto: BaseEntityDto? = null,
         override var status: UserIntentStatus = UserIntentStatus.Pending,
-        override val requireConfirmation: Boolean = false
     ) : UserIntent(), DtoAssociated {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): QueryRecords {
             return QueryRecords(
@@ -130,7 +119,6 @@ sealed class UserIntent : RequireConfirmation {
                 example = this.example,
                 dto = dto ?: this.dto,
                 status = status,
-                requireConfirmation = this.requireConfirmation
             )
         }
     }
@@ -143,7 +131,6 @@ sealed class UserIntent : RequireConfirmation {
         override val example: String = "Export my financial records from last month => exportRecords",
         override val dto: BaseEntityDto? = null,
         override var status: UserIntentStatus = UserIntentStatus.Pending,
-        override val requireConfirmation: Boolean = false
     ) : UserIntent(), DtoAssociated {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): ExportRecords {
             return ExportRecords(
@@ -151,7 +138,6 @@ sealed class UserIntent : RequireConfirmation {
                 example = this.example,
                 dto = dto ?: this.dto,
                 status = status,
-                requireConfirmation = this.requireConfirmation
             )
         }
     }

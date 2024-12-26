@@ -48,12 +48,17 @@ class AiService(
 
         val inferredUserIntent = inferUserIntent(text)
 
-        return inferredUserIntent
+
+        return getActionDetail(
+            inferredUserIntent, text, user, invokeInstant, userTimeZoneId
+
+        )
     }
+
     /**
      * Identifies the userIntent name from the user input text using OpenAI.
      */
-    private suspend fun inferUserIntent(text: String): UserIntent? {
+    private suspend fun inferUserIntent(text: String): UserIntent {
         val prompt = UserIntent.generatePrompt()
 
         val chatCompletionRequest = ChatCompletionRequest(
@@ -72,34 +77,31 @@ class AiService(
 
 
         //kotlin reflect not support in multiplatform
-        return UserIntent.fromKClassSimpleName(
-            response ?: ""
-        )
+
+
+        return response?.let {
+            UserIntent.fromKClassSimpleName(
+                it
+            )
+        } ?: UserIntent.JustTalk()
     }
 
     /**
      * Retrieves detailed userIntent information based on the userIntent name.
      */
     private suspend fun getActionDetail(
-        action: String, text: String, user: UserDto, invokeInstant: Long, //epoch seconds
+        userIntent: UserIntent, text: String, user: UserDto, invokeInstant: Long, //epoch seconds
         userTimeZoneId: String
     ): UserIntent? {
-        return when (action) {
-            "insertLedgerRecord" -> handleInsertLedgerAction(user, text)
-            // Add handlers for other actions similarly
-            "insertTransactionRecord" -> handleInsertTransactionAction(
-                user = user,
-                text = text,
-                invokeInstant = invokeInstant,
-                userTimeZoneId = userTimeZoneId
+        return when (userIntent) {
+            is UserIntent.InsertLedger -> handleInsertLedgerAction(user, text)
+            is UserIntent.InsertTransaction -> handleInsertTransactionAction(
+                user, text, invokeInstant, userTimeZoneId
             )
 
-            "justTalk" -> handleJustTalkAction(user, text)
+            is UserIntent.JustTalk -> handleJustTalkAction(user, text)
+            else -> null
 
-
-            // "queryRecords" -> handleQueryRecordsAction(user, text)
-            // ... other actions
-            else -> null // Handle unknown or unsupported actions
         }
     }
 
@@ -125,12 +127,11 @@ class AiService(
             [Examples]
             - "Create a new ledger called 'Expenses' in USD" => {"name": "Expenses", "currencyCode": "USD"}
             - "Add a new account for savings in EUR" => {"name": "Savings", "currencyCode": "EUR"}
-            - "新建人名币账本, 用于我的宝宝支出" => {"name": "宝宝支出", "currencyCode": "CNY"}
+            - "新建人民币账本, 用于我的宝宝支出" => {"name": "宝宝支出", "currencyCode": "CNY"}
             - "Set up a ledger named 'Income' with GBP as currency" => {"name": "Income", "currencyCode": "GBP"}
             - "Create a ledger for 'Investments' with the currency in USD" => {"name": "Investments", "currencyCode": "USD"}
             - "How to change the ledger's name?" => {"name": null, "currencyCode": null}
-            
-            
+           
         """.trimIndent()
 
         val chatCompletionRequest = ChatCompletionRequest(
@@ -257,12 +258,12 @@ class AiService(
             You are a friendly financial assistant who's name is Penny, a Diligent and cute fairy.
             [Goal]
             The user will input natural language to chat with you. Your task is to respond to the user's input in a friendly and helpful manner.
-            
             [Examples]
             - "How are you today?" => "I'm doing well, thank you for asking! How can I help you today?"
             - "What's the weather like today?" => "I'm not sure about the weather, but I can help you with your finances!"
             - "Tell me a joke" => "Sure! Why did the banker switch careers? He lost interest!"
             - "What's the meaning of life?" => "The meaning of life is to enjoy the journey and make the most of every moment!"
+            
         """.trimIndent()
 
         val chatCompletionRequest = ChatCompletionRequest(

@@ -1,11 +1,18 @@
 package app.penny.feature.aiChat
 
+import app.penny.core.data.model.MessageType
+import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.domain.handler.ActionHandler
+import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.SystemMessage
+import app.penny.core.domain.model.UserMessage
+import app.penny.core.domain.model.UserModel
 import app.penny.core.domain.usecase.ConfirmPendingActionUseCase
 import app.penny.core.domain.usecase.LoadChatHistoryUseCase
 import app.penny.core.domain.usecase.SendMessageUseCase
+import app.penny.servershared.enumerate.ConfirmRequired
 import app.penny.servershared.enumerate.DtoAssociated
 import app.penny.servershared.enumerate.UserIntentStatus
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -16,7 +23,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class AIChatViewModel(
@@ -24,9 +33,9 @@ class AIChatViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
     private val confirmPendingActionUseCase: ConfirmPendingActionUseCase,
     private val userDataRepository: UserDataRepository,
-    private val ledgerRepository: LedgerRepository
-
-
+    private val ledgerRepository: LedgerRepository,
+    private val chatRepository: ChatRepository,
+    private val intentHandler: Map<String, ActionHandler>
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(AIChatUiState())
@@ -96,19 +105,56 @@ class AIChatViewModel(
     private fun sendMessage(messageText: String) {
         screenModelScope.launch {
             _uiState.update { it.copy(isSending = true) }
+
             val userModel = _uiState.value.user
-            val result = sendMessageUseCase.execute(messageText, userModel)
+            val result = try {
+                // 构建 UserMessage
+                val userMessage = UserMessage(
+                    content = messageText,
+                    type = MessageType.TEXT,
+                    uuid = Uuid.random(),
+                    timestamp = Clock.System.now().epochSeconds,
+                    user = userModel,
+                    sender = userModel
+                )
+                // 插入数据库 和UI
+                chatRepository.insert(userMessage)
+                addMessageToUiState(userMessage)
+
+                // 调用 Repository 进行 AI 回复
+                val aiReply = chatRepository.sendMessage(messageText)
+                val aiMessage = SystemMessage(
+                    type = MessageType.TEXT,
+                    uuid = Uuid.random(),
+                    timestamp = Clock.System.now().epochSeconds,
+                    user = userModel,
+                    sender = UserModel.System,
+                    userIntent = aiReply.userIntent,
+                    content = aiReply.content
+                )
+
+                chatRepository.insert(aiMessage)
+                addMessageToUiState(aiMessage)
+                when (aiMessage.userIntent) {
+                    is ConfirmRequired -> {
+                    }
+
+                    else -> {
+                        intentHandler[aiMessage.userIntent!!::class.simpleName]!!.handle(
+                            aiMessage.userIntent
+                        )
+                    }
+                }
+
+                Result.success(userMessage to aiMessage)
+            } catch (e: Exception) {
+                Logger.e("Failed to send message", e)
+                Result.failure<Pair<UserMessage, SystemMessage?>>(e)
+            }
+
 
             result.onSuccess { (userMsg, aiMsg) ->
-                // 更新UIState里的消息列表
-                _uiState.update { state ->
-                    val newMessages = buildList {
-                        addAll(state.messages)
-                        add(userMsg)
-                        if (aiMsg != null) add(aiMsg)
-                    }
-                    state.copy(messages = newMessages, isSending = false, inputText = "")
-                }
+
             }.onFailure { e ->
                 Logger.e("Failed to send message", e)
                 _uiState.update { it.copy(isSending = false) }
@@ -157,6 +203,17 @@ class AIChatViewModel(
             it.copy(messages = it.messages.map { msg ->
                 if (msg.uuid == updatedMessage.uuid) updatedMessage else msg
             })
+        }
+    }
+
+    private fun addMessageToUiState(message: ChatMessage) {
+        _uiState.update {
+            it.copy(
+                messages = buildList {
+                    addAll(_uiState.value.messages)
+                    add(message)
+                }
+            )
         }
     }
 }

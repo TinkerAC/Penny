@@ -239,7 +239,6 @@ private fun IntentPendingContent(
                             fieldStates[field.name]?.value = newValue
                         })
                 }
-
                 FieldType.DATE -> {
                     DatePickerField(label = field.label,
                         selectedDateEpoch = fieldStates[field.name]?.value?.toLongOrNull() ?: 0L,

@@ -13,7 +13,7 @@ interface ActionHandler {
      * @param userIntent 要处理的动作。
      * @param dto 与动作相关的Dto。
      */
-    suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto)
+    suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto? = null)
 
 }
 

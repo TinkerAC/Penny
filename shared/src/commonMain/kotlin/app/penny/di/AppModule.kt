@@ -160,8 +160,6 @@ fun commonModule() = module {
                 userDataRepository = get()
             )
         )
-
-
     }
 
 
@@ -213,7 +211,6 @@ fun commonModule() = module {
 
     factory { GetSummaryUseCase(get()) }
 
-    factory { AIChatViewModel(get(), get(), get(), get(), get()) }
 
     factory { SendMessageUseCase(get()) }
 
@@ -251,7 +248,7 @@ fun commonModule() = module {
 
     factory { NewLedgerViewModel(get(), get()) }
 
-    factory { AIChatViewModel(get(), get(), get(), get(), get()) }
+    factory { AIChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
     factory {
         DashboardViewModel(
             get(), get(), get(), get()

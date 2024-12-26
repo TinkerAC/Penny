@@ -11,7 +11,7 @@ import app.penny.servershared.enumerate.UserIntent.SyncData
 class SyncDataHandler(
     private val syncDataUseCase: SyncDataUseCase
 ) : ActionHandler {
-    override suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto) {
+    override suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto?) {
         syncDataUseCase()
     }
 

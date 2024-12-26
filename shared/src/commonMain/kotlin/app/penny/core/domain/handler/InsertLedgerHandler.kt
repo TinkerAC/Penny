@@ -16,7 +16,7 @@ class InsertLedgerHandler(
     private val ledgerRepository: LedgerRepository
 ) : ActionHandler {
 
-    override suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto) {
+    override suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto?) {
 
 
         if (userIntent !is UserIntent.InsertLedger) {
