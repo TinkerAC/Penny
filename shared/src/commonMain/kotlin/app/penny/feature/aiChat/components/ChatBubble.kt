@@ -70,6 +70,7 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun MessageBubble(
     message: ChatMessage,
+    errorMessage: String? = null,
     onActionConfirm: (SystemMessage, Map<String, String?>) -> Unit,
     onActionDismiss: (SystemMessage) -> Unit
 ) {
@@ -94,7 +95,8 @@ fun MessageBubble(
             SystemMessageBubble(
                 message = message as SystemMessage,
                 onActionConfirm = onActionConfirm,
-                onActionDismiss = onActionDismiss
+                onActionDismiss = onActionDismiss,
+                errorMessage = errorMessage
             )
         }
 
@@ -136,6 +138,7 @@ fun UserMessageBubble(message: ChatMessage) {
 @Composable
 fun SystemMessageBubble(
     message: SystemMessage,
+    errorMessage: String? = null,
     onActionConfirm: (SystemMessage, Map<String, String?>) -> Unit,
     onActionDismiss: (SystemMessage) -> Unit
 ) {
@@ -177,7 +180,24 @@ fun SystemMessageBubble(
                     )
                 }
 
-                null -> TODO()
+
+                UserIntentStatus.Failed -> {
+                    Text(
+                        text = stringResource(SharedRes.strings.action_failed),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
+                null -> {}
+            }
+
+            if (errorMessage !== null) {
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
     }

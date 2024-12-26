@@ -313,6 +313,7 @@
 
     <string name="group_by_primary_category">一级分类</string>
     <string name="group_by_secondary_category">二级分类</string>
+    <string name="chat_with_penny">和Penny聊天</string>
 
 
 </resources>

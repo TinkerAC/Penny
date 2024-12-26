@@ -5,12 +5,11 @@ import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.domain.model.LedgerModel
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.enumerate.UserIntent
 import co.touchlab.kermit.Logger
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -34,8 +33,11 @@ class InsertTransactionHandler(
 
 
         // 确保 ledgerUuid 和 currencyCode 已设置
-        dto.ledgerUuid =
-            userDataRepository.getDefaultLedger()?.toString() ?: dto.ledgerUuid
+
+        val defaultLedger: LedgerModel = userDataRepository.getDefaultLedger()
+
+        dto.ledgerUuid = defaultLedger.uuid.toString()
+
         dto.currencyCode =
             ledgerRepository.findByUuid(Uuid.parse(dto.ledgerUuid))?.currency?.currencyCode
                 ?: throw IllegalArgumentException("Currency code not found for ledger")
@@ -43,10 +45,9 @@ class InsertTransactionHandler(
 
         // 插入交易
         try {
-            val transaction = withContext(Dispatchers.Default) {
-                transactionRepository.insert(dto.toModel())
-            }
-            Logger.i("Successfully inserted transaction: $transaction")
+            val transaction = dto.toModel()
+            transactionRepository.insert(transaction)
+            Logger.d("Transaction inserted Successfully: $dto")
 
         } catch (e: Exception) {
             Logger.e("Failed to insert transaction: $dto", e)

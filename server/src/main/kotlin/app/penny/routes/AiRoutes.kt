@@ -23,14 +23,12 @@ fun Route.aiRoutes(
              */
             post("/get-reply") {
                 val request = call.receive<GetAiReplyRequest>()
-
                 val userIntent: UserIntent? = aiService.getUserIntent(
                     call = call,
                     text = request.text?.trim() ?: "",
                     invokeInstant = request.invokeInstant,
                     userTimeZoneId = request.userTimeZoneId
                 )
-
                 if (userIntent != null) {
                     call.respond(
                         HttpStatusCode.OK,

@@ -29,7 +29,11 @@ import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
 import app.penny.core.data.repository.impl.UserPreferenceRepositoryImpl
 import app.penny.core.data.repository.impl.UserRepositoryImpl
+import app.penny.core.domain.handler.ActionHandler
+import app.penny.core.domain.handler.InsertLedgerHandler
+import app.penny.core.domain.handler.InsertTransactionHandler
 import app.penny.core.domain.model.LedgerModel
+import app.penny.core.domain.usecase.ConfirmPendingActionUseCase
 import app.penny.core.domain.usecase.CountUnsyncedDataUseCase
 import app.penny.core.domain.usecase.DeleteLedgerUseCase
 import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
@@ -37,9 +41,12 @@ import app.penny.core.domain.usecase.GetAllLedgerUseCase
 import app.penny.core.domain.usecase.GetSummaryUseCase
 import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
+import app.penny.core.domain.usecase.LoadChatHistoryUseCase
 import app.penny.core.domain.usecase.LoginUseCase
+import app.penny.core.domain.usecase.RebuildDtoUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
 import app.penny.core.domain.usecase.SearchTransactionsUseCase
+import app.penny.core.domain.usecase.SendMessageUseCase
 import app.penny.core.domain.usecase.SyncDataUseCase
 import app.penny.core.domain.usecase.UploadUnsyncedLedgerUseCase
 import app.penny.core.network.ApiClient
@@ -61,6 +68,7 @@ import app.penny.feature.setting.SettingViewModel
 import app.penny.feature.transactionDetail.TransactionDetailViewModel
 import app.penny.feature.transactions.TransactionViewModel
 import app.penny.presentation.viewmodel.MainViewModel
+import app.penny.servershared.enumerate.UserIntent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -136,6 +144,27 @@ fun commonModule() = module {
     single<StatisticRepository> { StatisticRepositoryImpl(get(), get()) }
 
 
+    single<Map<String, ActionHandler>> {
+        mapOf(
+            UserIntent.InsertLedger::class.simpleName!! to InsertLedgerHandler(
+                ledgerRepository = get()
+            ),
+            UserIntent.InsertTransaction::class.simpleName!! to InsertTransactionHandler(
+                transactionRepository = get(),
+                ledgerRepository = get(),
+                userDataRepository = get()
+            ),
+            UserIntent.SyncData::class.simpleName!! to InsertTransactionHandler(
+                transactionRepository = get(),
+                ledgerRepository = get(),
+                userDataRepository = get()
+            )
+        )
+
+
+    }
+
+
     //注入ApiClient
 
 
@@ -170,6 +199,12 @@ fun commonModule() = module {
         )
     }
 
+    factory { LoadChatHistoryUseCase(get()) }
+
+    factory { RebuildDtoUseCase() }
+
+    factory { ConfirmPendingActionUseCase(get(), get()) }
+
     factory {
         DeleteLedgerUseCase(
             get(), get()
@@ -180,6 +215,7 @@ fun commonModule() = module {
 
     factory { AIChatViewModel(get(), get(), get(), get(), get()) }
 
+    factory { SendMessageUseCase(get()) }
 
     // 注入 ViewModel
 

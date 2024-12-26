@@ -5,9 +5,7 @@ import app.penny.servershared.dto.BaseEntityDto
 import kotlinx.serialization.Serializable
 
 enum class UserIntentStatus {
-    Pending,
-    Completed,
-    Cancelled
+    Pending, Completed, Cancelled, Failed
 }
 
 interface DtoAssociated {
@@ -26,8 +24,7 @@ sealed class UserIntent : RequireConfirmation {
     abstract var status: UserIntentStatus
 
     abstract fun copy(
-        dto: BaseEntityDto? = null,
-        status: UserIntentStatus = this.status
+        dto: BaseEntityDto? = null, status: UserIntentStatus = this.status
     ): UserIntent
 
     @Serializable
@@ -39,8 +36,7 @@ sealed class UserIntent : RequireConfirmation {
         override val requireConfirmation: Boolean = true
     ) : UserIntent(), DtoAssociated {
         override fun copy(
-            dto: BaseEntityDto?,
-            status: UserIntentStatus
+            dto: BaseEntityDto?, status: UserIntentStatus
         ): InsertLedger {
             return InsertLedger(description, intentName, dto, status)
         }
@@ -65,12 +61,25 @@ sealed class UserIntent : RequireConfirmation {
         override val description: String = "Just talk",
         override val intentName: String = "justTalk",
         override var status: UserIntentStatus = UserIntentStatus.Completed,
-        val message: String?,
+        val aiReplyText: String?,
         override val requireConfirmation: Boolean = false,
     ) : UserIntent() {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): JustTalk {
-            return JustTalk(description, intentName, status, message)
+            return JustTalk(description, intentName, status, aiReplyText)
         }
+    }
+
+    @Serializable
+    data class SyncData(
+        override val description: String = "Sync data",
+        override val intentName: String = "syncData",
+        override var status: UserIntentStatus = UserIntentStatus.Pending,
+        override val requireConfirmation: Boolean = false
+    ) : UserIntent() {
+        override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): UserIntent {
+            return SyncData(description, intentName, status)
+        }
+
     }
 
 

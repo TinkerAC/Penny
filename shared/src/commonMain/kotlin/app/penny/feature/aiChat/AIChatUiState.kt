@@ -1,6 +1,7 @@
 package app.penny.feature.aiChat
 
 import app.penny.core.domain.model.ChatMessage
+import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.UserModel
 
 /**
@@ -11,5 +12,8 @@ data class AIChatUiState(
     val isLoading: Boolean = false,
     val messages: List<ChatMessage> = emptyList(),
     val inputText: String = "",
-    val isSending: Boolean = false
+    val isSending: Boolean = false,
+    val ledgerSelectDialogVisible: Boolean = false,
+    val selectedLedger: LedgerModel? = null,
+    val ledgerList: List<LedgerModel> = emptyList()
 )

@@ -12,16 +12,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,15 +37,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.penny.feature.aiChat.components.MessageBubble
-import app.penny.presentation.ui.components.SingleNavigateBackTopBar
+import app.penny.presentation.ui.components.LedgerSelectDialog
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import co.touchlab.kermit.Logger
+import dev.icerock.moko.resources.compose.stringResource
 
 class AIChatScreen : Screen {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         Logger.d { "AIChatScreen Content composed" }
@@ -50,9 +57,34 @@ class AIChatScreen : Screen {
         val uiState by viewModel.uiState.collectAsState()
 
         Scaffold(topBar = {
-            SingleNavigateBackTopBar(title = "Penny", onNavigateBack = {
-                rootNavigator.pop()
-            })
+
+            TopAppBar(
+                title = {
+                    Text(
+                        stringResource(SharedRes.strings.chat_with_penny)
+                    )
+
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        rootNavigator.pop()
+                    }) {
+                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            viewModel.handleIntent(AIChatIntent.ShowLedgerSelectDialog)
+                        }
+                    ) {
+                        Icon(
+                            Icons.Outlined.AccountBalanceWallet,
+                            contentDescription = "Select Ledger"
+                        )
+                    }
+                }
+            )
         }, bottomBar = {
             ChatInputBar(inputText = uiState.inputText, onTextChanged = { text ->
                 viewModel.updateInputText(text)
@@ -104,14 +136,25 @@ class AIChatScreen : Screen {
                         }
                     }
                 }
+
+
+                if (uiState.ledgerSelectDialogVisible) {
+                    LedgerSelectDialog(
+                        allLedgers = emptyList(),
+                        currentLedger = uiState.selectedLedger!!,
+                        onLedgerSelected = { ledger ->
+                            viewModel.handleIntent(AIChatIntent.SelectLedger(ledger))
+                        },
+                        onDismissRequest = {
+                            viewModel.handleIntent(AIChatIntent.HideLedgerSelectDialog)
+                        }
+                    )
+                }
             }
         }
     }
 
-//    @Composable
-//    override fun Content() {
-//        Text("fuck")
-//    }
+
 }
 
 @Composable

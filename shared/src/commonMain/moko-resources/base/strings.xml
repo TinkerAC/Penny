@@ -330,6 +330,5 @@
 
     <string name="group_by_primary_category">Primary</string>
     <string name="group_by_secondary_category">Secondary</string>
-
-
+    <string name="chat_with_penny">Chat with Penny</string>
 </resources>

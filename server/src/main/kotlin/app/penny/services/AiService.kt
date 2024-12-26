@@ -28,8 +28,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class AiService(
-    private val openAiClient: OpenAI,
-    private val userService: UserService
+    private val openAiClient: OpenAI, private val userService: UserService
 ) {
     private val json = Json {
         coerceInputValues = true
@@ -40,27 +39,25 @@ class AiService(
      * The user is retrieved from the ApplicationCall attributes.
      */
     suspend fun getUserIntent(
-        call: ApplicationCall,
-        text: String,
-        invokeInstant: Long,
-        userTimeZoneId: String
+        call: ApplicationCall, text: String, invokeInstant: Long, userTimeZoneId: String
     ): UserIntent? {
         val user = call.getAuthedUser()
             ?: // Optionally handle the absence of a user, e.g., throw an exception
             return null
 
+
         val actionName = getActionName(text)
 
-        return if (actionName != null) {
-            getActionDetail(
+        return when (actionName) {
+            "syncData" -> UserIntent.SyncData()
+            null -> null
+            else -> getActionDetail(
                 action = actionName,
                 text = text,
                 user = user,
                 invokeInstant = invokeInstant,
                 userTimeZoneId = userTimeZoneId
             )
-        } else {
-            null
         }
     }
 
@@ -84,6 +81,7 @@ class AiService(
             - deleteRecord (delete a financial record)
             - analyzeSpending (analyze spending habits)
             - setReminder (set financial reminders)
+            - syncDate (sync app data)
             - none (no userIntent required)
             
             [Examples]
@@ -94,16 +92,13 @@ class AiService(
             - "How is the weather today?" => none
         """.trimIndent()
 
+
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4o-mini"),
-            messages = listOf(
+            model = ModelId("gpt-4o-mini"), messages = listOf(
                 ChatMessage(
-                    role = ChatRole.System,
-                    content = prompt
-                ),
-                ChatMessage(
-                    role = ChatRole.User,
-                    content = text
+                    role = ChatRole.System, content = prompt
+                ), ChatMessage(
+                    role = ChatRole.User, content = text
                 )
             )
         )
@@ -117,10 +112,7 @@ class AiService(
      * Retrieves detailed userIntent information based on the userIntent name.
      */
     private suspend fun getActionDetail(
-        action: String,
-        text: String,
-        user: UserDto,
-        invokeInstant: Long, //epoch seconds
+        action: String, text: String, user: UserDto, invokeInstant: Long, //epoch seconds
         userTimeZoneId: String
     ): UserIntent? {
         return when (action) {
@@ -132,7 +124,9 @@ class AiService(
                 invokeInstant = invokeInstant,
                 userTimeZoneId = userTimeZoneId
             )
+
             "justTalk" -> handleJustTalkAction(user, text)
+
 
             // "queryRecords" -> handleQueryRecordsAction(user, text)
             // ... other actions
@@ -144,8 +138,7 @@ class AiService(
      * Handles the 'insertLedgerRecord' userIntent by extracting necessary details.
      */
     private suspend fun handleInsertLedgerAction(
-        user: UserDto,
-        text: String
+        user: UserDto, text: String
     ): UserIntent.InsertLedger? {
         val prompt = """
             [Role]
@@ -172,15 +165,11 @@ class AiService(
         """.trimIndent()
 
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4o-mini"),
-            messages = listOf(
+            model = ModelId("gpt-4o-mini"), messages = listOf(
                 ChatMessage(
-                    role = ChatRole.System,
-                    content = prompt
-                ),
-                ChatMessage(
-                    role = ChatRole.User,
-                    content = text
+                    role = ChatRole.System, content = prompt
+                ), ChatMessage(
+                    role = ChatRole.User, content = text
                 )
             )
         )
@@ -208,9 +197,7 @@ class AiService(
 
         return UserIntent.InsertLedger(
             dto = LedgerDto.create(
-                userUuid = user.uuid,
-                name = name ?: "",
-                currencyCode = currencyCode ?: ""
+                userUuid = user.uuid, name = name ?: "", currencyCode = currencyCode ?: ""
             )
         )
     }
@@ -218,9 +205,7 @@ class AiService(
 
     @OptIn(ExperimentalUuidApi::class)
     private suspend fun handleInsertTransactionAction(
-        user: UserDto,
-        text: String,
-        invokeInstant: Long, // epoch seconds
+        user: UserDto, text: String, invokeInstant: Long, // epoch seconds
         userTimeZoneId: String
     ): UserIntent.InsertTransaction? {
 
@@ -229,9 +214,8 @@ class AiService(
         val userTimeZone = TimeZone.of(zoneId = userTimeZoneId)
 
         // 将 invokeInstant 转为用户本地日期
-        val userLocalDate: LocalDate = Instant.fromEpochSeconds(invokeInstant)
-            .toLocalDateTime(userTimeZone)
-            .date
+        val userLocalDate: LocalDate =
+            Instant.fromEpochSeconds(invokeInstant).toLocalDateTime(userTimeZone).date
 
 
         val prompt = Category.generateLLMPrompt()
@@ -241,12 +225,9 @@ class AiService(
         println("input: $input")
 
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4o-mini"),
-            messages = listOf(
-                ChatMessage(role = ChatRole.System, content = prompt),
-                ChatMessage(
-                    role = ChatRole.User,
-                    content = input
+            model = ModelId("gpt-4o-mini"), messages = listOf(
+                ChatMessage(role = ChatRole.System, content = prompt), ChatMessage(
+                    role = ChatRole.User, content = input
 
                 )
             )
@@ -300,9 +281,8 @@ class AiService(
 
 
     private suspend fun handleJustTalkAction(
-        user: UserDto,
-        text: String
-    ): UserIntent.JustTalk? {
+        user: UserDto, text: String
+    ): UserIntent.JustTalk {
         val prompt = """
             [Role]
             You are a friendly financial assistant who's name is Penny, a Diligent and cute fairy.
@@ -317,15 +297,11 @@ class AiService(
         """.trimIndent()
 
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4o-mini"),
-            messages = listOf(
+            model = ModelId("gpt-4o-mini"), messages = listOf(
                 ChatMessage(
-                    role = ChatRole.System,
-                    content = prompt
-                ),
-                ChatMessage(
-                    role = ChatRole.User,
-                    content = text
+                    role = ChatRole.System, content = prompt
+                ), ChatMessage(
+                    role = ChatRole.User, content = text
                 )
             )
         )
@@ -335,7 +311,7 @@ class AiService(
         val response = completion.choices.firstOrNull()?.message?.content?.trim()
 
         return UserIntent.JustTalk(
-            message = response
+            aiReplyText = response
         )
     }
 

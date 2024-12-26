@@ -161,6 +161,8 @@ fun LedgerDto.toModel(): LedgerModel {
 @OptIn(ExperimentalUuidApi::class)
 fun TransactionDto.toModel(): TransactionModel {
     return TransactionModel(
+        uuid = Uuid.parse(uuid),
+        ledgerUuid = Uuid.parse(ledgerUuid),
         transactionInstant = Instant.fromEpochSeconds(transactionDate),
         category = Category.valueOf(categoryName),
         transactionType = TransactionType.valueOf(transactionType),
