@@ -38,13 +38,14 @@ expect class ApplicationInitializer(
 
 }
 
-
 // initSession: 通用逻辑，返回 ApplicationInitializer 本身
 fun ApplicationInitializer.initSession(
 ): ApplicationInitializer {
     val userDataRepository = getKoinInstance<UserDataRepository>()
     val tokenManager = getKoinInstance<TokenManager>()
     val authRepository = getKoinInstance<AuthRepository>()
+
+
 
     CoroutineScope(Dispatchers.Default).launch {
         val isFirstTime = userDataRepository.getIsFirstTime()

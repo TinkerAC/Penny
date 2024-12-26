@@ -14,7 +14,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
  * OnboardingNavigatorScreen负责多步Onboarding流程的导航。
  * 使用Voyager的Navigator包裹各个Onboarding步骤Screen。
  */
-class OnboardingNavigatorScreen : Screen {
+class OnboardingNavigatorScreen(
+    private val startPage: Int = 0
+) : Screen {
     @Composable
     override fun Content() {
         val rootNavigator = LocalNavigator.currentOrThrow
@@ -25,7 +27,7 @@ class OnboardingNavigatorScreen : Screen {
             OnboardingStep2(),
             OnboardingStep3Login(),
             OnboardingStep4InitLedger()
-        )
+        ).subList(fromIndex = startPage, toIndex = 5)
         SafeAreaBackgrounds(
             topColor = MaterialTheme.colorScheme.surface,
             bottomColor = MaterialTheme.colorScheme.surface
@@ -44,10 +46,11 @@ fun CurrentOnboardingFlow(
     onboardingScreens: List<Screen>,
     onFinish: () -> Unit
 ) {
-    val rootNavigator = LocalNavigator.currentOrThrow
 
     // 使用一个本地的Navigator来承载Onboarding多个步骤
-    Navigator(onboardingScreens.first()) { navigator ->
+    Navigator(
+        onboardingScreens.first()
+    ) { navigator ->
         val currentIndex = onboardingScreens.indexOf(navigator.lastItem)
         val isLast = currentIndex == onboardingScreens.lastIndex
 

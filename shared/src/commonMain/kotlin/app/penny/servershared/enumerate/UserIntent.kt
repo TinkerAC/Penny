@@ -30,7 +30,6 @@ sealed class UserIntent : RequireConfirmation {
         dto: BaseEntityDto? = null, status: UserIntentStatus = this.status
     ): UserIntent
 
-
     @Serializable
     data class InsertLedger(
         @Transient
@@ -157,7 +156,6 @@ sealed class UserIntent : RequireConfirmation {
         }
     }
 
-
     companion object {
         private val allIntents = listOf(
             InsertLedger(),
@@ -172,7 +170,6 @@ sealed class UserIntent : RequireConfirmation {
             return allIntents.find { it::class.simpleName == simpleName }
         }
 
-
         fun generatePrompt(): String {
             val basePrompt = """
                 [Role]
@@ -183,14 +180,15 @@ sealed class UserIntent : RequireConfirmation {
                 Supported methods:
             """.trimIndent()
 
-            val methodsList =
-                "SUPPORTED METHODS:\n" +
-                        allIntents.joinToString("\n") { "- ${this::class.simpleName}(\"${it.description}\")" }
+            // 正确获取每个 UserIntent 的类名和描述
+            val methodsList = allIntents.joinToString("\n") {
+                "- ${it::class.simpleName}(\"${it.description}\")"
+            }
 
-
-            //5 random examples
-            val examples =
-                allIntents.shuffled().take(5).joinToString("\n") { "- ${it.example}" }
+            // 5 个随机示例
+            val examples = allIntents.shuffled().take(5).joinToString("\n") {
+                "- ${it.example}"
+            }
 
             val fullPrompt = """
                 $basePrompt
@@ -203,4 +201,3 @@ sealed class UserIntent : RequireConfirmation {
         }
     }
 }
-

@@ -233,7 +233,7 @@ fun ChatMessage.toEntity(): ChatMessageEntity {
                 last_log = lastLog
 
 
-                )
+            )
         }
     }
 
