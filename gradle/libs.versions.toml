@@ -31,6 +31,7 @@ ktorSerializationKotlinxJsonJvm = "2.3.10"
 ktorServerContentNegotiationJvm = "2.3.10"
 ktorUtils = "3.0.0"
 materialKolor = "2.0.0"
+multiplatformMarkdownRenderer = "0.27.0"
 multiplatformSettings = "1.1.1"
 jdbcDriver = "2.0.2"
 junit = "4.13.2"
@@ -103,6 +104,7 @@ ktor-server-auth-jwt = { module = " io.ktor:ktor-server-auth-jwt" }
 ktor-server-content-negotiation-jvm = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktorServerContentNegotiationJvm" }
 ktor-utils = { module = "io.ktor:ktor-utils", version.ref = "ktorUtils" }
 material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+multiplatform-markdown-renderer = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "multiplatformMarkdownRenderer" }
 mysql-connector-java = { module = "mysql:mysql-connector-java", version.ref = "mysqlConnectorJava" }
 native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "jdbcDriver" }
 openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openaiClient" }

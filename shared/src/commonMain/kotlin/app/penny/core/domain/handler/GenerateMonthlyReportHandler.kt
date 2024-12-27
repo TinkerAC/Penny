@@ -30,7 +30,7 @@ class GenerateMonthlyReportHandler(
 
         val yearMonth = year?.let {
             month?.let {
-                YearMonth(it, year)
+                YearMonth(year, month)
             }
         } ?: YearMonth.now().plusMonths(-1)
 

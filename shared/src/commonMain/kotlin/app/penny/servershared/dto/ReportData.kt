@@ -1,11 +1,14 @@
 package app.penny.servershared.dto
 
+import app.penny.core.domain.enum.Language
+import app.penny.core.domain.model.valueObject.YearMonth
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 
 @Serializable
 data class MonthlyReportData(
+    val yearMonth: YearMonth, // Year and month of the report
     val totalIncome: Double, // Total income for the month
     val totalExpense: Double, // Total expenses for the month
     val totalBalance:Double, // Total balance for the month
@@ -13,7 +16,7 @@ data class MonthlyReportData(
     val expenseCategories: List<CategoryData>, // Expense breakdown
     val averageExpensePerDay : Double, // Average expense per day
     val largestExpense: LargestExpense, // Largest single expense
-    val userLocalDate: LocalDate
+    val language: Language // Language for the report
 )
 
 @Serializable

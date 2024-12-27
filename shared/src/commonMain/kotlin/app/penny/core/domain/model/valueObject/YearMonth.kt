@@ -17,7 +17,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class YearMonth(val year: Int, val month: Int) : Comparable<YearMonth> {
     init {
-        require(month in 1..12) { "Month must be between 1 and 12." }
+        require(month in 1..12) {
+            "Month must be between 1 and 12,given year $year , month $month"
+        }
     }
 
     companion object {
@@ -36,7 +38,8 @@ data class YearMonth(val year: Int, val month: Int) : Comparable<YearMonth> {
             val parts = yearMonth.split("-")
             require(parts.size == 2) { "Incorrect string format, should be 'YYYY-MM'." }
             val year = parts[0].toIntOrNull() ?: throw IllegalArgumentException("Invalid year.")
-            val month = parts[1].toIntOrNull() ?: throw IllegalArgumentException("Invalid month.")
+            val month =
+                parts[1].toIntOrNull() ?: throw IllegalArgumentException("Invalid month.")
             return YearMonth(year, month)
         }
     }
@@ -115,7 +118,8 @@ data class YearMonth(val year: Int, val month: Int) : Comparable<YearMonth> {
     fun plusMonths(offset: Long): YearMonth {
         val totalMonths = year * 12 + (month - 1) + offset
         val newYear = (totalMonths / 12).toInt()
-        val newMonth = ((totalMonths % 12) + 12) % 12 + 1 // Ensures the month is between 1 and 12
+        val newMonth =
+            ((totalMonths % 12) + 12) % 12 + 1 // Ensures the month is between 1 and 12
         return YearMonth(newYear, newMonth.toInt())
     }
 

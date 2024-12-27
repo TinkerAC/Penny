@@ -29,6 +29,7 @@ import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
 import app.penny.core.data.repository.impl.UserPreferenceRepositoryImpl
 import app.penny.core.data.repository.impl.UserRepositoryImpl
+import app.penny.core.domain.handler.GenerateMonthlyReportHandler
 import app.penny.core.domain.handler.InsertLedgerHandler
 import app.penny.core.domain.handler.InsertTransactionHandler
 import app.penny.core.domain.handler.JustTalkHandler
@@ -44,6 +45,7 @@ import app.penny.core.domain.usecase.GetSummaryUseCase
 import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.LoginUseCase
+import app.penny.core.domain.usecase.PrepareMonthlyReportDataUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
 import app.penny.core.domain.usecase.SearchTransactionsUseCase
 import app.penny.core.domain.usecase.SendMessageUseCase
@@ -148,10 +150,15 @@ fun commonModule() = module {
     single { InsertTransactionHandler(get(), get(), get()) }
     single { JustTalkHandler() }
     single { SyncDataHandler(get()) }
+    single {
+        GenerateMonthlyReportHandler(
+            get(), get(), get()
+        )
+    }
 
     single {
         UserIntentHandlers(
-            get(), get(), get(), get(),get()
+            get(), get(), get(), get(), get()
         )
     }
 
@@ -189,7 +196,11 @@ fun commonModule() = module {
             get(), get(), get(), get()
         )
     }
-
+    factory {
+        PrepareMonthlyReportDataUseCase(
+            get(), get()
+        )
+    }
 
 
     factory { ConfirmPendingActionUseCase(get()) }
@@ -199,6 +210,7 @@ fun commonModule() = module {
             get(), get()
         )
     }
+
 
     factory { GetSummaryUseCase(get()) }
 

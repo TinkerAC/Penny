@@ -1,17 +1,18 @@
 package app.penny.core.domain.usecase
 
 import app.penny.core.data.repository.TransactionRepository
+import app.penny.core.data.repository.UserPreferenceRepository
 import app.penny.core.domain.enum.TransactionType
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.core.utils.getDaysInMonth
-import app.penny.core.utils.localDateNow
 import app.penny.servershared.dto.CategoryData
 import app.penny.servershared.dto.LargestExpense
 import app.penny.servershared.dto.MonthlyReportData
 
 class PrepareMonthlyReportDataUseCase(
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val userPreferenceRepository: UserPreferenceRepository
 ) {
 
     suspend operator fun invoke(
@@ -69,6 +70,7 @@ class PrepareMonthlyReportDataUseCase(
 
 
         return MonthlyReportData(
+            yearMonth = yearMonth,
             totalIncome = totalIncome,
             totalExpense = totalExpense,
             totalBalance = totalBalance,
@@ -76,7 +78,7 @@ class PrepareMonthlyReportDataUseCase(
             expenseCategories = expenseCategories,
             averageExpensePerDay = averageExpensePerDay,
             largestExpense = largestExpense,
-            userLocalDate = localDateNow()
+            language = userPreferenceRepository.getLanguage()
         )
     }
 }
