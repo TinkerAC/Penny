@@ -151,7 +151,7 @@ fun commonModule() = module {
 
     single {
         UserIntentHandlers(
-            get(), get(), get(), get()
+            get(), get(), get(), get(),get()
         )
     }
 

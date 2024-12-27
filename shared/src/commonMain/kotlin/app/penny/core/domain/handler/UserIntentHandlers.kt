@@ -9,6 +9,7 @@ class UserIntentHandlers(
     private val insertTransactionHandler: InsertTransactionHandler,
     private val justTalkHandler: JustTalkHandler,
     private val syncDataHandler: SyncDataHandler,
+    private val generateMonthlyReportHandler: GenerateMonthlyReportHandler
 ) {
     suspend fun handle(message: SystemMessage, dto: BaseEntityDto? = null): SystemMessage {
         return when (message.userIntent) {
