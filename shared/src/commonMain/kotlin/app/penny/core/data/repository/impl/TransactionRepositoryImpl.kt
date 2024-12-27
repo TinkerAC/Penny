@@ -172,4 +172,16 @@ class TransactionRepositoryImpl(
 
         return result
     }
+
+
+    override suspend fun findByLedgerAndYearMonth(
+        ledger: LedgerModel,
+        yearMonth: YearMonth
+    ): List<TransactionModel> {
+        val startEpochSeconds = yearMonth.getStartEpochSeconds()
+        val endEpochSeconds = yearMonth.getEndEpochSeconds()
+        return transactionLocalDataSource.findByLedgerUuidAndTransactionDateBetween(
+            ledger.uuid.toString(), startEpochSeconds, endEpochSeconds
+        ).map { it.toModel() }
+    }
 }

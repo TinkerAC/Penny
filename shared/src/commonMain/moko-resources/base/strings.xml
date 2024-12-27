@@ -340,5 +340,6 @@
     <string name="user_intent_query_records">Query Records</string>
     <string name="user_intent_export_records">Export Records</string>
     <string name="generate_report">Generate Report</string>
+    <string name="user_intent_generate_monthly_report">Generate Monthly Report</string>
 
 </resources>

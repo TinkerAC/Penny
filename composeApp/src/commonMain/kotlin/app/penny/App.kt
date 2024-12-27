@@ -109,22 +109,23 @@ fun App() {
         CircularProgressIndicator()
 
     } else {
-        AppTheme(
-            appTheme = themeState.appTheme,
-            appDisplayMode = themeState.displayMode,
-            appThemeContrast = themeState.constraints
-        ) {
-            Navigator(
-                screen = if (startOnBoardingPage != -1) {
-                    // 如果不是-1，说明需要进入OnBoarding
-                    OnboardingNavigatorScreen(
-                        startPage = startOnBoardingPage!!
-                    )
-                } else {
-                    // 一切正常，直接跳转到主界面
-                    MainScreen()
-                }
-            ) { navigator ->
+
+        Navigator(
+            screen = if (startOnBoardingPage != -1) {
+                // 如果不是-1，说明需要进入OnBoarding
+                OnboardingNavigatorScreen(
+                    startPage = startOnBoardingPage!!
+                )
+            } else {
+                // 一切正常，直接跳转到主界面
+                MainScreen()
+            }
+        ) { navigator ->
+            AppTheme(
+                appTheme = themeState.appTheme,
+                appDisplayMode = themeState.displayMode,
+                appThemeContrast = themeState.constraints
+            ) {
                 SlideTransition(navigator = navigator)
             }
         }

@@ -114,6 +114,7 @@ sealed class UserIntent {
         }
     }
 
+
     @Serializable
     data class QueryRecords(
         @Transient
@@ -134,23 +135,25 @@ sealed class UserIntent {
     }
 
     @Serializable
-    data class ExportRecords(
+    data class GenerateMonthlyReport(
         @Transient
-        override val displayText: StringResource = SharedRes.strings.user_intent_export_records,
-        override val description: String = "Export financial records",
-        override val example: String = "Export my financial records from last month => exportRecords",
-        override val dto: BaseEntityDto? = null,
+        override val displayText: StringResource = SharedRes.strings.user_intent_generate_monthly_report,
+        override val description: String = "Generate a financial report of a specific month",
+        override val example: String = "Generate a report for the month of November => generateReport",
         override var status: UserIntentStatus = UserIntentStatus.Pending,
-    ) : UserIntent(), DtoAssociated {
-        override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): ExportRecords {
-            return ExportRecords(
+        val month: Int? = null,
+        val year: Int? = null,
+
+        ) : UserIntent(), SilentIntent {
+        override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): GenerateMonthlyReport {
+            return GenerateMonthlyReport(
                 description = this.description,
                 example = this.example,
-                dto = dto ?: this.dto,
                 status = status,
             )
         }
     }
+
 
     companion object {
         private val allIntents = listOf(
@@ -159,7 +162,7 @@ sealed class UserIntent {
             JustTalk(),
             SyncData(),
             QueryRecords(),
-            ExportRecords(),
+            GenerateMonthlyReport(),
         )
 
         fun fromKClassSimpleName(simpleName: String): UserIntent? {

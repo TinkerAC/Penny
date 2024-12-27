@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.SystemMessage
+import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.enumerate.SilentIntent
 import app.penny.servershared.enumerate.UserIntentStatus
 import app.penny.shared.SharedRes
@@ -29,7 +30,7 @@ import dev.icerock.moko.resources.compose.stringResource
 @Composable
 fun SystemMessageBubble(
     message: SystemMessage,
-    onActionConfirm: (SystemMessage, Map<String, String?>) -> Unit,
+    onActionConfirm: (SystemMessage, BaseEntityDto?) -> Unit,
     onActionDismiss: (SystemMessage) -> Unit
 ) {
     Card(
@@ -59,8 +60,8 @@ fun SystemMessageBubble(
                         UserIntentStatus.Pending -> {
                             IntentPendingContent(
                                 message = message,
-                                onConfirm = { editedFields ->
-                                    onActionConfirm(message, editedFields)
+                                onConfirm = { baseEntityDto ->
+                                    onActionConfirm(message, baseEntityDto)
                                 },
                                 onDismiss = {
                                     onActionDismiss(message)
@@ -110,6 +111,11 @@ fun SystemAvatar() {
             .border(1.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
     )
 }
+
+
+
+
+
 
 
 

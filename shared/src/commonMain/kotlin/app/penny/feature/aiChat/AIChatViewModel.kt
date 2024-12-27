@@ -176,7 +176,6 @@ class AIChatViewModel(
             return
         }
         screenModelScope.launch {
-
             val result = confirmPendingActionUseCase.execute(message)//todo
             result.onSuccess { updatedMessage ->
                 // 根据返回的 updatedMessage 更新 UIState

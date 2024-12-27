@@ -26,8 +26,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.enum.Category
 import app.penny.core.domain.model.SystemMessage
+import app.penny.core.domain.usecase.buildDto
 import app.penny.servershared.EditableField
 import app.penny.servershared.FieldType
+import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.enumerate.DtoAssociated
@@ -103,12 +105,11 @@ fun SilentIntentMessageContent(
 
 @Composable
 fun IntentPendingContent(
-    message: SystemMessage,
-    onConfirm: (Map<String, String?>) -> Unit,
-    onDismiss: () -> Unit
+    message: SystemMessage, onConfirm: (BaseEntityDto) -> Unit, onDismiss: () -> Unit
 ) {
     // 检查 userIntent 是否实现了 DtoAssociated
     val dtoAssociated = message.userIntent as? DtoAssociated
+
     if (dtoAssociated == null) {
         Text(
             text = stringResource(SharedRes.strings.unknown_status),
@@ -126,7 +127,7 @@ fun IntentPendingContent(
     // 初始化字段状态
     LaunchedEffect(fields) {
         fields.forEach { field ->
-            fieldStates.put(field.name, field.value)
+            fieldStates[field.name] = field.value
         }
     }
 
@@ -135,22 +136,19 @@ fun IntentPendingContent(
         when (val dto = dtoAssociated.dto) {
             is TransactionDto -> {
                 TransactionEditSheetContent(
-                    dtoFields = fields,
-                    fieldStates = fieldStates
+                    dtoFields = fields, fieldStates = fieldStates
                 )
             }
 
             is LedgerDto -> {
                 LedgerEditSheetContent(
-                    dtoFields = fields,
-                    fieldStates = fieldStates
+                    dtoFields = fields, fieldStates = fieldStates
                 )
             }
 
             else -> {
                 DefaultEditSheetContent(
-                    dtoFields = fields,
-                    fieldStates = fieldStates
+                    dtoFields = fields, fieldStates = fieldStates
                 )
             }
         }
@@ -159,12 +157,10 @@ fun IntentPendingContent(
 
         // 渲染确认和取消按钮
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
         ) {
             TextButton(
-                onClick = onDismiss,
-                colors = ButtonDefaults.textButtonColors(
+                onClick = onDismiss, colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
@@ -174,7 +170,15 @@ fun IntentPendingContent(
             Button(onClick = {
                 // 收集编辑字段的值
                 val editedFields = fieldStates.toMap()
-                onConfirm(editedFields)
+
+                val updatedDto = buildDto(
+                    user = message.user,
+                    userIntent = message.userIntent,
+                    originalDto = dtoAssociated.dto,
+                    editedFields = editedFields
+                )
+
+                onConfirm(updatedDto!!)
             }) {
                 Text(text = stringResource(SharedRes.strings.confirm))
             }
@@ -185,34 +189,27 @@ fun IntentPendingContent(
 
 @Composable
 fun TransactionEditSheetContent(
-    dtoFields: List<EditableField>,
-    fieldStates: MutableMap<String, String?>
+    dtoFields: List<EditableField>, fieldStates: MutableMap<String, String?>
 ) {
     Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+        modifier = Modifier.padding(16.dp).fillMaxWidth()
     ) {
         dtoFields.forEach { field ->
             when (field.type) {
                 FieldType.TEXT -> {
-                    EditableTextField(
-                        label = field.label,
+                    EditableTextField(label = field.label,
                         value = fieldStates[field.name] ?: "",
                         onValueChange = { newValue ->
                             fieldStates[field.name] = newValue
-                        }
-                    )
+                        })
                 }
 
                 FieldType.DATE -> {
-                    DatePickerField(
-                        label = field.label,
+                    DatePickerField(label = field.label,
                         selectedDateEpoch = fieldStates[field.name]?.toLongOrNull() ?: 0L,
                         onDateSelected = { epochSeconds ->
                             fieldStates[field.name] = epochSeconds.toString()
-                        }
-                    )
+                        })
                 }
 
                 FieldType.CATEGORY -> {
@@ -222,23 +219,19 @@ fun TransactionEditSheetContent(
                     } catch (e: IllegalArgumentException) {
                         null
                     }
-                    CategorySelectorField(
-                        label = field.label,
+                    CategorySelectorField(label = field.label,
                         selectedCategory = currentCategory,
                         onCategorySelected = { selectedCategoryEnum ->
                             fieldStates[field.name] = selectedCategoryEnum.name
-                        }
-                    )
+                        })
                 }
 
                 FieldType.CURRENCY -> {
-                    CurrencySelectorField(
-                        label = field.label,
+                    CurrencySelectorField(label = field.label,
                         selectedCurrency = fieldStates[field.name] ?: "",
                         onCurrencySelected = { selectedCurrency ->
                             fieldStates[field.name] = selectedCurrency
-                        }
-                    )
+                        })
                 }
 
                 // 其他类型可继续扩展
@@ -252,34 +245,27 @@ fun TransactionEditSheetContent(
 
 @Composable
 fun LedgerEditSheetContent(
-    dtoFields: List<EditableField>,
-    fieldStates: MutableMap<String, String?>
+    dtoFields: List<EditableField>, fieldStates: MutableMap<String, String?>
 ) {
     Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+        modifier = Modifier.padding(16.dp).fillMaxWidth()
     ) {
         dtoFields.forEach { field ->
             when (field.type) {
                 FieldType.TEXT -> {
-                    EditableTextField(
-                        label = field.label,
+                    EditableTextField(label = field.label,
                         value = fieldStates[field.name] ?: "",
                         onValueChange = { newValue ->
                             fieldStates[field.name] = newValue
-                        }
-                    )
+                        })
                 }
 
                 FieldType.CURRENCY -> {
-                    CurrencySelectorField(
-                        label = field.label,
+                    CurrencySelectorField(label = field.label,
                         selectedCurrency = fieldStates[field.name] ?: "",
                         onCurrencySelected = { selectedCurrency ->
                             fieldStates[field.name] = selectedCurrency
-                        }
-                    )
+                        })
                 }
 
                 // 若 Ledger 也需要 date、category 等字段，可一并在此扩展
@@ -293,34 +279,27 @@ fun LedgerEditSheetContent(
 
 @Composable
 fun DefaultEditSheetContent(
-    dtoFields: List<EditableField>,
-    fieldStates: MutableMap<String, String?>
+    dtoFields: List<EditableField>, fieldStates: MutableMap<String, String?>
 ) {
     Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+        modifier = Modifier.padding(16.dp).fillMaxWidth()
     ) {
         dtoFields.forEach { field ->
             when (field.type) {
                 FieldType.TEXT -> {
-                    EditableTextField(
-                        label = field.label,
+                    EditableTextField(label = field.label,
                         value = fieldStates[field.name] ?: "",
                         onValueChange = { newValue ->
                             fieldStates[field.name] = newValue
-                        }
-                    )
+                        })
                 }
 
                 FieldType.DATE -> {
-                    DatePickerField(
-                        label = field.label,
+                    DatePickerField(label = field.label,
                         selectedDateEpoch = fieldStates[field.name]?.toLongOrNull() ?: 0,
                         onDateSelected = { newEpoch ->
                             fieldStates[field.name] = newEpoch.toString()
-                        }
-                    )
+                        })
                 }
 
                 FieldType.CATEGORY -> {
@@ -330,23 +309,19 @@ fun DefaultEditSheetContent(
                     } catch (e: IllegalArgumentException) {
                         null
                     }
-                    CategorySelectorField(
-                        label = field.label,
+                    CategorySelectorField(label = field.label,
                         selectedCategory = currentCategory,
                         onCategorySelected = { newCategory ->
                             fieldStates[field.name] = newCategory.name
-                        }
-                    )
+                        })
                 }
 
                 FieldType.CURRENCY -> {
-                    CurrencySelectorField(
-                        label = field.label,
+                    CurrencySelectorField(label = field.label,
                         selectedCurrency = fieldStates[field.name] ?: "",
                         onCurrencySelected = { newCurrency ->
                             fieldStates[field.name] = newCurrency
-                        }
-                    )
+                        })
                 }
 
                 else -> {}

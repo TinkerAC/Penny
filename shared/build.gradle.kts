@@ -22,7 +22,15 @@ kotlin {
         }
     }
 
-    jvm()
+
+    jvm {
+        compilations.all {
+            kotlinOptions {
+                freeCompilerArgs += listOf("-Xdisable-optimizations")
+            }
+        }
+    }
+
 
     // 新的 iOS 目标配置方式
 

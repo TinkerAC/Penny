@@ -321,7 +321,7 @@
     <string name="user_intent_sync_data">同步数据</string>
     <string name="user_intent_query_records">查询记录</string>
     <string name="user_intent_export_records">导出记录</string>
-    <string name="generate_report">生成报告</string>
+    <string name="generate_monthly_report">生成月报</string>
 
 
 </resources>

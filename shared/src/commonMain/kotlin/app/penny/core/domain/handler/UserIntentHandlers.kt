@@ -16,7 +16,7 @@ class UserIntentHandlers(
             is UserIntent.InsertTransaction -> insertTransactionHandler.handle(message, dto)
             is UserIntent.JustTalk -> justTalkHandler.handle(message, dto)
             is UserIntent.SyncData -> syncDataHandler.handle(message, dto)
-            is UserIntent.ExportRecords -> TODO()
+            is UserIntent.GenerateMonthlyReport -> generateMonthlyReportHandler.handle(message)
             is UserIntent.QueryRecords -> TODO()
             else -> {
                 throw IllegalArgumentException("Unsupported userIntent type or not implemented")

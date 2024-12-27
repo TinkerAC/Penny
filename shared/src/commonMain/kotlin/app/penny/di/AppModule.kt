@@ -44,7 +44,6 @@ import app.penny.core.domain.usecase.GetSummaryUseCase
 import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.LoginUseCase
-import app.penny.core.domain.usecase.RebuildDtoUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
 import app.penny.core.domain.usecase.SearchTransactionsUseCase
 import app.penny.core.domain.usecase.SendMessageUseCase
@@ -192,7 +191,6 @@ fun commonModule() = module {
     }
 
 
-    factory { RebuildDtoUseCase() }
 
     factory { ConfirmPendingActionUseCase(get()) }
 

@@ -17,11 +17,12 @@ import app.penny.feature.aiChat.components.messageBubble.system.SystemAvatar
 import app.penny.feature.aiChat.components.messageBubble.system.SystemMessageBubble
 import app.penny.feature.aiChat.components.messageBubble.user.UserAvatar
 import app.penny.feature.aiChat.components.messageBubble.user.UserMessageBubble
+import app.penny.servershared.dto.BaseEntityDto
 
 @Composable
 fun MessageBubble(
     message: ChatMessage,
-    onActionConfirm: (SystemMessage, Map<String, String?>) -> Unit,
+    onActionConfirm: (SystemMessage, BaseEntityDto?) -> Unit,
     onActionDismiss: (SystemMessage) -> Unit
 ) {
     when (message.sender) {

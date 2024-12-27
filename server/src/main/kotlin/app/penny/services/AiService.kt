@@ -3,6 +3,7 @@ package app.penny.services
 
 import app.penny.core.domain.enum.Category
 import app.penny.servershared.dto.LedgerDto
+import app.penny.servershared.dto.MonthlyReportData
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UserDto
 import app.penny.servershared.enumerate.UserIntent
@@ -44,7 +45,6 @@ class AiService(
         val user = call.getAuthedUser()
             ?: // Optionally handle the absence of a user, e.g., throw an exception
             return UserIntent.JustTalk()
-
 
         val inferredUserIntent = inferUserIntent(text)
         return getActionDetail(
@@ -98,12 +98,97 @@ class AiService(
             )
 
             is UserIntent.JustTalk -> handleJustTalkAction(user, text)
+            is UserIntent.GenerateMonthlyReport -> handleGenerateReportAction(
+                user,
+                text,
+                invokeInstant,
+                userTimeZoneId
+            )
+
             else -> null
         }
 
         val notNullUserIntent: UserIntent = detailedUserIntent ?: handleJustTalkAction(user, text)
 
         return notNullUserIntent
+    }
+
+    private suspend fun handleGenerateReportAction(
+        user: UserDto,
+        text: String,
+        invokeInstant: Long,
+        userTimeZoneId: String
+    ): UserIntent? {
+        // 根据 userTimeZoneId 构建 TimeZone
+        // 假设 userTimeZoneId 表示与 UTC 的小时偏移量（如UTC+8）
+        val userTimeZone = TimeZone.of(zoneId = userTimeZoneId)
+
+        // 将 invokeInstant 转为用户本地日期
+        val userLocalDate: LocalDate =
+            Instant.fromEpochSeconds(invokeInstant).toLocalDateTime(userTimeZone).date
+
+        val prompt = """
+            [Role]
+            You are a diligent financial assistant who's name is Penny, a Diligent and cute fairy.
+            [Goal]
+            The user will input natural language to describe the Month they want to generate a financial report for
+            and a localDate of the user as a reference.
+            Your task is to extract the month and year from the user's input, and return them in JSON format.
+            
+            Supported fields:
+            - month (The month for which the user wants to generate a report)
+            - year (The year for which the user wants to generate a report)
+            
+            [Additional Information]
+            If no valid month or year is found, return null for those fields.
+            
+            [Examples]
+            
+            ex1:
+            text: "Generate a report for the month of November" 
+            userLocalDate: 2024-11-01
+            => {"month": 11, "year": 2024}
+             
+            ex2:
+            text: "Generate a report of last month"
+            userLocalDate: 2024-11-01
+            => {"month": 10, "year": 2024}
+            
+            [Note]
+            Keep in mind that the userLocalDate is the reference date of the user,and return JSON format
+        """.trimIndent()
+
+        val chatCompletionRequest = ChatCompletionRequest(
+            model = ModelId("gpt-4o-mini"), messages = listOf(
+                ChatMessage(
+                    role = ChatRole.System, content = prompt
+                ), ChatMessage(
+                    role = ChatRole.User, content = "text:$text \n userLocalDate:$userLocalDate"
+                )
+            )
+        )
+
+        val completion: ChatCompletion = openAiClient.chatCompletion(chatCompletionRequest)
+
+        val response = completion.choices.firstOrNull()?.message?.content?.trim()
+
+        if (response.isNullOrBlank()) {
+            return null
+        }
+
+        val jsonObject = try {
+            json.parseToJsonElement(response).jsonObject
+        } catch (e: Exception) {
+            null
+        }
+
+        val month = jsonObject?.get("month")?.jsonPrimitive?.contentOrNull
+        val year = jsonObject?.get("year")?.jsonPrimitive?.contentOrNull
+
+        return UserIntent.GenerateMonthlyReport(
+            month = month?.toIntOrNull() ?: 0,
+            year = year?.toIntOrNull() ?: 0
+        )
     }
 
     /**
@@ -132,7 +217,6 @@ class AiService(
             - "Set up a ledger named 'Income' with GBP as currency" => {"name": "Income", "currencyCode": "GBP"}
             - "Create a ledger for 'Investments' with the currency in USD" => {"name": "Investments", "currencyCode": "USD"}
             - "How to change the ledger's name?" => {"name": null, "currencyCode": null}
-           
         """.trimIndent()
 
         val chatCompletionRequest = ChatCompletionRequest(
@@ -284,6 +368,74 @@ class AiService(
         return UserIntent.JustTalk(
             aiReplyText = response
         )
+    }
+
+
+    suspend fun generateReport(
+        data: MonthlyReportData
+    ): String? {
+        val prompt = """
+            [Role]
+            You are a diligent financial assistant who's name is Penny, a Diligent and cute fairy.
+
+            [Goal]
+            The user will input their financial data for a specific month, and your task is to generate a natural language financial report based on this data.
+
+            Infos to be provided:
+            - totalIncome (The total income for the month)
+            - totalExpense (The total expenses for the month)
+            - totalBalance (The total balance for the month)
+            - incomeCategories (A breakdown of income sources and their percentages)
+            - expenseCategories (A breakdown of expenses by category and their percentages)
+            - averageExpense (The average daily expense for the month)
+            - largestExpense (The largest single expense, including its category and description)
+            
+            [Additional Information]
+            Use the provided data to generate a clear and concise monthly financial report in natural language, including trends, insights, and recommendations for the next month.
+            [Examples]
+            ex1:
+            data: {
+                "totalIncome": 5000,
+                "totalExpense": 4000,
+                "netSavings": 1000,
+                "incomeCategories": [
+                    {"category": "Salary", "amount": 4500, "percentage": 90},
+                    {"category": "Investment", "amount": 500, "percentage": 10}
+                ],
+                "expenseCategories": [
+                    {"category": "Food", "amount": 1200, "percentage": 30},
+                    {"category": "Rent", "amount": 2000, "percentage": 50},
+                    {"category": "Entertainment", "amount": 800, "percentage": 20}
+                ],
+                "
+                "savingsTarget": {"targetAmount": 2000, "currentSavings": 1000, "targetMet": false},
+                "largestExpense": {"category": "Rent", "amount": 2000, "description": "Monthly apartment rent"},
+                "userLocalDate": "2024-11-01"
+            }
+            => "In November 2024, your total income was 5000 and your total expenses were 4000, leaving you with net savings of 1000. The majority of your income came from your salary (90%). Your largest expense was on rent (2000), which accounted for 50% of your expenses. You spent 30% on food and 20% on entertainment. You saved 1000 towards your goal of 2000, meaning you are halfway there. Daily spending was consistent, with a slight peak on November 3. Next month, consider limiting entertainment expenses to increase savings."
+                         
+            [Note]
+            Use the provided data fields only and generate output strictly based on them. Do not introduce new fields or assumptions.
+        """.trimIndent()
+
+        val chatCompletionRequest = ChatCompletionRequest(
+            model = ModelId("gpt-4o-mini"), messages = listOf(
+                ChatMessage(
+                    role = ChatRole.System, content = prompt,
+                ),
+                ChatMessage(
+                    role = ChatRole.User, content = json.encodeToString(
+                        MonthlyReportData.serializer(), data
+                    )
+                )
+            )
+        )
+
+        val completion: ChatCompletion = openAiClient.chatCompletion(chatCompletionRequest)
+
+        val response = completion.choices.firstOrNull()?.message?.content?.trim()
+
+        return response
     }
 
 

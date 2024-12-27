@@ -52,7 +52,7 @@ interface TransactionRepository {
     ): DownloadTransactionResponse
 
 
-    suspend fun findByUser(user:UserModel): List<TransactionModel>
+    suspend fun findByUser(user: UserModel): List<TransactionModel>
 
 
     suspend fun findByUserAndYearMonth(
@@ -73,6 +73,10 @@ interface TransactionRepository {
     ): List<TransactionModel>
 
 
+    suspend fun findByLedgerAndYearMonth(
+        ledger: LedgerModel,
+        yearMonth: YearMonth
+    ): List<TransactionModel>
 
 
 }

@@ -2,9 +2,7 @@ package app.penny.core.domain.usecase
 
 import app.penny.core.domain.handler.UserIntentHandlers
 import app.penny.core.domain.model.SystemMessage
-import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.enumerate.DtoAssociated
-import app.penny.servershared.enumerate.UserIntent
 import app.penny.servershared.enumerate.UserIntentStatus
 import co.touchlab.kermit.Logger
 import kotlin.uuid.ExperimentalUuidApi
@@ -28,7 +26,6 @@ class ConfirmPendingActionUseCase(
 
         // 只有实现了 DtoAssociated 的 Intent 才需要在此进行 DTO 完整度校验
         if (userIntent is DtoAssociated) {
-
             val updatedDto = userIntent.dto
 
             // 如果编辑后的 DTO 为空，无法继续
@@ -54,7 +51,9 @@ class ConfirmPendingActionUseCase(
 
             // 如果 DTO 完整，则尝试执行用户意图
             return try {
-                executeUserIntent(message, userIntent, updatedDto)
+                val handledMessage = userIntentHandlers.handle(message, updatedDto)
+                Result.success(handledMessage)
+
             } catch (e: Exception) {
                 Logger.e("Failed to execute userIntent: ${userIntent.displayText}", e)
                 val failureMessage = message.copy(
@@ -73,25 +72,5 @@ class ConfirmPendingActionUseCase(
         }
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    private suspend fun executeUserIntent(
-        message: SystemMessage, userIntent: UserIntent, dto: BaseEntityDto
-    ): Result<SystemMessage> {
-        return try {
-            // 将更新后的 message + dto 交由 handler 处理
-            val handledMessage = userIntentHandlers.handle(
-                message.copy(
-                    userIntent = userIntent.copy(dto = dto)
-                )
-            )
-            Result.success(handledMessage)
-        } catch (e: Exception) {
-            Logger.e("Failed to execute userIntent: ${userIntent.displayText}", e)
-            val failureMessage = message.copy(
-                content = "执行操作失败: ${userIntent.displayText}",
-                userIntent = userIntent.copy(status = UserIntentStatus.Failed)
-            )
-            Result.failure(Exception("Failed to execute user intent", e))
-        }
-    }
+
 }

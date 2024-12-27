@@ -45,10 +45,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import co.touchlab.kermit.Logger
 import dev.icerock.moko.resources.compose.stringResource
+import kotlin.uuid.ExperimentalUuidApi
 
 class AIChatScreen : Screen {
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
         Logger.d { "AIChatScreen Content composed" }
@@ -113,10 +114,15 @@ class AIChatScreen : Screen {
 
 
                                 MessageBubble(message = message,
-                                    onActionConfirm = { msg, editableFields ->
+                                    onActionConfirm = { msg, baseEntityDto ->
                                         viewModel.handleIntent(
                                             AIChatIntent.ConfirmPendingAction(
-                                                message = msg
+                                                message = msg.copy(
+                                                    userIntent = msg.userIntent.copy(
+                                                        dto = baseEntityDto,
+                                                    )
+
+                                                )
                                             )
                                         )
                                     },

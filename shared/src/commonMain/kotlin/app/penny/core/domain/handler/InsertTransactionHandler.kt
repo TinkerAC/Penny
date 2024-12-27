@@ -10,6 +10,7 @@ import app.penny.core.domain.model.SystemMessage
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.enumerate.UserIntent
+import app.penny.servershared.enumerate.UserIntentStatus
 import co.touchlab.kermit.Logger
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -55,10 +56,13 @@ class InsertTransactionHandler(
             throw e
         }
 
-
-
-        return message.copy()
-
+        return message.copy(
+            content = "执行操作成功: ${message.userIntent.displayText}",
+            executeLog = "交易已插入: ${dto.categoryName} ${dto.amount}",
+            userIntent = message.userIntent.copy(
+                status = UserIntentStatus.Completed
+            )
+        )
 
     }
 }
