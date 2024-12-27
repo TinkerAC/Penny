@@ -57,6 +57,7 @@ import app.penny.core.domain.model.UserModel
 import app.penny.servershared.EditableField
 import app.penny.servershared.FieldType
 import app.penny.servershared.enumerate.DtoAssociated
+import app.penny.servershared.enumerate.SilentIntent
 import app.penny.servershared.enumerate.UserIntent
 import app.penny.servershared.enumerate.UserIntentStatus
 import app.penny.shared.SharedRes
@@ -159,45 +160,56 @@ fun SystemMessageBubble(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            when (message.userIntent?.status) {
-                UserIntentStatus.Pending -> {
-                    IntentPendingContent(message = message, onConfirm = { editedFields ->
-                        onActionConfirm(message, editedFields)
-                    }, onDismiss = {
-                        onActionDismiss(message)
-                    })
-                }
-
-                UserIntentStatus.Completed -> {
-                    ActionCompletedContent(
-                        userIntent = message.userIntent,
+            when (message.userIntent) {
+                is SilentIntent -> {
+                    SilentIntentMessageContent(
+                        message = message,
                     )
                 }
 
-                UserIntentStatus.Cancelled -> {
-                    ActionCancelledContent(
-                        userIntent = message.userIntent
-                    )
+                else -> {
+
+                    when (message.userIntent.status) {
+                        UserIntentStatus.Pending -> {
+                            IntentPendingContent(message = message, onConfirm = { editedFields ->
+                                onActionConfirm(message, editedFields)
+                            }, onDismiss = {
+                                onActionDismiss(message)
+                            })
+                        }
+
+                        UserIntentStatus.Completed -> {
+                            ActionCompletedContent(
+                                userIntent = message.userIntent,
+                            )
+                        }
+
+                        UserIntentStatus.Cancelled -> {
+                            ActionCancelledContent(
+                                userIntent = message.userIntent
+                            )
+                        }
+
+
+                        UserIntentStatus.Failed -> {
+                            Text(
+                                text = stringResource(SharedRes.strings.action_failed),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+
+                        null -> {}
+                    }
+
+                    if (errorMessage !== null) {
+                        Text(
+                            text = errorMessage,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
-
-
-                UserIntentStatus.Failed -> {
-                    Text(
-                        text = stringResource(SharedRes.strings.action_failed),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-
-                null -> {}
-            }
-
-            if (errorMessage !== null) {
-                Text(
-                    text = errorMessage,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error
-                )
             }
         }
     }
@@ -224,7 +236,11 @@ private fun IntentPendingContent(
         modifier = Modifier.padding(16.dp).fillMaxWidth()
     ) {
         Text(
-            text = stringResource(SharedRes.strings.pending_action) + ": ${stringResource(message.userIntent.displayText)}",
+            text = stringResource(SharedRes.strings.pending_action) + ": ${
+                stringResource(
+                    message.userIntent.displayText
+                )
+            }",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -239,6 +255,7 @@ private fun IntentPendingContent(
                             fieldStates[field.name]?.value = newValue
                         })
                 }
+
                 FieldType.DATE -> {
                     DatePickerField(label = field.label,
                         selectedDateEpoch = fieldStates[field.name]?.value?.toLongOrNull() ?: 0L,
@@ -305,7 +322,11 @@ private fun ActionCompletedContent(
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
-            text = stringResource(SharedRes.strings.action_completed) + ": ${stringResource(userIntent!!.displayText)}",
+            text = stringResource(SharedRes.strings.action_completed) + ": ${
+                stringResource(
+                    userIntent!!.displayText
+                )
+            }",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -325,7 +346,11 @@ private fun ActionCancelledContent(
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
-            text = stringResource(SharedRes.strings.action_cancelled) + ": ${stringResource(userIntent!!.displayText)}",
+            text = stringResource(SharedRes.strings.action_cancelled) + ": ${
+                stringResource(
+                    userIntent!!.displayText
+                )
+            }",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -384,11 +409,9 @@ private fun DatePickerField(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(4.dp))
-        androidx.compose.foundation.layout.Box(
-            modifier = Modifier.fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant)
-                .clickable { expanded = true }.padding(16.dp)
-        ) {
+        androidx.compose.foundation.layout.Box(modifier = Modifier.fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable { expanded = true }.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = if (date.isNotBlank()) date else stringResource(SharedRes.strings.please_select_date),
@@ -480,11 +503,9 @@ private fun CategorySelectorField(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(4.dp))
-        androidx.compose.foundation.layout.Box(
-            modifier = Modifier.fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant)
-                .clickable { expanded = true }.padding(16.dp)
-        ) {
+        androidx.compose.foundation.layout.Box(modifier = Modifier.fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable { expanded = true }.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = selectedCategory?.let { stringResource(it.categoryName) }
                     ?: stringResource(SharedRes.strings.please_select_category),
@@ -548,11 +569,9 @@ private fun CurrencySelectorField(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(4.dp))
-        androidx.compose.foundation.layout.Box(
-            modifier = Modifier.fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant)
-                .clickable { expanded = true }.padding(16.dp)
-        ) {
+        androidx.compose.foundation.layout.Box(modifier = Modifier.fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable { expanded = true }.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = if (selectedCurrency.isNotBlank()) selectedCurrency else stringResource(
@@ -613,5 +632,22 @@ private fun DropdownMenuItemList(
                 )
             }
         }
+    }
+}
+
+
+@Composable
+fun SilentIntentMessageContent(
+    message: SystemMessage,
+
+    ) {
+    Column {
+        Text(
+            text = message.content ?: "",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
     }
 }

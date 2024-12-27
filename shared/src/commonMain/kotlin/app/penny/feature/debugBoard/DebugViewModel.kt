@@ -46,6 +46,12 @@ class DebugViewModel(
         _uiState.value = DebugState(isLoading = true)
     }
 
+    fun clearLastSyncedAt(){
+        screenModelScope.launch {
+            userDataRepository.clearLastSyncedAt()
+        }
+    }
+
 
     fun handleIntent(intent: DashboardIntent) {
         when (intent) {

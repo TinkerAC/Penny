@@ -5,12 +5,10 @@ import app.penny.core.data.database.UserLocalDataSource
 import app.penny.core.data.kvstore.UserDataManager
 import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.UserModel
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class UserDataRepositoryImpl(
     private val userDataManager: UserDataManager,
@@ -59,6 +57,10 @@ class UserDataRepositoryImpl(
 
     override suspend fun setLastSyncedAt(lastSyncedAt: Instant) {
         userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, lastSyncedAt.epochSeconds)
+    }
+
+    override suspend fun clearLastSyncedAt() {
+        userDataManager.remove(UserDataManager.LAST_SYNCED_AT)
     }
 
     override suspend fun getUserNameOrNull(): String? {

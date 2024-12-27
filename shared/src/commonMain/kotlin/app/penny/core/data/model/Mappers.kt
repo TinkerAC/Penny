@@ -22,6 +22,7 @@ import app.penny.di.getKoinInstance
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UserDto
+import app.penny.servershared.enumerate.UserIntent
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -30,6 +31,10 @@ import kotlinx.serialization.json.Json
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+val json = Json {
+    ignoreUnknownKeys = true
+    encodeDefaults = true
+}
 
 @OptIn(ExperimentalUuidApi::class)
 fun LedgerEntity.toModel(): LedgerModel {
@@ -229,9 +234,8 @@ fun ChatMessage.toEntity(): ChatMessageEntity {
 //                audio_file_path = null,
                 duration = null,
                 type = type.name,
-                user_intent = userIntent?.let { Json.encodeToString(it) },
-                last_log = lastLog
-
+                user_intent = userIntent?.let { json.encodeToString(it) },
+                last_log = executeLog
 
             )
         }
@@ -253,7 +257,14 @@ fun ChatMessageEntity.toModel(): ChatMessage {
                 type = MessageType.valueOf(type),
                 timestamp = timestamp,
                 content = content,
-                userIntent = null
+                userIntent =
+                user_intent?.let {
+                    json.decodeFromString(
+                        UserIntent.serializer(),
+                        it
+                    )
+                } ?: UserIntent.JustTalk()
+
             )
         }
 

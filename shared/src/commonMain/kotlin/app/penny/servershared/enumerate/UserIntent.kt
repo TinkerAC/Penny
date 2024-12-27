@@ -15,10 +15,20 @@ interface DtoAssociated {
     val dto: BaseEntityDto?
 }
 
+/**
+ * Whether the user intent requires confirmation by the user.
+ */
 interface ConfirmRequired
 
+
+/**
+ * A salient intent is an intent that will not show on the UI,example [UserIntent.JustTalk]
+ */
+interface SilentIntent {
+}
+
 @Serializable
-sealed class UserIntent : ConfirmRequired {
+sealed class UserIntent {
     abstract val displayText: StringResource
     abstract val description: String
     abstract var status: UserIntentStatus
@@ -36,7 +46,7 @@ sealed class UserIntent : ConfirmRequired {
         override val example: String = "Create a new ledger called 'Expenses' in USD => InsertLedgerRecord",
         override val dto: BaseEntityDto? = null,
         override var status: UserIntentStatus = UserIntentStatus.Pending,
-    ) : UserIntent(), DtoAssociated {
+    ) : UserIntent(), DtoAssociated, ConfirmRequired {
         override fun copy(
             dto: BaseEntityDto?, status: UserIntentStatus
         ): InsertLedger {
@@ -57,7 +67,7 @@ sealed class UserIntent : ConfirmRequired {
         override val example: String = "I spent \$50 at a supermarket today => InsertTransactionRecord",
         override val dto: BaseEntityDto? = null,
         override var status: UserIntentStatus = UserIntentStatus.Pending,
-    ) : UserIntent(), DtoAssociated {
+    ) : UserIntent(), DtoAssociated, ConfirmRequired {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): InsertTransaction {
             return InsertTransaction(
                 description = this.description,
@@ -76,7 +86,7 @@ sealed class UserIntent : ConfirmRequired {
         override val example: String = "How is the weather today? => JustTalk",
         override var status: UserIntentStatus = UserIntentStatus.Completed,
         val aiReplyText: String? = null,
-    ) : UserIntent() {
+    ) : UserIntent(), SilentIntent {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): JustTalk {
             return JustTalk(
                 description = this.description,
@@ -94,7 +104,7 @@ sealed class UserIntent : ConfirmRequired {
         override val description: String = "Sync data with the server",
         override val example: String = "Sync my data with the server => SyncData",
         override var status: UserIntentStatus = UserIntentStatus.Pending,
-    ) : UserIntent() {
+    ) : UserIntent(), SilentIntent {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): SyncData {
             return SyncData(
                 description = this.description,

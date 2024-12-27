@@ -28,24 +28,19 @@ class SyncDataUseCase(
 
         if (countUnsyncedDataResult.hasUnsyncedData) {
             try {
-
-
                 //1.Prepare local changes
                 val ledgerLocalChanges: List<LedgerModel> =
                     ledgerRepository.findByUserUuidAndUpdatedAtAfter(
                         userUuid = user.uuid,
                         timeStamp = lastSyncedAt
-
                     )
-
                 val transactionLocalChanges: List<TransactionModel> =
                     transactionRepository.findByUserUuidAndUpdatedAtAfter(
                         userUuid = user.uuid,
                         timeStamp = lastSyncedAt
                     )
 
-
-                //2. Upload local changes
+                //2. Upload local changes(server do upsert)
 
                 try {
                     ledgerRepository.uploadUnsyncedLedgersByUserUuid(

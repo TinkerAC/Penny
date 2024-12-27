@@ -60,7 +60,7 @@ class AiService(
      */
     private suspend fun inferUserIntent(text: String): UserIntent {
         val prompt = UserIntent.generatePrompt()
-
+//        println(prompt)
         val chatCompletionRequest = ChatCompletionRequest(
             model = ModelId("gpt-4o-mini"), messages = listOf(
                 ChatMessage(

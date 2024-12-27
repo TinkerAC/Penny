@@ -30,6 +30,7 @@ fun Route.aiRoutes(
                     userTimeZoneId = request.userTimeZoneId
                 )
                 if (userIntent != null) {
+                    println("UserIntent: $userIntent")
                     call.respond(
                         HttpStatusCode.OK,
                         GetAiReplyResponse(
@@ -38,16 +39,8 @@ fun Route.aiRoutes(
                             userIntent = userIntent
                         )
                     )
-                } else {
-                    call.respond(
-                        HttpStatusCode.OK,
-                        GetAiReplyResponse(
-                            success = false,
-                            message = "Failed to retrieve userIntent",
-                            content = "Failed to retrieve userIntent"
-                        )
-                    )
                 }
+
             }
 
 

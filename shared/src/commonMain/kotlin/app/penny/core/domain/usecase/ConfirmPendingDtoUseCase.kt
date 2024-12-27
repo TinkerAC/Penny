@@ -1,6 +1,6 @@
 package app.penny.core.domain.usecase
 
-import app.penny.core.domain.handler.ActionHandler
+import app.penny.core.domain.handler.UserIntentHandlers
 import app.penny.core.domain.model.SystemMessage
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.enumerate.UserIntent
@@ -10,17 +10,14 @@ import kotlin.uuid.ExperimentalUuidApi
 
 class ConfirmPendingActionUseCase(
     private val rebuildDtoUseCase: RebuildDtoUseCase,
-    private val userIntentHandlers: Map<String, ActionHandler>
+    private val userIntentHandlers: UserIntentHandlers
 ) {
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun execute(
-        message: SystemMessage,
-        editedFields: Map<String, String?>
+        message: SystemMessage, editedFields: Map<String, String?>
     ): Result<SystemMessage> {
-        val userIntent = message.userIntent ?: return Result.failure(
-            IllegalStateException("No userIntent found in message")
-        )
+        val userIntent = message.userIntent
 
         val originalDto = (userIntent as? app.penny.servershared.enumerate.DtoAssociated)?.dto
         if (originalDto == null) {
@@ -42,8 +39,7 @@ class ConfirmPendingActionUseCase(
             // 返回标记为 Pending
             val incompleteMessage = message.copy(
                 userIntent = userIntent.copy(
-                    dto = newDto,
-                    status = UserIntentStatus.Pending
+                    dto = newDto, status = UserIntentStatus.Pending
                 )
             )
             return Result.success(incompleteMessage)
@@ -51,8 +47,11 @@ class ConfirmPendingActionUseCase(
 
         // 如果 DTO 完整，尝试执行用户意图
         return try {
+
             executeUserIntent(message, userIntent, newDto)
+
         } catch (e: Exception) {
+
             Logger.e("Failed to execute userIntent: ${userIntent.displayText}", e)
             val failureMessage = message.copy(
                 content = "执行操作失败: ${userIntent.displayText}",
@@ -66,21 +65,11 @@ class ConfirmPendingActionUseCase(
 
     @OptIn(ExperimentalUuidApi::class)
     private suspend fun executeUserIntent(
-        message: SystemMessage,
-        userIntent: UserIntent,
-        dto: BaseEntityDto
+        message: SystemMessage, userIntent: UserIntent, dto: BaseEntityDto
     ): Result<SystemMessage> {
-        val handler = userIntentHandlers[userIntent::class.simpleName]
-            ?: return Result.failure(Exception("No handler found for userIntent: ${userIntent.displayText}"))
-
         return try {
-            handler.handle(userIntent, dto)
-            val successMessage = "成功执行操作: ${userIntent.displayText}"
-            val updatedMessage = message.copy(
-                content = successMessage,
-                userIntent = userIntent.copy(status = UserIntentStatus.Completed)
-            )
-            Result.success(updatedMessage)
+            val handledMessage = userIntentHandlers.handle(message)
+            Result.success(handledMessage)
         } catch (e: Exception) {
             Logger.e("Failed to execute userIntent: ${userIntent.displayText}", e)
             val failureMessage = message.copy(

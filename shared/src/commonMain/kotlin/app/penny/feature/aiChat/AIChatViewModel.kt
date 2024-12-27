@@ -4,16 +4,14 @@ import app.penny.core.data.model.MessageType
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.domain.handler.ActionHandler
+import app.penny.core.domain.handler.UserIntentHandlers
 import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.SystemMessage
 import app.penny.core.domain.model.UserMessage
 import app.penny.core.domain.model.UserModel
 import app.penny.core.domain.usecase.ConfirmPendingActionUseCase
-import app.penny.core.domain.usecase.LoadChatHistoryUseCase
-import app.penny.core.domain.usecase.SendMessageUseCase
-import app.penny.servershared.enumerate.ConfirmRequired
 import app.penny.servershared.enumerate.DtoAssociated
+import app.penny.servershared.enumerate.SilentIntent
 import app.penny.servershared.enumerate.UserIntentStatus
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -29,13 +27,12 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class AIChatViewModel(
-    private val loadChatHistoryUseCase: LoadChatHistoryUseCase,
-    private val sendMessageUseCase: SendMessageUseCase,
     private val confirmPendingActionUseCase: ConfirmPendingActionUseCase,
     private val userDataRepository: UserDataRepository,
     private val ledgerRepository: LedgerRepository,
     private val chatRepository: ChatRepository,
-    private val intentHandler: Map<String, ActionHandler>
+    private val userIntentHandlers: UserIntentHandlers
+
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(AIChatUiState())
@@ -90,7 +87,13 @@ class AIChatViewModel(
         screenModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             val userUuid = _uiState.value.user.uuid
-            val result = loadChatHistoryUseCase.execute(userUuid)
+            val result = try {
+                val messages =
+                    chatRepository.findChatHistoryByUserUuid(userUuid)
+                Result.success(messages)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
             result.onSuccess { messages ->
                 _uiState.update {
                     it.copy(messages = messages, isLoading = false)
@@ -133,16 +136,18 @@ class AIChatViewModel(
                     content = aiReply.content
                 )
 
-                chatRepository.insert(aiMessage)
-                addMessageToUiState(aiMessage)
+                // 插入数据库 和UI
+
                 when (aiMessage.userIntent) {
-                    is ConfirmRequired -> {
+                    is SilentIntent -> {
+                        val handledMessage = userIntentHandlers.handle(aiMessage)
+                        addMessageToUiState(handledMessage)
+                        chatRepository.insert(handledMessage)
                     }
 
                     else -> {
-                        intentHandler[aiMessage.userIntent!!::class.simpleName]!!.handle(
-                            aiMessage.userIntent
-                        )
+                        addMessageToUiState(aiMessage)
+                        chatRepository.insert(aiMessage)
                     }
                 }
 
@@ -198,12 +203,21 @@ class AIChatViewModel(
 
 
     @OptIn(ExperimentalUuidApi::class)
-    private fun updateMessage(updatedMessage: app.penny.core.domain.model.ChatMessage) {
-        _uiState.update {
-            it.copy(messages = it.messages.map { msg ->
-                if (msg.uuid == updatedMessage.uuid) updatedMessage else msg
-            })
+    private fun updateMessage(updatedMessage: ChatMessage) {
+
+        //update message in database
+        screenModelScope.launch {
+            chatRepository.update(updatedMessage)
         }
+
+        _uiState.update {
+            it.copy(
+                messages = it.messages.map { msg ->
+                    if (msg.uuid == updatedMessage.uuid) updatedMessage else msg
+                })
+        }
+
+
     }
 
     private fun addMessageToUiState(message: ChatMessage) {
@@ -217,3 +231,6 @@ class AIChatViewModel(
         }
     }
 }
+
+
+

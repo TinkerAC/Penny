@@ -19,6 +19,7 @@ interface UserDataRepository {
 
     suspend fun getLastSyncedAt(): Instant?
     suspend fun setLastSyncedAt(lastSyncedAt: Instant)
+    suspend fun clearLastSyncedAt()
 
     suspend fun clearUserData()
 

@@ -6,6 +6,7 @@ import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.model.LedgerModel
+import app.penny.core.domain.model.SystemMessage
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.enumerate.UserIntent
@@ -20,11 +21,11 @@ class InsertTransactionHandler(
     private val transactionRepository: TransactionRepository,
     private val ledgerRepository: LedgerRepository,
     private val userDataRepository: UserDataRepository
-) : ActionHandler {
+) : UserIntentHandler {
 
     @OptIn(ExperimentalUuidApi::class)
-    override suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto?) {
-        if (userIntent !is UserIntent.InsertTransaction) {
+    override suspend fun handle(message: SystemMessage, dto: BaseEntityDto?): SystemMessage {
+        if (message.userIntent !is UserIntent.InsertTransaction) {
             throw IllegalArgumentException("Unsupported userIntent type")
         }
         if (dto !is TransactionDto) {
@@ -53,5 +54,11 @@ class InsertTransactionHandler(
             Logger.e("Failed to insert transaction: $dto", e)
             throw e
         }
+
+
+
+        return message.copy()
+
+
     }
 }

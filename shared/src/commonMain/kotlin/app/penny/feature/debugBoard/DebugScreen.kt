@@ -143,6 +143,14 @@ class DebugScreen : Screen {
                         Text("Sync All Data")
                     }
 
+                    Button(
+                        onClick = {
+                            debugViewModel.clearLastSyncedAt()
+                        }
+                    ) {
+                        Text("Clear Last Synced At")
+                    }
+
 
 
                     Text("Last Synced At: ${debugViewModel.uiState.value.lastSyncedAt ?: "Never"}")

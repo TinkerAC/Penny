@@ -29,9 +29,11 @@ import app.penny.core.data.repository.impl.TransactionRepositoryImpl
 import app.penny.core.data.repository.impl.UserDataRepositoryImpl
 import app.penny.core.data.repository.impl.UserPreferenceRepositoryImpl
 import app.penny.core.data.repository.impl.UserRepositoryImpl
-import app.penny.core.domain.handler.ActionHandler
 import app.penny.core.domain.handler.InsertLedgerHandler
 import app.penny.core.domain.handler.InsertTransactionHandler
+import app.penny.core.domain.handler.JustTalkHandler
+import app.penny.core.domain.handler.SyncDataHandler
+import app.penny.core.domain.handler.UserIntentHandlers
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.usecase.ConfirmPendingActionUseCase
 import app.penny.core.domain.usecase.CountUnsyncedDataUseCase
@@ -41,7 +43,6 @@ import app.penny.core.domain.usecase.GetAllLedgerUseCase
 import app.penny.core.domain.usecase.GetSummaryUseCase
 import app.penny.core.domain.usecase.InitLocalUserUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
-import app.penny.core.domain.usecase.LoadChatHistoryUseCase
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RebuildDtoUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
@@ -68,7 +69,6 @@ import app.penny.feature.setting.SettingViewModel
 import app.penny.feature.transactionDetail.TransactionDetailViewModel
 import app.penny.feature.transactions.TransactionViewModel
 import app.penny.presentation.viewmodel.MainViewModel
-import app.penny.servershared.enumerate.UserIntent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -143,22 +143,16 @@ fun commonModule() = module {
 
     single<StatisticRepository> { StatisticRepositoryImpl(get(), get()) }
 
+    single {
+        InsertLedgerHandler(get())
+    }
+    single { InsertTransactionHandler(get(), get(), get()) }
+    single { JustTalkHandler() }
+    single { SyncDataHandler(get()) }
 
-    single<Map<String, ActionHandler>> {
-        mapOf(
-            UserIntent.InsertLedger::class.simpleName!! to InsertLedgerHandler(
-                ledgerRepository = get()
-            ),
-            UserIntent.InsertTransaction::class.simpleName!! to InsertTransactionHandler(
-                transactionRepository = get(),
-                ledgerRepository = get(),
-                userDataRepository = get()
-            ),
-            UserIntent.SyncData::class.simpleName!! to InsertTransactionHandler(
-                transactionRepository = get(),
-                ledgerRepository = get(),
-                userDataRepository = get()
-            )
+    single {
+        UserIntentHandlers(
+            get(), get(), get(), get()
         )
     }
 
@@ -197,7 +191,6 @@ fun commonModule() = module {
         )
     }
 
-    factory { LoadChatHistoryUseCase(get()) }
 
     factory { RebuildDtoUseCase() }
 
@@ -237,6 +230,7 @@ fun commonModule() = module {
 
 
 
+
     factory { AnalyticViewModel(get(), get(), get()) }
     factory { TransactionViewModel(get(), get(), get(), get()) }
     factory { MainViewModel(get(), get()) }
@@ -248,7 +242,7 @@ fun commonModule() = module {
 
     factory { NewLedgerViewModel(get(), get()) }
 
-    factory { AIChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    factory { AIChatViewModel(get(), get(), get(), get(), get()) }
     factory {
         DashboardViewModel(
             get(), get(), get(), get()

@@ -8,6 +8,13 @@ import kotlin.uuid.Uuid
 class UserDataManager(
     private val settings: Settings
 ) {
+
+    fun remove(key: String) {
+        settings.remove(key)
+    }
+
+
+
     fun putString(key: String, value: String) {
         settings.set(key = key, value = value)
     }

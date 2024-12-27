@@ -3,35 +3,42 @@ package app.penny.core.domain.handler
 
 import app.penny.core.data.model.toModel
 import app.penny.core.data.repository.LedgerRepository
+import app.penny.core.domain.model.SystemMessage
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.enumerate.UserIntent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import app.penny.servershared.enumerate.UserIntentStatus
+import kotlin.uuid.ExperimentalUuidApi
 
 /**
  * 处理插入账本动作的处理器。
  */
 class InsertLedgerHandler(
     private val ledgerRepository: LedgerRepository
-) : ActionHandler {
+) : UserIntentHandler {
 
-    override suspend fun handle(userIntent: UserIntent, dto: BaseEntityDto?) {
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun handle(message: SystemMessage, dto: BaseEntityDto?): SystemMessage {
 
 
-        if (userIntent !is UserIntent.InsertLedger) {
+        if (message.userIntent !is UserIntent.InsertLedger) {
             throw IllegalArgumentException("Unsupported userIntent type")
         }
         if (dto !is LedgerDto) {
             throw IllegalArgumentException("Invalid DTO type for InsertLedger userIntent")
         }
 
+        val ledgerToBeInserted = dto.toModel()
+        ledgerRepository.insert(ledgerToBeInserted)
 
-        // 插入账本
-        val ledger = withContext(Dispatchers.Default) {
-            ledgerRepository.insert(dto.toModel())
-        }
 
+        return message.copy(
+            userIntent = message.userIntent.copy(
+                status = UserIntentStatus.Completed,
+
+                ),
+            executeLog = "成功插入账本：${ledgerToBeInserted.name}"
+        )
 
     }
 }
