@@ -60,7 +60,7 @@ class AIChatViewModel(
             is AIChatIntent.SendMessage -> sendMessage(intent.message)
             is AIChatIntent.SendAudio -> sendAudio(intent.audioFilePath, intent.duration)
             is AIChatIntent.ConfirmPendingAction -> confirmPendingAction(
-                intent.message, intent.editableFields
+                intent.message
             )
 
             is AIChatIntent.DismissFunctionalMessage -> dismissFunctionalMessage(intent.message)
@@ -127,10 +127,10 @@ class AIChatViewModel(
                 // 调用 Repository 进行 AI 回复
                 val aiReply = chatRepository.sendMessage(messageText)
                 val aiMessage = SystemMessage(
+                    user = userModel,
                     type = MessageType.TEXT,
                     uuid = Uuid.random(),
                     timestamp = Clock.System.now().epochSeconds,
-                    user = userModel,
                     sender = UserModel.System,
                     userIntent = aiReply.userIntent,
                     content = aiReply.content
@@ -146,8 +146,8 @@ class AIChatViewModel(
                     }
 
                     else -> {
-                        addMessageToUiState(aiMessage)
                         chatRepository.insert(aiMessage)
+                        addMessageToUiState(aiMessage)
                     }
                 }
 
@@ -169,16 +169,15 @@ class AIChatViewModel(
 
     private fun confirmPendingAction(
         message: SystemMessage,
-        editedFields: Map<String, String?>
     ) {
         val userIntent = message.userIntent
         if (userIntent !is DtoAssociated) {
             Logger.e("UserIntent does not implement DtoAssociated")
             return
         }
-
         screenModelScope.launch {
-            val result = confirmPendingActionUseCase.execute(message, editedFields)
+
+            val result = confirmPendingActionUseCase.execute(message)//todo
             result.onSuccess { updatedMessage ->
                 // 根据返回的 updatedMessage 更新 UIState
                 updateMessage(updatedMessage)
@@ -201,7 +200,9 @@ class AIChatViewModel(
         throw NotImplementedError("Audio messages are not supported yet")
     }
 
-
+    /**
+     * Update message in database and UIState
+     */
     @OptIn(ExperimentalUuidApi::class)
     private fun updateMessage(updatedMessage: ChatMessage) {
 
@@ -216,8 +217,6 @@ class AIChatViewModel(
                     if (msg.uuid == updatedMessage.uuid) updatedMessage else msg
                 })
         }
-
-
     }
 
     private fun addMessageToUiState(message: ChatMessage) {
@@ -230,6 +229,19 @@ class AIChatViewModel(
             )
         }
     }
+
+
+
+    private fun modifyMessage(message: ChatMessage) {
+        _uiState.update {
+            it.copy(
+                messages = it.messages.map { msg ->
+                    if (msg.uuid == message.uuid) message else msg
+                }
+            )
+        }
+    }
+
 }
 
 

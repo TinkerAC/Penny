@@ -22,14 +22,6 @@ fun ChatBackground(modifier: Modifier = Modifier) {
                 )
             )
     ) {
-//        // 可选：添加图案或图片
-//        Image(
-//            painter = painterResource(id = R.drawable.chat_pattern), // 替换为您的图案图片
-//            contentDescription = "Chat Background Pattern",
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(16.dp)
-//                .alpha(0.1f) // 根据需要调整透明度
-//        )
+
     }
 }

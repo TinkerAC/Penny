@@ -34,10 +34,10 @@ class SendMessageUseCase(
             // 调用 Repository 进行 AI 回复
             val aiReply = chatRepository.sendMessage(messageText)
             val aiMessage = SystemMessage(
+                user = userModel,
                 type = MessageType.TEXT,
                 uuid = Uuid.random(),
                 timestamp = Clock.System.now().epochSeconds,
-                user = userModel,
                 sender = UserModel.System,
                 userIntent = aiReply.userIntent,
                 content = aiReply.content

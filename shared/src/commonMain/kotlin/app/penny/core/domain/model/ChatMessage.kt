@@ -15,8 +15,7 @@ sealed class ChatMessage(
     open val type: MessageType,
     open val timestamp: Long,
     open val content: String?
-) {
-}
+)
 
 @OptIn(ExperimentalUuidApi::class)
 data class UserMessage @ExperimentalUuidApi constructor(
@@ -40,13 +39,10 @@ data class SystemMessage @ExperimentalUuidApi constructor(
     override val uuid: Uuid,
     override val timestamp: Long,
     override val sender: UserModel = UserModel.System,
-    val userIntent: UserIntent ,
     override var content: String? = null,
-    val errorMessage: String? = null,
+    val userIntent: UserIntent,
     val executeLog: String? = null
-) : ChatMessage(uuid, user, sender, type, timestamp, content) {
-
-}
+) : ChatMessage(uuid, user, sender, type, timestamp, content)
 
 
 

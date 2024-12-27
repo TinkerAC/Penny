@@ -36,7 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import app.penny.feature.aiChat.components.MessageBubble
+import app.penny.feature.aiChat.components.messageBubble.MessageBubble
 import app.penny.presentation.ui.components.LedgerSelectDialog
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
@@ -58,33 +58,27 @@ class AIChatScreen : Screen {
 
         Scaffold(topBar = {
 
-            TopAppBar(
-                title = {
-                    Text(
-                        stringResource(SharedRes.strings.chat_with_penny)
-                    )
+            TopAppBar(title = {
+                Text(
+                    stringResource(SharedRes.strings.chat_with_penny)
+                )
 
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        rootNavigator.pop()
-                    }) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            viewModel.handleIntent(AIChatIntent.ShowLedgerSelectDialog)
-                        }
-                    ) {
-                        Icon(
-                            Icons.Outlined.AccountBalanceWallet,
-                            contentDescription = "Select Ledger"
-                        )
-                    }
+            }, navigationIcon = {
+                IconButton(onClick = {
+                    rootNavigator.pop()
+                }) {
+                    Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
                 }
-            )
+            }, actions = {
+                IconButton(onClick = {
+                    viewModel.handleIntent(AIChatIntent.ShowLedgerSelectDialog)
+                }) {
+                    Icon(
+                        Icons.Outlined.AccountBalanceWallet,
+                        contentDescription = "Select Ledger"
+                    )
+                }
+            })
         }, bottomBar = {
             ChatInputBar(inputText = uiState.inputText, onTextChanged = { text ->
                 viewModel.updateInputText(text)
@@ -116,11 +110,13 @@ class AIChatScreen : Screen {
                             contentPadding = PaddingValues(16.dp)
                         ) {
                             items(uiState.messages.reversed()) { message ->
+
+
                                 MessageBubble(message = message,
                                     onActionConfirm = { msg, editableFields ->
                                         viewModel.handleIntent(
                                             AIChatIntent.ConfirmPendingAction(
-                                                message = msg, editableFields = editableFields
+                                                message = msg
                                             )
                                         )
                                     },
@@ -139,16 +135,14 @@ class AIChatScreen : Screen {
 
 
                 if (uiState.ledgerSelectDialogVisible) {
-                    LedgerSelectDialog(
-                        allLedgers = emptyList(),
+                    LedgerSelectDialog(allLedgers = emptyList(),
                         currentLedger = uiState.selectedLedger!!,
                         onLedgerSelected = { ledger ->
                             viewModel.handleIntent(AIChatIntent.SelectLedger(ledger))
                         },
                         onDismissRequest = {
                             viewModel.handleIntent(AIChatIntent.HideLedgerSelectDialog)
-                        }
-                    )
+                        })
                 }
             }
         }

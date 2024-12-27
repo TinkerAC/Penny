@@ -3,63 +3,73 @@ package app.penny.core.domain.usecase
 import app.penny.core.domain.handler.UserIntentHandlers
 import app.penny.core.domain.model.SystemMessage
 import app.penny.servershared.dto.BaseEntityDto
+import app.penny.servershared.enumerate.DtoAssociated
 import app.penny.servershared.enumerate.UserIntent
 import app.penny.servershared.enumerate.UserIntentStatus
 import co.touchlab.kermit.Logger
 import kotlin.uuid.ExperimentalUuidApi
 
+/**
+ * 当用户在 EditSheet 上完成编辑后（产出一个完整的 DTO），调用此 UseCase 进行下一步逻辑：
+ *   1. 检查 DTO 是否完整（isCompleteFor）。
+ *   2. 若不完整，则维持 Pending 状态并提示用户继续补充。
+ *   3. 若完整，则执行 userIntentHandlers.handle(message) 来真正执行此 UserIntent。
+ */
 class ConfirmPendingActionUseCase(
-    private val rebuildDtoUseCase: RebuildDtoUseCase,
     private val userIntentHandlers: UserIntentHandlers
 ) {
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun execute(
-        message: SystemMessage, editedFields: Map<String, String?>
+        // 原始 SystemMessage
+        message: SystemMessage,
     ): Result<SystemMessage> {
         val userIntent = message.userIntent
 
-        val originalDto = (userIntent as? app.penny.servershared.enumerate.DtoAssociated)?.dto
-        if (originalDto == null) {
-            Logger.e("Original DTO is null for userIntent: ${userIntent.displayText}")
-            return Result.failure(IllegalStateException("Original DTO is null"))
-        }
+        // 只有实现了 DtoAssociated 的 Intent 才需要在此进行 DTO 完整度校验
+        if (userIntent is DtoAssociated) {
 
-        // 重新构建 DTO
-        val newDto = rebuildDtoUseCase.execute(
-            user = message.user,
-            userIntent = userIntent,
-            originalDto = originalDto,
-            editedFields = editedFields
-        ) ?: return Result.failure(IllegalStateException("Failed to rebuild DTO"))
+            val updatedDto = userIntent.dto
 
-        // 检查新的 DTO 是否完整
-        if (!newDto.isCompleteFor(userIntent)) {
-            Logger.e("DTO is still incomplete after editing for userIntent: ${userIntent.displayText}")
-            // 返回标记为 Pending
-            val incompleteMessage = message.copy(
-                userIntent = userIntent.copy(
-                    dto = newDto, status = UserIntentStatus.Pending
+            // 如果编辑后的 DTO 为空，无法继续
+            if (updatedDto == null) {
+                Logger.e("Updated DTO is null for userIntent: ${userIntent.displayText}")
+                return Result.failure(
+                    IllegalStateException("Updated DTO is null, cannot proceed.")
                 )
-            )
-            return Result.success(incompleteMessage)
-        }
+            }
 
-        // 如果 DTO 完整，尝试执行用户意图
-        return try {
+            // 检查新的 DTO 是否满足操作要求
+            if (!updatedDto.isCompleteFor(userIntent)) {
+                Logger.e("DTO is still incomplete after editing for userIntent: ${userIntent.displayText}")
 
-            executeUserIntent(message, userIntent, newDto)
+                // 将状态仍设为 Pending 并提示用户继续编辑
+                val incompleteMessage = message.copy(
+                    userIntent = userIntent.copy(
+                        dto = updatedDto, status = UserIntentStatus.Pending
+                    ), executeLog = "请继续编辑以完成操作: ${userIntent.displayText}"
+                )
+                return Result.success(incompleteMessage)
+            }
 
-        } catch (e: Exception) {
+            // 如果 DTO 完整，则尝试执行用户意图
+            return try {
+                executeUserIntent(message, userIntent, updatedDto)
+            } catch (e: Exception) {
+                Logger.e("Failed to execute userIntent: ${userIntent.displayText}", e)
+                val failureMessage = message.copy(
+                    content = "执行操作失败: ${userIntent.displayText}",
+                    userIntent = userIntent.copy(status = UserIntentStatus.Failed),
+                    executeLog = "Failed to execute userIntent: ${userIntent.displayText}"
+                )
+                Result.failure(Exception("Failed to execute user intent", e))
+            }
 
-            Logger.e("Failed to execute userIntent: ${userIntent.displayText}", e)
-            val failureMessage = message.copy(
-                content = "执行操作失败: ${userIntent.displayText}",
-                userIntent = userIntent.copy(status = UserIntentStatus.Failed)
-            )
-            Result.failure(
-                Exception("Failed to execute user intent", e)
-            )
+        } else {
+            // 如果 userIntent 并不需要绑定某个 DTO，则直接交给 handler
+            val handledMessage = userIntentHandlers.handle(message)
+
+            return Result.success(handledMessage)
         }
     }
 
@@ -68,7 +78,12 @@ class ConfirmPendingActionUseCase(
         message: SystemMessage, userIntent: UserIntent, dto: BaseEntityDto
     ): Result<SystemMessage> {
         return try {
-            val handledMessage = userIntentHandlers.handle(message)
+            // 将更新后的 message + dto 交由 handler 处理
+            val handledMessage = userIntentHandlers.handle(
+                message.copy(
+                    userIntent = userIntent.copy(dto = dto)
+                )
+            )
             Result.success(handledMessage)
         } catch (e: Exception) {
             Logger.e("Failed to execute userIntent: ${userIntent.displayText}", e)

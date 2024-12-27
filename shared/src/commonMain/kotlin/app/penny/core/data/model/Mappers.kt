@@ -251,19 +251,19 @@ fun ChatMessageEntity.toModel(): ChatMessage {
     return when (sender_uuid) {
         UserModel.System.uuid.toString() -> {
             SystemMessage(
-                uuid = Uuid.parse(uuid),
                 user = UserModel(Uuid.parse(user_uuid), "", ""),
-                sender = UserModel.System,
                 type = MessageType.valueOf(type),
+                uuid = Uuid.parse(uuid),
                 timestamp = timestamp,
-                content = content,
+                sender = UserModel.System,
                 userIntent =
                 user_intent?.let {
                     json.decodeFromString(
                         UserIntent.serializer(),
                         it
                     )
-                } ?: UserIntent.JustTalk()
+                } ?: UserIntent.JustTalk(),
+                content = content
 
             )
         }

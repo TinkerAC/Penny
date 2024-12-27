@@ -12,7 +12,6 @@ sealed class AIChatIntent {
 
     data class ConfirmPendingAction(
         val message: SystemMessage,
-        val editableFields: Map<String, String?>
     ) : AIChatIntent()
 
     data class DismissFunctionalMessage(

@@ -194,7 +194,7 @@ fun commonModule() = module {
 
     factory { RebuildDtoUseCase() }
 
-    factory { ConfirmPendingActionUseCase(get(), get()) }
+    factory { ConfirmPendingActionUseCase(get()) }
 
     factory {
         DeleteLedgerUseCase(

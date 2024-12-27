@@ -19,13 +19,11 @@ class InsertLedgerHandler(
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun handle(message: SystemMessage, dto: BaseEntityDto?): SystemMessage {
-
-
         if (message.userIntent !is UserIntent.InsertLedger) {
             throw IllegalArgumentException("Unsupported userIntent type")
         }
         if (dto !is LedgerDto) {
-            throw IllegalArgumentException("Invalid DTO type for InsertLedger userIntent")
+            throw IllegalArgumentException("Invalid DTO type for InsertLedger userIntent , expected LedgerDto , but got $dto")
         }
 
         val ledgerToBeInserted = dto.toModel()
