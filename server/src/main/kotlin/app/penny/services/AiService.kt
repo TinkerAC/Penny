@@ -40,18 +40,15 @@ class AiService(
      */
     suspend fun getUserIntent(
         call: ApplicationCall, text: String, invokeInstant: Long, userTimeZoneId: String
-    ): UserIntent? {
+    ): UserIntent {
         val user = call.getAuthedUser()
             ?: // Optionally handle the absence of a user, e.g., throw an exception
-            return null
+            return UserIntent.JustTalk()
 
 
         val inferredUserIntent = inferUserIntent(text)
-
-
         return getActionDetail(
             inferredUserIntent, text, user, invokeInstant, userTimeZoneId
-
         )
     }
 
@@ -92,8 +89,9 @@ class AiService(
     private suspend fun getActionDetail(
         userIntent: UserIntent, text: String, user: UserDto, invokeInstant: Long, //epoch seconds
         userTimeZoneId: String
-    ): UserIntent? {
-        return when (userIntent) {
+    ): UserIntent {
+
+        val detailedUserIntent: UserIntent? = when (userIntent) {
             is UserIntent.InsertLedger -> handleInsertLedgerAction(user, text)
             is UserIntent.InsertTransaction -> handleInsertTransactionAction(
                 user, text, invokeInstant, userTimeZoneId
@@ -101,8 +99,11 @@ class AiService(
 
             is UserIntent.JustTalk -> handleJustTalkAction(user, text)
             else -> null
-
         }
+
+        val notNullUserIntent: UserIntent = detailedUserIntent ?: handleJustTalkAction(user, text)
+
+        return notNullUserIntent
     }
 
     /**
