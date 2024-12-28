@@ -29,10 +29,10 @@ class TransactionService(
 
 
     fun upsertTransactionByUuid(
-        transaction: TransactionDto,
+        transaction: TransactionDto,  userId: Long
     ) {
         transactionRepository.upsertByUuid(
-            transaction
+            transaction, userId =userId
         )
     }
 }

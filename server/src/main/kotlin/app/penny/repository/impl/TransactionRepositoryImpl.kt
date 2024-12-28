@@ -2,11 +2,14 @@
 package app.penny.repository.impl
 
 import app.penny.models.Transactions
+import app.penny.models.Users
 import app.penny.models.toTransactionDto
 import app.penny.repository.TransactionRepository
 import app.penny.servershared.dto.TransactionDto
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -64,22 +67,23 @@ class TransactionRepositoryImpl : TransactionRepository {
     }
 
 
-    override fun upsertByUuid(transaction: TransactionDto) {
-        transaction {
-            val insertedCount = Transactions.insertIgnore { row ->
-                row[uuid] = transaction.uuid
-                row[ledgerUuid] = transaction.ledgerUuid
-                row[amount] = transaction.amount
-                row[createdAt] = transaction.createdAt
-                row[updatedAt] = transaction.updatedAt
-                row[remark] = transaction.remark
-                row[transactionType] = transaction.transactionType
-                row[transactionDate] = transaction.transactionDate
-                row[categoryName] = transaction.categoryName
-                row[currencyCode] = transaction.currencyCode
-                row[userId] = transaction.userId
-            }.insertedCount
+    override fun upsertByUuid(transaction: TransactionDto,userId: Long) {
 
+        val userIId = EntityID(userId, Users)
+        transaction {
+                val insertedCount = Transactions.insertIgnore { row ->
+                    row[Transactions.userId] = userIId
+                    row[uuid] = transaction.uuid
+                    row[ledgerUuid] = transaction.ledgerUuid
+                    row[amount] = transaction.amount
+                    row[createdAt] = transaction.createdAt
+                    row[updatedAt] = transaction.updatedAt
+                    row[remark] = transaction.remark
+                    row[transactionType] = transaction.transactionType
+                    row[transactionDate] = transaction.transactionDate
+                    row[categoryName] = transaction.categoryName
+                    row[currencyCode] = transaction.currencyCode
+                }.insertedCount
             if (insertedCount == 0) {
                 Transactions.update({ Transactions.uuid eq transaction.uuid }) { row ->
                     row[ledgerUuid] = transaction.ledgerUuid
@@ -91,7 +95,6 @@ class TransactionRepositoryImpl : TransactionRepository {
                     row[transactionDate] = transaction.transactionDate
                     row[categoryName] = transaction.categoryName
                     row[currencyCode] = transaction.currencyCode
-                    row[userId] = transaction.userId
                 }
             }
         }
