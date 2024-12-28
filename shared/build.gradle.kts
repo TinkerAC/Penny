@@ -50,7 +50,7 @@ kotlin {
                 api(libs.resources.compose) // 如果使用 Compose Multiplatform
                 implementation(libs.material.kolor)
                 implementation(libs.colorpicker.compose)
-                runtimeOnly(libs.multiplatform.markdown.renderer)
+                implementation(libs.multiplatform.markdown.renderer.m3)
 
                 implementation(libs.ktor.utils)
                 api(libs.multiplatformSettings.noArg)

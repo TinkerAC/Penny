@@ -31,7 +31,6 @@ class TransactionScreen : Screen {
         val uiState by viewModel.uiState.collectAsState()
         var isCalendarView by remember { mutableStateOf(false) }
 
-
         val currentMonth = remember {
             mutableStateOf(
                 YearMonth(

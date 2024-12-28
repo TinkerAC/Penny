@@ -19,14 +19,13 @@ sealed class ChatMessage(
 
 @OptIn(ExperimentalUuidApi::class)
 data class UserMessage @ExperimentalUuidApi constructor(
-    override val user: UserModel,
-    override val sender: UserModel,
-    override val type: MessageType,
-    override val uuid: Uuid,
-    override val timestamp: Long,
-    override val content: String? = null,
-    val audioFilePath: String? = null,
-    val duration: Long? = null
+    override val user: UserModel, // which the message belongs to
+    override val sender: UserModel, // the sender of the message
+    override val type: MessageType, // the type of the message(Text,Audio(NYI))
+    override val uuid: Uuid, // the unique id of the message
+    override val timestamp: Long, // the timestamp of the message sent
+    override val content: String? = null,  // the content of the message
+    val duration: Long? = null // the duration of the audio message
 ) : ChatMessage(uuid, user, user, type, timestamp, content) {
 
 }
@@ -34,14 +33,14 @@ data class UserMessage @ExperimentalUuidApi constructor(
 
 @OptIn(ExperimentalUuidApi::class)
 data class SystemMessage @ExperimentalUuidApi constructor(
-    override val user: UserModel,
-    override val type: MessageType,
-    override val uuid: Uuid,
-    override val timestamp: Long,
-    override val sender: UserModel = UserModel.System,
+    override val user: UserModel, // which the message belongs to
+    override val type: MessageType, // the type of the message(Text)
+    override val uuid: Uuid,  // the unique id of the message
+    override val timestamp: Long, // the timestamp of the message sent
+    override val sender: UserModel = UserModel.System, // the sender of the message
     override var content: String? = null,
-    val userIntent: UserIntent,
-    val executeLog: String? = null
+    val userIntent: UserIntent, // the intent of the userIntent inferred from the last user message
+    val executeLog: String? = null // the log of the execution of the userIntent
 ) : ChatMessage(uuid, user, sender, type, timestamp, content)
 
 

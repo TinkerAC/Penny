@@ -324,4 +324,28 @@
     <string name="generate_monthly_report">生成月报</string>
 
 
+    <string name="status_pending">待处理</string>
+    <string name="status_completed">已完成</string>
+    <string name="status_cancelled">已取消</string>
+    <string name="status_failed">失败</string>
+    <!--    <string name="user_intent_generate_monthly_report_complete_description" />-->
+    <!--    <string name="user_intent_sync_data_complete_description">Sync data completed</string>-->
+
+
+    <!--    <string name="user_intent_just_talk_complete_description">Penny reply to your query</string>-->
+    <!--    <string name="user_intent_insert_transaction_complete_description">Transaction data has been-->
+    <!--        inserted/updated-->
+    <!--    </string>-->
+
+    <!--    <string name="user_intent_insert_ledger_complete_description">Ledger data has been-->
+    <!--        inserted/updated-->
+    <!--    </string>-->
+
+    <string name="user_intent_generate_monthly_report_complete_description">月报已生成</string>
+    <string name="user_intent_sync_data_complete_description">数据同步完成</string>
+    <string name="user_intent_just_talk_complete_description">Penny回复您的查询</string>
+    <string name="user_intent_insert_transaction_complete_description">交易数据已插入/更新</string>
+    <string name="user_intent_insert_ledger_complete_description">账本数据已插入/更新</string>
+
+
 </resources>

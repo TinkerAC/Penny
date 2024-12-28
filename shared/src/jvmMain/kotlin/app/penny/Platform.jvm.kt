@@ -9,6 +9,8 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
 import org.koin.core.component.KoinComponent
 import org.koin.dsl.KoinAppDeclaration
+import java.awt.Desktop
+import java.net.URI
 import java.util.Locale
 
 class JVMPlatform() : Platform() {
@@ -60,4 +62,12 @@ actual fun getRawStringResource(
 ): String {
     val locale = Locale(localeString)
     return stringResource.localized(locale)
+}
+
+actual fun openUrlInDefaultBrowser(url: String) {
+    if (Desktop.isDesktopSupported()) {
+        Desktop.getDesktop().browse(URI(url))
+    } else {
+        throw UnsupportedOperationException("Desktop is not supported on this platform")
+    }
 }

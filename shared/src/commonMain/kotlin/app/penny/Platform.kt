@@ -100,3 +100,9 @@ expect fun getScreenHeightDp(): Dp
  */
 expect fun getRawStringResource(stringResource: StringResource, localeString: String=LocaleManager.currentLocale
 ): String
+
+
+
+
+
+expect fun openUrlInDefaultBrowser(url: String)

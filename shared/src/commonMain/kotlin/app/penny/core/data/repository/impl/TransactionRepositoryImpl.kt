@@ -132,8 +132,13 @@ class TransactionRepositoryImpl(
 
 
     override suspend fun findByUser(user: UserModel): List<TransactionModel> {
-        return transactionLocalDataSource.findByUserUuid(user.uuid.toString())
+        val result = transactionLocalDataSource.findByUserUuid(user.uuid.toString())
             .map { it.toModel() }
+
+
+        Logger.d("result of transaction findByUser: ${result.size}")
+
+        return result
     }
 
 

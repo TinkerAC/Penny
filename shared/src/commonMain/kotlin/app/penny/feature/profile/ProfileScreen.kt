@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.penny.feature.debugBoard.DebugScreen
@@ -67,7 +68,7 @@ class ProfileScreen : Screen {
 
 
 
-        LaunchedEffect(Unit){
+        LaunchedEffect(Unit) {
             viewModel.refreshData()
         }
 
@@ -166,9 +167,18 @@ fun UserInfoSection(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            StatisticItem(number = uiState.ledgerCount, label = stringResource(SharedRes.strings.ledgers))
-            StatisticItem(number = uiState.totalTransactionDateSpan, label = stringResource(SharedRes.strings.days))
-            StatisticItem(number = uiState.totalTransactionCount, label = stringResource(SharedRes.strings.transactions))
+            StatisticItem(
+                number = uiState.ledgerCount,
+                label = stringResource(SharedRes.strings.ledgers)
+            )
+            StatisticItem(
+                number = uiState.totalTransactionDateSpan,
+                label = stringResource(SharedRes.strings.days)
+            )
+            StatisticItem(
+                number = uiState.totalTransactionCount,
+                label = stringResource(SharedRes.strings.transactions)
+            )
         }
     }
 }
@@ -257,19 +267,22 @@ data class FeatureItem(
 
 @Composable
 fun MenuList() {
-    // TODO: navigation not implemented
+    val localUriHandler = LocalUriHandler.current
     val menuItems = listOf(
         MenuItem(
             stringResource(SharedRes.strings.help),
-            Icons.AutoMirrored.Filled.Help
+            Icons.AutoMirrored.Filled.Help,
+            link = "https://www.github.com/TinkerAC/Penny"
         ),
         MenuItem(
             stringResource(SharedRes.strings.feedback),
-            Icons.Default.Feedback
+            Icons.Default.Feedback,
+            link = "https://www.github.com/TinkerAC/Penny/issues"
         ),
         MenuItem(
             stringResource(SharedRes.strings.about),
-            Icons.Default.Info
+            Icons.Default.Info,
+            link = "https://www.github.com/TinkerAC/Penny"
         )
     )
     Column(
@@ -283,7 +296,9 @@ fun MenuList() {
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
                     .clickable {
-                        // TODO: navigation not implemented
+
+                        localUriHandler.openUri(menuItem.link)
+
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -306,5 +321,6 @@ fun MenuList() {
 
 data class MenuItem(
     val name: String,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val link: String = ""
 )

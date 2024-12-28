@@ -341,5 +341,28 @@
     <string name="user_intent_export_records">Export Records</string>
     <string name="generate_report">Generate Report</string>
     <string name="user_intent_generate_monthly_report">Generate Monthly Report</string>
+    <!--    status_pending)-->
+    <!--    status_completed)-->
+    <!--    status_cancelled)-->
+    <!--    status_failed)-->
+
+    <string name="status_pending">Pending</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_cancelled">Cancelled</string>
+    <string name="status_failed">Failed</string>
+
+
+    <string name="user_intent_generate_monthly_report_complete_description" />
+    <string name="user_intent_sync_data_complete_description">Sync data completed</string>
+
+
+    <string name="user_intent_just_talk_complete_description">Penny reply to your query</string>
+    <string name="user_intent_insert_transaction_complete_description">Transaction data has been
+        inserted/updated
+    </string>
+
+    <string name="user_intent_insert_ledger_complete_description">Ledger data has been
+        inserted/updated
+    </string>
 
 </resources>

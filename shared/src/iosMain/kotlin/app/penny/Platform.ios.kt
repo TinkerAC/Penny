@@ -16,9 +16,11 @@ import platform.Foundation.NSBundle
 import platform.Foundation.NSLocale
 import platform.Foundation.countryCode
 import platform.Foundation.languageCode
-import platform.Foundation.localeIdentifier
+import platform.UIKit.UIApplication
 import platform.UIKit.UIDevice
 import platform.UIKit.UIScreen
+import platform.Foundation.NSURL
+
 
 class IOSPlatform : Platform() {
     override val name: String =
@@ -104,4 +106,11 @@ private fun createLocalizedBundle(baseBundle: NSBundle, locale: NSLocale): NSBun
 
     // 如果路径存在，返回对应的 bundle，否则返回 null
     return if (path != null) NSBundle(path = path) else null
+}
+
+actual fun openUrlInDefaultBrowser(url: String) {
+    val nsUrl = NSURL(string = url)
+    if (UIApplication.sharedApplication.canOpenURL(nsUrl)) {
+        UIApplication.sharedApplication.openURL(nsUrl)
+    }
 }

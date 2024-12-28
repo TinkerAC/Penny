@@ -33,7 +33,7 @@ sealed class UserIntent {
     abstract val description: String
     abstract var status: UserIntentStatus
     abstract val example: String
-
+    abstract val completeDescription: StringResource
     abstract fun copy(
         dto: BaseEntityDto? = null, status: UserIntentStatus = this.status
     ): UserIntent
@@ -42,6 +42,8 @@ sealed class UserIntent {
     data class InsertLedger(
         @Transient
         override val displayText: StringResource = SharedRes.strings.user_intent_insert_ledger,
+        @Transient
+        override val completeDescription: StringResource = SharedRes.strings.user_intent_insert_ledger_complete_description,
         override val description: String = "Add a Ledger record",
         override val example: String = "Create a new ledger called 'Expenses' in USD => InsertLedgerRecord",
         override val dto: BaseEntityDto? = null,
@@ -63,6 +65,8 @@ sealed class UserIntent {
     data class InsertTransaction(
         @Transient
         override val displayText: StringResource = SharedRes.strings.user_intent_insert_transaction,
+        @Transient
+        override val completeDescription: StringResource = SharedRes.strings.user_intent_insert_transaction_complete_description,
         override val description: String = "Add a Transaction record",
         override val example: String = "I spent \$50 at a supermarket today => InsertTransactionRecord",
         override val dto: BaseEntityDto? = null,
@@ -82,6 +86,8 @@ sealed class UserIntent {
     data class JustTalk(
         @Transient
         override val displayText: StringResource = SharedRes.strings.user_intent_just_talk, // should not appear in the UI
+        @Transient
+        override val completeDescription: StringResource = SharedRes.strings.user_intent_just_talk_complete_description,
         override val description: String = "Just talk",
         override val example: String = "How is the weather today? => JustTalk",
         override var status: UserIntentStatus = UserIntentStatus.Completed,
@@ -101,6 +107,8 @@ sealed class UserIntent {
     data class SyncData(
         @Transient
         override val displayText: StringResource = SharedRes.strings.user_intent_sync_data,
+        @Transient
+        override val completeDescription: StringResource = SharedRes.strings.user_intent_sync_data_complete_description,
         override val description: String = "Sync data with the server",
         override val example: String = "Sync my data with the server => SyncData",
         override var status: UserIntentStatus = UserIntentStatus.Pending,
@@ -116,35 +124,18 @@ sealed class UserIntent {
 
 
     @Serializable
-    data class QueryRecords(
-        @Transient
-        override val displayText: StringResource = SharedRes.strings.user_intent_query_records,
-        override val description: String = "Query financial records",
-        override val example: String = "Show me the spending records for November => queryRecords",
-        override val dto: BaseEntityDto? = null,
-        override var status: UserIntentStatus = UserIntentStatus.Pending,
-    ) : UserIntent(), DtoAssociated {
-        override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): QueryRecords {
-            return QueryRecords(
-                description = this.description,
-                example = this.example,
-                dto = dto ?: this.dto,
-                status = status,
-            )
-        }
-    }
-
-    @Serializable
     data class GenerateMonthlyReport(
         @Transient
         override val displayText: StringResource = SharedRes.strings.user_intent_generate_monthly_report,
+        @Transient
+        override val completeDescription: StringResource = SharedRes.strings.user_intent_generate_monthly_report_complete_description,
         override val description: String = "Generate a financial report of a specific month",
         override val example: String = "Generate a report for the month of November => generateReport",
         override var status: UserIntentStatus = UserIntentStatus.Pending,
         val month: Int? = null,
         val year: Int? = null,
 
-        ) : UserIntent(), SilentIntent {
+        ) : UserIntent() {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): GenerateMonthlyReport {
             return GenerateMonthlyReport(
                 description = this.description,
@@ -161,7 +152,6 @@ sealed class UserIntent {
             InsertTransaction(),
             JustTalk(),
             SyncData(),
-            QueryRecords(),
             GenerateMonthlyReport(),
         )
 

@@ -381,7 +381,6 @@ class AiService(
             [Goal]
             The user will input their financial data for a specific month. Your task is to generate a clear, accurate, and natural language financial report based on the provided data. 
             The report should include an analysis of their income, expenses, and spending trends, as well as insights and actionable recommendations for the next month.
-            The report should be return as MarkDown Code Block.
 
             [Infos to be provided]
             The data provided will include the following fields:
@@ -420,7 +419,7 @@ class AiService(
                 "largestExpense": {"category": "Rent", "amount": 2000, "description": "Monthly apartment rent"},
                 "language": "English"
             }
-            => ```In November 2024, your total income was ${'$'}5000, and your total expenses amounted to ${'$'}4000, leaving you with a balance of ${'$'}1000. Most of your income came from your salary, accounting for 90% of the total. Your largest expense this month was rent (${'$'}2000), making up 50% of your expenses. Other significant expenses included food (30%) and entertainment (20%). Your average daily spending was approximately ${'$'}133. Consider adjusting your entertainment budget next month to further increase your savings.```
+            => In November 2024, your total income was ${'$'}5000, and your total expenses amounted to ${'$'}4000, leaving you with a balance of ${'$'}1000. Most of your income came from your salary, accounting for 90% of the total. Your largest expense this month was rent (${'$'}2000), making up 50% of your expenses. Other significant expenses included food (30%) and entertainment (20%). Your average daily spending was approximately ${'$'}133. Consider adjusting your entertainment budget next month to further increase your savings.
 
             ex2:
             data: {
@@ -440,7 +439,7 @@ class AiService(
                 "largestExpense": {"category": "Rent", "amount": 2000, "description": "Monthly apartment rent"},
                 "language": "Chinese"
             }
-            => ```2024年11月，您的总收入为5000元，总支出为4000元，余额为1000元。您的收入主要来源于工资，占比90%。本月最大的支出是房租（2000元），占总支出的50%。其他显著支出包括食品（30%）和娱乐（20%）。您的平均每日支出约为133元。下个月，可以考虑减少娱乐支出，以便进一步增加储蓄。```
+            => 2024年11月，您的总收入为5000元，总支出为4000元，余额为1000元。您的收入主要来源于工资，占比90%。本月最大的支出是房租（2000元），占总支出的50%。其他显著支出包括食品（30%）和娱乐（20%）。您的平均每日支出约为133元。下个月，可以考虑减少娱乐支出，以便进一步增加储蓄。
 
             [Note]
             - Always adhere to the provided fields and do not make additional assumptions.

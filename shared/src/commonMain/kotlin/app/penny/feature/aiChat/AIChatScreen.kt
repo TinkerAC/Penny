@@ -1,5 +1,6 @@
 package app.penny.feature.aiChat
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,7 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import app.penny.feature.aiChat.components.messageBubble.MessageBubble
+import app.penny.feature.aiChat.components.messageBubble.MessageRow
 import app.penny.presentation.ui.components.LedgerSelectDialog
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
@@ -92,11 +94,10 @@ class AIChatScreen : Screen {
             })
         }) { paddingValues ->
             Box(
-                modifier = Modifier.padding(paddingValues).fillMaxSize()
+                modifier = Modifier.padding(paddingValues).fillMaxSize().background(
+                    MaterialTheme.colorScheme.surface
+                )
             ) {
-                // 应用自定义的聊天背景
-//                ChatBackground()
-
                 Column(modifier = Modifier.fillMaxSize()) {
                     if (uiState.isLoading) {
                         Box(
@@ -113,7 +114,7 @@ class AIChatScreen : Screen {
                             items(uiState.messages.reversed()) { message ->
 
 
-                                MessageBubble(message = message,
+                                MessageRow(message = message,
                                     onActionConfirm = { msg, baseEntityDto ->
                                         viewModel.handleIntent(
                                             AIChatIntent.ConfirmPendingAction(

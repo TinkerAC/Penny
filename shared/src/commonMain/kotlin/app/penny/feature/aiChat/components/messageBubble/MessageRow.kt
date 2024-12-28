@@ -1,6 +1,7 @@
 // MessageBubble.kt
 package app.penny.feature.aiChat.components.messageBubble
 
+import ModernSystemMessageBubble
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,14 +14,13 @@ import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.SystemMessage
 import app.penny.core.domain.model.UserModel
-import app.penny.feature.aiChat.components.messageBubble.system.SystemAvatar
-import app.penny.feature.aiChat.components.messageBubble.system.SystemMessageBubble
+import app.penny.feature.aiChat.components.messageBubble.user.SystemAvatar
 import app.penny.feature.aiChat.components.messageBubble.user.UserAvatar
 import app.penny.feature.aiChat.components.messageBubble.user.UserMessageBubble
 import app.penny.servershared.dto.BaseEntityDto
 
 @Composable
-fun MessageBubble(
+fun MessageRow(
     message: ChatMessage,
     onActionConfirm: (SystemMessage, BaseEntityDto?) -> Unit,
     onActionDismiss: (SystemMessage) -> Unit
@@ -36,7 +36,7 @@ fun MessageBubble(
 
                 SystemAvatar()
                 Spacer(modifier = Modifier.width(8.dp))
-                SystemMessageBubble(
+                ModernSystemMessageBubble(
                     message = message as SystemMessage,
                     onActionConfirm = onActionConfirm,
                     onActionDismiss = onActionDismiss

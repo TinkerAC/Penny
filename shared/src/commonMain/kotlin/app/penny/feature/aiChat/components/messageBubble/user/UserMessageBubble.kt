@@ -3,7 +3,10 @@ package app.penny.feature.aiChat.components.messageBubble.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Card
@@ -44,6 +47,20 @@ fun UserMessageBubble(message: ChatMessage) {
 fun UserAvatar() {
     Image(
         painter = painterResource(SharedRes.images.avatar_boy),
+        contentDescription = null,
+        modifier = Modifier
+            .size(40.dp)
+            .clip(CircleShape)
+            .border(1.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
+    )
+
+}
+
+
+@Composable
+fun SystemAvatar() {
+    Image(
+        painter = painterResource(SharedRes.images.avatar_penny),
         contentDescription = null,
         modifier = Modifier
             .size(40.dp)

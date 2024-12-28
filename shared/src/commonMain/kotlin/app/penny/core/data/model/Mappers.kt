@@ -276,7 +276,6 @@ fun ChatMessageEntity.toModel(): ChatMessage {
                 type = MessageType.valueOf(type),
                 timestamp = timestamp,
                 content = content,
-                audioFilePath = null,
                 duration = null
             )
         }
