@@ -19,7 +19,7 @@ abstract class BaseApiClient(
         method: HttpMethod,
         noinline setup: HttpRequestBuilder.() -> Unit = {}
     ): T {
-        Logger.d { "Making $method request to $url" }
+//        Logger.d { "Making $method request to $url" }
         return try {
             val response: HttpResponse = httpClient.request(url) {
                 this.method = method

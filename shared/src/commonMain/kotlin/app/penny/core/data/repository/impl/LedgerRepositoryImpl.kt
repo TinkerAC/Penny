@@ -58,7 +58,6 @@ class LedgerRepositoryImpl(
         val ledgerDtos = ledgers.map { it.toLedgerDto() }
         val uploadUpdatedLedgersResponse =
             apiClient.sync.uploadLedgers(ledgerDtos, lastSyncedAt.epochSeconds)
-
         return uploadUpdatedLedgersResponse
     }
 

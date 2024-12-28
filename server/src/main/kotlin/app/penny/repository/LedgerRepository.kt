@@ -7,5 +7,5 @@ interface LedgerRepository {
     fun insert(userId: Long, ledgers: List<LedgerDto>)
     fun findByUserIdAndUpdatedAtAfter(userId: Long, lastSyncedAt: Long): List<LedgerDto>
     fun countByUserIdAndUpdatedAfter(userId: Long, timeStamp: Long): Long
-    fun upsertByUuid(ledger: LedgerDto)
+    fun upsertByUuid(ledger: LedgerDto, userId: Long)
 }

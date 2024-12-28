@@ -28,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -73,15 +74,21 @@ class AIChatScreen : Screen {
                     Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
                 }
             }, actions = {
-                IconButton(onClick = {
-                    viewModel.handleIntent(AIChatIntent.ShowLedgerSelectDialog)
-                }) {
-                    Icon(
-                        Icons.Outlined.AccountBalanceWallet,
-                        contentDescription = "Select Ledger"
-                    )
-                }
-            })
+//                IconButton(onClick = {
+//                    viewModel.handleIntent(AIChatIntent.ShowLedgerSelectDialog)
+//                }) {
+//                    Icon(
+//                        Icons.Outlined.AccountBalanceWallet,
+//                        contentDescription = "Select Ledger"
+//                    )
+//                }
+            },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                )
+
+
+            )
         }, bottomBar = {
             ChatInputBar(inputText = uiState.inputText, onTextChanged = { text ->
                 viewModel.updateInputText(text)

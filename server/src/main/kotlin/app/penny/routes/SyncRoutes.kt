@@ -68,7 +68,10 @@ fun Route.syncRoutes(
                     try {
 
                         ledgerDTOs.forEach {
-                            ledgerService.upsertLedgerByUuid(it)
+                            ledgerService.upsertLedgerByUuid(
+                                it,
+                                userId = user.id
+                            )
                         }
 
                         call.respond(

@@ -45,14 +45,12 @@ fun ApplicationInitializer.initSession(
     val tokenManager = getKoinInstance<TokenManager>()
     val authRepository = getKoinInstance<AuthRepository>()
 
-
-
     CoroutineScope(Dispatchers.Default).launch {
         val isFirstTime = userDataRepository.getIsFirstTime()
         val isUserLoggedIn = authRepository.isLoggedIn()
 
         if (isFirstTime || !isUserLoggedIn) {
-            Logger.i("First time launch Or User not logged in")
+            Logger.i("First time launch Or User hasn't logged in once")
             return@launch
         }
 

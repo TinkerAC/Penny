@@ -17,10 +17,10 @@ class LedgerService(
 
 
     fun upsertLedgerByUuid(
-        ledger: LedgerDto,
+        ledger: LedgerDto, userId: Long
     ) {
         ledgerRepository.upsertByUuid(
-            ledger
+            ledger , userId =  userId
         )
     }
 }

@@ -43,19 +43,22 @@ class CountUnsyncedDataUseCase(
 
             unsyncedRemoteTransactionCount = unsyncedRemoteChangeCount.unsyncedTransactionsCount
 
-
         } catch (e: Exception) {
             Logger.w(e) { "Failed to get remote unsynced data count" }
             unsyncedRemoteLedgerCount = 0
             unsyncedRemoteTransactionCount = 0
         }
 
-        return CountUnsyncedDataResult(
+
+        val result = CountUnsyncedDataResult(
             unsyncedLocalLedgerCount = unsyncedLedgerCount,
             unsyncedLocalTransactionCount = unsyncedTransactionCount,
             unsyncedRemoteLedgerCount = unsyncedRemoteLedgerCount,
             unsyncedRemoteTransactionCount = unsyncedRemoteTransactionCount
         )
+
+        Logger.d("统计未同步数据结果: $result")
+        return result
 
 
     }
