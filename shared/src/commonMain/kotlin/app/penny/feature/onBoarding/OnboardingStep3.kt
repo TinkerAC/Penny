@@ -20,9 +20,12 @@ class OnboardingStep3Login : OnboardingStepScreen {
             currentPage = 3,
             totalPages = 5,
             onNext = {
-
                 onNext?.invoke()
+            },
+            onFinish={
+                onFinish?.invoke()
             }
+
         )
     }
 }

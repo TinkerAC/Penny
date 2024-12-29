@@ -8,7 +8,7 @@ class AndroidApp : Application() {
         val appInitializer =
             ApplicationInitializer(
                 application = this
-            ).initialize()
+            ).initNotifierManager().initKoin().initSession()
 
     }
 }

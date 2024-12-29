@@ -29,6 +29,7 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://company/com/maven2")
         }
+
     }
 }
 

@@ -1,9 +1,10 @@
 [versions]
 agp = "8.2.2"
-android-compileSdk = "34"
-android-minSdk = "24"
-android-targetSdk = "34"
+android-compileSdk = "35"
+android-minSdk = "28"
+android-targetSdk = "35"
 coilCompose = "3.0.4"
+coilNetworkKtor = "3.0.0-alpha06"
 coilNetworkOkhttp = "3.0.4"
 coilSvgVersion = "3.0.4"
 colorpickerCompose = "1.1.2"
@@ -20,13 +21,22 @@ androidx-test-junit = "1.2.1"
 bignum = "0.3.10"
 chartVersion = "Beta-0.0.5"
 #Why is there a reversed versioning scheme? Took me forever to track down the issue until I saw the release dates on Maven Central.
-
+gradlePlugins-crashlytics = "2.9.9"
 composableTable = "1.2.0"
+cryptographyCore = "0.4.0"
+cryptographyProviderOpenssl3Api = "0.4.0"
+cryptographyProviderOpenssl3Prebuilt = "0.4.0"
+cryptographyProviderOpenssl3Shared = "0.4.0"
+cryptographyProviderWebcrypto = "0.4.0"
 datastorePreferences = "1.1.1"
 exposedVersion = "0.56.0"
+
 jbcrypt = "0.4"
+kamelImageDefault = "1.0.0"
+kmpnotifier = "1.1.0"
 kotlinx_datetime_ext = "1.3.1"
 kotlinxSerializationJson = "1.5.1"
+ktorClientOkhttp = "3.0.0-alpha06"
 ktorSerializationKotlinxJsonJvm = "2.3.10"
 ktorServerContentNegotiationJvm = "2.3.10"
 ktorUtils = "3.0.0"
@@ -38,7 +48,7 @@ jdbcDriver = "2.0.2"
 junit = "4.13.2"
 kandyLetsPlot = "0.7.0"
 kermit = "2.0.4"
-koin = "3.5.0"  # 统一 Koin 版本为 3.5.0
+koin = "3.4.0"  # 统一 Koin 版本为 3.5.0
 koin-android = "3.5.0"
 koin-core-ext = "3.0.2"
 koin-android-ext = "3.0.2"
@@ -47,35 +57,61 @@ koin-android-ext = "3.0.2"
 ktor-server = "2.3.13"
 
 kotlin = "2.0.20"
+composeComplier ="2.0.20"
 kotlinx-coroutines = "1.9.0"
 mysqlConnectorJava = "8.0.33"
 navigationCompose = "2.7.0-alpha07"
 dateTimeVersion = "0.6.0"
 ktor = "3.0.0"
+ktorClientJava = "3.0.0" # $ktor 3.0.0
+
 lifecycleViewmodelCompose = "2.7.0"
 material3 = "1.3.1"
 openaiClient = "4.0.0-beta01"
 resources = "0.21.0"
 resourcesCompose = "0.24.4"
 resourcesGenerator = "0.24.4"
+
+sha256KtVersion = "1.0"
 sqlDelight = "2.0.2"
 sqliteXX4Dialect = "2.0.2"
 uuid = "0.8.4"
 voyagerLifecycleKmp = "1.1.0-beta03"
-voyagerVersion = "1.1.0-beta02"
+voyagerVersion = "1.1.0-beta03"
 logback = "1.5.11"
 uiToolingPreviewDesktop = "1.7.0"
+#Firebase android
+firebase-android-bom = "32.8.1"
+#Gradle
+gradlePlugins-google-services = "4.4.1"
+#Gitlive
+firebase-gitlive-sdk = "1.12.0"
 coilSvg = "1.3.0"
 
 [libraries]
 # Koin 依赖，版本统一为 3
+
+
+#Firebase
+firebase-android-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-android-bom" }
+firebase-android-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics" }
+#Gitlive
+gitlive-firebase-kotlin-crashlytics = { module = "dev.gitlive:firebase-crashlytics", version.ref = "firebase-gitlive-sdk" }
+
+
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coilNetworkKtor" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 coil3-coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coilSvgVersion" }
 colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpickerCompose" }
 composable-table = { module = "io.github.sunny-chung:composable-table", version.ref = "composableTable" }
+cryptography-core = { module = "dev.whyoleg.cryptography:cryptography-core", version.ref = "cryptographyCore" }
+cryptography-provider-openssl3-api = { module = "dev.whyoleg.cryptography:cryptography-provider-openssl3-api", version.ref = "cryptographyProviderOpenssl3Api" }
+cryptography-provider-openssl3-prebuilt = { module = "dev.whyoleg.cryptography:cryptography-provider-openssl3-prebuilt", version.ref = "cryptographyProviderOpenssl3Prebuilt" }
+cryptography-provider-openssl3-shared = { module = "dev.whyoleg.cryptography:cryptography-provider-openssl3-shared", version.ref = "cryptographyProviderOpenssl3Shared" }
+cryptography-provider-webcrypto = { module = "dev.whyoleg.cryptography:cryptography-provider-webcrypto", version.ref = "cryptographyProviderWebcrypto" }
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedVersion" }
 exposed-crypt = { module = "org.jetbrains.exposed:exposed-crypt", version.ref = "exposedVersion" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposedVersion" }
@@ -85,9 +121,11 @@ exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datet
 exposed-money = { module = "org.jetbrains.exposed:exposed-money", version.ref = "exposedVersion" }
 exposed-spring-boot-starter = { module = "org.jetbrains.exposed:exposed-spring-boot-starter", version.ref = "exposedVersion" }
 jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
+kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamelImageDefault" }
 kandy-lets-plot = { module = "org.jetbrains.kotlinx:kandy-lets-plot", version.ref = "kandyLetsPlot" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 kermit-koin = { module = "co.touchlab:kermit-koin", version.ref = "kermit" }
+kmpnotifier = { module = "io.github.mirzemehdi:kmpnotifier", version.ref = "kmpnotifier" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-core-ext = { module = "io.insert-koin:koin-core-ext", version.ref = "koin-core-ext" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-android" }
@@ -98,6 +136,9 @@ android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx_datetime_ext = { module = "com.raedghazal:kotlinx_datetime_ext", version.ref = "kotlinx_datetime_ext" }
 
+#noinspection SimilarGradleDependency
+ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktorClientJava" }
+#noinspection SimilarGradleDependency
 ktor-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
 ktor-serialization-kotlinx-json-jvm = { module = "io.ktor:ktor-serialization-kotlinx-json-jvm", version.ref = "ktorSerializationKotlinxJsonJvm" }
 ktor-server-auth = { module = "io.ktor:ktor-server-auth" }
@@ -110,7 +151,8 @@ mysql-connector-java = { module = "mysql:mysql-connector-java", version.ref = "m
 native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "jdbcDriver" }
 openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openaiClient" }
 resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "resourcesCompose" }
-resources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "resourcesGenerator" }
+
+sha256-kt = { module = "com.asyncant.crypto:sha256-kt", version.ref = "sha256KtVersion" }
 sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "jdbcDriver" }
 jdbc-driver = { module = "app.cash.sqldelight:jdbc-driver", version.ref = "jdbcDriver" }
 runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqlDelight" }
@@ -186,9 +228,14 @@ kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "composeComplier" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "gradlePlugins-crashlytics" }
+google-services = { id = "com.google.gms.google-services", version.ref = "gradlePlugins-google-services" }
+kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+
+

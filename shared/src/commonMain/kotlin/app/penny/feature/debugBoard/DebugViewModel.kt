@@ -10,6 +10,8 @@ import app.penny.core.domain.usecase.UploadUnsyncedLedgerUseCase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
+import com.mmk.kmpnotifier.notification.NotifierManager
+//import com.mmk.kmpnotifier.notification.NotifierManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,7 +50,7 @@ class DebugViewModel(
 
     fun clearLastSyncedAt(){
         screenModelScope.launch {
-            userDataRepository.clearLastSyncedAt()
+            userDataRepository.removeLastSyncedAt()
         }
     }
 
@@ -69,6 +71,18 @@ class DebugViewModel(
             else -> {
             }
         }
+    }
+
+    fun sendNotification(){
+        val notifier = NotifierManager.getLocalNotifier()
+
+        notifier.notify (
+            title = "Hello",
+            id = 1,
+            body = "Sss"
+        )
+
+
     }
 
     fun downloadUnsyncedLedgers() {

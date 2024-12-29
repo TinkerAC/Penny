@@ -27,6 +27,9 @@ class UserDataRepositoryImpl(
         userDataManager.putString(UserDataManager.DEFAULT_LEDGER_UUID, ledger.uuid.toString())
     }
 
+    override suspend fun removeDefaultLedger() {
+        userDataManager.remove(UserDataManager.DEFAULT_LEDGER_UUID)
+    }
 
     override suspend fun setContinuousCheckInDays(days: Int) {
         userDataManager.putInt(UserDataManager.CONTINUOUS_CHECK_IN_DAYS, days)
@@ -59,7 +62,7 @@ class UserDataRepositoryImpl(
         userDataManager.putLong(UserDataManager.LAST_SYNCED_AT, lastSyncedAt.epochSeconds)
     }
 
-    override suspend fun clearLastSyncedAt() {
+    override suspend fun removeLastSyncedAt() {
         userDataManager.remove(UserDataManager.LAST_SYNCED_AT)
     }
 

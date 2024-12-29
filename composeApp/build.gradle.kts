@@ -1,8 +1,10 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
+
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
@@ -10,7 +12,11 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
     id("dev.icerock.mobile.multiplatform-resources") version "0.24.4"
+    kotlin("native.cocoapods") version "2.0.20"
+
+
 }
+
 
 kotlin {
     androidTarget {
@@ -22,15 +28,54 @@ kotlin {
 
 
     jvm("desktop")
-    iosX64 { binaries.framework { baseName = "ComposeApp" } }
-    iosArm64 { binaries.framework { baseName = "ComposeApp" } }
-    iosSimulatorArm64 { binaries.framework { baseName = "ComposeApp" } }
+
+    val iosTargets = listOf(iosX64(), iosArm64(), iosSimulatorArm64())
+    iosTargets.forEach() { iosTarget ->
+//        iosTarget.binaries.framework {
+//            export(libs.kmpnotifier)
+//            baseName = "ComposeApp"
+//            isStatic = true
+//        }
+
+
+    }
+    cocoapods {
+        // Required properties
+        // Specify the required Pod version here. Otherwise, the Gradle project version is used.
+        version = "1.16.2"
+        summary = "Some description for a Kotlin/Native module"
+        homepage = "Link to a Kotlin/Native module homepage"
+
+        // Optional properties
+        // Configure the Pod name here instead of changing the Gradle project name
+        name = "ComposeAppCocoaPod"
+
+        framework {
+            // Required properties
+            // Framework name configuration. Use this property instead of deprecated 'frameworkName'
+            baseName = "ComposeApp"
+
+            // Optional properties
+            // Specify the framework linking type. It's dynamic by default.
+            isStatic = true
+            // Dependency export
+            // Uncomment and specify another project module if you have one:
+            export(projects.shared)
+            @OptIn(ExperimentalKotlinGradlePluginApi::class)
+            transitiveExport = false // This is default.
+        }
+
+        // Maps custom Xcode configuration to NativeBuildType
+        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
+        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
+    }
+
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 // 公共依赖项
-                implementation(projects.shared)
+                api(projects.shared)
 //                implementation(libs.composable.table)
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
@@ -69,6 +114,8 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
+                api(libs.kmpnotifier)
+
                 implementation(libs.ktor.client.android)
                 implementation(compose.preview)
                 implementation(libs.androidx.activity.compose)
@@ -81,6 +128,8 @@ kotlin {
 
         val desktopMain by getting {
             dependencies {
+                api(libs.kmpnotifier)
+
                 implementation(libs.koin.core)
                 implementation(libs.sqlite.driver)
                 implementation(libs.jdbc.driver)
@@ -92,12 +141,11 @@ kotlin {
 
 
     }
-}
 
+}
 android {
     namespace = "app.penny"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-
     defaultConfig {
         applicationId = "app.penny"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -136,6 +184,7 @@ compose.desktop {
         }
     }
 }
+
 multiplatformResources {
     resourcesClassName = "SharedRes"
     resourcesPackage = "app.penny.shared"

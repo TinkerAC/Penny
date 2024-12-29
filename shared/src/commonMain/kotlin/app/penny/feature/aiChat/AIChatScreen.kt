@@ -17,7 +17,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material.icons.outlined.AccountBalanceWallet
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -121,7 +120,8 @@ class AIChatScreen : Screen {
                             items(uiState.messages.reversed()) { message ->
 
 
-                                MessageRow(message = message,
+                                MessageRow(
+                                    message = message,
                                     onActionConfirm = { msg, baseEntityDto ->
                                         viewModel.handleIntent(
                                             AIChatIntent.ConfirmPendingAction(
@@ -140,7 +140,8 @@ class AIChatScreen : Screen {
                                                 m
                                             )
                                         )
-                                    })
+                                    }, userAvatarUrl = uiState.userAvatarUrl
+                                )
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
                         }

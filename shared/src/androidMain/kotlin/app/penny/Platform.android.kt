@@ -2,10 +2,8 @@ package app.penny
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.net.Uri
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
@@ -14,10 +12,11 @@ import androidx.compose.runtime.ProvidedValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import app.penny.di.commonModule
 import app.penny.di.platformModule
 import co.touchlab.kermit.Logger
+import com.mmk.kmpnotifier.notification.NotifierManager
+import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
 import dev.icerock.moko.resources.StringResource
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
@@ -34,8 +33,9 @@ actual fun getPlatform(): Platform {
 }
 
 actual class ApplicationInitializer actual constructor(
-    val application: Any?
-) : KoinComponent {
+    val application: Any?,
+
+    ) : KoinComponent {
     private val logger = Logger.withTag("ApplicationInitializer")
 
     actual fun initKoin(appDeclaration: KoinAppDeclaration): ApplicationInitializer {
@@ -54,6 +54,20 @@ actual class ApplicationInitializer actual constructor(
 
         return this
     }
+
+    actual fun initNotifierManager(): ApplicationInitializer {
+        logger.i { "Initializing NotifierManager..." }
+        NotifierManager.initialize(
+            configuration = NotificationPlatformConfiguration.Android(
+                notificationIconResId = R.drawable.ic_notification
+            )
+
+        )
+        logger.i { "NotifierManager initialized successfully" }
+
+        return this
+    }
+
 
 }
 
@@ -99,10 +113,4 @@ actual fun getRawStringResource(
     return localizedContext.getString(stringResource.resourceId)
 }
 
-actual fun openUrlInDefaultBrowser(url: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    ContextCompat.startActivity(
-        appContext, intent, null
-    )
-}
+

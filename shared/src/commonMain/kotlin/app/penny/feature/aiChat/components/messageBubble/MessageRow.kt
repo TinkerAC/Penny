@@ -21,6 +21,7 @@ import app.penny.servershared.dto.BaseEntityDto
 
 @Composable
 fun MessageRow(
+    userAvatarUrl: String?,
     message: ChatMessage,
     onActionConfirm: (SystemMessage, BaseEntityDto?) -> Unit,
     onActionDismiss: (SystemMessage) -> Unit
@@ -54,7 +55,9 @@ fun MessageRow(
             ) {
                 UserMessageBubble(message = message)
                 Spacer(modifier = Modifier.width(8.dp))
-                UserAvatar()
+                UserAvatar(
+                    imageUrl = userAvatarUrl ?: ""
+                )
             }
         }
     }

@@ -1,6 +1,8 @@
 package app.penny
 
 
+//import com.mmk.kmpnotifier.notification.NotifierManager
+//import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.optOutOfCupertinoOverscroll
 import androidx.compose.runtime.Composable
@@ -9,17 +11,19 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.mmk.kmpnotifier.notification.NotifierManager
+import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
 import dev.icerock.moko.resources.StringResource
 import org.koin.core.component.KoinComponent
 import org.koin.dsl.KoinAppDeclaration
 import platform.Foundation.NSBundle
 import platform.Foundation.NSLocale
+import platform.Foundation.NSURL
 import platform.Foundation.countryCode
 import platform.Foundation.languageCode
 import platform.UIKit.UIApplication
 import platform.UIKit.UIDevice
 import platform.UIKit.UIScreen
-import platform.Foundation.NSURL
 
 
 class IOSPlatform : Platform() {
@@ -39,6 +43,13 @@ actual class ApplicationInitializer actual constructor(
 ) : KoinComponent {
     actual fun initKoin(appDeclaration: KoinAppDeclaration): ApplicationInitializer {
         app.penny.di.initKoin()
+        return this
+    }
+
+    actual fun initNotifierManager(): ApplicationInitializer {
+        NotifierManager.initialize(
+            NotificationPlatformConfiguration.Ios()
+        )
         return this
     }
 
@@ -108,9 +119,78 @@ private fun createLocalizedBundle(baseBundle: NSBundle, locale: NSLocale): NSBun
     return if (path != null) NSBundle(path = path) else null
 }
 
-actual fun openUrlInDefaultBrowser(url: String) {
-    val nsUrl = NSURL(string = url)
-    if (UIApplication.sharedApplication.canOpenURL(nsUrl)) {
-        UIApplication.sharedApplication.openURL(nsUrl)
-    }
-}
+
+
+//// CommonMain
+//actual class LocalNotificationManager {
+//    // 实时发送通知
+//    actual fun sendImmediateNotification(title: String, body: String) {
+//        val content = UNMutableNotificationContent().apply {
+//            setTitle(title)
+//            setBody(body)
+//            setSound(UNNotificationSound.defaultSound())
+//            setBadge(
+//                NSNumber(
+//                    UIApplication.sharedApplication.applicationIconBadgeNumber + 1
+//                )
+//            )
+//        }
+//
+//        val request = UNNotificationRequest.requestWithIdentifier(
+//            identifier = "immediate_notification",
+//            content = content,
+//            trigger = null // 立即触发
+//        )
+//
+//        UNUserNotificationCenter.currentNotificationCenter().addNotificationRequest(
+//            request = request
+//        ) { error ->
+//            if (error != null) {
+//                println("实时通知发送失败: ${error.localizedDescription}")
+//            } else {
+//                println("实时通知已发送")
+//            }
+//        }
+//    }
+//
+//    // 设置定时通知
+//    actual fun scheduleNotification(
+//        title: String,
+//        body: String,
+//        delaySeconds: Long,
+//        identifier: String
+//    ) {
+//        val content = UNMutableNotificationContent().apply {
+//            setTitle(title)
+//            setBody(body)
+//            setSound(UNNotificationSound.defaultSound())
+//            setBadge(
+//                NSNumber(
+//                    UIApplication.sharedApplication.applicationIconBadgeNumber + 1
+//                )
+//            )
+//        }
+//
+//        val trigger = UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(
+//            timeInterval = delaySeconds.toDouble(),
+//            repeats = false // 不重复
+//        )
+//
+//        val request = UNNotificationRequest.requestWithIdentifier(
+//            identifier = identifier,
+//            content = content,
+//            trigger = trigger
+//        )
+//
+//        UNUserNotificationCenter.currentNotificationCenter().addNotificationRequest(
+//            request = request
+//        ) { error ->
+//            if (error != null) {
+//                println("定时通知设置失败: ${error.localizedDescription}")
+//            } else {
+//                println("定时通知已设置: $identifier")
+//            }
+//        }
+//    }
+//}
+

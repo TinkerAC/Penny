@@ -15,5 +15,6 @@ data class AIChatUiState(
     val isSending: Boolean = false,
     val ledgerSelectDialogVisible: Boolean = false,
     val selectedLedger: LedgerModel? = null,
-    val ledgerList: List<LedgerModel> = emptyList()
+    val ledgerList: List<LedgerModel> = emptyList(),
+    val userAvatarUrl: String? = null,
 )

@@ -11,7 +11,13 @@ interface AuthRepository {
 
     suspend fun checkIsEmailRegistered(email: String): Boolean?
 
+
+    // detect if the user is logged in (check accessToken)
     fun isLoggedIn(): Boolean
+
+
+    // detect if the user has logged in before ( has refresh token persisted)
+    fun hasLoggedIn(): Boolean
 
 
     fun clearToken()

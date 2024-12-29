@@ -33,12 +33,16 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.penny.core.data.repository.LedgerRepository
+import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.usecase.InitLocalUserUseCase
+import app.penny.core.domain.usecase.SyncDataUseCase
 import app.penny.di.getKoinInstance
 import app.penny.presentation.ui.components.PennyLogo
 import app.penny.presentation.ui.components.RegisterAndLoginModal
 import app.penny.presentation.ui.theme.spacing
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun OnboardingPage(
@@ -169,6 +173,7 @@ fun OnboardingPage(
 }
 
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun OnboardingLoginPage(
     illustration: Painter?,
@@ -176,7 +181,8 @@ fun OnboardingLoginPage(
     content: String,
     currentPage: Int,
     totalPages: Int,
-    onNext: () -> Unit
+    onNext: () -> Unit,
+    onFinish: () -> Unit
 ) {
     var showLoginModal by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -308,7 +314,26 @@ fun OnboardingLoginPage(
             RegisterAndLoginModal(
                 onDismiss = { showLoginModal = false },
                 onLoginSuccess = {
-                    onNext()
+                    coroutineScope.launch {
+                        val syncDataUseCase = getKoinInstance<SyncDataUseCase>()
+                        val userDataRepository = getKoinInstance<UserDataRepository>()
+                        val ledgerRepository = getKoinInstance<LedgerRepository>()
+                        try {
+                            //retrieve user data from remote
+                            syncDataUseCase()
+                            // set the first ledger as default
+                            userDataRepository.setDefaultLedger(
+                                ledgerRepository.findByUserUuid(userDataRepository.getUser().uuid)
+                                    .first()
+                            )
+                            //navigate to main screen
+                            onFinish()
+                        } catch (e: Exception) {
+
+                            // if error occurs, navigate to ledger init page
+                            onNext()
+                        }
+                    }
                 }
             )
         }

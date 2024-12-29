@@ -39,6 +39,7 @@ class CountUnsyncedDataUseCase(
             val unsyncedRemoteChangeCount = apiClient.sync.getRemoteUnsyncedDataCount(
                 lastSyncedAt = lastSyncedAt?.epochSeconds ?: Instant.DISTANT_PAST.epochSeconds
             )
+
             unsyncedRemoteLedgerCount = unsyncedRemoteChangeCount.unsyncedLedgersCount
 
             unsyncedRemoteTransactionCount = unsyncedRemoteChangeCount.unsyncedTransactionsCount

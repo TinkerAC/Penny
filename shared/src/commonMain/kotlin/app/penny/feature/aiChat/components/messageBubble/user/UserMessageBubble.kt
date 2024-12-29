@@ -3,6 +3,7 @@ package app.penny.feature.aiChat.components.messageBubble.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -11,15 +12,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.ChatMessage
 import app.penny.shared.SharedRes
 import dev.icerock.moko.resources.compose.painterResource
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 
 @Composable
 fun UserMessageBubble(message: ChatMessage) {
@@ -44,15 +49,27 @@ fun UserMessageBubble(message: ChatMessage) {
 }
 
 @Composable
-fun UserAvatar() {
-    Image(
-        painter = painterResource(SharedRes.images.avatar_boy),
-        contentDescription = null,
-        modifier = Modifier
-            .size(40.dp)
-            .clip(CircleShape)
-            .border(1.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
-    )
+fun UserAvatar(
+    imageUrl: String
+) {
+    Box() {
+        KamelImage(
+            resource = { asyncPainterResource(imageUrl) },
+            contentDescription = "用户头像",
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .border(1.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape),
+            contentScale = ContentScale.Crop,
+            onLoading = {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        )
+    }
+
 
 }
 

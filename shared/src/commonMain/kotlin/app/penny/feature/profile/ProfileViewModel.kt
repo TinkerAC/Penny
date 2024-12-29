@@ -10,6 +10,7 @@ import app.penny.core.domain.exception.LoginException
 import app.penny.core.domain.exception.RegisterException
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
+import app.penny.presentation.utils.generateGravatarUrl
 import app.penny.servershared.dto.responseDto.LoginResponse
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -41,9 +42,6 @@ class ProfileViewModel(
     init {
         screenModelScope.launch {
             fetchProfileStatistics()
-            _uiState.value = _uiState.value.copy(
-                isLoggedIn = authRepository.isLoggedIn(),
-            )
         }
     }
 
@@ -60,9 +58,7 @@ class ProfileViewModel(
             ProfileIntent.TryLogin -> showLoginModal()
             is ProfileIntent.Login -> attemptLogin(intent.email, intent.password)
             is ProfileIntent.Register -> attemptRegister(
-                intent.email,
-                intent.password,
-                intent.confirmPassword
+                intent.email, intent.password, intent.confirmPassword
             )
 
             is ProfileIntent.UnfocusEmail -> checkEmailStatus(intent.email)
@@ -98,18 +94,14 @@ class ProfileViewModel(
 
                 localUser == null -> {
                     // 无本地匿名用户
-                    if (isEmailRegistered)
-                        "This email has been registered, please login"
-                    else
-                        "This email is not registered, please register"
+                    if (isEmailRegistered) "This email has been registered, please login"
+                    else "This email is not registered, please register"
                 }
 
                 else -> {
                     // 有本地匿名用户（意味着绑定）
-                    if (isEmailRegistered)
-                        "This email has been registered, please login"
-                    else
-                        "This email is not registered, and your local data will be bound to the new account"
+                    if (isEmailRegistered) "This email has been registered, please login"
+                    else "This email is not registered, and your local data will be bound to the new account"
                 }
             }
 
@@ -171,13 +163,12 @@ class ProfileViewModel(
                 if (registerResponse.success) {
                     // 注册成功
                     _uiState.value = _uiState.value.copy(
-                        errorMessage = "Register success, please login",
-                        modalInLoginMode = true
+                        errorMessage = "Register success, please login", modalInLoginMode = true
                     )
                 } else {
                     // 理论上这里不会被执行，因为不成功的情况在 usecase 中已抛异常
                     _uiState.value = _uiState.value.copy(
-                        errorMessage = registerResponse.message ?: "Unknown error occurred"
+                        errorMessage = registerResponse.message
                     )
                 }
             } catch (e: RegisterException) {
@@ -195,23 +186,20 @@ class ProfileViewModel(
 
     private fun toggleModalMode() {
         _uiState.value = _uiState.value.copy(
-            modalInLoginMode = !_uiState.value.modalInLoginMode,
-            errorMessage = null
+            modalInLoginMode = !_uiState.value.modalInLoginMode, errorMessage = null
         )
     }
 
     private fun showLoginModal() {
         _uiState.value = _uiState.value.copy(
-            loggingModalVisible = true,
-            errorMessage = null
+            loggingModalVisible = true, errorMessage = null
         )
     }
 
 
     private fun dismissLoginModal() {
         _uiState.value = _uiState.value.copy(
-            loggingModalVisible = false,
-            errorMessage = null
+            loggingModalVisible = false, errorMessage = null
         )
     }
 
@@ -221,12 +209,14 @@ class ProfileViewModel(
         val user = userDataRepository.getUser()
         _uiState.value = _uiState.value.copy(
             user = user,
+            isLoggedIn = authRepository.isLoggedIn(),
             email = userDataRepository.getUserEmailOrNull(),
             username = userDataRepository.getUserNameOrNull(),
             totalTransactionDateSpan = statisticRepository.getTransactionDateSpanDays(user),
             ledgerCount = ledgerRepository.countByUser(user),
             totalTransactionCount = statisticRepository.getTotalTransactionCountByUser(user),
-            isLoading = false
+            isLoading = false,
+            userAvatarUrl = user.email?.let { generateGravatarUrl("2058666094@qq.com") }
         )
     }
 }

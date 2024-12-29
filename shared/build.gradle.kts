@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -12,6 +13,7 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
     id("dev.icerock.mobile.multiplatform-resources") version "0.24.4"
+
 }
 
 kotlin {
@@ -23,20 +25,30 @@ kotlin {
     }
 
 
+
+
+
     jvm {
         compilations.all {
-            kotlinOptions {
-                freeCompilerArgs += listOf("-Xdisable-optimizations")
-            }
+//            kotlinOptions {
+//                freeCompilerArgs += listOf("-Xdisable-optimizations")
+//            }
         }
     }
 
 
     // 新的 iOS 目标配置方式
 
-    iosX64 { binaries.framework { baseName = "shared" } }
-    iosArm64 { binaries.framework { baseName = "shared" } }
-    iosSimulatorArm64 { binaries.framework { baseName = "shared" } }
+
+    val iosTargets = listOf(iosX64(), iosArm64(), iosSimulatorArm64())
+    iosTargets.forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "ComposeApp"
+//            export(libs.kmpnotifier)
+//            isStatic = true
+//        }
+    }
+
     // 应用默认的层次结构模板
     applyDefaultHierarchyTemplate()
 
@@ -47,11 +59,14 @@ kotlin {
 
             dependencies {
                 // 公共依赖项
+                implementation(libs.uuid)
+//                api(libs.gitlive.firebase.kotlin.crashlytics)
+                implementation(libs.kmpnotifier)
                 api(libs.resources.compose) // 如果使用 Compose Multiplatform
                 implementation(libs.material.kolor)
                 implementation(libs.colorpicker.compose)
                 implementation(libs.multiplatform.markdown.renderer.m3)
-
+                implementation(libs.kamel.image.default)
                 implementation(libs.ktor.utils)
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
@@ -86,20 +101,12 @@ kotlin {
                 implementation(libs.kermit.koin)
                 implementation(compose.materialIconsExtended)
 
-                //键值对存储
-//                implementation(libs.androidx.datastore.preferences)
-//                implementation(libs.kotlinx.serialization.json) // 用于序列化
-
-
-//                // 用于生成 UUID
-//                implementation(libs.uuid)
 
                 implementation(libs.ktor.client.cio)
 
 
                 //image loader
                 implementation(libs.coil.compose)
-//                implementation(libs.coil.network.okhttp)
 
 
             }
@@ -135,7 +142,6 @@ kotlin {
             dependencies {
                 implementation(libs.native.driver)
                 implementation(libs.ktor.client.darwin)
-
             }
         }
     }

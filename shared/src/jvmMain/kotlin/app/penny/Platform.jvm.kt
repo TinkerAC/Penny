@@ -6,6 +6,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.mmk.kmpnotifier.notification.NotifierManager
+import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
+//import com.mmk.kmpnotifier.notification.NotifierManager
+//import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
 import dev.icerock.moko.resources.StringResource
 import org.koin.core.component.KoinComponent
 import org.koin.dsl.KoinAppDeclaration
@@ -32,6 +36,13 @@ actual class ApplicationInitializer actual constructor(
         appDeclaration: KoinAppDeclaration
     ): ApplicationInitializer {
         app.penny.di.initKoin()
+        return this
+    }
+
+    actual fun initNotifierManager(): ApplicationInitializer {
+        NotifierManager.initialize(
+            NotificationPlatformConfiguration.Desktop()
+        )
         return this
     }
 
@@ -64,10 +75,4 @@ actual fun getRawStringResource(
     return stringResource.localized(locale)
 }
 
-actual fun openUrlInDefaultBrowser(url: String) {
-    if (Desktop.isDesktopSupported()) {
-        Desktop.getDesktop().browse(URI(url))
-    } else {
-        throw UnsupportedOperationException("Desktop is not supported on this platform")
-    }
-}
+

@@ -10,6 +10,7 @@ import app.penny.core.domain.model.SystemMessage
 import app.penny.core.domain.model.UserMessage
 import app.penny.core.domain.model.UserModel
 import app.penny.core.domain.usecase.ConfirmPendingActionUseCase
+import app.penny.presentation.utils.generateGravatarUrl
 import app.penny.servershared.enumerate.DtoAssociated
 import app.penny.servershared.enumerate.SilentIntent
 import app.penny.servershared.enumerate.UserIntentStatus
@@ -47,7 +48,8 @@ class AIChatViewModel(
                 it.copy(
                     user = user,
                     ledgerList = ledgerRepository.findByUserUuid(user.uuid),
-                    selectedLedger = defaultLedger
+                    selectedLedger = defaultLedger,
+                    userAvatarUrl = user.email?.let { it1 -> generateGravatarUrl(it1) }
                 )
             }
             // 立即加载聊天记录

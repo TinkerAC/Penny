@@ -37,7 +37,6 @@ class MainScreen : Screen {
 
     @Composable
     override fun Content() {
-
         val viewModel = koinScreenModel<MainViewModel>()
         val uiState by viewModel.uiState.collectAsState()
         val rootNavigator = LocalNavigator.currentOrThrow

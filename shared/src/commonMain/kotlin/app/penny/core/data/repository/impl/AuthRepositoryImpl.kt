@@ -49,13 +49,18 @@ class AuthRepositoryImpl(
     }
 
     override fun isLoggedIn(): Boolean {
-
         val accessToken = tokenManager.getAccessTokenFromMemory()
         val isValid = accessToken != null && !tokenManager.isTokenExpired(accessToken)
         Logger.d { "Is logged in: $isValid" }
         return isValid
     }
 
+    override fun hasLoggedIn(): Boolean {
+        val refreshToken = tokenManager.getRefreshToken()
+        val hasLoggedIn = refreshToken != null && !tokenManager.isTokenExpired(refreshToken)
+        Logger.d { "Has logged in before : $hasLoggedIn" }
+        return hasLoggedIn
+    }
 
     override fun clearToken() {
         tokenManager.clearAllTokens()

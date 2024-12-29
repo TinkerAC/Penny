@@ -47,7 +47,7 @@ class TokenManager(
     }
 
     // 从持久化存储中获取 Refresh Token
-    private fun getRefreshToken(): String? {
+    fun getRefreshToken(): String? {
         return settings.getStringOrNull(REFRESH_TOKEN_KEY)
     }
 

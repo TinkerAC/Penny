@@ -32,9 +32,11 @@ expect class ApplicationInitializer(
     application: Any? = null
 ) {
 
-
     // init logic with expect-actual
     fun initKoin(appDeclaration: KoinAppDeclaration = {}): ApplicationInitializer
+
+    fun initNotifierManager(): ApplicationInitializer
+
 
 }
 
@@ -47,9 +49,9 @@ fun ApplicationInitializer.initSession(
 
     CoroutineScope(Dispatchers.Default).launch {
         val isFirstTime = userDataRepository.getIsFirstTime()
-        val isUserLoggedIn = authRepository.isLoggedIn()
+        val hasUserLoggedInBefore = authRepository.hasLoggedIn()
 
-        if (isFirstTime || !isUserLoggedIn) {
+        if (isFirstTime || !hasUserLoggedInBefore) {
             Logger.i("First time launch Or User hasn't logged in once")
             return@launch
         }
@@ -70,7 +72,7 @@ fun ApplicationInitializer.initSession(
 
 // initialize: 链式调用 initKoin 和 initSession
 fun ApplicationInitializer.initialize(): ApplicationInitializer {
-    return this.printDeviceInfo().initKoin().initSession()
+    return this.initNotifierManager().initKoin().initSession()
 }
 
 
@@ -96,11 +98,26 @@ expect fun getScreenHeightDp(): Dp
 /**
  * 直接返回原始字符串资源的 API
  */
-expect fun getRawStringResource(stringResource: StringResource, localeString: String=LocaleManager.currentLocale
+expect fun getRawStringResource(
+    stringResource: StringResource, localeString: String = LocaleManager.currentLocale
 ): String
 
 
-
-
-
-expect fun openUrlInDefaultBrowser(url: String)
+//// CommonMain
+//expect class LocalNotificationManager {
+//    /**
+//     * 发送实时通知
+//     * @param title 通知标题
+//     * @param body 通知内容
+//     */
+//    fun sendImmediateNotification(title: String, body: String)
+//
+//    /**
+//     * 设置定时通知
+//     * @param title 通知标题
+//     * @param body 通知内容
+//     * @param delaySeconds 延迟时间（秒）
+//     * @param identifier 通知标识符
+//     */
+//    fun scheduleNotification(title: String, body: String, delaySeconds: Long, identifier: String)
+//}

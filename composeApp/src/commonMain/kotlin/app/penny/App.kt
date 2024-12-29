@@ -16,8 +16,8 @@ import app.penny.presentation.ui.MainScreen
 import app.penny.presentation.ui.ThemeManager
 import app.penny.presentation.ui.ThemeState
 import app.penny.presentation.ui.theme.AppTheme
+import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.SlideTransition
 import co.touchlab.kermit.Logger
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -62,6 +62,8 @@ fun App() {
             // 如果能正确取得 userModel，则用户数据正常
         } catch (e: Exception) {
             isUserDataBroken = true
+            //wipe other broken data
+            userDataRepository.clearUserData()
             Logger.d("User data is broken")
         }
 
@@ -70,7 +72,6 @@ fun App() {
             try {
                 val defaultLedger = userDataRepository.getDefaultLedger()
                 val userLedgers = ledgerRepository.findByUserUuid(userDataRepository.getUser().uuid)
-
                 // 若查询为空 或 defaultLedger 不在列表中，则说明账本数据有问题
                 if (userLedgers.isEmpty() || userLedgers.none { it.uuid == defaultLedger.uuid }) {
                     isLedgerDataBroken = true
@@ -80,6 +81,9 @@ fun App() {
                 ledgerRepository.findByUuid(defaultLedger.uuid)
             } catch (e: Exception) {
                 isLedgerDataBroken = true
+                //wipe broken ledger data
+                userDataRepository.removeDefaultLedger()
+                userDataRepository.removeLastSyncedAt()
                 Logger.d("Ledger data is broken")
             }
         }
@@ -126,7 +130,7 @@ fun App() {
                 appDisplayMode = themeState.displayMode,
                 appThemeContrast = themeState.constraints
             ) {
-                SlideTransition(navigator = navigator)
+                CurrentScreen()
             }
         }
     }

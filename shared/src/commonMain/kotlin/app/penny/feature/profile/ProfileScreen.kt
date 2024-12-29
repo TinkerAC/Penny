@@ -18,7 +18,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.AccountBalanceWallet
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Feedback
 import androidx.compose.material.icons.filled.HomeRepairService
 import androidx.compose.material.icons.filled.Info
@@ -38,7 +37,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
@@ -47,6 +45,7 @@ import app.penny.feature.debugBoard.DebugScreen
 import app.penny.feature.myLedger.MyLedgerScreen
 import app.penny.feature.setting.SettingScreen
 import app.penny.presentation.ui.components.RegisterAndLoginBottomSheet
+import app.penny.presentation.ui.components.UserAvatar
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -138,18 +137,12 @@ fun UserInfoSection(
             .padding(vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            imageVector = Icons.Default.AccountCircle,
-            contentDescription = "用户头像",
-            modifier = Modifier
-                .size(80.dp)
-                .clip(MaterialTheme.shapes.large)
-                .clickable(
-                    onClick = {
-                        viewModel.handleIntent(ProfileIntent.TryLogin)
-                    }
-                ),
-            tint = MaterialTheme.colorScheme.primary
+
+        UserAvatar(
+            imageUrl = uiState.userAvatarUrl,
+            onClick = {
+                viewModel.handleIntent(ProfileIntent.TryLogin)
+            }
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(

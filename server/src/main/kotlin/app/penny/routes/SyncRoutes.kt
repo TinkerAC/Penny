@@ -134,7 +134,9 @@ fun Route.syncRoutes(
 
                     try {
                         transactionDTOs.forEach {
-                            transactionService.upsertTransactionByUuid(it)
+                            transactionService.upsertTransactionByUuid(it,
+                                userId = user.id
+                            )
                         }
                         call.respond(
                             UploadTransactionResponse(
