@@ -209,7 +209,7 @@ class ProfileViewModel(
         val user = userDataRepository.getUser()
         _uiState.value = _uiState.value.copy(
             user = user,
-            isLoggedIn = authRepository.isLoggedIn(),
+            isLoggedIn = authRepository.hasLoggedIn(),
             email = userDataRepository.getUserEmailOrNull(),
             username = userDataRepository.getUserNameOrNull(),
             totalTransactionDateSpan = statisticRepository.getTransactionDateSpanDays(user),

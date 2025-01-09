@@ -1,11 +1,11 @@
-package app.penny.core.data.model
+package app.penny.core.data.enumerate
 
 
 import app.penny.core.data.repository.UserRepository
-import app.penny.core.domain.enum.Category
-import app.penny.core.domain.enum.Currency
-import app.penny.core.domain.enum.LedgerCover
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.Category
+import app.penny.core.domain.enumerate.Currency
+import app.penny.core.domain.enumerate.LedgerCover
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.AchievementModel
 import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.LedgerModel

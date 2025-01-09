@@ -98,6 +98,6 @@ sealed class GroupKey {
     ) : GroupKey()
 
     data class Category(
-        val category: app.penny.core.domain.enum.Category
+        val category: app.penny.core.domain.enumerate.Category
     ) : GroupKey()
 }

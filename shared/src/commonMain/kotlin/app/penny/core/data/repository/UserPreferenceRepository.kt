@@ -1,12 +1,11 @@
 package app.penny.core.data.repository
 
-import app.penny.core.domain.enum.AppDisplayMode
-import app.penny.core.domain.enum.AppThemeContrast
-import app.penny.core.domain.enum.Language
+import app.penny.presentation.enumerate.AppDisplayMode
+import app.penny.presentation.enumerate.AppThemeContrast
+import app.penny.presentation.enumerate.Language
 import app.penny.presentation.ui.theme.AppTheme
 
 interface UserPreferenceRepository {
-
 
 
     fun getAppTheme(): AppTheme
@@ -23,6 +22,16 @@ interface UserPreferenceRepository {
 
     fun setLanguage(language: Language)
     fun getLanguage(): Language
+
+    //Notification preferences
+    fun getNotificationEnabled(): Boolean
+    fun setNotificationEnabled(enabled: Boolean)
+
+    fun getScheduledNotificationEnabled(): Boolean
+    fun setScheduledNotificationEnabled(enabled: Boolean)
+
+    fun getBudgetReachedNotificationEnabled(): Boolean
+    fun setBudgetReachedNotificationEnabled(enabled: Boolean)
 
 
 }

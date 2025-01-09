@@ -1,7 +1,7 @@
 // file: shared/src/commonMain/kotlin/app/penny/core/domain/handler/InsertLedgerHandler.kt
 package app.penny.core.domain.handler
 
-import app.penny.core.data.model.toModel
+import app.penny.core.data.enumerate.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.SystemMessage
 import app.penny.servershared.dto.BaseEntityDto

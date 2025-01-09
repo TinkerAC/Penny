@@ -1,8 +1,8 @@
 package app.penny.core.data.repository.impl
 
 import app.penny.core.data.database.ChatMessageLocalDataSource
-import app.penny.core.data.model.toEntity
-import app.penny.core.data.model.toModel
+import app.penny.core.data.enumerate.toEntity
+import app.penny.core.data.enumerate.toModel
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.ChatMessage

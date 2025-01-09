@@ -1,7 +1,7 @@
 package app.penny.core.domain.model
 
-import app.penny.core.domain.enum.Currency
-import app.penny.core.domain.enum.LedgerCover
+import app.penny.core.domain.enumerate.Currency
+import app.penny.core.domain.enumerate.LedgerCover
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi

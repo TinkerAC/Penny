@@ -16,7 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.penny.core.domain.enum.Category
+import app.penny.core.domain.enumerate.Category
 import app.penny.servershared.dto.TransactionDto
 
 

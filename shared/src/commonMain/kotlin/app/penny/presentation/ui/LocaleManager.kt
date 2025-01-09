@@ -1,8 +1,7 @@
 package app.penny.presentation.ui
 
-import androidx.compose.ui.text.intl.Locale
 import app.penny.core.data.repository.UserPreferenceRepository
-import app.penny.core.domain.enum.Language
+import app.penny.presentation.enumerate.Language
 import app.penny.di.getKoinInstance
 import dev.icerock.moko.resources.desc.StringDesc
 

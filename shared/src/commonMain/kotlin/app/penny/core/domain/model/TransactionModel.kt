@@ -1,8 +1,8 @@
 package app.penny.core.domain.model
 
-import app.penny.core.domain.enum.Category
-import app.penny.core.domain.enum.Currency
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.Category
+import app.penny.core.domain.enumerate.Currency
+import app.penny.core.domain.enumerate.TransactionType
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi

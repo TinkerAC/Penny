@@ -28,8 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import app.penny.core.domain.enum.Category
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.Category
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.feature.newTransaction.component.CategorySelector
 import app.penny.feature.newTransaction.component.NewTransactionTopBar
 import app.penny.feature.newTransaction.component.NumPad

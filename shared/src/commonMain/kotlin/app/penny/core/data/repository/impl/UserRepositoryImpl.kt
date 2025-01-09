@@ -2,8 +2,8 @@ package app.penny.core.data.repository.impl
 
 import app.penny.core.data.database.UserLocalDataSource
 import app.penny.core.data.kvstore.UserDataManager
-import app.penny.core.data.model.toEntity
-import app.penny.core.data.model.toModel
+import app.penny.core.data.enumerate.toEntity
+import app.penny.core.data.enumerate.toModel
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.model.UserModel
 import kotlin.uuid.ExperimentalUuidApi

@@ -1,9 +1,9 @@
 package app.penny.core.data.repository.impl
 
 import app.penny.core.data.database.LedgerLocalDataSource
-import app.penny.core.data.model.toEntity
-import app.penny.core.data.model.toLedgerDto
-import app.penny.core.data.model.toModel
+import app.penny.core.data.enumerate.toEntity
+import app.penny.core.data.enumerate.toLedgerDto
+import app.penny.core.data.enumerate.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.UserModel

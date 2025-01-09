@@ -4,10 +4,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import app.penny.core.data.kvstore.UserPreferenceManager
 import app.penny.core.data.repository.UserPreferenceRepository
-import app.penny.core.domain.enum.AppDisplayMode
-import app.penny.core.domain.enum.AppThemeContrast
-import app.penny.core.domain.enum.Language
-import app.penny.core.domain.enum.ThemeMode
+import app.penny.presentation.enumerate.AppDisplayMode
+import app.penny.presentation.enumerate.AppThemeContrast
+import app.penny.presentation.enumerate.Language
+import app.penny.presentation.enumerate.ThemeMode
 import app.penny.presentation.ui.theme.AppTheme
 import kotlin.random.Random
 
@@ -103,10 +103,48 @@ class UserPreferenceRepositoryImpl(
         //if not set , return random color
 
         return when (seedColorArgb) {
-            null -> AppTheme.DynamicAppTheme(Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()))
+            null -> AppTheme.DynamicAppTheme(
+                Color(
+                    Random.nextFloat(),
+                    Random.nextFloat(),
+                    Random.nextFloat()
+                )
+            )
+
             else -> AppTheme.DynamicAppTheme(Color(seedColorArgb.toInt()))
         }
 
+    }
+
+
+    override fun getNotificationEnabled(): Boolean {
+        return userPreferenceManager.getBoolean(UserPreferenceManager.NOTIFICATION_ENABLED)
+    }
+
+    override fun setNotificationEnabled(enabled: Boolean) {
+        userPreferenceManager.putBoolean(UserPreferenceManager.NOTIFICATION_ENABLED, enabled)
+    }
+
+    override fun getScheduledNotificationEnabled(): Boolean {
+        return userPreferenceManager.getBoolean(UserPreferenceManager.SCHEDULED_NOTIFICATION_ENABLED)
+    }
+
+    override fun setScheduledNotificationEnabled(enabled: Boolean) {
+        userPreferenceManager.putBoolean(
+            UserPreferenceManager.SCHEDULED_NOTIFICATION_ENABLED,
+            enabled
+        )
+    }
+
+    override fun getBudgetReachedNotificationEnabled(): Boolean {
+        return userPreferenceManager.getBoolean(UserPreferenceManager.BUDGET_REACHED_NOTIFICATION_ENABLED)
+    }
+
+    override fun setBudgetReachedNotificationEnabled(enabled: Boolean) {
+        userPreferenceManager.putBoolean(
+            UserPreferenceManager.BUDGET_REACHED_NOTIFICATION_ENABLED,
+            enabled
+        )
     }
 }
 

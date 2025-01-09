@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 /** 分区模块 **/
 @Composable
 fun SettingSection(
-    title: String,
+    title: String? = null,
     description: String? = null,
     settingItems: List<@Composable () -> Unit>
 ) {
@@ -41,24 +41,28 @@ fun SettingSection(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Column {
-                // Small cylinder shape to enhance the title
-                Row {
-                    Box(
-                        modifier = Modifier.size(width = 5.dp, height = 16.dp)
-                            .background(
-                                shape = RoundedCornerShape(2.dp),
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            .align(Alignment.CenterVertically)
-                    )
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
+
+            title?.let {
+                Column {
+                    // Small cylinder shape to enhance the title
+                    Row {
+                        Box(
+                            modifier = Modifier.size(width = 5.dp, height = 16.dp)
+                                .background(
+                                    shape = RoundedCornerShape(2.dp),
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                .align(Alignment.CenterVertically)
+                        )
+
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(start = 4.dp)
+                        )
+                    }
                 }
 
                 if (description != null) {
@@ -69,13 +73,13 @@ fun SettingSection(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
+                Spacer(modifier = Modifier.height(12.dp))
+
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
 
             Column(
                 modifier = Modifier
-                    .padding(start = 8.dp)
             ) {
                 settingItems.forEach { item ->
                     item()

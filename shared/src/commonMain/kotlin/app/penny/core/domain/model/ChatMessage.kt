@@ -1,7 +1,7 @@
 // file: shared/src/commonMain/kotlin/app/penny/core/domain/model/ChatMessage.kt
 package app.penny.core.domain.model
 
-import app.penny.core.data.model.MessageType
+import app.penny.core.data.enumerate.MessageType
 import app.penny.servershared.enumerate.UserIntent
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

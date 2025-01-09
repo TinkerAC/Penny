@@ -1,4 +1,4 @@
-package app.penny.core.domain.enum
+package app.penny.presentation.enumerate
 
 /**
  * AppTheme mode enum class,

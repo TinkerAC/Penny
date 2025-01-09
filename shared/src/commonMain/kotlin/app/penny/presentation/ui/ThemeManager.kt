@@ -1,8 +1,7 @@
 package app.penny.presentation.ui
 
-import androidx.compose.ui.graphics.Color
-import app.penny.core.domain.enum.AppDisplayMode
-import app.penny.core.domain.enum.AppThemeContrast
+import app.penny.presentation.enumerate.AppDisplayMode
+import app.penny.presentation.enumerate.AppThemeContrast
 import app.penny.presentation.ui.theme.AppTheme
 
 import kotlinx.coroutines.flow.MutableSharedFlow

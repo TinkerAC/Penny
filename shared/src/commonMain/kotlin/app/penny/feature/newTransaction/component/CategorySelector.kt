@@ -36,8 +36,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.penny.core.domain.enum.Category
-import app.penny.core.domain.enum.Category.Companion.getSubCategories
+import app.penny.core.domain.enumerate.Category
+import app.penny.core.domain.enumerate.Category.Companion.getSubCategories
 import app.penny.feature.newTransaction.NewTransactionIntent
 import app.penny.feature.newTransaction.NewTransactionUiState
 import app.penny.feature.newTransaction.NewTransactionViewModel

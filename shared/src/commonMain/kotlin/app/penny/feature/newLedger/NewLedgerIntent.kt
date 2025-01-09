@@ -1,8 +1,8 @@
 // shared/src/commonMain/kotlin/app/penny/feature/newLedger/intents/NewLedgerIntent.kt
 package app.penny.feature.newLedger
 
-import app.penny.core.domain.enum.Currency
-import app.penny.core.domain.enum.LedgerCover
+import app.penny.core.domain.enumerate.Currency
+import app.penny.core.domain.enumerate.LedgerCover
 
 sealed class NewLedgerIntent {
     object OpenCurrencySelectorModal : NewLedgerIntent()

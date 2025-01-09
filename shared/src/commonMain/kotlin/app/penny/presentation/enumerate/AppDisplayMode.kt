@@ -1,4 +1,4 @@
-package app.penny.core.domain.enum
+package app.penny.presentation.enumerate
 
 import app.penny.shared.SharedRes
 import dev.icerock.moko.resources.StringResource

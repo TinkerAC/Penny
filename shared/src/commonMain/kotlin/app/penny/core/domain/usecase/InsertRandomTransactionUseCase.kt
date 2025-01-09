@@ -2,8 +2,8 @@ package app.penny.core.domain.usecase
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
-import app.penny.core.domain.enum.Category
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.Category
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.TransactionModel
 import co.touchlab.kermit.Logger
 import com.ionspin.kotlin.bignum.decimal.BigDecimal

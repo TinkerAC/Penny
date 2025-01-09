@@ -1,4 +1,4 @@
-package app.penny.core.data.model
+package app.penny.core.data.enumerate
 
 
 enum class MessageType(

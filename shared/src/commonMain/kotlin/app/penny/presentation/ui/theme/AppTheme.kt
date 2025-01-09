@@ -3,8 +3,8 @@ package app.penny.presentation.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import app.penny.core.domain.enum.AppThemeContrast
-import app.penny.core.domain.enum.AppDisplayMode
+import app.penny.presentation.enumerate.AppThemeContrast
+import app.penny.presentation.enumerate.AppDisplayMode
 import app.penny.presentation.ui.theme.theme1.AppTypography
 import com.materialkolor.DynamicMaterialTheme
 

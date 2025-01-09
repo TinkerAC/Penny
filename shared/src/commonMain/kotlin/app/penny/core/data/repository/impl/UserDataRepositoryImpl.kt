@@ -3,7 +3,7 @@ package app.penny.core.data.repository.impl
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.database.UserLocalDataSource
 import app.penny.core.data.kvstore.UserDataManager
-import app.penny.core.data.model.toModel
+import app.penny.core.data.enumerate.toModel
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.UserModel

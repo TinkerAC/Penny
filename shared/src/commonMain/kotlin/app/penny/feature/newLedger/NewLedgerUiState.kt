@@ -1,8 +1,8 @@
 package app.penny.feature.newLedger
 
 import androidx.compose.material3.SnackbarHostState
-import app.penny.core.domain.enum.Currency
-import app.penny.core.domain.enum.LedgerCover
+import app.penny.core.domain.enumerate.Currency
+import app.penny.core.domain.enumerate.LedgerCover
 
 data class NewLedgerUiState(
     val ledgerName: String = "",

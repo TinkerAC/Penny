@@ -99,7 +99,6 @@ class DashboardScreen : Screen {
                 )
         ) {
             CompositionLocalProvider(*provideNullAndroidOverscrollConfiguration()) {
-
                 LazyColumn(
                     state = listState,
                     modifier = Modifier

@@ -22,9 +22,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.penny.core.domain.enum.Category
+import app.penny.core.domain.enumerate.Category
 import app.penny.core.domain.model.SystemMessage
 import app.penny.core.domain.usecase.buildDto
 import app.penny.servershared.EditableField
@@ -33,7 +32,6 @@ import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.enumerate.DtoAssociated
-import app.penny.servershared.enumerate.UserIntent
 import app.penny.shared.SharedRes
 import dev.icerock.moko.resources.compose.stringResource
 

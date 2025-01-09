@@ -11,10 +11,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.penny.feature.analytics.component.topbar.AnalyticsTopBar
-import app.penny.feature.analytics.component.CategoryPieChart
 import app.penny.feature.analytics.component.AssetChangeTable
+import app.penny.feature.analytics.component.CategoryPieChart
 import app.penny.feature.analytics.component.IncomeExpenseTrendChartCard
+import app.penny.feature.analytics.component.topbar.AnalyticsTopBar
 import app.penny.presentation.ui.components.LedgerSelectDialog
 import app.penny.presentation.ui.components.LoadingScreen
 import cafe.adriel.voyager.core.screen.Screen
@@ -63,7 +63,6 @@ class AnalyticScreen : Screen {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 16.dp)
                     ) {
                         item {
                             IncomeExpenseTrendChartCard(

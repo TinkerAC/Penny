@@ -1,10 +1,8 @@
 package app.penny.feature.setting
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,14 +15,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import app.penny.feature.setting.component.ExpendSetting
 import app.penny.feature.setting.component.ExposedDropDownSetting
 import app.penny.feature.setting.component.SettingSection
+import app.penny.feature.setting.component.SwitchSetting
 import app.penny.feature.setting.component.ThemeColorOptionContent
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
 import app.penny.presentation.ui.theme.AppTheme
@@ -157,7 +153,7 @@ class SettingScreen : Screen {
                                 description = stringResource(SharedRes.strings.security_setting_description),
                                 settingItems = listOf {
                                     SwitchSetting(
-                                        settingName = "Lock App",
+                                        title = "Lock App",
                                         checked = true,
                                         onCheckedChange = {}
                                     )
@@ -195,36 +191,7 @@ class SettingScreen : Screen {
 }
 
 
-/** 开关设置项 **/
-@Composable
-fun SwitchSetting(
-    settingName: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = settingName,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedTrackColor = MaterialTheme.colorScheme.primary,
-                checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                uncheckedTrackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-            )
-        )
-    }
-}
+
 
 /** 信息展示设置项 **/
 @Composable

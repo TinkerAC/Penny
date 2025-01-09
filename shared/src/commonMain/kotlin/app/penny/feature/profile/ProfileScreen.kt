@@ -41,9 +41,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.penny.feature.debugBoard.DebugScreen
 import app.penny.feature.myLedger.MyLedgerScreen
+import app.penny.feature.notification.NotificationScreen
 import app.penny.feature.setting.SettingScreen
+import app.penny.feature.toolBox.ToolBoxScreen
 import app.penny.presentation.ui.components.RegisterAndLoginBottomSheet
 import app.penny.presentation.ui.components.UserAvatar
 import app.penny.shared.SharedRes
@@ -196,12 +197,12 @@ fun StatisticItem(number: Long, label: String) {
 
 @Composable
 fun FunctionGrid() {
-
     val rootNavigator = LocalNavigator.currentOrThrow
     val features = listOf(
         FeatureItem(
             stringResource(SharedRes.strings.notification),
-            Icons.Default.Notifications
+            Icons.Default.Notifications,
+            NotificationScreen()
         ),
         FeatureItem(
             stringResource(SharedRes.strings.my_ledger),
@@ -211,7 +212,7 @@ fun FunctionGrid() {
         FeatureItem(
             stringResource(SharedRes.strings.pennys_box),
             Icons.Default.HomeRepairService,
-            DebugScreen(),
+            ToolBoxScreen()
         ),
         FeatureItem(
             stringResource(SharedRes.strings.settings),

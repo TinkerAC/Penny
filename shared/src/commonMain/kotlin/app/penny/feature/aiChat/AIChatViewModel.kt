@@ -1,6 +1,6 @@
 package app.penny.feature.aiChat
 
-import app.penny.core.data.model.MessageType
+import app.penny.core.data.enumerate.MessageType
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository

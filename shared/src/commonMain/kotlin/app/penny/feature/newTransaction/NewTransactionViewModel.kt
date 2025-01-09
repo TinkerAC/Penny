@@ -5,9 +5,9 @@ package app.penny.feature.newTransaction
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.domain.enum.Category
-import app.penny.core.domain.enum.Currency
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.Category
+import app.penny.core.domain.enumerate.Currency
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import app.penny.feature.newTransaction.component.DoneButtonState

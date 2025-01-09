@@ -1,7 +1,7 @@
 // file: server/src/main/kotlin/app/penny/services/AiService.kt
 package app.penny.services
 
-import app.penny.core.domain.enum.Category
+import app.penny.core.domain.enumerate.Category
 import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.MonthlyReportData
 import app.penny.servershared.dto.TransactionDto

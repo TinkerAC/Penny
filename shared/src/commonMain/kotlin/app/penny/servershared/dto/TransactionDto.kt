@@ -1,7 +1,7 @@
 // file: shared/src/commonMain/kotlin/app/penny/servershared/dto/TransactionDto.kt
 package app.penny.servershared.dto
 
-import app.penny.core.domain.enum.Category
+import app.penny.core.domain.enumerate.Category
 import app.penny.servershared.EditableField
 import app.penny.servershared.FieldType
 import app.penny.servershared.enumerate.UserIntent

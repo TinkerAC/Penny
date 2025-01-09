@@ -1,8 +1,8 @@
 package app.penny.feature.setting
 
-import app.penny.core.domain.enum.AppDisplayMode
-import app.penny.core.domain.enum.AppThemeContrast
-import app.penny.core.domain.enum.Language
+import app.penny.presentation.enumerate.AppDisplayMode
+import app.penny.presentation.enumerate.AppThemeContrast
+import app.penny.presentation.enumerate.Language
 import app.penny.presentation.ui.theme.AppTheme
 
 data class SettingUiState(

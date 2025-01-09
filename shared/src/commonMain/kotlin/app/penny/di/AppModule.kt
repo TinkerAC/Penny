@@ -65,6 +65,7 @@ import app.penny.feature.ledgerDetail.LedgerDetailViewModel
 import app.penny.feature.myLedger.MyLedgerViewModel
 import app.penny.feature.newLedger.NewLedgerViewModel
 import app.penny.feature.newTransaction.NewTransactionViewModel
+import app.penny.feature.notification.NotificationViewModel
 import app.penny.feature.profile.ProfileViewModel
 import app.penny.feature.setting.SettingViewModel
 import app.penny.feature.transactionDetail.TransactionDetailViewModel
@@ -258,6 +259,12 @@ fun commonModule() = module {
             get(), get(), get(), get()
         )
     }
+    factory {
+        NotificationViewModel(
+            get()
+        )
+    }
+
 
     factory { (transactionUuid: Uuid) -> TransactionDetailViewModel(transactionUuid, get(), get()) }
 

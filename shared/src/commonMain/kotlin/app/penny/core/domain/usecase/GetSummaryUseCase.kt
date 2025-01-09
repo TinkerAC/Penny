@@ -1,7 +1,7 @@
 package app.penny.core.domain.usecase
 
 import app.penny.core.data.repository.TransactionRepository
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.Summary
 import app.penny.core.domain.model.TransactionModel

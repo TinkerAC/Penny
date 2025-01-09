@@ -1,6 +1,6 @@
 package app.penny.core.domain.model
 
-import app.penny.core.domain.enum.Category
+import app.penny.core.domain.enumerate.Category
 import app.penny.feature.transactions.GroupByType
 
 /**

@@ -2,8 +2,8 @@
 package app.penny.feature.newTransaction
 
 import androidx.compose.material3.SnackbarHostState
-import app.penny.core.domain.enum.Category
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.Category
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.LedgerModel
 import app.penny.feature.newTransaction.component.DoneButtonState
 import com.ionspin.kotlin.bignum.decimal.BigDecimal

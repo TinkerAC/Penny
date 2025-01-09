@@ -1,4 +1,4 @@
-package app.penny.core.domain.enum
+package app.penny.core.domain.enumerate
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp

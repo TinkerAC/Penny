@@ -1,6 +1,6 @@
 package app.penny.core.domain.usecase
 
-import app.penny.core.data.model.toModel
+import app.penny.core.data.enumerate.toModel
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository

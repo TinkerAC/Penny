@@ -2,9 +2,9 @@ package app.penny.core.data.repository.impl
 
 import app.penny.core.data.database.LedgerLocalDataSource
 import app.penny.core.data.database.TransactionLocalDataSource
-import app.penny.core.data.model.toDto
-import app.penny.core.data.model.toEntity
-import app.penny.core.data.model.toModel
+import app.penny.core.data.enumerate.toDto
+import app.penny.core.data.enumerate.toEntity
+import app.penny.core.data.enumerate.toModel
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel

@@ -1,8 +1,8 @@
 // file: src/commonMain/kotlin/app/penny/feature/transactionDetail/TransactionDetailIntent.kt
 package app.penny.feature.transactionDetail
 
-import app.penny.core.domain.enum.Category
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.Category
+import app.penny.core.domain.enumerate.TransactionType
 
 sealed class TransactionDetailIntent {
     data class SelectPrimaryCategory(val category: Category) : TransactionDetailIntent()

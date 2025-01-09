@@ -13,6 +13,12 @@ class UserPreferenceManager(
 
     fun getStringOrNull(key: String) = settings.getStringOrNull(key)
 
+    fun putBoolean(key: String, value: Boolean) {
+        settings.set(key = key, value = value)
+    }
+
+    fun getBoolean(key: String) = settings.getBoolean(key, false)
+
 
     companion object {
         const val THEME_MODE = "theme_mode" //STATIC, DYNAMIC
@@ -21,6 +27,10 @@ class UserPreferenceManager(
         const val CONSTRAINTS = "constraints"//LOW, MEDIUM, HIGH
         const val DARK_MODE = "dark_mode" //SYSTEM, LIGHT, DARK
         const val LANGUAGE = "language" //ENGLISH, CHINESE
+        const val NOTIFICATION_ENABLED = "notification_enabled"
+        const val SCHEDULED_NOTIFICATION_ENABLED = "scheduled_notification_enabled"
+        const val BUDGET_REACHED_NOTIFICATION_ENABLED = "budget_reached_notification_enabled"
+
     }
 
 

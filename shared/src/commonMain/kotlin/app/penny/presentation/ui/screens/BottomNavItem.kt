@@ -41,7 +41,7 @@ sealed class BottomNavItem(
             Icons.Outlined.PieChart,
             SharedRes.strings.analytics,
             AnalyticScreen(),
-            { MaterialTheme.colorScheme.surfaceVariant }
+            { MaterialTheme.colorScheme.surface }
         )
 
     data object Profile : BottomNavItem(

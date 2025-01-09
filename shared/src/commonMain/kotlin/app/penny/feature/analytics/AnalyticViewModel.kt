@@ -3,7 +3,7 @@ package app.penny.feature.analytics
 import androidx.compose.ui.graphics.Color
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.valueObject.YearMonth

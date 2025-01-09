@@ -3,8 +3,8 @@ package app.penny.feature.transactionDetail
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
-import app.penny.core.domain.enum.Category
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.Category
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope

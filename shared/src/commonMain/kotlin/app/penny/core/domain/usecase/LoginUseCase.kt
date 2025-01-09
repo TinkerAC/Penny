@@ -1,6 +1,6 @@
 package app.penny.core.domain.usecase
 
-import app.penny.core.data.model.toUserModel
+import app.penny.core.data.enumerate.toUserModel
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository

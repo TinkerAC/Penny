@@ -52,7 +52,6 @@ fun <T> ExposedDropDownSetting(
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
 
-            // 右侧：调用我们提取的 FilterChipDropDown 组件
             Row(verticalAlignment = Alignment.CenterVertically) {
                 FilterChipDropDown(
                     items = items,

@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import app.penny.core.data.model.userRepository
+import app.penny.core.data.enumerate.userRepository
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserPreferenceRepository
@@ -18,6 +18,7 @@ import app.penny.presentation.ui.ThemeState
 import app.penny.presentation.ui.theme.AppTheme
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
 import co.touchlab.kermit.Logger
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -130,7 +131,7 @@ fun App() {
                 appDisplayMode = themeState.displayMode,
                 appThemeContrast = themeState.constraints
             ) {
-                CurrentScreen()
+                SlideTransition( navigator = navigator)
             }
         }
     }

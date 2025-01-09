@@ -1,6 +1,6 @@
 package app.penny.core.domain.usecase
 
-import app.penny.core.data.model.MessageType
+import app.penny.core.data.enumerate.MessageType
 import app.penny.core.data.repository.ChatRepository
 import app.penny.core.domain.model.SystemMessage
 import app.penny.core.domain.model.UserMessage

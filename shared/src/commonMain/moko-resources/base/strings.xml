@@ -365,4 +365,22 @@
         inserted/updated
     </string>
 
+    <string name="notification_scheduled">Scheduled Notification</string>
+    <string name="notification_scheduled_description">This notification reminds you of scheduled
+        activities or tasks.
+    </string>
+
+    <string name="notification_budget_reached">Budget Reached Notification</string>
+    <string name="notification_budget_reached_description">This notification alerts you when your
+        budget is reached.
+    </string>
+    <string name="notification_scheduled_help">Scheduled Notification Help</string>
+    <string name="notification_budget_reached_help">Budget Reached Notification Help</string>
+
+
+
+
+    <string name="tool_data_export">Data Export</string>
+    <string name="tool_exchange_rate_conversion">Exchange Rate Conversion</string>
+    <string name="tool_debt_calculator">Debt Calculator</string>
 </resources>

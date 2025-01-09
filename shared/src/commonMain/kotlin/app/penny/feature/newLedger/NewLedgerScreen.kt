@@ -32,8 +32,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.penny.core.domain.enum.Currency
-import app.penny.core.domain.enum.LedgerCover
+import app.penny.core.domain.enumerate.Currency
+import app.penny.core.domain.enumerate.LedgerCover
 import app.penny.presentation.ui.components.CurrencySelectorModal
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
 import cafe.adriel.voyager.core.screen.Screen

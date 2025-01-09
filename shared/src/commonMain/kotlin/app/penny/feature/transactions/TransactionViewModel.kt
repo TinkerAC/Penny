@@ -5,7 +5,7 @@ import app.penny.core.data.repository.StatisticRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.GroupIdentifier
 import app.penny.core.domain.model.Summary
 import app.penny.core.domain.model.TransactionModel

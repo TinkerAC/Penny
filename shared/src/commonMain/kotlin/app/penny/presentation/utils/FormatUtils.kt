@@ -1,7 +1,7 @@
 package app.penny.presentation.utils
 
 import androidx.compose.runtime.Composable
-import app.penny.core.domain.enum.TransactionType
+import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.TransactionModel
 import app.penny.shared.SharedRes
 import com.ionspin.kotlin.bignum.decimal.BigDecimal

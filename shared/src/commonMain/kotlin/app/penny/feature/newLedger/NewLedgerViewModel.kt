@@ -3,8 +3,8 @@ package app.penny.feature.newLedger
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
-import app.penny.core.domain.enum.Currency
-import app.penny.core.domain.enum.LedgerCover
+import app.penny.core.domain.enumerate.Currency
+import app.penny.core.domain.enumerate.LedgerCover
 import app.penny.core.domain.model.LedgerModel
 
 import cafe.adriel.voyager.core.model.ScreenModel
