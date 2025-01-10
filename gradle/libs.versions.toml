@@ -48,16 +48,11 @@ jdbcDriver = "2.0.2"
 junit = "4.13.2"
 kandyLetsPlot = "0.7.0"
 kermit = "2.0.4"
-koin = "3.4.0"  # 统一 Koin 版本为 3.5.0
-koin-android = "3.5.0"
-koin-core-ext = "3.0.2"
-koin-android-ext = "3.0.2"
+koin = "4.0.0"
 
-
-ktor-server = "2.3.13"
 
 kotlin = "2.0.20"
-composeComplier ="2.0.20"
+composeComplier = "2.0.20"
 kotlinx-coroutines = "1.9.0"
 mysqlConnectorJava = "8.0.33"
 navigationCompose = "2.7.0-alpha07"
@@ -83,7 +78,7 @@ uiToolingPreviewDesktop = "1.7.0"
 #Firebase android
 firebase-android-bom = "32.8.1"
 #Gradle
-gradlePlugins-google-services = "4.4.1"
+gradlePlugins-google-services = "4.4.2"
 #Gitlive
 firebase-gitlive-sdk = "1.12.0"
 coilSvg = "1.3.0"
@@ -124,13 +119,14 @@ jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
 kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamelImageDefault" }
 kandy-lets-plot = { module = "org.jetbrains.kotlinx:kandy-lets-plot", version.ref = "kandyLetsPlot" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
-kermit-koin = { module = "co.touchlab:kermit-koin", version.ref = "kermit" }
 kmpnotifier = { module = "io.github.mirzemehdi:kmpnotifier", version.ref = "kmpnotifier" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-core-ext = { module = "io.insert-koin:koin-core-ext", version.ref = "koin-core-ext" }
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-android" }
-koin-android-ext = { module = "io.insert-koin:koin-android-ext", version.ref = "koin-android-ext" }
-coil-svg ={ module="io.coil-kt:coil-svg", version.ref="coilSvg" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+
+
+kermit-koin = { module = "co.touchlab:kermit-koin", version.ref = "kermit" }
+
+coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coilSvg" }
 # SQLDelight 驱动
 android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "jdbcDriver" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
@@ -170,6 +166,7 @@ voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyagerVersion" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyagerVersion" }
 
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 # Kotlinx
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
@@ -216,13 +213,6 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 androidx-ui-tooling-preview-desktop = { group = "androidx.compose.ui", name = "ui-tooling-preview-desktop", version.ref = "uiToolingPreviewDesktop" }
 
-
-
-
-
-
-
-# Compose 和 Kotlin 插件
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
@@ -235,7 +225,7 @@ sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "gradlePlugins-crashlytics" }
-google-services = { id = "com.google.gms.google-services", version.ref = "gradlePlugins-google-services" }
+gms = { id = "com.google.gms.google-services", version.ref = "gradlePlugins-google-services" }
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 
 

@@ -1,6 +1,8 @@
 package app.penny.feature.profile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import app.penny.feature.debugBoard.DebugScreen
 import app.penny.feature.myLedger.MyLedgerScreen
 import app.penny.feature.notification.NotificationScreen
 import app.penny.feature.setting.SettingScreen
@@ -65,8 +68,6 @@ class ProfileScreen : Screen {
         val bottomSheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = true
         )
-
-
 
         LaunchedEffect(Unit) {
             viewModel.refreshData()
@@ -195,6 +196,7 @@ fun StatisticItem(number: Long, label: String) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FunctionGrid() {
     val rootNavigator = LocalNavigator.currentOrThrow
@@ -216,7 +218,8 @@ fun FunctionGrid() {
         ),
         FeatureItem(
             stringResource(SharedRes.strings.settings),
-            Icons.Default.Settings, SettingScreen()
+            Icons.Default.Settings,
+            SettingScreen()
         )
     )
 
@@ -230,11 +233,18 @@ fun FunctionGrid() {
             Column(
                 modifier = Modifier
                     .padding(8.dp)
-                    .clickable {
-                        feature.screen?.let {
-                            rootNavigator.push(it)
+                    .combinedClickable(
+                        onClick = {
+                            feature.screen?.let {
+                                rootNavigator.push(it)
+                            }
+                        },
+                        onLongClick = {
+                            if (feature == features.last()) {
+                                rootNavigator.push(DebugScreen())
+                            }
                         }
-                    },
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Icon(

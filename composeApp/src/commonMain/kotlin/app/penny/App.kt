@@ -16,11 +16,12 @@ import app.penny.presentation.ui.MainScreen
 import app.penny.presentation.ui.ThemeManager
 import app.penny.presentation.ui.ThemeState
 import app.penny.presentation.ui.theme.AppTheme
-import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import co.touchlab.kermit.Logger
+import org.koin.compose.KoinContext
 import kotlin.uuid.ExperimentalUuidApi
+
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
@@ -107,32 +108,35 @@ fun App() {
         }
     }
 
-    // 加载完成与否的判断
-    // isFirstTime 可能是 null，表示尚未加载完成；startOnBoardingPage 也可能是null
-    if (isFirstTime == null || startOnBoardingPage == null) {
-        // 还在加载中
-        CircularProgressIndicator()
+    KoinContext {
+        // isFirstTime 可能是 null，表示尚未加载完成；startOnBoardingPage 也可能是null
+        if (isFirstTime == null || startOnBoardingPage == null) {
+            // 还在加载中
+            CircularProgressIndicator()
 
-    } else {
+        } else {
 
-        Navigator(
-            screen = if (startOnBoardingPage != -1) {
-                // 如果不是-1，说明需要进入OnBoarding
-                OnboardingNavigatorScreen(
-                    startPage = startOnBoardingPage!!
-                )
-            } else {
-                // 一切正常，直接跳转到主界面
-                MainScreen()
-            }
-        ) { navigator ->
-            AppTheme(
-                appTheme = themeState.appTheme,
-                appDisplayMode = themeState.displayMode,
-                appThemeContrast = themeState.constraints
-            ) {
-                SlideTransition( navigator = navigator)
+            Navigator(
+                screen = if (startOnBoardingPage != -1) {
+                    // 如果不是-1，说明需要进入OnBoarding
+                    OnboardingNavigatorScreen(
+                        startPage = startOnBoardingPage!!
+                    )
+                } else {
+                    // 一切正常，直接跳转到主界面
+                    MainScreen()
+                }
+            ) { navigator ->
+                AppTheme(
+                    appTheme = themeState.appTheme,
+                    appDisplayMode = themeState.displayMode,
+                    appThemeContrast = themeState.constraints
+                ) {
+                    SlideTransition(navigator = navigator)
+                }
             }
         }
     }
+
+
 }

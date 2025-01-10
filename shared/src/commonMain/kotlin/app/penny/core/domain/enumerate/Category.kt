@@ -419,7 +419,7 @@ enum class Category(
     EXPENSE_FINANCIAL_INVESTMENTS(
         EXPENSE_FINANCIAL,
         SharedRes.strings.category_financial_investments,
-        Icons.Filled.TrendingUp,
+        Icons.AutoMirrored.Filled.TrendingUp,
         "Stocks, bonds, and other investments"
     ),
     EXPENSE_FINANCIAL_BANKING_FEES(

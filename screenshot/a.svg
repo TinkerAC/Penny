@@ -1,0 +1,303 @@
+<svg xmlns="http://www.w3.org/2000/svg" contentStyleType="text/css" height="653px"
+    preserveAspectRatio="none" style="width:1299px;height:653px;background:#FFFFFF;" version="1.1"
+    viewBox="0 0 1299 653" width="1299px" zoomAndPan="magnify">
+    <title>全栈 Kotlin Multiplatform 应用架构</title>
+    <defs />
+    <g>
+        <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold"
+            lengthAdjust="spacing" textLength="253.6953" x="515.6523" y="22.9951">全栈 Kotlin
+            Multiplatform 应用架构
+        </text><!--cluster ?? (Frontend)-->
+        <g id="cluster_前端 (Frontend)">
+            <path
+                d="M8.5,43.2969 L127.3994,43.2969 A3.75,3.75 0 0 1 129.8994,45.7969 L136.8994,65.5938 L859,65.5938 A2.5,2.5 0 0 1 861.5,68.0938 L861.5,325.7969 A2.5,2.5 0 0 1 859,328.2969 L8.5,328.2969 A2.5,2.5 0 0 1 6,325.7969 L6,45.7969 A2.5,2.5 0 0 1 8.5,43.2969 "
+                fill="none" style="stroke:#000000;stroke-width:1.5;" />
+            <line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="136.8994" y1="65.5938"
+                y2="65.5938" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold"
+                lengthAdjust="spacing" textLength="117.8994" x="10" y="58.292">前端 (Frontend)
+            </text>
+        </g><!--cluster ?? (Shared)-->
+        <g id="cluster_共享 (Shared)">
+            <path
+                d="M693.5,352.2969 L796.0889,352.2969 A3.75,3.75 0 0 1 798.5889,354.7969 L805.5889,374.5938 L1153.5,374.5938 A2.5,2.5 0 0 1 1156,377.0938 L1156,454.7969 A2.5,2.5 0 0 1 1153.5,457.2969 L693.5,457.2969 A2.5,2.5 0 0 1 691,454.7969 L691,354.7969 A2.5,2.5 0 0 1 693.5,352.2969 "
+                fill="none" style="stroke:#000000;stroke-width:1.5;" />
+            <line style="stroke:#000000;stroke-width:1.5;" x1="691" x2="805.5889" y1="374.5938"
+                y2="374.5938" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold"
+                lengthAdjust="spacing" textLength="101.5889" x="695" y="367.292">共享 (Shared)
+            </text>
+        </g><!--cluster ?? (Backend)-->
+        <g id="cluster_后端 (Backend)">
+            <path
+                d="M362,481.2969 L475.8818,481.2969 A3.75,3.75 0 0 1 478.3818,483.7969 L485.3818,503.5938 L1289.5,503.5938 A2.5,2.5 0 0 1 1292,506.0938 L1292,643.7969 A2.5,2.5 0 0 1 1289.5,646.2969 L362,646.2969 A2.5,2.5 0 0 1 359.5,643.7969 L359.5,483.7969 A2.5,2.5 0 0 1 362,481.2969 "
+                fill="none" style="stroke:#000000;stroke-width:1.5;" />
+            <line style="stroke:#000000;stroke-width:1.5;" x1="359.5" x2="485.3818" y1="503.5938"
+                y2="503.5938" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold"
+                lengthAdjust="spacing" textLength="112.8818" x="363.5" y="496.292">后端 (Backend)
+            </text>
+        </g><!--entity UI-->
+        <g id="elem_UI">
+            <rect fill="#F1F1F1" height="52.5938" rx="2.5" ry="2.5"
+                style="stroke:#181818;stroke-width:0.5;" width="202.5674" x="22" y="80.7969" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="182.5674" x="32" y="103.792">Compose Multiplatform UI
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="126" x="32" y="120.0889">（跨平台用户界面）
+            </text>
+        </g>
+        <g id="elem_GMN4">
+            <path
+                d="M350,78.7969 L350,92.7269 L225.43,102.5569 L350,100.7269 L350,103.9297 A0,0 0 0 0 350,103.9297 L583.3101,103.9297 A0,0 0 0 0 583.3101,103.9297 L583.3101,88.7969 L573.3101,78.7969 L350,78.7969 A0,0 0 0 0 350,78.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <path d="M573.3101,78.7969 L573.3101,88.7969 L583.3101,88.7969 L573.3101,78.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="212.3101" x="356" y="95.8638">使用 Compose Multiplatform 构建
+            </text>
+        </g><!--entity SharedCodeFront-->
+        <g id="elem_SharedCodeFront">
+            <rect fill="#F1F1F1" height="52.5938" rx="2.5" ry="2.5"
+                style="stroke:#181818;stroke-width:0.5;" width="158.291" x="387.5" y="198.7969" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="138.291" x="397.5" y="221.792">Kotlin Multiplatform
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="102.4912" x="397.5" y="238.0889">共享代码 (99%)
+            </text>
+        </g>
+        <g id="elem_GMN8">
+            <path
+                d="M720.5,212.7969 L720.5,221.2969 L545.65,225.2969 L720.5,229.2969 L720.5,237.9297 A0,0 0 0 0 720.5,237.9297 L845.5,237.9297 A0,0 0 0 0 845.5,237.9297 L845.5,222.7969 L835.5,212.7969 L720.5,212.7969 A0,0 0 0 0 720.5,212.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <path d="M835.5,212.7969 L835.5,222.7969 L845.5,222.7969 L835.5,212.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="104" x="726.5" y="229.8638">逻辑层和业务代码
+            </text>
+        </g><!--entity KtorClient-->
+        <g id="elem_KtorClient">
+            <rect fill="#F1F1F1" height="52.5938" rx="2.5" ry="2.5"
+                style="stroke:#181818;stroke-width:0.5;" width="141.7207" x="52.5" y="170.7969" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="121.7207" x="62.5" y="193.792">Ktor (CIO Engine)
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="56" x="62.5" y="210.0889">网络引擎
+            </text>
+        </g>
+        <g id="elem_GMN12">
+            <path
+                d="M409,138.7969 L409,154.9369 L194.74,187.8169 L409,162.9369 L409,163.9297 A0,0 0 0 0 409,163.9297 L523.7612,163.9297 A0,0 0 0 0 523.7612,163.9297 L523.7612,148.7969 L513.7612,138.7969 L409,138.7969 A0,0 0 0 0 409,138.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <path d="M513.7612,138.7969 L513.7612,148.7969 L523.7612,148.7969 L513.7612,138.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="93.7612" x="415" y="155.8638">处理 HTTP 请求
+            </text>
+        </g><!--entity SQLDelight-->
+        <g id="elem_SQLDelight">
+            <rect fill="#F1F1F1" height="52.5938" rx="2.5" ry="2.5"
+                style="stroke:#181818;stroke-width:0.5;" width="141.502" x="52.5" y="258.7969" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="115.4043" x="62.5" y="281.792">SQLDelight ORM
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="121.502" x="62.5" y="298.0889">(SQLDelight 方言)
+            </text>
+        </g>
+        <g id="elem_GMN16">
+            <path
+                d="M423.5,286.7969 L423.5,311.9297 L509.5,311.9297 L509.5,296.7969 L499.5,286.7969 L423.5,286.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <path d="M499.5,286.7969 L499.5,296.7969 L509.5,296.7969 L499.5,286.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="65" x="429.5" y="303.8638">数据持久化
+            </text>
+        </g><!--entity ServerShared-->
+        <g id="elem_ServerShared">
+            <rect fill="#F1F1F1" height="52.5938" rx="2.5" ry="2.5"
+                style="stroke:#181818;stroke-width:0.5;" width="151.8242" x="707" y="387.7969" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="117.7695" x="717" y="410.792">server_shared 包
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="131.8242" x="717" y="427.0889">(枚举, 网络请求对象)
+            </text>
+        </g>
+        <g id="elem_GMN21">
+            <path
+                d="M976,401.7969 L976,410.2969 L859.32,414.2969 L976,418.2969 L976,426.9297 A0,0 0 0 0 976,426.9297 L1140,426.9297 A0,0 0 0 0 1140,426.9297 L1140,411.7969 L1130,401.7969 L976,401.7969 A0,0 0 0 0 976,401.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <path d="M1130,401.7969 L1130,411.7969 L1140,411.7969 L1130,401.7969 " fill="#FEFFDD"
+                style="stroke:#181818;stroke-width:0.5;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="143" x="982" y="418.8638">前后端共享的模型和协议
+            </text>
+        </g><!--entity KtorServer-->
+        <g id="elem_KtorServer">
+            <rect fill="#F1F1F1" height="52.5938" rx="2.5" ry="2.5"
+                style="stroke:#181818;stroke-width:0.5;" width="182.3193" x="375.5" y="516.7969" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="162.3193" x="385.5" y="539.792">Ktor Server Framework
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="80.9238" x="385.5" y="556.0889">(服务器框架)
+            </text>
+        </g>
+        <g id="elem_GMN26">
+            <path
+                d="M727,604.7969 L727,629.9297 A0,0 0 0 0 727,629.9297 L839,629.9297 A0,0 0 0 0 839,629.9297 L839,614.7969 L829,604.7969 L735,604.7969 L557.62,564.5069 L727,604.7969 L727,604.7969 A0,0 0 0 0 727,604.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <path d="M829,604.7969 L829,614.7969 L839,614.7969 L829,604.7969 " fill="#FEFFDD"
+                style="stroke:#181818;stroke-width:0.5;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="91" x="733" y="621.8638">处理客户端请求
+            </text>
+        </g><!--entity Exposed-->
+        <g id="elem_Exposed">
+            <rect fill="#F1F1F1" height="52.5938" rx="2.5" ry="2.5"
+                style="stroke:#181818;stroke-width:0.5;" width="116.6533" x="724.5" y="516.7969" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="96.6533" x="734.5" y="539.792">Exposed ORM
+            </text>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="58.9941" x="734.5" y="556.0889">(MySQL)
+            </text>
+        </g>
+        <g id="elem_GMN30">
+            <path
+                d="M1015,590.7969 L1015,590.7969 L841.56,555.9469 L1015,598.7969 L1015,615.9297 A0,0 0 0 0 1015,615.9297 L1101,615.9297 A0,0 0 0 0 1101,615.9297 L1101,600.7969 L1091,590.7969 L1015,590.7969 A0,0 0 0 0 1015,590.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <path d="M1091,590.7969 L1091,600.7969 L1101,600.7969 L1091,590.7969 " fill="#FEFFDD"
+                style="stroke:#181818;stroke-width:0.5;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="65" x="1021" y="607.8638">数据库交互
+            </text>
+        </g><!--entity MySQL-->
+        <g id="elem_MySQL">
+            <rect fill="#F1F1F1" height="36.2969" rx="2.5" ry="2.5"
+                style="stroke:#181818;stroke-width:0.5;" width="114.5205" x="1000.5" y="519.2969" />
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing"
+                textLength="94.5205" x="1010.5" y="542.292">MySQL 数据库
+            </text>
+        </g>
+        <g id="elem_GMN34">
+            <path
+                d="M1203,524.7969 L1203,533.2969 L1115.79,537.2969 L1203,541.2969 L1203,549.9297 A0,0 0 0 0 1203,549.9297 L1276,549.9297 A0,0 0 0 0 1276,549.9297 L1276,534.7969 L1266,524.7969 L1203,524.7969 A0,0 0 0 0 1203,524.7969 "
+                fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;" />
+            <path d="M1266,524.7969 L1266,534.7969 L1276,534.7969 L1266,524.7969 " fill="#FEFFDD"
+                style="stroke:#181818;stroke-width:0.5;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="52" x="1209" y="541.8638">存储数据
+            </text>
+        </g><!--link SQLDelight to GMN16-->
+        <g id="link_SQLDelight_GMN16">
+            <path
+                d="M194.56,290.7169 C214.12,292.0669 235.38,293.3869 255,294.2969 C313.24,296.9969 380.62,298.2769 423.15,298.8469 "
+                fill="none" id="SQLDelight-GMN16"
+                style="stroke:#181818;stroke-width:1;stroke-dasharray:7.0,7.0;" />
+        </g><!--link UI to SharedCodeFront-->
+        <g id="link_UI_SharedCodeFront">
+            <path d="M201.45,133.9269 C257.44,153.2969 327.2399,177.4548 383.1599,196.8048 "
+                fill="none" id="UI-to-SharedCodeFront" style="stroke:#181818;stroke-width:1;" />
+            <polygon fill="#181818"
+                points="388.83,198.7669,381.6328,192.0437,384.1049,197.1318,379.0168,199.6039,388.83,198.7669"
+                style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="26" x="274.5" y="152.3638">使用
+            </text>
+        </g><!--link KtorClient to SharedCodeFront-->
+        <g id="link_KtorClient_SharedCodeFront">
+            <path d="M194.74,203.0669 C250.8,207.6669 323.2902,213.6154 381.3302,218.3854 "
+                fill="none" id="KtorClient-to-SharedCodeFront"
+                style="stroke:#181818;stroke-width:1;" />
+            <polygon fill="#181818"
+                points="387.31,218.8769,378.6679,214.1531,382.3268,218.4673,378.0126,222.1263,387.31,218.8769"
+                style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="26" x="274.5" y="205.3638">使用
+            </text>
+        </g><!--link SQLDelight to SharedCodeFront-->
+        <g id="link_SQLDelight_SharedCodeFront">
+            <path d="M194.74,272.9369 C250.8,263.0769 323.3607,250.3064 381.4007,240.0964 "
+                fill="none" id="SQLDelight-to-SharedCodeFront"
+                style="stroke:#181818;stroke-width:1;" />
+            <polygon fill="#181818"
+                points="387.31,239.0569,377.7531,236.6766,382.3856,239.9231,379.1391,244.5557,387.31,239.0569"
+                style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="26" x="274.5" y="248.3638">使用
+            </text>
+        </g><!--link SharedCodeFront to ServerShared-->
+        <g id="link_SharedCodeFront_ServerShared">
+            <path
+                d="M545.5,251.7569 C558.29,257.0069 571.21,262.9069 583,269.2969 C646.7,303.8369 708.6706,352.3659 746.4006,383.8059 "
+                fill="none" id="SharedCodeFront-to-ServerShared"
+                style="stroke:#181818;stroke-width:1;" />
+            <polygon fill="#181818"
+                points="751.01,387.6469,746.6565,378.8124,747.1688,384.4461,741.5352,384.9583,751.01,387.6469"
+                style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="26" x="631" y="286.3638">使用
+            </text>
+        </g><!--link KtorServer to ServerShared-->
+        <g id="link_KtorServer_ServerShared">
+            <path d="M532.28,516.7269 C586.41,494.5269 657.6488,465.3038 711.7488,443.1138 "
+                fill="none" id="KtorServer-to-ServerShared"
+                style="stroke:#181818;stroke-width:1;" />
+            <polygon fill="#181818"
+                points="717.3,440.8369,707.4553,440.5514,712.674,442.7343,710.4912,447.953,717.3,440.8369"
+                style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="26" x="631" y="455.3638">使用
+            </text>
+        </g><!--link SQLDelight to ServerShared-->
+        <g id="link_SQLDelight_ServerShared">
+            <path
+                d="M150.1,312.2569 C174.52,335.9869 213.64,369.0569 255,384.2969 C407.64,440.5169 595.9859,433.7537 700.8159,423.9837 "
+                fill="none" id="SQLDelight-to-ServerShared"
+                style="stroke:#181818;stroke-width:1;" />
+            <polygon fill="#181818"
+                points="706.79,423.4269,697.4576,420.2793,701.8116,423.8909,698.2,428.2448,706.79,423.4269"
+                style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="26" x="453.5" y="408.3638">使用
+            </text>
+        </g><!--link KtorClient to KtorServer-->
+        <g id="link_KtorClient_KtorServer">
+            <path
+                d="M194.63,221.2369 C205.49,226.7969 216.06,233.4369 225,241.2969 C235.13,250.1969 341.17,439.1069 350,449.2969 C372.36,475.0769 397.523,495.7303 421.343,513.1103 "
+                fill="none" id="KtorClient-to-KtorServer" style="stroke:#181818;stroke-width:1;" />
+            <polygon fill="#181818"
+                points="426.19,516.6469,421.2773,508.1108,422.1509,513.6998,416.5619,514.5734,426.19,516.6469"
+                style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="63.6289" x="256" y="290.3638">HTTP 请求
+            </text>
+        </g><!--link KtorServer to Exposed-->
+        <g id="link_KtorServer_Exposed">
+            <path d="M557.62,543.2969 C611.17,543.2969 671.5,543.2969 718.11,543.2969 " fill="none"
+                id="KtorServer-to-Exposed" style="stroke:#181818;stroke-width:1;" />
+            <polygon fill="#181818"
+                points="724.11,543.2969,715.11,539.2969,719.11,543.2969,715.11,547.2969,724.11,543.2969"
+                style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="60.6138" x="614" y="539.3638">ORM 操作
+            </text>
+        </g><!--link Exposed to MySQL-->
+        <g id="link_Exposed_MySQL">
+            <path d="M841.56,542.0269 C888.34,541.0069 947.9514,539.6885 994.4514,538.6685 "
+                fill="none" id="Exposed-to-MySQL" style="stroke:#181818;stroke-width:1;" />
+            <polygon fill="#181818"
+                points="1000.45,538.5369,991.3644,534.7352,995.4512,538.6465,991.5399,542.7333,1000.45,538.5369"
+                style="stroke:#181818;stroke-width:1;" />
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing"
+                textLength="55.8594" x="890" y="535.3638">SQL 查询
+            </text>
+        </g><!--SRC=[VLDTJnfH47tVNp4XQOIa_W1vw4EffgOrjbNVI1eYAsx4NRDilz8qKGiM5F3RMcAfK6r8J4528nyh-cTsxYvF_eNUlRieh8ltySoPcJDpvWw1KRxIssLo_ArJFEGKGOdoW8aIEKx22qc92Y9Cl8igmb8qfCn9yY9WQq_VAv7y1Sd7EMx8JiV6LwmkauCcRcrhZPQcPh7-1vFdk5dZeloS0ee4iX2PLo0ioFoi8aYYcOpbdDPCOIgZdrKmdU2MGhCBeGWF7Wi2xvWiYGelXdqU-Cm1VMPoI8nGaPw0jBWanNY7lfdne7XpcJJg9MpMSFFS59kiw_lfpi_YpMNA0w4OvR1QegJmjYffZe9-qDhNb0_kbUd0gBOufmotBGL5J5Irrfcc_jQFLy0xClB8npfFpOTaFXoGmZoRp4M6W-67ph9gN6rZTHLtqbeZX-i5g-fz8OeaWpSmFWcZOaGGULzGrDlRkdg4b_jaDylwcvn0LE1TMzy5_O0dSNrh3PvFJxy2er8drTLx_QPUltp6Hrdov9k9eEZj0UWb6ALbU-PRs6tSsw0VoFuvoPH9UaLh9Z1zm7tfEH6spluJOH1uhOMv7KYCbz_pyjiO8m1DfXf9FgSrhXw3jHbhCgmqZMh15ijoh9fkSdl2T4cf36vbpTjbMlHSd9GAcD-WJc5cqoYN-qQmc7qZC0YyJoamuCYPgLPN69D3Y_m7ILumvpZAq4l07oLIMAEVqNVhhiKTuAuLxBgBvQBvDSug0mmU_MZ-Wh3jxiGdwfNLnmwuDB4ZNI-njQkrJhJMphtQhDeTYvLbc4jHXbFHVmznjMIbz2vML-EQUg4rDphV_r4BZEiyoPvYegRNL6vc78Q7dpW_5NH_EdTtyW_pUaxxGHxdZ31spz7qjxQD7KnozdKbEQVegUpl-y6Ebbr__QR3G7OpMlk8wu8cmJB93yogNwT6fVWV]-->
+    </g>
+</svg>

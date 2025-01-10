@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
+    <defs>
+        <linearGradient id="uuid-d784d10b-4a4a-4489-ad70-9cb5a21ae972" data-name="未命名的渐变" x1="-493.55" y1="3.21" x2="-492.55" y2="4.21" gradientTransform="translate(44416 -291.98) scale(90)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#8a2be2"/>
+            <stop offset="1" stop-color="orange"/>
+        </linearGradient>
+    </defs>
+    <rect width="90" height="90" style="fill: url(#uuid-d784d10b-4a4a-4489-ad70-9cb5a21ae972);"/>
+</svg>

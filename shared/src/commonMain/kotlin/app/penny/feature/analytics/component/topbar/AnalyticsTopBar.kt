@@ -155,7 +155,7 @@ private fun TopTabRow(
                 contentColor = MaterialTheme.colorScheme.primary,
                 divider = {},
                 indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
+                    TabRowDefaults.SecondaryIndicator(
                         Modifier.tabIndicatorOffset(tabPositions[selectedTab.ordinal]),
                         color = MaterialTheme.colorScheme.primary
                     )

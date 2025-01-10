@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import org.koin.dsl.KoinAppDeclaration
 
 abstract class Platform(
-
 ) {
     abstract val name: String
     abstract val version: String

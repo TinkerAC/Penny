@@ -5,6 +5,7 @@ import co.touchlab.kermit.Logger
 import co.touchlab.kermit.koin.KermitKoinLogger
 import org.koin.core.context.startKoin
 
+
 fun initKoin() {
     println("initKoin called")
     try {

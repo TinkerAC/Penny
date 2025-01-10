@@ -7,84 +7,198 @@
 ![Android Gradle Plugin](https://img.shields.io/badge/AGP-8.2.2-brightgreen)
 ![SQLDelight](https://img.shields.io/badge/SQLDelight-2.0.2-yellow)
 ![Ktor](https://img.shields.io/badge/Ktor-3.0.0-blue)
-![Material 3](https://img.shields.io/badge/Material3-1.3.1-red)
 ![Koin](https://img.shields.io/badge/Koin-3.5.0-brightgreen)
 
+A modern, AI-powered financial management application built for the next generation of users. Penny
+helps you track expenses, analyze spending patterns, and make smarter financial decisions with ease.
 
-Penny is a simple expense tracker app that helps you manage your daily expenses. It is built with Kotlin Multiplatform, Compose Multiplatform, and SQLDelight. It runs on Android, iOS, and Desktop.
+[//]: # (![App Screenshot]&#40;screenshot/) //todo: add screenshot
 
-4. 项目概述
-    - 用一两段话简洁地介绍项目的主要功能和目标用户,让读者一眼就能get到项目的价值主张
-    - 可以附上一些项目运行时的截图或gif动图,直观地展示项目的界面和功能,提升吸引力
-    - 例子:  "🚀 Awesome-KMP 是一款基于Kotlin
-      Multiplatform开发的Todo应用,旨在帮助用户高效管理个人待办事项。凭借KMP的跨平台特性,本应用可以流畅地运行在Android、iOS、Web等多个平台,为你带来统一一致的出色体验。" (
-      附上几张炫酷的App截图)
+## Features
 
-2. 功能特性
-    - 以条目列表的形式清晰罗列项目所包含的核心功能,可以分条目进行简要说明
-    - 要突出项目的独特卖点和创新点,吸引评委的眼球
-    - 例子:  
-      "- ✨ 支持Android、iOS、Web、macOS、Linux等多平台运行,带来统一流畅的使用体验
-        - 📝 极简设计的待办事项添加与管理,提升使用效率
-        - 🗓️ 按日期、优先级、标签等维度智能分类待办事项,让你的时间得到合理规划
-        - 📊 任务统计面板,帮助你掌控进度,了解自己的效率状况
-        - 🎨 支持个性化主题定制,选择喜欢的色彩,享受独一无二的视觉体验"
+### 🌩️ Cloud Sync & Storage
 
-3. 安装说明
-    - 详细列出在各个平台下运行项目的步骤,要写得清楚明白、简单易懂,让评委可以轻松运行你的项目
-    - 对一些可能遇到的常见问题,可以给出提示和解决方案
-    - 例子:
-      "### Android端
-        1. Clone本仓库到本地
-        2. 使用Android Studio打开项目,等待Gradle Sync完成
-        3. 选择`androidApp`配置,点击绿色Run按钮运行项目
-        4. App运行后,点击右下角`+`按钮,填写代办标题后点击`ADD`按钮即可添加新的待办事项
+- Seamlessly synchronize your financial data across all your devices
+- Secure cloud storage ensures your data is always backed up and accessible
+- Real-time synchronization keeps your records up-to-date everywhere
 
-      > 如遇到Gradle Sync失败,请检查Android
-      SDK版本是否为33,JDK版本是否为11。如仍有问题,欢迎在Issues中向我们反馈。"
+### ✨ AI-Powered Automation
 
-4. 技术架构
-    - 对项目的技术选型与架构设计进行概述,让评委快速了解你的项目结构与技术栈
-    - 要体现出使用Kotlin Multiplatform所带来的优势,如代码复用、性能提升等
-    - 例子:
-      "本项目采用Kotlin
-      Multiplatform作为核心开发框架,通过复用最大化的公共业务代码,我们极大提升了开发效率。同时,得益于KMM优秀的性能,在资源占用、内存和包体积上也相比传统原生开发有了显著优化。
+- Automatic transaction categorization using advanced AI technology
+- Smart chatbot assistant for financial advice and queries
+- Automated monthly report generation with insights and recommendations
+- Natural language processing for quick and easy expense entry
 
-      项目结构说明:
-        - `shared`:公共业务模块,包含核心数据模型、业务逻辑、数据持久化等,由Kotlin实现
-        - `androidApp`:Android平台功能模块及UI层,由Kotlin实现
-        - `iosApp`:iOS平台功能模块及UI层,由Swift实现
-        - `web`:Web端功能模块以及前端页面,由Kotlin/JS + React实现"
+### 🎨 Customizable Themes
 
-5. 团队介绍
-    - 对参赛团队的成员组成、分工进行简单介绍
-    - 可以附上成员的GitHub主页地址,方便评委进一步了解你们
-    - 例子:
-      "🙌 感谢以下队友的共同努力:
-        - Alex:团队Leader,全栈开发,架构设计 - [GitHub](https://github.com/alex)
-        - Bella:Android开发,shared模块维护 - [GitHub](https://github.com/bella)
-        - Chris:iOS开发,shared模块维护 - [GitHub](https://github.com/chris)
-        - David:Web前端开发 - [GitHub](https://github.com/david)"
+- Modern and youth-oriented design philosophy
+- Extensive theme customization options to match your style
+- Personalized dashboard layouts and widgets
+- Dark/Light mode support with custom color schemes
 
-6. 反馈渠道
-    - 提供清晰的反馈渠道,包括但不限于:Issue、PR、邮箱、Twitter等
-    - 表达出对用户反馈的重视,提升项目的开放性、可持续性
-    - 例子:
-      "💡 我们重视你的每一个反馈,这将帮助我们持续改进。欢迎通过以下途径联系到我们:
-        - [GitHub Issues](https://github.com/xx/xx/issues):提交Bug、提出建议或改进想法
-        - [GitHub Pull Request](https://github.com/xx/xx/pulls):贡献代码,成为项目的Contributor
-        - 邮箱:xxx@gmail.com
-        - Twitter:@xxx"
+### 📊 Data Visualization
 
-除上述内容要点之外,还有一些小Tips供你参考:
+- Interactive spending trend analysis
+- Category-wise expense distribution through intuitive pie charts
+- Custom report generation with exportable charts
 
-- 使用Markdown语法美化排版,合理运用标题、列表、引用、代码块、图片等,提升README的可读性
-- 语言表达要言简意赅、通俗易懂,避免使用太多晦涩难懂的专业术语
-- 可适当使用emoji表情来增添趣味性,但也不要过度使用影响美观
-- 如果条件允许,可以录制一个短视频来介绍Demo,更直观地展示项目
-- 定期Review和优化README,保持内容的持续更新,展现项目的活跃度
+---
 
-总之,一份优秀的README能帮你在参赛项目初期就给评委留下一个良好的印象。它不仅仅是一个说明文档,更是一份能够打动人心的"
-宣传册"。用心去编写,投入你的创意和热情,这份耕耘一定会让你的项目在竞赛中脱颖而出。
+## Getting Started
 
-祝比赛顺利,期待你的出色表现!
+### Prerequisites
+
+- **Operating Systems**:
+    - Windows 11
+    - macOS Sonoma (Sequoia)
+- **IDE**:
+    - Android Studio 2024.2.1 (Ladybug)
+    - Xcode 16.1
+        - Package Manager: CocoaPods 1.16.2
+
+> Note: The application should work in similar development environments. This information is
+> provided as a reference to ensure optimal compatibility.
+
+## Installation
+
+1. Run Git clone
+
+```
+git clone https://www.github.com/TinkerAC/penny.git
+```
+
+2. Open the project in Android Studio and wait for the Gradle sync to complete
+
+### 🏗️ Building the Application And Run
+
+<details>
+<summary> 🖥️ Desktop Application</summary>
+
+```bash
+# Using Gradle
+./gradlew :ComposeApp:run
+# Or using Android Studio
+Run the `Penny Desktop` configuration at "Run Configurations"
+```
+
+</details>
+
+<details>
+<summary>📱 Android Application</summary>
+
+1. Select the `Penny Android` configuration
+2. Choose your target device/emulator
+3. Click the "Run" button or press `Shift + F10`
+
+</details>
+
+<details>
+<summary>🍎iOS Application </summary>
+
+### Android Studio
+
+1. edit the configuration `Penny IOS` to match your environment(Simulator or Device)
+2. Click the "Run" button or press `Shift + F10`
+
+### Xcode
+
+1. open `iosApp/iosApp.xcworkspace` in Xcode
+2. set your team in the `Signing & Capabilities` tab
+3. Select your target device/simulator
+4. Click the "Run" button or press `⌘ + R`
+
+> Note: To run the iOS app on a physical device, you need to have a valid Apple Developer account
+> and a provisioning profile set up in Xcode,
+> and you need to trust the developer certificate on the device.
+
+</details>
+
+## Tech Stack
+
+---
+
+### Core
+
+- **[Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html)**: Cross-platform
+  development
+- **[Kotlin Coroutines & Flow](https://kotlinlang.org/docs/coroutines-overview.html)**: Asynchronous
+  programming
+
+### Data Management
+
+- **[SQLDelight](https://sqldelight.github.io/sqldelight)**: SQL database for storing financial data
+    - Local persistence
+    - Offline-first capability
+- **[Ktor](https://ktor.io/)**: HTTP client for network requests
+- **[Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization)**: JSON serialization
+
+### Dependency Injection
+
+- **[Koin](https://insert-koin.io/)**: Lightweight DI framework
+
+### Resources Management
+
+- **[Moko Resources](https://github.com/icerockdev/moko-resources)**: Shared resources across
+  platforms
+
+### Presentation & UI
+
+- **[Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform/)**: UI framework for
+  all platforms
+- **[Voyager](https://voyager.adriel.cafe/)**: Navigation library
+
+## Modules & Directory Structure
+
+---
+
+### :shared
+
+Contains the shared codebase for the application, including the data model, business logic, and UI
+build with Compose Multiplatform. 
+
+### :composeApp
+
+depended on :shared module,
+
+Contains the entry point for supported platform ,include Desktop and Android.
+
+### :server
+
+depended on :shared module,
+
+Contains the server-side codebase for the application, including the API routes ,database setup and
+AI feature implementation.
+
+### Dir `iosApp`
+
+Contains the Xcode project for the iOS application.
+
+### Dir `shared/server_shared`
+
+Contains the shared codebase for the server-side application, including the data model and
+request/response encapsulation.
+
+## License
+
+---
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [Organiks1_KMP_Server](https://github.com/samAricha/Organiks1_KMP_Server):
+  One of the winner project
+  Of [Kotlin Multiplatform Contest 2024](https://kotlinconf.com/2024/contest/)
+  by [Aricha Samson](https://github.com/samAricha).
+
+
+- [AAY-chart](https://github.com/TheChance101/AAY-chart)  
+  A library contains several chart composables for usage in Kotlin Multiplatform projects and
+  Android Native, developed by [TheChance101](https://github.com/TheChance101).  
+  Copyright (c) 2023 The Chance  
+  The code under `/shared/src/commonMain/kotlin/app/penny/presentation/ui/components/aayChart`
+  contains modified versions of AAY-chart code, used under the MIT License.
+
+  
+
+

@@ -61,8 +61,10 @@ kotlin {
             // Dependency export
             // Uncomment and specify another project module if you have one:
             export(projects.shared)
+//            export(libs.kmpnotifier)
             @OptIn(ExperimentalKotlinGradlePluginApi::class)
             transitiveExport = false // This is default.
+
         }
 
         // Maps custom Xcode configuration to NativeBuildType
@@ -77,12 +79,11 @@ kotlin {
                 // 公共依赖项
                 api(projects.shared)
 //                implementation(libs.composable.table)
+                implementation(libs.koin.core)
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
-                implementation(libs.koin.core)
                 implementation(libs.bignum)
                 implementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
-                implementation(libs.voyager.koin)
                 implementation(libs.cafe.voyager.screenmodel)
                 implementation(libs.runtime)
                 implementation(libs.voyager.tab.navigator)
@@ -98,12 +99,10 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.ui)
-                implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.thechance101.chart)
                 implementation(libs.kermit)
-                implementation(libs.kermit.koin)
                 implementation(compose.materialIconsExtended)
 
                 //键值对存储
@@ -114,23 +113,15 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                api(libs.kmpnotifier)
-
                 implementation(libs.ktor.client.android)
                 implementation(compose.preview)
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.android.driver)
-                implementation(libs.koin.android)
-                implementation(libs.koin.android.ext)
-                implementation(libs.koin.core.ext)
             }
         }
 
         val desktopMain by getting {
             dependencies {
-                api(libs.kmpnotifier)
-
-                implementation(libs.koin.core)
                 implementation(libs.sqlite.driver)
                 implementation(libs.jdbc.driver)
                 implementation(compose.desktop.currentOs)
@@ -189,4 +180,5 @@ multiplatformResources {
     resourcesClassName = "SharedRes"
     resourcesPackage = "app.penny.shared"
     iosBaseLocalizationRegion = "en"
+
 }

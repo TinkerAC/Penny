@@ -1,7 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -23,8 +23,6 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
-
-
 
 
 
@@ -61,7 +59,7 @@ kotlin {
                 // 公共依赖项
                 implementation(libs.uuid)
 //                api(libs.gitlive.firebase.kotlin.crashlytics)
-                implementation(libs.kmpnotifier)
+                api(libs.kmpnotifier)
                 api(libs.resources.compose) // 如果使用 Compose Multiplatform
                 implementation(libs.material.kolor)
                 implementation(libs.colorpicker.compose)
@@ -71,6 +69,7 @@ kotlin {
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
                 implementation(libs.koin.core)
+
                 implementation(libs.bignum)
                 implementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
                 implementation(libs.voyager.koin)
@@ -89,6 +88,7 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.ui)
+                api(libs.koin.compose)
 //                implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.androidx.lifecycle.viewmodel)
@@ -100,8 +100,6 @@ kotlin {
                 implementation(libs.kermit)
                 implementation(libs.kermit.koin)
                 implementation(compose.materialIconsExtended)
-
-
                 implementation(libs.ktor.client.cio)
 
 
@@ -119,8 +117,7 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.android.driver)
                 implementation(libs.koin.android)
-                implementation(libs.koin.android.ext)
-                implementation(libs.koin.core.ext)
+
 
                 //okhttp
                 implementation(libs.ktor.client.okhttp)
@@ -129,7 +126,6 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation(libs.koin.core)
                 implementation(libs.sqlite.driver)
                 implementation(libs.jdbc.driver)
                 implementation(compose.desktop.currentOs)
