@@ -178,10 +178,10 @@ compose.desktop {
                 iconFile.set(file("res/images/icon.icns"))
             }
             windows {
-                iconFile.set(file("images/icon.ico"))
+                iconFile.set(file("res/images/icon.ico"))
             }
             linux {
-                iconFile.set(file("images/icon.png"))
+                iconFile.set(file("res/images/icon.png"))
             }
         }
     }
