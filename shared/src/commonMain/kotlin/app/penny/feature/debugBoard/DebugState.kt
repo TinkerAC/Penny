@@ -4,6 +4,7 @@ import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.UserModel
 import kotlinx.datetime.Instant
+import kotlinx.io.files.Path
 
 data class DebugState(
     val transactions: List<TransactionModel> = emptyList(),
@@ -13,5 +14,7 @@ data class DebugState(
     val lastSyncedAt: Instant? = null,
     val message: String? = null,
     val activeUser: UserModel? = null,
-    val defaultLedger:LedgerModel? = null
+    val defaultLedger:LedgerModel? = null,
+    val databasePath :Path? = null,
+    val settingStorePath: Path? = null
 )

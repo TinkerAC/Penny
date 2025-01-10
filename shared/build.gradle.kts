@@ -106,6 +106,9 @@ kotlin {
                 //image loader
                 implementation(libs.coil.compose)
 
+                implementation(libs.multiplatform.paths)
+
+
 
             }
         }
@@ -175,17 +178,6 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
-compose.desktop {
-    application {
-        mainClass = "app.penny.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "app.penny"
-            packageVersion = "1.0.0"
-        }
-    }
-}
 
 sqldelight {
     databases {

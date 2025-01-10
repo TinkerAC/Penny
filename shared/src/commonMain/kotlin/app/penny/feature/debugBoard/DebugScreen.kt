@@ -168,6 +168,10 @@ class DebugScreen : Screen {
 
                     Text("Default Ledger: ${debugViewModel.uiState.value.defaultLedger ?: "No Default Ledger"})")
 
+                    Text("DataBasePath: ${debugViewModel.uiState.value.databasePath ?: "Unknown"}")
+                    Text("Setting Store Path: ${debugViewModel.uiState.value.settingStorePath ?: "Unknown"}")
+
+
                 }
 
                 item {

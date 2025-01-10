@@ -170,8 +170,19 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "app.penny"
+            modules("java.sql")
+            packageName = "Penny"
             packageVersion = "1.0.0"
+
+            macOS{
+                iconFile.set(file("res/images/icon.icns"))
+            }
+            windows {
+                iconFile.set(file("images/icon.ico"))
+            }
+            linux {
+                iconFile.set(file("images/icon.png"))
+            }
         }
     }
 }

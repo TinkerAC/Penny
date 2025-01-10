@@ -7,6 +7,7 @@ import app.penny.core.domain.usecase.DownloadUnsyncedLedgerUseCase
 import app.penny.core.domain.usecase.InsertRandomTransactionUseCase
 import app.penny.core.domain.usecase.SyncDataUseCase
 import app.penny.core.domain.usecase.UploadUnsyncedLedgerUseCase
+import app.penny.platform.MultiplatformSettingsWrapper
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -16,6 +17,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.io.files.Path
+import me.sujanpoudel.utils.paths.appDataDirectory
 import kotlin.uuid.ExperimentalUuidApi
 
 
@@ -26,7 +29,7 @@ class DebugViewModel(
     private val downloadUnsyncedLedgerUseCase: DownloadUnsyncedLedgerUseCase,
     private val syncDataUseCase: SyncDataUseCase,
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(DebugState())
     val uiState: StateFlow<DebugState> = _uiState.asStateFlow()
@@ -121,6 +124,12 @@ class DebugViewModel(
 
             val defaultLedger = userDataRepository.getDefaultLedger()
             _uiState.value = _uiState.value.copy(defaultLedger = defaultLedger)
+
+
+            val databasePath = appDataDirectory("penny").toString()+"/penny.db"
+            _uiState.value = _uiState.value.copy(databasePath = Path(databasePath))
+
+
         }
     }
 

@@ -235,7 +235,7 @@ fun commonModule() = module {
             downloadUnsyncedLedgerUseCase = get(),
             get(),
             get(),
-            get()
+            get(),
         )
     }
 
