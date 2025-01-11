@@ -19,6 +19,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,8 +49,13 @@ fun TransactionTopBar(
     onGroupByOptionSelected: (GroupByType, GroupByType.GroupOption) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+
+    ) {
+
         TopAppBar(
+
             title = {
                 Text(
                     text = stringResource(SharedRes.strings.transaction),
@@ -68,7 +74,7 @@ fun TransactionTopBar(
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
             ), modifier = Modifier.shadow(elevation = 2.dp)
@@ -76,6 +82,13 @@ fun TransactionTopBar(
 
         // 仅在列表视图中显示 FilterChips
         if (!isCalendarView) {
+            //divider
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp), thickness = 1.dp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.1f)
+            )
+
+
             GroupFilterChipsRow(
                 selectedGroupByType = selectedGroupByType,
                 selectedGroupByOption = selectedGroupByOption,
@@ -98,8 +111,9 @@ fun GroupFilterChipsRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .background(MaterialTheme.colorScheme.surfaceVariant),
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+            ),
         horizontalArrangement = Arrangement.Start,
 
         ) {
@@ -134,14 +148,10 @@ fun GroupFilterChipsRow(
                         }
                     },
                     colors = FilterChipDefaults.filterChipColors(
-                        containerColor = if (selectedGroupByType == groupByType)
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                        else
-                            MaterialTheme.colorScheme.surfaceVariant,
-                        labelColor = if (selectedGroupByType == groupByType)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onSurfaceVariant
+                        selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        selectedLabelColor = MaterialTheme.colorScheme.primary,
+                        labelColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
                     modifier = Modifier.padding(horizontal = 4.dp)
                 )

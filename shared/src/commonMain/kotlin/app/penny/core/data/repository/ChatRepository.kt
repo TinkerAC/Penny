@@ -8,7 +8,7 @@ import kotlin.uuid.Uuid
 interface ChatRepository {
     suspend fun sendMessage(message: String): GetAiReplyResponse
 
-    suspend fun sendAudio(audioFilePath: String, duration: Long)
+    suspend fun sendAudio(audioFilePath: String): GetAiReplyResponse
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun findChatHistoryByUserUuid(

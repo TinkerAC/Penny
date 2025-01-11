@@ -25,7 +25,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import app.penny.feature.dashBoard.component.BottomSection
-import app.penny.provideNullAndroidOverscrollConfiguration
+import app.penny.platform.provideNullAndroidOverscrollConfiguration
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 

@@ -8,10 +8,12 @@ import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UserDto
 import app.penny.servershared.enumerate.UserIntent
 import app.penny.utils.getAuthedUser
+import com.aallam.openai.api.audio.TranscriptionRequest
 import com.aallam.openai.api.chat.ChatCompletion
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.file.FileSource
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import io.ktor.server.application.ApplicationCall
@@ -21,6 +23,8 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.io.Buffer
+import kotlinx.io.RawSource
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
@@ -99,10 +103,7 @@ class AiService(
 
             is UserIntent.JustTalk -> handleJustTalkAction(user, text)
             is UserIntent.GenerateMonthlyReport -> handleGenerateReportAction(
-                user,
-                text,
-                invokeInstant,
-                userTimeZoneId
+                user, text, invokeInstant, userTimeZoneId
             )
 
             else -> null
@@ -114,10 +115,7 @@ class AiService(
     }
 
     private suspend fun handleGenerateReportAction(
-        user: UserDto,
-        text: String,
-        invokeInstant: Long,
-        userTimeZoneId: String
+        user: UserDto, text: String, invokeInstant: Long, userTimeZoneId: String
     ): UserIntent? {
         // 根据 userTimeZoneId 构建 TimeZone
         // 假设 userTimeZoneId 表示与 UTC 的小时偏移量（如UTC+8）
@@ -186,8 +184,7 @@ class AiService(
         val year = jsonObject?.get("year")?.jsonPrimitive?.contentOrNull
 
         return UserIntent.GenerateMonthlyReport(
-            month = month?.toIntOrNull() ?: 0,
-            year = year?.toIntOrNull() ?: 0
+            month = month?.toIntOrNull() ?: 0, year = year?.toIntOrNull() ?: 0
         )
     }
 
@@ -374,7 +371,7 @@ class AiService(
     suspend fun generateReport(
         data: MonthlyReportData
     ): String? {
-        val prompt ="""
+        val prompt = """
             [Role]
             You are a diligent financial assistant named Penny, a cute and hardworking fairy who specializes in creating financial reports in a concise and human-friendly manner.
 
@@ -451,8 +448,7 @@ class AiService(
             model = ModelId("gpt-4o-mini"), messages = listOf(
                 ChatMessage(
                     role = ChatRole.System, content = prompt,
-                ),
-                ChatMessage(
+                ), ChatMessage(
                     role = ChatRole.User, content = json.encodeToString(
                         MonthlyReportData.serializer(), data
                     )
@@ -467,5 +463,33 @@ class AiService(
         return response
     }
 
+    /**
+     * Speak to Text powered by OpenAI Whisper
+     */
+    suspend fun audioToText(audioByteArray: ByteArray): String {
+
+        val byteArrayRawSource = ByteArrayRawSource(audioByteArray)
+
+        val request = TranscriptionRequest(
+            audio = FileSource(name = "audio", source = byteArrayRawSource),
+            model = ModelId("whisper-1"),
+        )
+        val transcription = openAiClient.transcription(request)
+
+        return transcription.text
+    }
+
+
+}
+
+class ByteArrayRawSource(private val byteArray: ByteArray) : RawSource {
+    override fun close() {
+        //no-op
+    }
+
+    override fun readAtMostTo(sink: Buffer, byteCount: Long): Long {
+        sink.write(byteArray)
+        return byteArray.size.toLong()
+    }
 
 }

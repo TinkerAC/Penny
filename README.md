@@ -1,18 +1,17 @@
-# Penny
+<div style="text-align: center;">
+    <img src="images/icon_round_corner.png" alt="logo" width="120" height="120">
+    <h2>Penny</h2>
+</div>
 
 ---
+<div style="text-align: center;">
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.0.20-blueviolet)
-![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.7.0-orange)
-![Android Gradle Plugin](https://img.shields.io/badge/AGP-8.2.2-brightgreen)
-![SQLDelight](https://img.shields.io/badge/SQLDelight-2.0.2-yellow)
-![Ktor](https://img.shields.io/badge/Ktor-3.0.0-blue)
-![Koin](https://img.shields.io/badge/Koin-3.5.0-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-green)
 
+</div>
 A modern, AI-powered financial management application built for the next generation of users. Penny
 helps you track expenses, analyze spending patterns, and make smarter financial decisions with ease.
-
-[//]: # (![App Screenshot]&#40;screenshot/) //todo: add screenshot
 
 ## Features
 
@@ -42,7 +41,25 @@ helps you track expenses, analyze spending patterns, and make smarter financial 
 - Category-wise expense distribution through intuitive pie charts
 - Custom report generation with exportable charts
 
+## Gallery
+
 ---
+
+### Dashboard
+
+[Dashboard](screenshot/dashboard.png)
+
+### New Transaction Screen
+
+[New Transaction Screen](screenshot/new_transaction.png)
+
+### Analysis Screen
+
+[Analysis Screen](screenshot/analysis.png)
+
+### Settings Screen
+
+[Settings Screen](screenshot/settings.png)
 
 ## Getting Started
 
@@ -154,7 +171,7 @@ Run the `Penny Desktop` configuration at "Run Configurations"
 ### :shared
 
 Contains the shared codebase for the application, including the data model, business logic, and UI
-build with Compose Multiplatform. 
+build with Compose Multiplatform.
 
 ### :composeApp
 

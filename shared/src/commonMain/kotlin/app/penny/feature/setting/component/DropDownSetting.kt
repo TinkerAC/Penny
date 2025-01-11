@@ -22,6 +22,7 @@ import app.penny.presentation.ui.components.FilterChipDropDown
 @Composable
 fun <T> ExposedDropDownSetting(
     settingName: String,
+    enabled: Boolean = true,
     items: List<T>,
     selectedItem: T,
     onItemSelected: (T) -> Unit,
@@ -54,6 +55,7 @@ fun <T> ExposedDropDownSetting(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 FilterChipDropDown(
+                    enabled = enabled,
                     items = items,
                     selectedItem = selectedItem,
                     onItemSelected = onItemSelected,

@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -30,13 +31,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> FilterChipDropDown(
+    enabled: Boolean = true,
     items: List<T>,
     selectedItem: T,
     onItemSelected: (T) -> Unit,
     displayMapper: @Composable (T) -> String,
-    // 新增样式配置
-    styleConfig: FilterChipDropDownStyle = defaultFilterChipDropDownStyle(),
-
+    styleConfig: FilterChipDropDownStyle = defaultFilterChipDropDownStyle(enabled = enabled),
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -44,7 +44,11 @@ fun <T> FilterChipDropDown(
         // 显示FilterChip
         FilterChip(
             selected = styleConfig.alwaysSelected,
-            onClick = { expanded = !expanded }, // 点击时切换下拉菜单展开/收起
+            onClick = {
+                if (enabled) {
+                    expanded = !expanded
+                }
+            },
             label = {
                 Text(
                     text = displayMapper(selectedItem),
@@ -54,20 +58,23 @@ fun <T> FilterChipDropDown(
                 )
             },
             trailingIcon = {
-                if (expanded) {
-                    styleConfig.expandedIcon()
-                } else {
-                    styleConfig.collapsedIcon()
-                }
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                    contentDescription = if (expanded) "Collapse" else "Expand",
+                    tint = if (!enabled) MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.disabled) else MaterialTheme.colorScheme.onSurface
+                )
+
             },
             colors = styleConfig.filterChipColors,
             shape = styleConfig.shape,
             border = styleConfig.border,
+            enabled = enabled
+
         )
 
         // 下拉菜单
         DropdownMenu(
-            expanded = expanded,
+            expanded = expanded && enabled,
             onDismissRequest = { expanded = false },
             modifier = styleConfig.dropdownModifier
         ) {
@@ -76,27 +83,28 @@ fun <T> FilterChipDropDown(
                     text = {
                         Text(
                             text = displayMapper(item),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = if (item == selectedItem)
-                                MaterialTheme.colorScheme.primary
-                            else
-                                MaterialTheme.colorScheme.onSurface,
-                            fontWeight = if (item == selectedItem)
-                                FontWeight.Bold
-                            else
-                                FontWeight.Normal
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = if (item == selectedItem)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.onSurface,
+                                fontWeight = if (item == selectedItem)
+                                    FontWeight.Bold
+                                else
+                                    FontWeight.Normal
+                            )
                         )
                     },
                     onClick = {
                         onItemSelected(item)
                         expanded = false // 选中后收起
-                    }
+                    },
+                    enabled = enabled
                 )
             }
         }
     }
 }
-
 
 /**
  *
@@ -127,11 +135,18 @@ data class FilterChipDropDownStyle(
 @Composable
 fun defaultFilterChipDropDownStyle(
     alwaysSelected: Boolean = true,
+    enabled: Boolean = true
 ): FilterChipDropDownStyle {
     return FilterChipDropDownStyle(
         alwaysSelected = alwaysSelected,
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+        border =
+        BorderStroke(
+            2.dp,
+            if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(
+                alpha = ContentAlpha.disabled
+            )
+        ),
         filterChipColors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
         ),

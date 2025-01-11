@@ -1,6 +1,7 @@
 package app.penny.feature.aiChat
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,34 +11,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.AttachFile
-import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import app.penny.feature.aiChat.components.ChatInputBar
 import app.penny.feature.aiChat.components.messageBubble.MessageRow
 import app.penny.presentation.ui.components.LedgerSelectDialog
 import app.penny.shared.SharedRes
@@ -60,12 +57,10 @@ class AIChatScreen : Screen {
         val uiState by viewModel.uiState.collectAsState()
 
         Scaffold(topBar = {
-
             TopAppBar(title = {
                 Text(
                     stringResource(SharedRes.strings.chat_with_penny)
                 )
-
             }, navigationIcon = {
                 IconButton(onClick = {
                     rootNavigator.pop()
@@ -73,31 +68,27 @@ class AIChatScreen : Screen {
                     Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
                 }
             }, actions = {
-//                IconButton(onClick = {
-//                    viewModel.handleIntent(AIChatIntent.ShowLedgerSelectDialog)
-//                }) {
-//                    Icon(
-//                        Icons.Outlined.AccountBalanceWallet,
-//                        contentDescription = "Select Ledger"
-//                    )
-//                }
+                // Placeholder for any future actions
             },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceContainer
                 )
-
-
             )
         }, bottomBar = {
-            ChatInputBar(inputText = uiState.inputText, onTextChanged = { text ->
-                viewModel.updateInputText(text)
-            }, onSendClicked = { message ->
-                viewModel.handleIntent(AIChatIntent.SendMessage(message))
-            }, onAttachClicked = {
-                // 附件功能留空
-            }, onAudioClicked = {
-                // 语音功能留空
-            })
+            ChatInputBar(
+                inputMode = uiState.inputMode,
+                inputText = uiState.inputText,
+                onModeToggle = {
+                    viewModel.handleIntent(AIChatIntent.ToggleInputMode)
+                },
+                onSendClicked = { text ->
+                    viewModel.handleIntent(AIChatIntent.SendMessage(text))
+                },
+                onStartRecord = {
+                    viewModel.handleIntent(AIChatIntent.StartRecording)
+                },
+                onStopRecord = {},
+            )
         }) { paddingValues ->
             Box(
                 modifier = Modifier.padding(paddingValues).fillMaxSize().background(
@@ -118,8 +109,6 @@ class AIChatScreen : Screen {
                             contentPadding = PaddingValues(16.dp)
                         ) {
                             items(uiState.messages.reversed()) { message ->
-
-
                                 MessageRow(
                                     message = message,
                                     onActionConfirm = { msg, baseEntityDto ->
@@ -129,7 +118,6 @@ class AIChatScreen : Screen {
                                                     userIntent = msg.userIntent.copy(
                                                         dto = baseEntityDto,
                                                     )
-
                                                 )
                                             )
                                         )
@@ -140,7 +128,8 @@ class AIChatScreen : Screen {
                                                 m
                                             )
                                         )
-                                    }, userAvatarUrl = uiState.userAvatarUrl
+                                    },
+                                    userAvatarUrl = uiState.userAvatarUrl
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
@@ -148,67 +137,85 @@ class AIChatScreen : Screen {
                     }
                 }
 
+                // 提升遮罩层和取消按钮到父组件
+                if (uiState.isRecording) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Gray.copy(alpha = 0.5f))
+                            .clickable(enabled = false) { /* 防止点击穿透 */ },
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
 
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) { // 圆形取消按钮
+                                IconButton(
+                                    onClick = {
+                                        viewModel.handleIntent(AIChatIntent.CancelRecording)
+                                    },
+                                    modifier = Modifier
+                                        .size(64.dp)
+                                        .background(Color.White, shape = CircleShape)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Cancel Recording",
+                                        tint = Color.Red
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("点击取消")
+                            }
+                            //confirm button
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        viewModel.handleIntent(AIChatIntent.StopRecording)
+                                    },
+                                    modifier = Modifier
+                                        .size(64.dp)
+                                        .background(Color.White, shape = CircleShape)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Stop Recording",
+                                        tint = Color.Green
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("点击发送")
+
+
+                            }
+
+
+                        }
+
+
+                    }
+                }
+
+                // 显示 Ledger Select Dialog
                 if (uiState.ledgerSelectDialogVisible) {
-                    LedgerSelectDialog(allLedgers = emptyList(),
+                    LedgerSelectDialog(
+                        allLedgers = emptyList(),
                         currentLedger = uiState.selectedLedger!!,
                         onLedgerSelected = { ledger ->
                             viewModel.handleIntent(AIChatIntent.SelectLedger(ledger))
                         },
                         onDismissRequest = {
                             viewModel.handleIntent(AIChatIntent.HideLedgerSelectDialog)
-                        })
+                        }
+                    )
                 }
             }
         }
     }
 
-
-}
-
-@Composable
-fun ChatInputBar(
-    inputText: String,
-    onTextChanged: (String) -> Unit,
-    onSendClicked: (String) -> Unit,
-    onAttachClicked: () -> Unit,
-    onAudioClicked: () -> Unit
-) {
-    var textFieldValue by remember { mutableStateOf(TextFieldValue(inputText)) }
-
-    Surface(
-        tonalElevation = 8.dp, modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onAttachClicked) {
-                Icon(Icons.Default.AttachFile, contentDescription = "Attach File")
-            }
-            TextField(
-                value = textFieldValue,
-                onValueChange = {
-                    textFieldValue = it
-                    onTextChanged(it.text)
-                },
-                placeholder = { Text("Type a message") },
-                modifier = Modifier.weight(1f).height(56.dp),
-//                colors = TextFieldDefaults.colors(
-//                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-//                    textColor = MaterialTheme.colorScheme.onSurface,
-//                    placeholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-//                )
-            )
-            IconButton(onClick = onAudioClicked) {
-                Icon(Icons.Default.Mic, contentDescription = "Record Audio")
-            }
-            IconButton(onClick = {
-                onSendClicked(textFieldValue.text)
-                textFieldValue = TextFieldValue("")
-            }) {
-                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send Message")
-            }
-        }
-    }
 }

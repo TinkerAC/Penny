@@ -348,5 +348,6 @@
     <string name="tool_data_export">数据导出</string>
     <string name="tool_exchange_rate_conversion">汇率转换</string>
     <string name="tool_debt_calculator">债务计算器</string>
+    <string name="pick_a_color">选择颜色</string>
 
 </resources>

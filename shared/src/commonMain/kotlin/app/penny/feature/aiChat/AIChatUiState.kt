@@ -1,5 +1,6 @@
 package app.penny.feature.aiChat
 
+import app.penny.core.data.enumerate.MessageType
 import app.penny.core.domain.model.ChatMessage
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.UserModel
@@ -17,4 +18,6 @@ data class AIChatUiState(
     val selectedLedger: LedgerModel? = null,
     val ledgerList: List<LedgerModel> = emptyList(),
     val userAvatarUrl: String? = null,
+    val isRecording: Boolean = false,
+    val inputMode: MessageType = MessageType.TEXT
 )

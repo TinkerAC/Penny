@@ -11,7 +11,7 @@ import app.penny.core.domain.usecase.SearchTransactionsUseCase
 import app.penny.core.utils.generateDateSequence
 import app.penny.core.utils.getDaysInMonth
 import app.penny.core.utils.localDateNow
-import app.penny.getRawStringResource
+import app.penny.platform.getRawStringResource
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger

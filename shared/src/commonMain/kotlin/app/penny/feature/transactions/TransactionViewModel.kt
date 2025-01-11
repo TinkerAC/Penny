@@ -9,6 +9,7 @@ import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.GroupIdentifier
 import app.penny.core.domain.model.Summary
 import app.penny.core.domain.model.TransactionModel
+import app.penny.core.utils.localDateNow
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -91,13 +92,20 @@ class TransactionViewModel(
                 selectedDate = if (currentState.isCalendarView) null else currentState.selectedDate
             )
         }
+
+        // click today after every time get into calendar view
+
+        if (_uiState.value.isCalendarView) {
+            selectDate(localDateNow())
+        }
+
+
         Logger.d("Toggle view to ${if (_uiState.value.isCalendarView) "Calendar" else "List"}")
     }
 
     /**
      * 选择日期
      */
-    @OptIn(ExperimentalUuidApi::class)
     private fun selectDate(date: LocalDate) {
         screenModelScope.launch { //fetch transactions for the selected date
             _uiState.value = _uiState.value.copy(

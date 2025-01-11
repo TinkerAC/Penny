@@ -41,7 +41,7 @@ import app.penny.core.domain.enumerate.Category.Companion.getSubCategories
 import app.penny.feature.newTransaction.NewTransactionIntent
 import app.penny.feature.newTransaction.NewTransactionUiState
 import app.penny.feature.newTransaction.NewTransactionViewModel
-import app.penny.getScreenWidthDp
+import app.penny.platform.getScreenWidthDp
 import dev.icerock.moko.resources.compose.stringResource
 
 @Composable

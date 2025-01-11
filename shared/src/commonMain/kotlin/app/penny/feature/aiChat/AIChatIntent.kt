@@ -10,6 +10,12 @@ sealed class AIChatIntent {
     data object HideLedgerSelectDialog : AIChatIntent()
     data class SelectLedger(val ledger: LedgerModel) : AIChatIntent()
 
+    data object ToggleInputMode : AIChatIntent()
+
+    data object StartRecording : AIChatIntent()
+    data object StopRecording : AIChatIntent()
+    data object CancelRecording : AIChatIntent()
+
     data class ConfirmPendingAction(
         val message: SystemMessage,
     ) : AIChatIntent()

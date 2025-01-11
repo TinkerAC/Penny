@@ -129,6 +129,7 @@ class SettingScreen : Screen {
                                         displayMapper = { stringResource(it.displayName) }
                                     )
                                     ExposedDropDownSetting(
+                                        enabled = uiState.appTheme !is AppTheme.DynamicAppTheme,
                                         settingName = stringResource(SharedRes.strings.contrast),
                                         items = uiState.constraints,
                                         selectedItem = uiState.constraint,
@@ -172,6 +173,7 @@ class SettingScreen : Screen {
 
             if (uiState.showColorPicker) {
                 ColorPickerDialog(
+                    initColor = uiState.appTheme.primaryColor,
                     onDismissRequest = { viewModel.handleIntent(SettingIntent.HideColorPicker) },
                     onConfirmed = { color ->
                         viewModel.handleIntent(
@@ -189,8 +191,6 @@ class SettingScreen : Screen {
         }
     }
 }
-
-
 
 
 /** 信息展示设置项 **/

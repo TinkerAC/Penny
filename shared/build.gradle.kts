@@ -69,6 +69,9 @@ kotlin {
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
                 implementation(libs.koin.core)
+//                implementation(libs.kmp.io)
+                implementation(libs.okio)
+
 
                 implementation(libs.bignum)
                 implementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
@@ -184,12 +187,11 @@ sqldelight {
         create("PennyDatabase") {
             packageName.set("app.penny.database")
             dialect("app.cash.sqldelight:sqlite-3-38-dialect:2.0.2")
-
-            // 设置 SQLite 方言
         }
     }
 }
 multiplatformResources {
+
     resourcesClassName = "SharedRes"
     resourcesPackage = "app.penny.shared"
     iosBaseLocalizationRegion = "en"

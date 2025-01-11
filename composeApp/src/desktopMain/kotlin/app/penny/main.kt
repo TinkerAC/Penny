@@ -8,6 +8,9 @@ import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import app.penny.platform.ApplicationInitializer
+import app.penny.platform.initialize
+import app.penny.platform.printDeviceInfo
 import app.penny.shared.SharedRes
 import dev.icerock.moko.resources.compose.stringResource
 import java.awt.BorderLayout
@@ -15,7 +18,6 @@ import java.awt.Button
 import java.awt.Dialog
 import java.awt.FlowLayout
 import java.awt.Frame
-import java.awt.Label
 import java.awt.Panel
 import java.awt.TextArea
 

@@ -10,6 +10,7 @@ import app.penny.core.domain.model.SystemMessage
 import app.penny.core.domain.model.UserMessage
 import app.penny.core.domain.model.UserModel
 import app.penny.core.domain.usecase.ConfirmPendingActionUseCase
+import app.penny.platform.AudioRecorderFactory
 import app.penny.presentation.utils.generateGravatarUrl
 import app.penny.servershared.enumerate.DtoAssociated
 import app.penny.servershared.enumerate.SilentIntent
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import me.sujanpoudel.utils.paths.appCacheDirectory
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -38,6 +40,8 @@ class AIChatViewModel(
 
     private val _uiState = MutableStateFlow(AIChatUiState())
     val uiState: StateFlow<AIChatUiState> = _uiState.asStateFlow()
+    val recorder =
+        AudioRecorderFactory.createAudioRecorder(appCacheDirectory("app.penny").toString())
 
     init {
         screenModelScope.launch {
@@ -60,7 +64,7 @@ class AIChatViewModel(
     fun handleIntent(intent: AIChatIntent) {
         when (intent) {
             is AIChatIntent.SendMessage -> sendMessage(intent.message)
-            is AIChatIntent.SendAudio -> sendAudio(intent.audioFilePath, intent.duration)
+            is AIChatIntent.SendAudio -> sendAudio(intent.audioFilePath)
             is AIChatIntent.ConfirmPendingAction -> confirmPendingAction(
                 intent.message
             )
@@ -77,7 +81,44 @@ class AIChatViewModel(
             AIChatIntent.ShowLedgerSelectDialog -> {
                 _uiState.update { it.copy(ledgerSelectDialogVisible = true) }
             }
+
+            AIChatIntent.ToggleInputMode -> {
+                _uiState.update {
+                    it.copy(
+                        inputMode = if (it.inputMode == MessageType.TEXT) MessageType.AUDIO else MessageType.TEXT
+                    )
+                }
+            }
+
+            AIChatIntent.CancelRecording -> cancelRecording()
+            AIChatIntent.StartRecording -> startRecording()
+            AIChatIntent.StopRecording -> stopRecording()
         }
+    }
+
+    private fun stopRecording() {
+        screenModelScope.launch {
+            val audioFilePath = recorder.stopRecording()
+            println("recording stopped, file saved at $audioFilePath")
+            sendAudio(audioFilePath)
+        }
+
+    }
+
+
+    private fun startRecording() {
+        _uiState.update { it.copy(isRecording = true) }
+        screenModelScope.launch {
+            val audioFilePath = recorder.startRecording()
+        }
+    }
+
+    /**
+     * Discard the recording
+     */
+    private fun cancelRecording() {
+        _uiState.update { it.copy(isRecording = false) }
+        Logger.d("Recording cancelled")
     }
 
     fun updateInputText(text: String) {
@@ -196,9 +237,11 @@ class AIChatViewModel(
         }
     }
 
-    private fun sendAudio(audioFilePath: String, duration: Long) {
-        // 目前没有实现，就先留在 ViewModel
-        throw NotImplementedError("Audio messages are not supported yet")
+    private fun sendAudio(audioFilePath: String) {
+        screenModelScope.launch {
+            chatRepository.sendAudio(audioFilePath)
+        }
+
     }
 
     /**
@@ -230,7 +273,6 @@ class AIChatViewModel(
             )
         }
     }
-
 
 
     private fun modifyMessage(message: ChatMessage) {

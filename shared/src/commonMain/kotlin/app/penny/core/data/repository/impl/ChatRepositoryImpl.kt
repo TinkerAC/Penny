@@ -27,8 +27,8 @@ class ChatRepositoryImpl(
 
     }
 
-    override suspend fun sendAudio(audioFilePath: String, duration: Long) {
-        TODO("Not yet implemented")
+    override suspend fun sendAudio(audioFilePath: String): GetAiReplyResponse {
+        return apiClient.ai.getAiReplyAudio(audioFilePath)
     }
 
     @ExperimentalUuidApi

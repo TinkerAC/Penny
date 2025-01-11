@@ -12,7 +12,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import app.penny.core.domain.model.valueObject.YearMonth
 import app.penny.feature.transactions.component.CalendarViewContent
@@ -29,7 +28,6 @@ class TransactionScreen : Screen {
     override fun Content() {
         val viewModel = koinScreenModel<TransactionViewModel>()
         val uiState by viewModel.uiState.collectAsState()
-        var isCalendarView by remember { mutableStateOf(false) }
 
         val currentMonth = remember {
             mutableStateOf(
@@ -48,8 +46,10 @@ class TransactionScreen : Screen {
         Scaffold(
             topBar = {
                 TransactionTopBar(
-                    isCalendarView = isCalendarView,
-                    onToggleView = { isCalendarView = !isCalendarView },
+                    isCalendarView = uiState.isCalendarView,
+                    onToggleView = {
+                        viewModel.handleIntent(TransactionIntent.ToggleView)
+                    },
                     selectedGroupByType = uiState.selectedGroupByType,
                     selectedGroupByOption = uiState.selectedGroupByOption
                         ?: GroupByType.Time.GroupOption.Month,
@@ -64,9 +64,11 @@ class TransactionScreen : Screen {
                 modifier =
                 Modifier
                     .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)
+                    )
             ) {
-                if (isCalendarView) {
+                if (uiState.isCalendarView) {
                     CalendarViewContent(
                         currentYearMonth = currentMonth.value,
                         onDateSelected = { date ->

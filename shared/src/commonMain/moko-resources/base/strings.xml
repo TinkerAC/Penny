@@ -383,4 +383,7 @@
     <string name="tool_data_export">Data Export</string>
     <string name="tool_exchange_rate_conversion">Exchange Rate Conversion</string>
     <string name="tool_debt_calculator">Debt Calculator</string>
+
+    <string name="pick_a_color">Pick a color</string>
+
 </resources>

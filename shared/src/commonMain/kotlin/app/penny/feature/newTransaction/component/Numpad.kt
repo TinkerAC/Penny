@@ -86,18 +86,19 @@ fun NumPad(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.End
             )
-            IconButton(
-                onClick = {
-                    // TODO: 插入照片逻辑，暂不实现
-                },
-                modifier = Modifier.size(48.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.AttachFile,
-                    contentDescription = "添加附件",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
+//            IconButton(
+//                onClick = {
+//                    // TODO: attach file
+//                },
+//                modifier = Modifier.size(48.dp)
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.AttachFile,
+//                    contentDescription = "添加附件",
+//                    tint = MaterialTheme.colorScheme.primary
+//                )
+//            }
+
             IconButton(onClick = onCloseClicked) {
                 Icon(
                     imageVector = Icons.Default.KeyboardHide,

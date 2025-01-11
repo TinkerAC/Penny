@@ -1,4 +1,3 @@
-// DebugScreen.kt
 package app.penny.feature.debugBoard
 
 import androidx.compose.foundation.layout.height

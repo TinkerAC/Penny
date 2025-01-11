@@ -6,10 +6,12 @@ import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.header
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpMethod
+import io.ktor.http.content.PartData
 
 abstract class BaseApiClient(
     val httpClient: HttpClient,
@@ -19,7 +21,6 @@ abstract class BaseApiClient(
         method: HttpMethod,
         noinline setup: HttpRequestBuilder.() -> Unit = {}
     ): T {
-//        Logger.d { "Making $method request to $url" }
         return try {
             val response: HttpResponse = httpClient.request(url) {
                 this.method = method
@@ -38,6 +39,23 @@ abstract class BaseApiClient(
         }
     }
 
+
+    suspend inline fun <reified T> makeRequestWithBinaryData(
+        url: String,
+        formData: List<PartData>
+    ): T {
+        return try {
+            val response: HttpResponse = httpClient.submitFormWithBinaryData(
+                url = url,
+                formData = formData
+            )
+            val responseBody: T = response.body()
+            responseBody
+        } catch (e: Exception) {
+            // 错误处理
+            throw e
+        }
+    }
 }
 
 
@@ -70,5 +88,6 @@ abstract class BaseAuthedApiClient(
             throw e
         }
     }
+
 
 }

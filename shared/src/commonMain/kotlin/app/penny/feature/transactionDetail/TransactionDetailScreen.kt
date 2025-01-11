@@ -1,6 +1,9 @@
 // file: src/commonMain/kotlin/app/penny/feature/transactionDetail/TransactionDetailScreen.kt
 package app.penny.feature.transactionDetail
 
+
+
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -50,7 +53,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import app.penny.getRawStringResource
+import app.penny.platform.getRawStringResource
 import app.penny.presentation.ui.components.FilterChipDropDown
 import app.penny.presentation.ui.components.FilterChipDropDownStyle
 import app.penny.shared.SharedRes

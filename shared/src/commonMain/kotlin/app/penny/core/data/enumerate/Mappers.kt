@@ -1,5 +1,16 @@
 package app.penny.core.data.enumerate
 
+/**
+ * This file contains extension functions for converting between various data models,
+ * including database entities, domain models, and DTOs .
+ *
+ * It includes conversions for:
+ * - Entity to model (e.g., `LedgerEntity` to `LedgerModel`).
+ * - Model to DTO (e.g., `TransactionModel` to `TransactionDto`).
+ * - DTO to model (e.g., `TransactionDto` to `TransactionModel`).
+ * - Conversions between different types of `ChatMessage` (user/system messages).
+ */
+
 
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.enumerate.Category
@@ -30,6 +41,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+
 
 val json = Json {
     ignoreUnknownKeys = true

@@ -27,7 +27,7 @@ import app.penny.core.domain.model.LedgerModel
 import app.penny.feature.ledgerDetail.component.BalanceSummarySection
 import app.penny.feature.ledgerDetail.component.BasicInfoSection
 import app.penny.feature.ledgerDetail.component.LedgerCard
-import app.penny.getRawStringResource
+import app.penny.platform.getRawStringResource
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
 import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen

@@ -30,15 +30,7 @@ kotlin {
     jvm("desktop")
 
     val iosTargets = listOf(iosX64(), iosArm64(), iosSimulatorArm64())
-    iosTargets.forEach() { iosTarget ->
-//        iosTarget.binaries.framework {
-//            export(libs.kmpnotifier)
-//            baseName = "ComposeApp"
-//            isStatic = true
-//        }
 
-
-    }
     cocoapods {
         // Required properties
         // Specify the required Pod version here. Otherwise, the Gradle project version is used.
@@ -104,10 +96,8 @@ kotlin {
                 implementation(libs.thechance101.chart)
                 implementation(libs.kermit)
                 implementation(compose.materialIconsExtended)
+//                implementation(libs.record.core)
 
-                //键值对存储
-//                implementation(libs.androidx.datastore.preferences)
-//                implementation(libs.kotlinx.serialization.json) // 用于序列化
             }
         }
 
@@ -174,14 +164,14 @@ compose.desktop {
             packageName = "Penny"
             packageVersion = "1.0.0"
 
-            macOS{
-                iconFile.set(file("res/images/icon.icns"))
+            macOS {
+                iconFile.set(file("../images/icon.icns"))
             }
             windows {
-                iconFile.set(file("res/images/icon.ico"))
+                iconFile.set(file("../images/icon.ico"))
             }
             linux {
-                iconFile.set(file("res/images/icon.png"))
+                iconFile.set(file("../images/icon.png"))
             }
         }
     }
@@ -191,5 +181,4 @@ multiplatformResources {
     resourcesClassName = "SharedRes"
     resourcesPackage = "app.penny.shared"
     iosBaseLocalizationRegion = "en"
-
 }
