@@ -130,11 +130,11 @@ fun Route.aiRoutes(
                 println(message)
 
                 //save the audio file temporarily for debug
-                val audioFilePath = "audio-debug.wav"
+                val audioFilePath = requestJson!!.fileName
                 val file = File(audioFilePath)
 
                 file.writeBytes(audioBytesReceived!!)
-//                throw Exception("audio file saved to $audioFilePath")
+
                 try {
                     // 将音频转录为文本
                     val transcribedText = aiService.audioToText(

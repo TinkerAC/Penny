@@ -74,13 +74,19 @@ class AuthRepositoryImpl(
 
 
     override suspend fun checkIsEmailRegistered(email: String): Boolean? {
-        val response = userApiClient.checkIsEmailRegistered(email)
-
-        if (response.success) {
-            return response.isEmailRegistered
-        } else {
-            Logger.e { "Check email registered failed: ${response.message}" }
+        try {
+            val response = userApiClient.checkIsEmailRegistered(email)
+            if (response.success) {
+                return response.isEmailRegistered
+            } else {
+                Logger.e { "Check email registered failed: ${response.message}" }
+                return null
+            }
+        } catch (e: Exception) {
+            Logger.e { "Check email registered failed: ${e.message}" }
             return null
         }
+
+
     }
 }

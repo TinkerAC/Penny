@@ -65,11 +65,18 @@ class TokenManager(
             return token
         }
         Logger.d { "Access Token expired or missing, attempting to refresh" }
-        if (refreshToken()) {
-            Logger.d { "Access Token refreshed successfully" }
-            return accessToken
+        try {
+            val success = refreshToken()
+            if (success) {
+                Logger.d { "Access Token refreshed successfully" }
+                return accessToken
+            }
+        } catch (e: Exception) {
+            Logger.e(e) { "Failed to refresh Access Token" }
         }
-        throw IllegalStateException("Access Token not found, and refresh token failed, user must login again")
+
+        return null
+
     }
 
     // 调用 ApiClient 刷新 Token

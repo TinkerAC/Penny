@@ -197,11 +197,17 @@ class AIChatViewModel(
                 addMessageToUiState(userMessage)
 
                 // 调用 Repository 进行 AI 回复
-                val aiReply = when (messageType) {
-                    MessageType.TEXT -> chatRepository.sendMessage(messageText!!)
-                    MessageType.AUDIO -> chatRepository.sendAudio(audioFilePath!!)
-                    else -> throw IllegalStateException("Invalid message type")
-                }
+                val aiReply =
+                    try {
+                        when (messageType) {
+                            MessageType.TEXT -> chatRepository.sendMessage(messageText!!)
+                            MessageType.AUDIO -> chatRepository.sendAudio(audioFilePath!!)
+                        }
+                    } catch (e: Exception) {
+                        Logger.e("Failed to send message", e)
+                        return@launch
+                    }
+
 
                 val aiMessage = buildMessage(
                     messageType = MessageType.TEXT,
@@ -210,7 +216,7 @@ class AIChatViewModel(
                     userIntent = aiReply.userIntent
                 ) as SystemMessage
 
-                
+
 
                 when (aiMessage.userIntent) {
                     is SilentIntent -> {

@@ -139,7 +139,6 @@ fun UserInfoSection(
             .padding(vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         UserAvatar(
             imageUrl = uiState.userAvatarUrl,
             onClick = {

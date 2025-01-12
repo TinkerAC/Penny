@@ -48,7 +48,6 @@ import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.PrepareMonthlyReportDataUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
 import app.penny.core.domain.usecase.SearchTransactionsUseCase
-import app.penny.core.domain.usecase.SendMessageUseCase
 import app.penny.core.domain.usecase.SyncDataUseCase
 import app.penny.core.domain.usecase.UploadUnsyncedLedgerUseCase
 import app.penny.core.network.ApiClient
@@ -216,7 +215,6 @@ fun commonModule() = module {
     factory { GetSummaryUseCase(get()) }
 
 
-    factory { SendMessageUseCase(get()) }
 
     // 注入 ViewModel
 

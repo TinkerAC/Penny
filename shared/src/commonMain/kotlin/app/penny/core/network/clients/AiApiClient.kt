@@ -20,9 +20,9 @@ import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
-import io.ktor.utils.io.InternalAPI
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
+import okio.Path
 import okio.Path.Companion.toPath
 
 class AiApiClient(
@@ -67,12 +67,16 @@ class AiApiClient(
         }
     }
 
-    @OptIn(InternalAPI::class)
     suspend fun getAiReplyAudio(audioFilePath: String): GetAiReplyResponse {
         println("audioFilePath: $audioFilePath")
+        val audioPath: Path = audioFilePath.toPath()
+
+        //get audio file Name
+
         val audioBytes = fileSystem.read(audioFilePath.toPath()) {
             readByteArray()
         }
+
         val language = userPreferenceRepository.getLanguage().locale
 
         val response = makeAuthenticatedRequestWithBinaryData<GetAiReplyResponse>(
@@ -85,6 +89,7 @@ class AiApiClient(
                         GetAiReplyAudioRequest(
                             userTimeZoneId = TimeZone.currentSystemDefault().id,
                             invokeInstant = Clock.System.now().epochSeconds,
+                            fileName = audioPath.name,
                             language = language
                         )
                     ),

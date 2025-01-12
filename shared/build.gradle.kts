@@ -64,7 +64,7 @@ kotlin {
                 implementation(libs.material.kolor)
                 implementation(libs.colorpicker.compose)
                 implementation(libs.multiplatform.markdown.renderer.m3)
-//                implementation(libs.kamel.image.default)
+                api(libs.kamel.image.default)
                 implementation(libs.ktor.utils)
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
@@ -109,6 +109,7 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(libs.ktor.client.cio)
 
+//                implementation (libs.load.the.image)
 
                 //image loader
                 implementation(libs.coil.compose)
@@ -202,4 +203,5 @@ multiplatformResources {
     resourcesPackage = "app.penny.shared"
     iosBaseLocalizationRegion = "en"
 }
+
 

@@ -66,7 +66,7 @@ fun App() {
             isUserDataBroken = true
             //wipe other broken data
             userDataRepository.clearUserData()
-            Logger.d("User data is broken")
+            Logger.d("User data is broken,should go to onboarding (init user + ledger)")
         }
 
         // 4. 如果用户数据正常，再检测账本数据
@@ -86,7 +86,7 @@ fun App() {
                 //wipe broken ledger data
                 userDataRepository.removeDefaultLedger()
                 userDataRepository.removeLastSyncedAt()
-                Logger.d("Ledger data is broken")
+                Logger.d("Ledger data is broken,should go to onboarding (init ledger)")
             }
         }
 
