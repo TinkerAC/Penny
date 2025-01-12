@@ -6,6 +6,7 @@ import app.penny.servershared.dto.LedgerDto
 import app.penny.servershared.dto.MonthlyReportData
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.dto.UserDto
+import app.penny.servershared.dto.requestDto.GetAiReplyAudioRequest
 import app.penny.servershared.enumerate.UserIntent
 import app.penny.utils.getAuthedUser
 import com.aallam.openai.api.audio.TranscriptionRequest
@@ -25,6 +26,7 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.io.Buffer
 import kotlinx.io.RawSource
+import kotlinx.io.files.Path
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
@@ -466,15 +468,22 @@ class AiService(
     /**
      * Speak to Text powered by OpenAI Whisper
      */
-    suspend fun audioToText(audioByteArray: ByteArray): String {
-
-        val byteArrayRawSource = ByteArrayRawSource(audioByteArray)
+    suspend fun audioToText(
+        path: Path, requestDto: GetAiReplyAudioRequest
+    ): String {
 
         val request = TranscriptionRequest(
-            audio = FileSource(name = "audio", source = byteArrayRawSource),
+            audio = FileSource(path = path),
             model = ModelId("whisper-1"),
+            language = requestDto.language
         )
         val transcription = openAiClient.transcription(request)
+        println(
+
+            "\n\n\nTranscription: ${
+                String(transcription.text.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
+            }\n\n\n"
+        )
 
         return transcription.text
     }
@@ -482,14 +491,30 @@ class AiService(
 
 }
 
+
 class ByteArrayRawSource(private val byteArray: ByteArray) : RawSource {
+
+    private var readPosition: Int = 0 // 当前读取位置
+
     override fun close() {
-        //no-op
+        // No resources to close in this case
     }
 
     override fun readAtMostTo(sink: Buffer, byteCount: Long): Long {
-        sink.write(byteArray)
-        return byteArray.size.toLong()
-    }
+        if (readPosition >= byteArray.size) {
+            return -1 // 已经读完，返回 EOF
+        }
 
+        // 计算实际可读取的字节数
+        val remaining = byteArray.size - readPosition
+        val toRead = minOf(remaining.toLong(), byteCount).toInt()
+
+        // 将数据写入 sink
+        sink.write(byteArray, readPosition, toRead)
+
+        // 更新读取位置
+        readPosition += toRead
+
+        return toRead.toLong()
+    }
 }
