@@ -23,31 +23,33 @@ import java.awt.TextArea
 
 //JVM entry point
 fun main() {
-    Thread.setDefaultUncaughtExceptionHandler { _, e ->
-        // 创建一个 AWT 对话框显示异常信息
-        Dialog(Frame(), "Error").apply {
-            layout = BorderLayout() // 使用 BorderLayout 更好地布局组件
+//    Thread.setDefaultUncaughtExceptionHandler { _, e ->
+//        // 创建一个 AWT 对话框显示异常信息
+//        Dialog(Frame(), "Error").apply {
+//            layout = BorderLayout() // 使用 BorderLayout 更好地布局组件
+//
+//            // 创建一个多行文本区域用于显示完整的堆栈跟踪信息
+//            val textArea = TextArea(e.stackTraceToString(), 10, 50, TextArea.SCROLLBARS_VERTICAL_ONLY).apply {
+//                isEditable = false // 禁止编辑
+//            }
+//            add(textArea, BorderLayout.CENTER)
+//
+//            // 添加一个按钮用于关闭对话框
+//            val buttonPanel = Panel(FlowLayout()).apply {
+//                val button = Button("OK").apply {
+//                    addActionListener { dispose() }
+//                }
+//                add(button)
+//            }
+//            add(buttonPanel, BorderLayout.SOUTH)
+//
+//            // 设置对话框大小并显示
+//            setSize(500, 400)
+//            isVisible = true
+//        }
+//    }
 
-            // 创建一个多行文本区域用于显示完整的堆栈跟踪信息
-            val textArea = TextArea(e.stackTraceToString(), 10, 50, TextArea.SCROLLBARS_VERTICAL_ONLY).apply {
-                isEditable = false // 禁止编辑
-            }
-            add(textArea, BorderLayout.CENTER)
 
-            // 添加一个按钮用于关闭对话框
-            val buttonPanel = Panel(FlowLayout()).apply {
-                val button = Button("OK").apply {
-                    addActionListener { dispose() }
-                }
-                add(button)
-            }
-            add(buttonPanel, BorderLayout.SOUTH)
-
-            // 设置对话框大小并显示
-            setSize(500, 400)
-            isVisible = true
-        }
-    }
 
 
 

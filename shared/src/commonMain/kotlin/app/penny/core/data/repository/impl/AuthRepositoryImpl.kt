@@ -36,9 +36,6 @@ class AuthRepositoryImpl(
 
     }
 
-
-    // 始终返回有效的 Access Token，否则抛出异常
-
     override suspend fun getAccessToken(): String? {
         return tokenManager.getAccessToken()
     }

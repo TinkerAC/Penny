@@ -43,7 +43,7 @@ class AudioRecorderJVM(private val cacheDir: String) : AudioRecorder {
 
     override suspend fun startRecording() {
 
-        listSupportedAudioFormats()
+//        listSupportedAudioFormats()
 
         withContext(Dispatchers.IO) {
             if (isRecordingFlag) return@withContext

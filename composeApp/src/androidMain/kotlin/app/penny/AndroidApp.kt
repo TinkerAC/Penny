@@ -8,6 +8,7 @@ import app.penny.platform.initSession
 class AndroidApp : Application() {
     override fun onCreate() {
         super.onCreate()
+
         val appInitializer =
             ApplicationInitializer(
                 application = this

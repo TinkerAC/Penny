@@ -88,7 +88,7 @@ fun Route.aiRoutes(
                     when (part) {
                         is PartData.FormItem -> {
                             // 检查是否为 JSON 数据
-                            if (part.name == "application/json") {
+                            if (part.name == "jsonRequest") {
                                 jsonRequest = part.value.let {
                                     json.decodeFromString(GetAiReplyRequest.serializer(), it)
                                 }
@@ -96,7 +96,7 @@ fun Route.aiRoutes(
                         }
 
                         is PartData.FileItem -> {
-                            if (part.name == "application/octet-stream") {
+                            if (part.name == "audio") {
                                 audioBytes = part.provider().readByteArray(
                                     count = part.headers["Content-Length"]?.toInt() ?: 0
                                 )

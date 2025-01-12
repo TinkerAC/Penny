@@ -1,6 +1,7 @@
 package app.penny.core.network.clients
 
 import app.penny.config.Config.API_URL
+import app.penny.core.data.enumerate.json
 import app.penny.core.data.kvstore.TokenProvider
 import app.penny.core.network.BaseAuthedApiClient
 import app.penny.platform.fileSystem
@@ -13,7 +14,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
-import io.ktor.http.Headers
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.utils.io.InternalAPI
@@ -71,19 +71,23 @@ class AiApiClient(
         val audioByteArray = fileSystem.read(path) {
             readByteArray()
         }
-
-        return makeRequestWithBinaryData<GetAiReplyResponse>(
+        println("audioByteArray: ${audioByteArray.slice(0..1000)}")
+        return makeAuthenticatedRequestWithBinaryData(
             url = "$API_URL/ai/get-reply-audio",
             formData = formData {
-                append("application/json", GetAiReplyRequest())
+                append(
+                    key = "jsonRequest",
+                    value = json.encodeToString(
+                        serializer = GetAiReplyRequest.serializer(),
+                        value = GetAiReplyRequest()
+                    )
+                )
 
                 //add length of byte array in the header
                 append(
-                    key = "application/octet-stream",
-                    value = audioByteArray,
-                    headers = Headers.build {
-                        append("Content-Length", audioByteArray.size.toString())
-                    })
+                    key = "audio",
+                    value = audioByteArray
+                )
             }
         )
     }

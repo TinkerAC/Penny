@@ -89,5 +89,25 @@ abstract class BaseAuthedApiClient(
         }
     }
 
+    suspend inline fun <reified T> makeAuthenticatedRequestWithBinaryData(
+        url: String,
+        formData: List<PartData>
+    ): T {
+        return try {
+            val response: HttpResponse = httpClient.submitFormWithBinaryData(
+                url = url,
+                formData = formData
+            ) {
+                header("Authorization", "Bearer ${tokenProvider.getAccessToken()}")
+            }
+
+            response.body()
+
+        } catch (e: Exception) {
+            // 错误处理
+            throw e
+        }
+    }
+
 
 }

@@ -14,6 +14,7 @@ import app.penny.platform.AudioRecorderFactory
 import app.penny.presentation.utils.generateGravatarUrl
 import app.penny.servershared.enumerate.DtoAssociated
 import app.penny.servershared.enumerate.SilentIntent
+import app.penny.servershared.enumerate.UserIntent
 import app.penny.servershared.enumerate.UserIntentStatus
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -155,31 +156,27 @@ class AIChatViewModel(
             val userModel = _uiState.value.user
             val result = try {
                 // 构建 UserMessage
-                val userMessage = UserMessage(
-                    content = messageText,
-                    type = MessageType.TEXT,
-                    uuid = Uuid.random(),
-                    timestamp = Clock.System.now().epochSeconds,
-                    user = userModel,
-                    sender = userModel
-                )
+                val userMessage = buildMessage(
+                    messageType = MessageType.TEXT,
+                    sender = userModel,
+                    content = messageText
+                ) as UserMessage
+
                 // 插入数据库 和UI
                 chatRepository.insert(userMessage)
                 addMessageToUiState(userMessage)
 
                 // 调用 Repository 进行 AI 回复
                 val aiReply = chatRepository.sendMessage(messageText)
-                val aiMessage = SystemMessage(
-                    user = userModel,
-                    type = MessageType.TEXT,
-                    uuid = Uuid.random(),
-                    timestamp = Clock.System.now().epochSeconds,
+                val aiMessage = buildMessage(
+                    messageType = MessageType.TEXT,
                     sender = UserModel.System,
-                    userIntent = aiReply.userIntent,
-                    content = aiReply.content
-                )
+                    content = aiReply.content,
+                    userIntent = aiReply.userIntent
+                ) as SystemMessage
 
-                // 插入数据库 和UI
+                // assert aiMessage is SystemMessage
+
 
                 when (aiMessage.userIntent) {
                     is SilentIntent -> {
@@ -232,7 +229,7 @@ class AIChatViewModel(
 
     private fun dismissFunctionalMessage(message: SystemMessage) {
         screenModelScope.launch {
-            message.userIntent?.let { it.status = UserIntentStatus.Cancelled }
+            message.userIntent.status = UserIntentStatus.Cancelled
             updateMessage(message)
         }
     }
@@ -240,6 +237,7 @@ class AIChatViewModel(
     private fun sendAudio(audioFilePath: String) {
         screenModelScope.launch {
             chatRepository.sendAudio(audioFilePath)
+
         }
 
     }
@@ -281,6 +279,50 @@ class AIChatViewModel(
                 messages = it.messages.map { msg ->
                     if (msg.uuid == message.uuid) message else msg
                 }
+            )
+        }
+    }
+
+
+    private fun buildMessage(
+        messageType: MessageType,
+        sender: UserModel,
+        content: String? = null,
+        userIntent: UserIntent? = null
+    ): ChatMessage {
+        if (sender != UserModel.System) {
+            when (messageType) {
+                MessageType.TEXT -> {
+                    return UserMessage(
+                        content = content,
+                        type = MessageType.TEXT,
+                        uuid = Uuid.random(),
+                        timestamp = Clock.System.now().epochSeconds,
+                        user = _uiState.value.user,
+                        sender = sender
+                    )
+                }
+
+                MessageType.AUDIO -> {
+                    return UserMessage(
+                        content = "Audio message",
+                        type = MessageType.AUDIO,
+                        uuid = Uuid.random(),
+                        timestamp = Clock.System.now().epochSeconds,
+                        user = _uiState.value.user,
+                        sender = sender
+                    )
+                }
+            }
+        } else {
+            return SystemMessage(
+                content = content,
+                type = MessageType.TEXT,
+                uuid = Uuid.random(),
+                timestamp = Clock.System.now().epochSeconds,
+                sender = UserModel.System,
+                user = _uiState.value.user,
+                userIntent = userIntent ?: UserIntent.JustTalk()
             )
         }
     }
