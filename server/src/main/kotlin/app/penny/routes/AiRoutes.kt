@@ -1,7 +1,6 @@
 // file: server/src/main/kotlin/app/penny/routes/AiRoutes.kt
 package app.penny.routes
 
-import app.penny.core.data.enumerate.json
 import app.penny.servershared.dto.requestDto.GenerateMonthlyReportRequest
 import app.penny.servershared.dto.requestDto.GetAiReplyRequest
 import app.penny.servershared.dto.requestDto.GetAiReplyResponse
@@ -11,14 +10,16 @@ import app.penny.services.AiService
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
+import io.ktor.http.content.streamProvider
 import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.request.receiveMultipart
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
-import io.ktor.utils.io.readByteArray
+import kotlinx.datetime.Clock
 
 fun Route.aiRoutes(
     aiService: AiService
@@ -78,54 +79,65 @@ fun Route.aiRoutes(
             }
 
             post("/get-reply-audio") {
+                // 1. 接收 Multipart
                 val multipart = call.receiveMultipart()
 
-                var jsonRequest: GetAiReplyRequest? = null
-                var audioBytes: ByteArray? = null
+                var textDataReceived: String? = null
+                var audioBytesReceived: ByteArray? = null
 
-                // 解析 multipart 请求
+                // 2. 遍历每个 Part
                 multipart.forEachPart { part ->
                     when (part) {
                         is PartData.FormItem -> {
-                            // 检查是否为 JSON 数据
-                            if (part.name == "jsonRequest") {
-                                jsonRequest = part.value.let {
-                                    json.decodeFromString(GetAiReplyRequest.serializer(), it)
-                                }
+                            // 如果 name == "textData"，提取出文本
+                            if (part.name == "textData") {
+                                textDataReceived = part.value
                             }
                         }
 
                         is PartData.FileItem -> {
-                            if (part.name == "audio") {
-                                audioBytes = part.provider().readByteArray(
-                                    count = part.headers["Content-Length"]?.toInt() ?: 0
-                                )
+                            // 如果 name == "audioFile"，读取出二进制流
+                            if (part.name == "audioFile") {
+                                audioBytesReceived = part.streamProvider().readBytes()
                             }
                         }
 
                         else -> {}
                     }
+                    // 使用完后需要 dispose
                     part.dispose()
                 }
 
-                if (jsonRequest == null || audioBytes == null) {
-                    call.respond(
-                        HttpStatusCode.BadRequest,
-                        "Missing required data (JSON request or audio file)"
-                    )
-                    return@post
+                // 3. 做一些简单的处理，比如打印或存储到数据库/文件系统
+                val message = buildString {
+                    appendLine("接收到的文本：$textDataReceived")
+                    appendLine("接收到的音频大小：${audioBytesReceived?.size ?: 0} bytes")
                 }
+
+                // 4. 返回处理结果
+                call.respondText(message, status = HttpStatusCode.OK)
+
+
+//            if (jsonRequest == null || audioBytes == null) {
+//                call.respond(
+//                    HttpStatusCode.BadRequest,
+//                    "Missing required data (JSON request or audio file)"
+//                )
+//                return@post
+//            }
 
                 try {
                     // 将音频转录为文本
-                    val transcribedText = aiService.audioToText(audioBytes!!)
+                    val transcribedText = aiService.audioToText(
+                        audioBytesReceived!!
+                    )
 
                     // 调用原有 get-ai-reply 逻辑
                     val userIntent: UserIntent = aiService.getUserIntent(
                         call = call,
                         text = transcribedText,
-                        invokeInstant = jsonRequest!!.invokeInstant,
-                        userTimeZoneId = jsonRequest!!.userTimeZoneId
+                        invokeInstant = Clock.System.now().epochSeconds,
+                        userTimeZoneId = "Asia/Shanghai"
                     )
 
                     call.respond(

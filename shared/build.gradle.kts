@@ -28,9 +28,9 @@ kotlin {
 
     jvm {
         compilations.all {
-//            kotlinOptions {
-//                freeCompilerArgs += listOf("-Xdisable-optimizations")
-//            }
+            kotlinOptions {
+                freeCompilerArgs += listOf("-Xdisable-optimizations")
+            }
         }
     }
 

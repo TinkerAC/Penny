@@ -48,17 +48,17 @@ class AudioRecorderJVM(private val cacheDir: String) : AudioRecorder {
         withContext(Dispatchers.IO) {
             if (isRecordingFlag) return@withContext
 
-            val fileName = "recording_${System.currentTimeMillis()}.wav"
+            val fileName = "recording_temp.wav"
             val file = File(cacheDir, fileName)
             outputFilePath = file.absolutePath
 
             val audioFormat = AudioFormat(
                 AudioFormat.Encoding.PCM_SIGNED,
-                48000.0f,
+                8000.0f,
                 16,
                 1,
                 2,
-                48000.0f,
+                8000.0f,
                 false
             )
 
