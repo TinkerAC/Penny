@@ -1,4 +1,4 @@
-package app.penny
+package app.penny.composeApp
 
 import App
 import android.os.Bundle

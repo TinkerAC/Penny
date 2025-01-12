@@ -1,18 +1,19 @@
 package app.penny.core.network.clients
 
 import app.penny.config.Config.API_URL
+import app.penny.core.data.enumerate.json
 import app.penny.core.data.kvstore.TokenProvider
+import app.penny.core.data.repository.UserPreferenceRepository
 import app.penny.core.network.BaseAuthedApiClient
 import app.penny.platform.fileSystem
 import app.penny.servershared.dto.MonthlyReportData
 import app.penny.servershared.dto.requestDto.GenerateMonthlyReportRequest
+import app.penny.servershared.dto.requestDto.GetAiReplyAudioRequest
 import app.penny.servershared.dto.requestDto.GetAiReplyRequest
 import app.penny.servershared.dto.requestDto.GetAiReplyResponse
 import app.penny.servershared.dto.responseDto.GenerateMonthlyReportResponse
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.forms.formData
-import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
@@ -25,7 +26,9 @@ import kotlinx.datetime.TimeZone
 import okio.Path.Companion.toPath
 
 class AiApiClient(
-    httpClient: HttpClient, tokenProvider: TokenProvider
+    httpClient: HttpClient,
+    tokenProvider: TokenProvider,
+    private val userPreferenceRepository: UserPreferenceRepository
 ) : BaseAuthedApiClient(httpClient, tokenProvider) {
 
     suspend fun getAiReply(
@@ -66,15 +69,30 @@ class AiApiClient(
 
     @OptIn(InternalAPI::class)
     suspend fun getAiReplyAudio(audioFilePath: String): GetAiReplyResponse {
-
+        println("audioFilePath: $audioFilePath")
         val audioBytes = fileSystem.read(audioFilePath.toPath()) {
             readByteArray()
         }
-        val response = httpClient.submitFormWithBinaryData(
-            url = "$API_URL/ai/get-reply",
+        val language = userPreferenceRepository.getLanguage().locale
+
+        val response = makeAuthenticatedRequestWithBinaryData<GetAiReplyResponse>(
+            url = "$API_URL/ai/get-reply-audio",
             formData = formData {
                 // 1. 添加文本字段
-                append("textData", "1234text")
+                append(
+                    "requestJson", json.encodeToString(
+                        GetAiReplyAudioRequest.serializer(),
+                        GetAiReplyAudioRequest(
+                            userTimeZoneId = TimeZone.currentSystemDefault().id,
+                            invokeInstant = Clock.System.now().epochSeconds,
+                            language = language
+                        )
+                    ),
+                    headers = Headers.build {
+                        append(HttpHeaders.ContentType, "application/json")
+                    }
+                )
+
 
                 // 2. 添加文件字段；可以在 headers 中指定文件名、ContentType 等
                 append(
@@ -90,12 +108,9 @@ class AiApiClient(
                     }
                 )
             }
-        ) {
-            // 此处也可以配置额外的请求参数、请求头等
-            method = HttpMethod.Post
-        }
+        )
 
-        return response.body()
+        return response
     }
 
 }

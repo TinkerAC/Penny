@@ -118,7 +118,7 @@ fun commonModule() = module {
     single { AuthApiClient(get()) }
     single { UserApiClient(get(), get()) }
     single { SyncApiClient(get(), get()) }
-    single { AiApiClient(get(), get()) }
+    single { AiApiClient(get(), get(),get()) }
 
 
 

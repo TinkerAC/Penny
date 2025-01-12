@@ -1,7 +1,7 @@
 package app.penny.platform
 
 import android.app.Application
-import app.penny.R
+import app.penny.shared.R
 import app.penny.di.commonModule
 import app.penny.di.platformModule
 import co.touchlab.kermit.Logger

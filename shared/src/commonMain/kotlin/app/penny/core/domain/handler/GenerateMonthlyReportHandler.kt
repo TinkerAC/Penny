@@ -19,14 +19,12 @@ class GenerateMonthlyReportHandler(
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun handle(message: SystemMessage, dto: BaseEntityDto?): SystemMessage {
         //receive yearMonth from message
-
         if (message.userIntent !is UserIntent.GenerateMonthlyReport) {
             throw IllegalArgumentException("Unsupported userIntent type")
         }
         //if can not parse from message, use LastMonth
         val year = message.userIntent.year
         val month = message.userIntent.month
-
 
         val yearMonth = year?.let {
             month?.let {

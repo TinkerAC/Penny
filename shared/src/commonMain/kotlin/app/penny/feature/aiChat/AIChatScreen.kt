@@ -82,10 +82,10 @@ class AIChatScreen : Screen {
                     viewModel.handleIntent(AIChatIntent.ToggleInputMode)
                 },
                 onSendClicked = { text ->
-                    viewModel.handleIntent(AIChatIntent.SendMessage(text))
+                    viewModel.handleIntent(AIChatIntent.SendTextMessage(text))
                 },
                 onStartRecord = {
-                    viewModel.handleIntent(AIChatIntent.StartRecording)
+                    viewModel.handleIntent(AIChatIntent.StartRecord)
                 },
                 onStopRecord = {},
             )
@@ -155,7 +155,7 @@ class AIChatScreen : Screen {
                             ) { // 圆形取消按钮
                                 IconButton(
                                     onClick = {
-                                        viewModel.handleIntent(AIChatIntent.CancelRecording)
+                                        viewModel.handleIntent(AIChatIntent.StopRecordAndDiscard)
                                     },
                                     modifier = Modifier
                                         .size(64.dp)
@@ -176,7 +176,7 @@ class AIChatScreen : Screen {
                             ) {
                                 IconButton(
                                     onClick = {
-                                        viewModel.handleIntent(AIChatIntent.StopRecording)
+                                        viewModel.handleIntent(AIChatIntent.StopRecordAndSend)
                                     },
                                     modifier = Modifier
                                         .size(64.dp)

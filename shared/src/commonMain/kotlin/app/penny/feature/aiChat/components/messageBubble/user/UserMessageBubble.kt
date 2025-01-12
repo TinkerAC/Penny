@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,9 +21,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.ChatMessage
 import app.penny.shared.SharedRes
+import coil3.compose.AsyncImage
 import dev.icerock.moko.resources.compose.painterResource
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+
 
 @Composable
 fun UserMessageBubble(message: ChatMessage) {
@@ -53,21 +52,31 @@ fun UserAvatar(
     imageUrl: String
 ) {
     Box() {
-        KamelImage(
-            resource = { asyncPainterResource(imageUrl) },
+//        KamelImage(
+//            resource = { asyncPainterResource(imageUrl) },
+//            contentDescription = "用户头像",
+//            modifier = Modifier
+//                .size(40.dp)
+//                .clip(CircleShape)
+//                .border(1.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape),
+//            contentScale = ContentScale.Crop,
+//            onLoading = {
+//                CircularProgressIndicator(
+//                    modifier = Modifier.size(24.dp),
+//                    color = MaterialTheme.colorScheme.primary
+//                )
+//            }
+//        )
+        AsyncImage(
+            model = imageUrl,
             contentDescription = "用户头像",
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
                 .border(1.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape),
             contentScale = ContentScale.Crop,
-            onLoading = {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
         )
+
     }
 
 

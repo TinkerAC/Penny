@@ -135,7 +135,7 @@ sealed class UserIntent {
         val month: Int? = null,
         val year: Int? = null,
 
-        ) : UserIntent() {
+        ) : UserIntent(),SilentIntent {
         override fun copy(dto: BaseEntityDto?, status: UserIntentStatus): GenerateMonthlyReport {
             return GenerateMonthlyReport(
                 description = this.description,

@@ -58,13 +58,17 @@ class PrepareMonthlyReportDataUseCase(
 
         val averageExpensePerDay = totalExpense / getDaysInMonth(yearMonth)
         val largestExpense =
-            allExpenseTransactions.maxByOrNull { it.amount.toString().toDouble() }!!.let {
+            allExpenseTransactions.maxByOrNull { it.amount.toString().toDouble() }?.let {
                 LargestExpense(
                     category = it.category.parentCategory!!.name,
                     amount = it.amount.toString().toDouble(),
                     description = it.remark ?: ""
                 )
-            }
+            } ?: LargestExpense(
+                category = "",
+                amount = 0.0,
+                description = ""
+            )
 
 
 

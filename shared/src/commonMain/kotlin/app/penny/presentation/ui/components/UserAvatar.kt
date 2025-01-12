@@ -1,6 +1,7 @@
 package app.penny.presentation.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -17,8 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+import coil3.compose.rememberAsyncImagePainter
+
+//import io.kamel.image.KamelImage
+//import io.kamel.image.asyncPainterResource
 
 /**
  * A composable that displays a user avatar based on their email address (uses Gravatar).
@@ -40,8 +43,33 @@ fun UserAvatar(
             .clickable { onClick() }
     ) {
         if (!imageUrl.isNullOrEmpty()) {
-            KamelImage(
-                resource = { asyncPainterResource(imageUrl) },
+//            KamelImage(
+//                resource = { asyncPainterResource(imageUrl) },
+//                contentDescription = "用户头像",
+//                modifier = Modifier
+//                    .size(80.dp)
+//                    .clip(CircleShape)
+//                    .border(
+//                        BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)),
+//                        shape = CircleShape
+//                    ),
+//                contentScale = ContentScale.Crop,
+//                onLoading = {
+//                    if (loadingEffect) {
+//                        CircularProgressIndicator(
+//                            modifier = Modifier.size(24.dp),
+//                            color = MaterialTheme.colorScheme.primary
+//                        )
+//                    }
+//                },
+//                onFailure = {
+//                    DefaultAvatar(onClick = onClick)
+//                }
+//            )
+
+
+            Image(
+                painter = rememberAsyncImagePainter(imageUrl),
                 contentDescription = "用户头像",
                 modifier = Modifier
                     .size(80.dp)
@@ -51,17 +79,8 @@ fun UserAvatar(
                         shape = CircleShape
                     ),
                 contentScale = ContentScale.Crop,
-                onLoading = {
-                    if (loadingEffect) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                },
-                onFailure = {
-                    DefaultAvatar(onClick = onClick)
-                }
+
+
             )
         } else {
             DefaultAvatar(onClick = onClick)

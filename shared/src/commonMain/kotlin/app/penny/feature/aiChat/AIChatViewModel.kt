@@ -64,8 +64,11 @@ class AIChatViewModel(
 
     fun handleIntent(intent: AIChatIntent) {
         when (intent) {
-            is AIChatIntent.SendMessage -> sendMessage(intent.message)
-            is AIChatIntent.SendAudio -> sendAudio(intent.audioFilePath)
+            is AIChatIntent.SendTextMessage -> sendChatMessage(
+                messageType = MessageType.TEXT,
+                messageText = intent.message
+            )
+
             is AIChatIntent.ConfirmPendingAction -> confirmPendingAction(
                 intent.message
             )
@@ -91,36 +94,47 @@ class AIChatViewModel(
                 }
             }
 
-            AIChatIntent.CancelRecording -> cancelRecording()
-            AIChatIntent.StartRecording -> startRecording()
-            AIChatIntent.StopRecording -> stopRecording()
+            AIChatIntent.StartRecord -> startRecording()
+
+            AIChatIntent.StopRecordAndDiscard -> {
+                screenModelScope.launch {
+                    stopRecording()
+                }
+            }
+
+            AIChatIntent.StopRecordAndSend -> {
+                screenModelScope.launch {
+                    val path = stopRecording()
+                    println("audio file path: $path")
+                    sendChatMessage(
+                        messageType = MessageType.AUDIO,
+                        audioFilePath = path
+                    )
+                }
+
+            }
+
         }
     }
 
-    private fun stopRecording() {
-        screenModelScope.launch {
-            val audioFilePath = recorder.stopRecording()
-            println("recording stopped, file saved at $audioFilePath")
-            sendAudio(audioFilePath)
-        }
+    private suspend fun stopRecording(): String {
+        val audioFilePath = recorder.stopRecording()
+        println("recording stopped, file saved at $audioFilePath")
+
+        _uiState.update { it.copy(isRecording = false) }
+        return audioFilePath
+
 
     }
 
 
     private fun startRecording() {
-        _uiState.update { it.copy(isRecording = true) }
         screenModelScope.launch {
             val audioFilePath = recorder.startRecording()
         }
+        _uiState.update { it.copy(isRecording = true) }
     }
 
-    /**
-     * Discard the recording
-     */
-    private fun cancelRecording() {
-        _uiState.update { it.copy(isRecording = false) }
-        Logger.d("Recording cancelled")
-    }
 
     fun updateInputText(text: String) {
         _uiState.update { it.copy(inputText = text) }
@@ -132,8 +146,7 @@ class AIChatViewModel(
             _uiState.update { it.copy(isLoading = true) }
             val userUuid = _uiState.value.user.uuid
             val result = try {
-                val messages =
-                    chatRepository.findChatHistoryByUserUuid(userUuid)
+                val messages = chatRepository.findChatHistoryByUserUuid(userUuid)
                 Result.success(messages)
             } catch (e: Exception) {
                 Result.failure(e)
@@ -149,25 +162,47 @@ class AIChatViewModel(
         }
     }
 
-    private fun sendMessage(messageText: String) {
+    private fun sendChatMessage(
+        messageType: MessageType,
+        messageText: String? = null,
+        audioFilePath: String? = null
+    ) {
         screenModelScope.launch {
             _uiState.update { it.copy(isSending = true) }
-
             val userModel = _uiState.value.user
+            var userMessage: UserMessage? = null
             val result = try {
-                // 构建 UserMessage
-                val userMessage = buildMessage(
-                    messageType = MessageType.TEXT,
-                    sender = userModel,
-                    content = messageText
-                ) as UserMessage
+                when (messageType) {
+                    MessageType.TEXT -> {
+                        // 构建 UserMessage
+                        userMessage = buildMessage(
+                            messageType = MessageType.TEXT,
+                            sender = userModel,
+                            content = messageText
+                        ) as UserMessage
+                    }
+
+                    MessageType.AUDIO -> {
+                        // 构建 UserMessage
+                        userMessage = buildMessage(
+                            messageType = MessageType.AUDIO,
+                            sender = userModel,
+                            content = "Audio message"
+                        ) as UserMessage
+                    }
+                }
 
                 // 插入数据库 和UI
                 chatRepository.insert(userMessage)
                 addMessageToUiState(userMessage)
 
                 // 调用 Repository 进行 AI 回复
-                val aiReply = chatRepository.sendMessage(messageText)
+                val aiReply = when (messageType) {
+                    MessageType.TEXT -> chatRepository.sendMessage(messageText!!)
+                    MessageType.AUDIO -> chatRepository.sendAudio(audioFilePath!!)
+                    else -> throw IllegalStateException("Invalid message type")
+                }
+
                 val aiMessage = buildMessage(
                     messageType = MessageType.TEXT,
                     sender = UserModel.System,
@@ -175,8 +210,7 @@ class AIChatViewModel(
                     userIntent = aiReply.userIntent
                 ) as SystemMessage
 
-                // assert aiMessage is SystemMessage
-
+                
 
                 when (aiMessage.userIntent) {
                     is SilentIntent -> {
@@ -205,7 +239,9 @@ class AIChatViewModel(
                 _uiState.update { it.copy(isSending = false) }
             }
         }
+
     }
+
 
     private fun confirmPendingAction(
         message: SystemMessage,
@@ -234,13 +270,6 @@ class AIChatViewModel(
         }
     }
 
-    private fun sendAudio(audioFilePath: String) {
-        screenModelScope.launch {
-            chatRepository.sendAudio(audioFilePath)
-
-        }
-
-    }
 
     /**
      * Update message in database and UIState

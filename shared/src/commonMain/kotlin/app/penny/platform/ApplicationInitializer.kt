@@ -5,6 +5,7 @@ import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.di.getKoinInstance
 import co.touchlab.kermit.Logger
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +54,7 @@ fun ApplicationInitializer.initSession(
 
 // initialize: 链式调用 initKoin 和 initSession
 fun ApplicationInitializer.initialize(): ApplicationInitializer {
-    return this.initNotifierManager().initKoin().initSession()
+    return this.initNotifierManager().initKoin().initSession().askForPermissions()
 }
 
 
@@ -61,5 +62,12 @@ fun ApplicationInitializer.printDeviceInfo(): ApplicationInitializer {
     println(
         "Platform: ${getPlatform()}"
     )
+    return this
+}
+
+
+fun ApplicationInitializer.askForPermissions(): ApplicationInitializer {
+
+
     return this
 }

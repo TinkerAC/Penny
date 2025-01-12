@@ -1,4 +1,4 @@
-package app.penny
+package app.penny.composeApp
 
 import android.app.Application
 import app.penny.platform.ApplicationInitializer

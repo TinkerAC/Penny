@@ -88,7 +88,6 @@ class AudioRecorderJVM(private val cacheDir: String) : AudioRecorder {
     override suspend fun stopRecording(): String {
         return withContext(Dispatchers.IO) {
             if (!isRecordingFlag) return@withContext ""
-
             targetDataLine?.stop()
             targetDataLine?.close()
             targetDataLine = null

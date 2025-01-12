@@ -12,7 +12,7 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
     id("dev.icerock.mobile.multiplatform-resources") version "0.24.4"
-    kotlin("native.cocoapods") version "2.0.20"
+    kotlin("native.cocoapods") version "2.1.0"
 
 
 }
@@ -125,10 +125,10 @@ kotlin {
 
 }
 android {
-    namespace = "app.penny"
+    namespace = "app.penny.composeApp"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
-        applicationId = "app.penny"
+        applicationId = "app.penny.composeApp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

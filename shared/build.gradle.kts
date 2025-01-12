@@ -58,19 +58,21 @@ kotlin {
             dependencies {
                 // 公共依赖项
                 implementation(libs.uuid)
-//                api(libs.gitlive.firebase.kotlin.crashlytics)
+
                 api(libs.kmpnotifier)
                 api(libs.resources.compose) // 如果使用 Compose Multiplatform
                 implementation(libs.material.kolor)
                 implementation(libs.colorpicker.compose)
                 implementation(libs.multiplatform.markdown.renderer.m3)
-                implementation(libs.kamel.image.default)
+//                implementation(libs.kamel.image.default)
                 implementation(libs.ktor.utils)
                 api(libs.multiplatformSettings.noArg)
                 api(libs.multiplatformSettings.coroutines)
                 implementation(libs.koin.core)
 //                implementation(libs.kmp.io)
                 implementation(libs.okio)
+                implementation(libs.coil.compose)
+//                implementation(libs.coil.network.okhttp)
 
 
                 implementation(libs.bignum)
@@ -98,6 +100,8 @@ kotlin {
 //                implementation(libs.coil.svg)
                 implementation(libs.voyager.lifecycle.kmp)
                 implementation(libs.coil3.coil.svg)
+                implementation(libs.coil.compose)
+
 
 //                implementation(libs.thechance101.chart)
                 implementation(libs.kermit)
@@ -111,6 +115,7 @@ kotlin {
 
                 implementation(libs.multiplatform.paths)
 
+                implementation(libs.coil.network.ktor)
 
 
             }
@@ -126,6 +131,7 @@ kotlin {
 
 
                 //okhttp
+
                 implementation(libs.ktor.client.okhttp)
             }
         }
@@ -150,7 +156,7 @@ kotlin {
 }
 
 android {
-    namespace = "app.penny"
+    namespace = "app.penny.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
