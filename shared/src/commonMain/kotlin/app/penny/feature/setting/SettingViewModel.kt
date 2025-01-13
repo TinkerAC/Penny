@@ -35,10 +35,11 @@ class SettingViewModel(
                     constraint = userPreferenceRepository.getConstraints(),
                     language = userPreferenceRepository.getLanguage(),
                     appThemes = AppTheme.Static.items + (storedDynamicTheme),
+                    autoCloudSyncEnabled = userPreferenceRepository.getAutoCloudSyncEnabled()
+
                 )
             } catch (e: Exception) {
                 Logger.e("Error initializing settings: ${e.message}")
-                // 设置默认值或采取其他恢复措施
             }
         }
     }
@@ -116,8 +117,7 @@ class SettingViewModel(
                         _uiState.value = _uiState.value.copy(language = intent.language)
                         LocaleManager.setLocaleTo(intent.language)
                         Logger.d { "Language set to ${intent.language}" }
-                        // 确保 UI 刷新以反映语言更改
-                        // 可以触发应用重启或相关组件的重新组合
+
                     } catch (e: Exception) {
                         Logger.e("Error setting language: ${e.message}")
                     }
@@ -135,8 +135,25 @@ class SettingViewModel(
             SettingIntent.ShowColorPicker -> {
                 showColorPicker()
             }
+
+            SettingIntent.ToggleAutoCloudSync -> {
+                toggleAutoCloudSync()
+            }
         }
     }
+
+    private fun toggleAutoCloudSync() {
+        screenModelScope.launch {
+            try {
+                val autoCloudSyncEnabled = _uiState.value.autoCloudSyncEnabled
+                userPreferenceRepository.setAutoCloudSyncEnabled(!autoCloudSyncEnabled)
+                _uiState.value = _uiState.value.copy(autoCloudSyncEnabled = !autoCloudSyncEnabled)
+            } catch (e: Exception) {
+                Logger.e("Error toggling auto cloud sync: ${e.message}")
+            }
+        }
+    }
+
 
     private fun showColorPicker() {
         _uiState.value = _uiState.value.copy(showColorPicker = true)
@@ -161,8 +178,7 @@ class SettingViewModel(
     }
 
 
-
     private fun recompose() {
-        
+
     }
 }

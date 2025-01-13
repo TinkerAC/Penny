@@ -5,6 +5,8 @@ CREATE TABLE ledgerEntity (
     currency_code TEXT NOT NULL,                -- 货币代码
     cover_name TEXT NOT NULL,                   -- 封面名称（枚举名）
     description TEXT,                           -- 描述
+    budget_amount TEXT,                         -- 预算金额
+
     created_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),   -- 创建时间
     updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),    -- 修改时间
 
@@ -12,7 +14,7 @@ CREATE TABLE ledgerEntity (
 );
 
 insert:
-INSERT INTO ledgerEntity (uuid,user_uuid, name, currency_code, cover_name, description) VALUES (?, ?,?, ?, ?, ?);
+INSERT INTO ledgerEntity (uuid,user_uuid, name, currency_code, cover_name, description,budget_amount) VALUES (?, ?, ?, ?, ?, ?, ?);
 
 findByUuid:
 SELECT * FROM ledgerEntity WHERE uuid = ?;
@@ -26,6 +28,7 @@ UPDATE ledgerEntity SET
     currency_code = ?,
     cover_name = ?,
     description = ?,
+    budget_amount = ?,
     updated_at = strftime('%s','now')
 WHERE uuid = ?;
 
@@ -34,8 +37,8 @@ DELETE FROM ledgerEntity WHERE uuid = ?;
 
 
 upsertByUuid:
-INSERT INTO ledgerEntity (uuid,user_uuid, name, currency_code, cover_name, description, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?, ?, strftime('%s','now'), strftime('%s','now'))
+INSERT INTO ledgerEntity (uuid,user_uuid, name, currency_code, cover_name, description, budget_amount,created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?,strftime('%s','now'), strftime('%s','now'))
 ON CONFLICT(uuid) DO UPDATE SET
     name = excluded.name,
     currency_code = excluded.currency_code,

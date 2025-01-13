@@ -68,6 +68,8 @@ lifecycleViewmodelCompose = "2.7.0"
 material3 = "1.3.1"
 okio = "3.10.2"
 openaiClient = "4.0.0-beta01"
+permissions = "0.18.1"
+permissionsCompose = "0.18.1"
 recordCore = "0.3.0"
 resources = "0.21.0"
 resourcesCompose = "0.24.4"
@@ -156,6 +158,8 @@ mysql-connector-java = { module = "mysql:mysql-connector-java", version.ref = "m
 native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "jdbcDriver" }
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openaiClient" }
+permissions = { module = "dev.icerock.moko:permissions", version.ref = "permissions" }
+permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "permissionsCompose" }
 record-core = { module = "dev.theolm.record:record-core", version.ref = "recordCore" }
 resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "resourcesCompose" }
 

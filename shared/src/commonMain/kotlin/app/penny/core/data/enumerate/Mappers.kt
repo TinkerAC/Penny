@@ -69,12 +69,13 @@ fun LedgerModel.toEntity(): LedgerEntity {
     return LedgerEntity(
         uuid = uuid.toString(),
         name = name,
-        currency_code = currency.currencyCode,
+        currency_code = currency.code,
         cover_name = cover.name,
         description = "",
         created_at = 0,
         updated_at = 0,
-        user_uuid = userUuid.toString()
+        user_uuid = userUuid.toString(),
+        budget_amount = BigDecimal.ZERO.toPlainString()
     )
 }
 
@@ -88,7 +89,7 @@ fun TransactionModel.toEntity(): TransactionEntity {
         category_name = category.name,
         transaction_type = transactionType.name,
         amount = amount.toPlainString(),
-        currency_code = currency.currencyCode,
+        currency_code = currency.code,
         remark = remark,
         screenshot_uri = screenshotUri,
         created_at = Clock.System.now().epochSeconds,
@@ -123,7 +124,7 @@ fun TransactionModel.toDto(
         transactionType = transactionType.name,
         transactionDate = transactionInstant.epochSeconds,
         categoryName = category.name,
-        currencyCode = currency.currencyCode,
+        currencyCode = currency.code,
         amount = amount.toPlainString(),
         remark = remark,
         createdAt = Clock.System.now().epochSeconds,
@@ -150,7 +151,7 @@ fun LedgerModel.toLedgerDto(): LedgerDto {
         uuid = uuid.toString(),
         name = name,
         coverUri = "not implemented",
-        currencyCode = currency.currencyCode,
+        currencyCode = currency.code,
         createdAt = createdAt.epochSeconds,
         updatedAt = updatedAt.epochSeconds
 

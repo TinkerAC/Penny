@@ -14,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import app.penny.feature.currencyConvater.CurrencyConverterScreen
+import app.penny.feature.loanCalculator.LoanCalculatorScreen
 import app.penny.feature.toolBox.component.ToolCard
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
 import app.penny.shared.SharedRes
@@ -26,7 +28,8 @@ import dev.icerock.moko.resources.compose.stringResource
 data class Tool(
     val displayName: StringResource,
     val description: StringResource? = null,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val screen: Screen? = null
 )
 
 
@@ -39,44 +42,42 @@ class ToolBoxScreen : Screen {
         val toolList = listOf(
             Tool(
                 displayName = SharedRes.strings.tool_data_export,
-                icon = Icons.Filled.IosShare
-            ),
+                icon = Icons.Filled.IosShare,
+
+                ),
             Tool(
                 displayName = SharedRes.strings.tool_exchange_rate_conversion,
                 icon = Icons.Filled.CurrencyExchange,
+                screen = CurrencyConverterScreen()
             ),
             Tool(
-                displayName = SharedRes.strings.tool_debt_calculator,
+                displayName = SharedRes.strings.tool_loan_calculator,
                 icon = Icons.Filled.AttachMoney,
+                screen = LoanCalculatorScreen()
             ),
         )
 
         Scaffold(
             topBar = {
-                SingleNavigateBackTopBar(
-                    title = stringResource(SharedRes.strings.pennys_box),
+                SingleNavigateBackTopBar(title = stringResource(SharedRes.strings.pennys_box),
                     onNavigateBack = {
                         localNavigator.pop()
-                    }
-                )
+                    })
             },
         ) { innerPadding ->
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(36.dp),
+                modifier = Modifier.padding(innerPadding).padding(36.dp),
                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp),
                 horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
             ) {
                 items(toolList) { tool ->
                     ToolCard(
-                        toolName = stringResource(tool.displayName),
-                        icon = tool.icon,
-                        onClick = {
-                            // TODO:
-                        },
-                        toolDescription = ""
+                        toolName = stringResource(tool.displayName), icon = tool.icon, onClick = {
+                            tool.screen?.let { screen ->
+                                localNavigator.push(screen)
+                            }
+                        }, toolDescription = ""
 
                     )
                 }

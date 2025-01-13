@@ -5,16 +5,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+
 import app.penny.platform.getPlatform
-import app.penny.platform.initMokoResources
+import app.penny.platform.initAppContext
+import app.penny.platform.requestMicrophonePermission
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initMokoResources(
+        initAppContext(
             context = this,
         )
+
+
         getPlatform()
+
+        requestMicrophonePermission(activity = this, context = this)
+
         enableEdgeToEdge() // Add this
         setContent {
             App()

@@ -36,10 +36,12 @@ import app.penny.core.domain.enumerate.Currency
 import app.penny.core.domain.enumerate.LedgerCover
 import app.penny.presentation.ui.components.CurrencySelectorModal
 import app.penny.presentation.ui.components.SingleNavigateBackTopBar
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import dev.icerock.moko.resources.compose.painterResource
+import dev.icerock.moko.resources.compose.stringResource
 
 class NewLedgerScreen(
 ) : Screen {
@@ -109,7 +111,7 @@ fun NewLedgerContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "设置我的账本",
+            text = stringResource(SharedRes.strings.ledger_name),
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -119,7 +121,7 @@ fun NewLedgerContent(
         )
 
         Text(
-            text = "设置账本封面",
+            text = stringResource(SharedRes.strings.ledger_cover),
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -129,7 +131,7 @@ fun NewLedgerContent(
         )
 
         Text(
-            text = "设置基础信息",
+            text = stringResource(SharedRes.strings.basic_info),
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -154,7 +156,7 @@ fun LedgerNameInput(
     TextField(
         value = name,
         onValueChange = onNameChange,
-        label = { Text("账本名称") },
+        label = { Text(text = stringResource(SharedRes.strings.ledger_name)) },
         modifier = modifier.fillMaxWidth()
     )
 }
@@ -235,13 +237,13 @@ fun CurrencySelector(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "${currency.currencyName} (${currency.currencyCode})",
+                text = "${currency.displayName} (${currency.code})",
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f)
             )
             Image(
                 painter = painterResource(currency.regionFlag),
-                contentDescription = currency.currencyCode,
+                contentDescription = currency.code,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -267,6 +269,6 @@ fun CreateLedgerButton(
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
-        Text(text = "创建账本")
+        Text(text = stringResource(SharedRes.strings.create_ledger))
     }
 }

@@ -46,8 +46,6 @@ class SettingScreen : Screen {
         val viewModel = koinScreenModel<SettingViewModel>()
         val uiState by viewModel.uiState.collectAsState()
 
-
-
         LaunchedEffect(Unit) {
             viewModel.refreshData()
         }
@@ -143,20 +141,20 @@ class SettingScreen : Screen {
                                 }
                             )
 
-
-
-
                             Spacer(modifier = Modifier.height(8.dp))
 
-                            // 安全设置部分：锁定开关
                             SettingSection(
-                                title = stringResource(SharedRes.strings.security),
-                                description = stringResource(SharedRes.strings.security_setting_description),
+                                title = stringResource(SharedRes.strings.data),
+                                description = stringResource(SharedRes.strings.data_setting_description),
                                 settingItems = listOf {
                                     SwitchSetting(
-                                        title = "Lock App",
-                                        checked = true,
-                                        onCheckedChange = {}
+                                        title = stringResource(SharedRes.strings.auto_cloud_sync),
+                                        checked = uiState.autoCloudSyncEnabled,
+                                        onCheckedChange = {
+                                            viewModel.handleIntent(
+                                                SettingIntent.ToggleAutoCloudSync
+                                            )
+                                        }
                                     )
                                 }
                             )

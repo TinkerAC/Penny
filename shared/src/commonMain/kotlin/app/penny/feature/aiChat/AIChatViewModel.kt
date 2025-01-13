@@ -129,10 +129,11 @@ class AIChatViewModel(
 
 
     private fun startRecording() {
+        //ask for permission
         screenModelScope.launch {
             val audioFilePath = recorder.startRecording()
+            _uiState.update { it.copy(isRecording = true) }
         }
-        _uiState.update { it.copy(isRecording = true) }
     }
 
 
@@ -215,8 +216,6 @@ class AIChatViewModel(
                     content = aiReply.content,
                     userIntent = aiReply.userIntent
                 ) as SystemMessage
-
-
 
                 when (aiMessage.userIntent) {
                     is SilentIntent -> {

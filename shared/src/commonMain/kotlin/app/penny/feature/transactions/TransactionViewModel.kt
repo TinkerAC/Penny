@@ -27,7 +27,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import kotlin.uuid.ExperimentalUuidApi
 
 /**
  * TransactionViewModel负责从仓库中获取数据、更新UI状态，并响应用户意图
@@ -113,10 +112,11 @@ class TransactionViewModel(
                 calendarViewSummaryByDate = _uiState.value.transactions.groupBy {
                     it.transactionInstant.toLocalDateTime(TimeZone.currentSystemDefault()).date
                 }.mapValues { entry ->
-                    val income = entry.value.filter { it.amount > BigDecimal.ZERO }
+                    val income = entry.value.filter { it.transactionType == TransactionType.INCOME }
                         .fold(BigDecimal.ZERO) { acc, transaction -> acc + transaction.amount }
-                    val expense = entry.value.filter { it.amount < BigDecimal.ZERO }
-                        .fold(BigDecimal.ZERO) { acc, transaction -> acc + transaction.amount.abs() }
+                    val expense =
+                        entry.value.filter { it.transactionType == TransactionType.EXPENSE }
+                            .fold(BigDecimal.ZERO) { acc, transaction -> acc + transaction.amount }
 
                     Summary(
                         income = income,
@@ -148,25 +148,16 @@ class TransactionViewModel(
                     is GroupByType.Time.GroupOption -> GroupByType.Time
                     is GroupByType.Category.GroupOption -> GroupByType.Category
                 }
-
             )
         }
         doGroupBy(groupByOption)
         Logger.d("Selected group by option: $groupByOption")
     }
 
-    /**
-     * 隐藏分组下拉菜单
-     */
-    private fun dismissSharedDropdown() {
-        _uiState.update { it.copy(sharedPopUpVisible = false) }
-        Logger.d("Dismiss shared dropdown")
-    }
 
     /**
      * 获取交易数据
      */
-    @OptIn(ExperimentalUuidApi::class)
     private fun fetchTransactions() {
         screenModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
@@ -271,11 +262,7 @@ class TransactionViewModel(
             GroupedTransaction(
                 groupIdentifier = groupIdentifier,
                 transactions = listOfTx.sortedByDescending { it.transactionInstant },
-                summary = Summary(
-                    balance = calculateBalance(listOfTx),
-                    income = calculateIncome(listOfTx),
-                    expense = calculateExpense(listOfTx)
-                )
+                summary = calculateSummary(listOfTx)
             )
         }
     }
@@ -311,39 +298,34 @@ class TransactionViewModel(
         // 3) 构建 GroupedTransaction：
         //    - 使用 CategoryGroupIdentifier 来存储分组信息
         return sortedGroups.map { (categoryObj, groupedTransactions) ->
+
             GroupedTransaction(
                 groupIdentifier = GroupIdentifier.CategoryGroupIdentifier(
                     groupOption = groupBy, category = categoryObj
                 ),
                 transactions = groupedTransactions.sortedByDescending { it.transactionInstant },
-                summary = Summary(
-                    balance = calculateBalance(groupedTransactions),
-                    income = calculateIncome(groupedTransactions),
-                    expense = calculateExpense(groupedTransactions)
-                )
+                summary = calculateSummary(groupedTransactions)
             )
         }
 
 
     }
 
-    /**
-     * 计算总余额
-     */
-    private fun calculateBalance(transactions: List<TransactionModel>): BigDecimal {
-        return transactions.fold(BigDecimal.ZERO) { acc, transaction ->
-            acc + transaction.amount
-        }
-    }
 
-    /**
-     * 计算总收入
-     */
-    private fun calculateIncome(transactions: List<TransactionModel>): BigDecimal {
-        return transactions.filter { it.transactionType == TransactionType.INCOME }
+    private fun calculateSummary(transactions: List<TransactionModel>): Summary {
+        val income = transactions.filter { it.transactionType == TransactionType.INCOME }
             .fold(BigDecimal.ZERO) { acc, transaction ->
                 acc + transaction.amount
             }
+        val expense = transactions.filter { it.transactionType == TransactionType.EXPENSE }
+            .fold(BigDecimal.ZERO) { acc, transaction ->
+                acc + transaction.amount
+            }
+        return Summary(
+            income = income,
+            expense = expense,
+            balance = income - expense
+        )
     }
 
     /**
@@ -352,7 +334,7 @@ class TransactionViewModel(
     private fun calculateExpense(transactions: List<TransactionModel>): BigDecimal {
         return transactions.filter { it.transactionType == TransactionType.EXPENSE }
             .fold(BigDecimal.ZERO) { acc, transaction ->
-                acc + transaction.amount.abs()
+                acc + transaction.amount
             }
     }
 

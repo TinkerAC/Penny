@@ -6,7 +6,8 @@ import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.enumerate.Currency
 import app.penny.core.domain.enumerate.LedgerCover
 import app.penny.core.domain.model.LedgerModel
-
+import app.penny.platform.getRawStringResource
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -58,7 +59,11 @@ class NewLedgerViewModel(
     private fun confirmCreateLedger() {
         screenModelScope.launch {
             if (!validateLedgerName()) {
-                _eventFlow.emit(NewLedgerUiEvent.ShowSnackBar("账本名称不能为空"))
+                _eventFlow.emit(
+                    NewLedgerUiEvent.ShowSnackBar(
+                        getRawStringResource(SharedRes.strings.ledger_name_cannot_be_empty)
+                    )
+                )
                 return@launch
             }
 
@@ -74,11 +79,15 @@ class NewLedgerViewModel(
                 )
                 ledgerRepository.insert(newLedger)
                 _uiState.value = _uiState.value.copy(isLoading = false)
-                _eventFlow.emit(NewLedgerUiEvent.ShowSnackBar("账本创建成功!"))
+                _eventFlow.emit(
+                    NewLedgerUiEvent.ShowSnackBar(
+                        getRawStringResource(SharedRes.strings.ledger_created_successfully)
+                    )
+                )
                 _eventFlow.emit(NewLedgerUiEvent.OnFinishInsert(newLedger))
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(isLoading = false)
-                _eventFlow.emit(NewLedgerUiEvent.ShowSnackBar(e.message ?: "创建账本失败"))
+                _eventFlow.emit(NewLedgerUiEvent.ShowSnackBar(e.message ?: "Unknown error"))
             }
         }
     }

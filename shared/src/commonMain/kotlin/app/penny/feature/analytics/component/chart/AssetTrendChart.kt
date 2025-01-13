@@ -1,4 +1,4 @@
-package app.penny.feature.analytics.component
+package app.penny.feature.analytics.component.chart
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

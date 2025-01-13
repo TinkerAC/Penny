@@ -16,9 +16,9 @@ import dev.icerock.moko.resources.StringResource
 private lateinit var appContext: Context
 
 /**
- * 初始化 Context。确保在 Application 或 Activity 中调用。
+ * Initialize the app context,will be called in "AndroidApp"
  */
-fun initMokoResources(context: Context) {
+fun initAppContext(context: Context) {
     appContext = context
 }
 
@@ -54,3 +54,5 @@ actual fun getRawStringResource(
     val localizedContext = appContext.createConfigurationContext(config)
     return localizedContext.getString(stringResource.resourceId)
 }
+
+

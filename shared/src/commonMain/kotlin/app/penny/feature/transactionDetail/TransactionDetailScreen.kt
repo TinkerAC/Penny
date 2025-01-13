@@ -2,8 +2,7 @@
 package app.penny.feature.transactionDetail
 
 
-
-
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -69,19 +68,6 @@ import org.koin.core.parameter.parametersOf
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@Composable
-private fun LocalFilterChipDropDownStyle(): FilterChipDropDownStyle {
-    return FilterChipDropDownStyle(
-        alwaysSelected = true,
-        shape = MaterialTheme.shapes.small,
-        border = null,
-        filterChipColors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f),
-            selectedLabelColor = MaterialTheme.colorScheme.onSecondary
-        ),
-        labelTextStyle = MaterialTheme.typography.labelMedium.copy()
-    )
-}
 
 /**
  * 一个简单的包装后的 RemarkTextField，用来展示编辑备注。
@@ -252,11 +238,9 @@ fun TransactionEditSheet(
         AmountEditField(
             amountString = uiState.amountText,
             onAmountChange = { newAmount ->
-                // 实时更新文本，不做解析
                 viewModel.handleIntent(TransactionDetailIntent.UpdateAmountText(newAmount))
             },
             onAmountValidate = {
-                // 当失去焦点时 -> 校验
                 viewModel.handleIntent(TransactionDetailIntent.ValidateAmount)
             },
             errorMessage = uiState.amountInputError?.let { stringResource(it) },
@@ -357,7 +341,7 @@ fun TransactionEditSheet(
             modifier = Modifier.padding(vertical = 16.dp)
         )
 
-        // 4. 账户（只读）
+        // 4. Ledger(ReadOnly)
         EditRow(
             icon = {
                 Icon(
@@ -369,7 +353,7 @@ fun TransactionEditSheet(
             title = stringResource(SharedRes.strings.ledger),
             content = {
                 Text(
-                    text = uiState.belongingLedger.name + "(${uiState.belongingLedger.currency.currencyCode})",
+                    text = uiState.belongingLedger.name + "(${uiState.belongingLedger.currency.code})",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
                 )
@@ -440,9 +424,6 @@ fun TransactionEditSheet(
         )
     }
 }
-
-
-
 
 
 /**
@@ -533,4 +514,19 @@ fun EditRow(
             content()
         }
     }
+}
+
+
+@Composable
+private fun LocalFilterChipDropDownStyle(): FilterChipDropDownStyle {
+    return FilterChipDropDownStyle(
+        alwaysSelected = true,
+        shape = MaterialTheme.shapes.small,
+        border = null,
+        filterChipColors = FilterChipDefaults.filterChipColors(
+            selectedContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f),
+            selectedLabelColor = MaterialTheme.colorScheme.onSecondary
+        ),
+        labelTextStyle = MaterialTheme.typography.labelMedium.copy()
+    )
 }

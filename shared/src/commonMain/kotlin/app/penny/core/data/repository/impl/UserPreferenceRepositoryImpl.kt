@@ -146,5 +146,13 @@ class UserPreferenceRepositoryImpl(
             enabled
         )
     }
+
+    override fun getAutoCloudSyncEnabled(): Boolean {
+        return userPreferenceManager.getBoolean(UserPreferenceManager.AUTO_CLOUD_SYNC_ENABLED)
+    }
+
+    override fun setAutoCloudSyncEnabled(enabled: Boolean) {
+        userPreferenceManager.putBoolean(UserPreferenceManager.AUTO_CLOUD_SYNC_ENABLED, enabled)
+    }
 }
 

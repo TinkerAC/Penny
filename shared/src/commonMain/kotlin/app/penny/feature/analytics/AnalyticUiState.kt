@@ -37,7 +37,8 @@ data class AnalyticUiState(
     val assetTrendLineChartData: Pair<List<String>, List<Double>> = Pair(emptyList(), emptyList()),
 
 
-    val ledgerSelectionDialogVisible: Boolean = false
+    val ledgerSelectionDialogVisible: Boolean = false,
+
 ) {
     companion object {
         private val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())

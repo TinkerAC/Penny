@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import app.penny.presentation.AvatarKamelConfig
 import io.kamel.core.config.KamelConfig
 import io.kamel.core.config.httpUrlFetcher
 import io.kamel.core.config.takeFrom
@@ -45,7 +46,7 @@ fun UserAvatar(
             .clip(CircleShape)
             .clickable { onClick() }
     ) {
-        CompositionLocalProvider(LocalKamelConfig provides customKamelConfig) {
+        CompositionLocalProvider(LocalKamelConfig provides AvatarKamelConfig) {
             if (!imageUrl.isNullOrEmpty()) {
                 KamelImage(
                     resource = { asyncPainterResource(imageUrl) },
@@ -101,19 +102,4 @@ fun DefaultAvatar(
 }
 
 
-val customKamelConfig = KamelConfig {
-    // Copies the default implementation if needed
-    takeFrom(KamelConfig.Default)
-
-    // Configures Ktor HttpClient
-    httpUrlFetcher {
-        // httpCache is defined in kamel-core and configures the ktor client
-        // to install a HttpCache feature with the implementation provided by Kamel.
-        // The size of the cache can be defined in Bytes.
-        httpCache(20 * 1024 * 1024  /* 10 MiB */)
-
-    }
-
-    // more functionality available.
-}
 

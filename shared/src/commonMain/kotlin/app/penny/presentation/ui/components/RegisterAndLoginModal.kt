@@ -43,6 +43,8 @@ import app.penny.core.domain.exception.RegisterException
 import app.penny.core.domain.usecase.LoginUseCase
 import app.penny.core.domain.usecase.RegisterUseCase
 import app.penny.di.getKoinInstance
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 
 @Composable
@@ -109,7 +111,11 @@ fun RegisterAndLoginModal(
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text("邮箱") },
+                        label = {
+                            Text(
+                                stringResource(SharedRes.strings.email)
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
@@ -122,7 +128,11 @@ fun RegisterAndLoginModal(
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text("密码") },
+                        label = {
+                            Text(
+                                stringResource(SharedRes.strings.password)
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -144,7 +154,7 @@ fun RegisterAndLoginModal(
                         OutlinedTextField(
                             value = confirmPassword,
                             onValueChange = { confirmPassword = it },
-                            label = { Text("确认密码") },
+                            label = { Text(stringResource(SharedRes.strings.confirm_password)) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -218,14 +228,19 @@ fun RegisterAndLoginModal(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(if (isLoginMode) "登录" else "注册")
+                        Text(
+                            if (isLoginMode)
+                                stringResource(SharedRes.strings.login)
+                            else
+                                stringResource(SharedRes.strings.register)
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Close Button
                     TextButton(onClick = onDismiss) {
-                        Text("关闭")
+                        Text("Close")
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))

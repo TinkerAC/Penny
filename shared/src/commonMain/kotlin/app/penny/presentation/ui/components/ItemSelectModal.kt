@@ -91,7 +91,7 @@ fun CurrencyListItem(
         },
         supportingContent = {
             Text(
-                text = currency.currencyCode,
+                text = currency.code,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

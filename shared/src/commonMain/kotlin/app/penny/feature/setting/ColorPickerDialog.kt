@@ -100,7 +100,7 @@ fun ColorPickerDialog(
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "#${color.toHex()}",
+                        text = color.toHex(),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )

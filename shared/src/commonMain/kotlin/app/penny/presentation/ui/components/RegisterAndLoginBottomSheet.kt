@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import app.penny.feature.profile.ProfileIntent
 import app.penny.feature.profile.ProfileUiState
 import app.penny.feature.profile.ProfileViewModel
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun RegisterAndLoginBottomSheet(
@@ -87,7 +89,7 @@ fun RegisterAndLoginBottomSheet(
             onValueChange = { email ->
                 viewModel.handleIntent(ProfileIntent.InputEmail(email))
             },
-            label = { Text("邮箱") },
+            label = { Text(stringResource(SharedRes.strings.email)) },
             modifier =
             Modifier
                 .fillMaxWidth()
@@ -112,14 +114,21 @@ fun RegisterAndLoginBottomSheet(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("密码") },
+            label = {
+                Text(
+                    stringResource(SharedRes.strings.password)
+                )
+            },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val image =
                     if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
-                val description = if (passwordVisible) "隐藏密码" else "显示密码"
+                val description =
+                    if (passwordVisible) stringResource(SharedRes.strings.hide_password) else stringResource(
+                        SharedRes.strings.show_password
+                    )
 
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(imageVector = image, contentDescription = description)
@@ -136,14 +145,21 @@ fun RegisterAndLoginBottomSheet(
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("确认密码") },
+                label = {
+                    Text(
+                        stringResource(SharedRes.strings.confirm_password)
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     val image =
                         if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
-                    val description = if (confirmPasswordVisible) "隐藏密码" else "显示密码"
+                    val description =
+                        if (confirmPasswordVisible) stringResource(SharedRes.strings.hide_password) else stringResource(
+                            SharedRes.strings.show_password
+                        )
 
                     IconButton(onClick = {
                         confirmPasswordVisible = !confirmPasswordVisible
@@ -183,7 +199,12 @@ fun RegisterAndLoginBottomSheet(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (uiState.value.modalInLoginMode) "登录" else "注册")
+            Text(
+                stringResource(
+                    if (uiState.value.modalInLoginMode) SharedRes.strings.login else SharedRes.strings.register
+                )
+            )
+
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -192,7 +213,7 @@ fun RegisterAndLoginBottomSheet(
         TextButton(onClick = {
             viewModel.handleIntent(ProfileIntent.DismissLoginModal)
         }) {
-            Text("关闭")
+            Text(stringResource(SharedRes.strings.close))
         }
 
         Spacer(modifier = Modifier.height(16.dp))

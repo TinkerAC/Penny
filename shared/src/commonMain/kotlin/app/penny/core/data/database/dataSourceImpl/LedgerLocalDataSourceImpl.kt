@@ -15,7 +15,8 @@ class LedgerLocalDataSourceImpl(
             name = ledgerEntity.name,
             currency_code = ledgerEntity.currency_code,
             cover_name = ledgerEntity.cover_name,
-            description = ledgerEntity.description
+            description = ledgerEntity.description,
+            budget_amount = ledgerEntity.budget_amount,
         )
     }
 
@@ -37,7 +38,8 @@ class LedgerLocalDataSourceImpl(
             currency_code = ledgerEntity.currency_code,
             cover_name = ledgerEntity.cover_name,
             description = ledgerEntity.description,
-            uuid = ledgerEntity.uuid
+            uuid = ledgerEntity.uuid,
+            budget_amount = ledgerEntity.budget_amount,
         )
     }
 
@@ -60,7 +62,8 @@ class LedgerLocalDataSourceImpl(
             name = ledgerEntity.name,
             currency_code = ledgerEntity.currency_code,
             cover_name = ledgerEntity.cover_name,
-            description = ledgerEntity.description
+            description = ledgerEntity.description,
+            budget_amount = ledgerEntity.budget_amount,
         )
     }
 

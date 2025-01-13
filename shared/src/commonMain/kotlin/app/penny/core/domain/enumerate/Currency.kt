@@ -4,8 +4,8 @@ import app.penny.shared.SharedRes
 import dev.icerock.moko.resources.ImageResource
 
 enum class Currency(
-    val currencyCode: String,
-    val currencyName: String,
+    val code: String,
+    val displayName: String,
     val currencySymbol: String,
     val regionFlag: ImageResource
 
@@ -14,6 +14,10 @@ enum class Currency(
     EUR("EUR", "Euro", "€", SharedRes.images.flag_eu),
     JPY("JPY", "Japanese Yen", "¥", SharedRes.images.flag_jp),
     CNY("CNY", "Chinese Yuan", "¥", SharedRes.images.flag_cn),
-    RUB("RUB", "Russian Ruble", "₽", SharedRes.images.flag_ru),
+    RUB("RUB", "Russian Ruble", "₽", SharedRes.images.flag_ru);
 
+    companion object {
+        val supportedCurrencies: List<Currency> = entries
+    }
 }
+

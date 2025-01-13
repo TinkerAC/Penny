@@ -41,6 +41,8 @@ import app.penny.di.getKoinInstance
 import app.penny.presentation.ui.components.PennyLogo
 import app.penny.presentation.ui.components.RegisterAndLoginModal
 import app.penny.presentation.ui.theme.spacing
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -149,7 +151,7 @@ fun OnboardingPage(
                             .padding(end = 8.dp)
                     ) {
                         Text(
-                            text = "上一步",
+                            text = stringResource(SharedRes.strings.previous),
                             style = typography.titleMedium
                         )
                     }
@@ -162,7 +164,7 @@ fun OnboardingPage(
                             .padding(start = 8.dp)
                     ) {
                         Text(
-                            text = if (currentPage == totalPages - 1) "完成" else "下一步",
+                            text = if (currentPage == totalPages - 1) stringResource(SharedRes.strings.done) else stringResource(SharedRes.strings.next),
                             style = typography.titleMedium
                         )
                     }
@@ -281,7 +283,7 @@ fun OnboardingLoginPage(
                         .padding(horizontal = MaterialTheme.spacing.medium)
                 ) {
                     Text(
-                        text = "登录 / 注册",
+                        text = stringResource(SharedRes.strings.loginOrRegister),
                         style = typography.titleMedium
                     )
                 }
@@ -302,7 +304,7 @@ fun OnboardingLoginPage(
                         .padding(horizontal = MaterialTheme.spacing.medium)
                 ) {
                     Text(
-                        text = "跳过",
+                        text = stringResource(SharedRes.strings.skip),
                         style = typography.titleMedium
                     )
                 }

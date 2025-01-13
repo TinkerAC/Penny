@@ -37,9 +37,11 @@ import app.penny.presentation.ui.MainScreen
 import app.penny.presentation.ui.components.CurrencySelectorModal
 import app.penny.presentation.ui.components.PennyLogo
 import app.penny.presentation.ui.theme.spacing
+import app.penny.shared.SharedRes
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -80,8 +82,8 @@ class OnboardingStep4InitLedger : OnboardingStepScreen {
         }
 
         OnboardingInitLedgerPage(
-            title = "初始化您的账本",
-            content = "请为您的账本设置名称和封面，完成后将开始使用Penny管理您的财务！",
+            title = stringResource(SharedRes.strings.set_up_your_ledger),
+            content = stringResource(SharedRes.strings.set_up_your_ledger_description),
             uiState = uiState,
             onIntent = { intent -> viewModel.handleIntent(intent) },
             viewModel = viewModel
@@ -122,9 +124,9 @@ fun OnboardingInitLedgerPage(
 
             Text(
                 text = title,
-                style = typography.headlineMedium.copy(
+                style = typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.9f)
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)

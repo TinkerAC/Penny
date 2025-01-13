@@ -59,7 +59,9 @@ kotlin {
                 // 公共依赖项
                 implementation(libs.uuid)
 
+
                 api(libs.kmpnotifier)
+
                 api(libs.resources.compose) // 如果使用 Compose Multiplatform
                 implementation(libs.material.kolor)
                 implementation(libs.colorpicker.compose)
@@ -149,6 +151,7 @@ kotlin {
 
         val iosMain by getting {
             dependencies {
+
                 implementation(libs.native.driver)
                 implementation(libs.ktor.client.darwin)
             }

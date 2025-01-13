@@ -54,13 +54,16 @@ import app.penny.core.network.ApiClient
 import app.penny.core.network.clients.AiApiClient
 import app.penny.core.network.clients.AuthApiClient
 import app.penny.core.network.clients.SyncApiClient
+import app.penny.core.network.clients.ThirdPartyApiClient
 import app.penny.core.network.clients.UserApiClient
 import app.penny.database.PennyDatabase
 import app.penny.feature.aiChat.AIChatViewModel
 import app.penny.feature.analytics.AnalyticViewModel
+import app.penny.feature.currencyConvater.CurrencyConverterViewModel
 import app.penny.feature.dashBoard.DashboardViewModel
 import app.penny.feature.debugBoard.DebugViewModel
 import app.penny.feature.ledgerDetail.LedgerDetailViewModel
+import app.penny.feature.loanCalculator.LoanCalculatorViewModel
 import app.penny.feature.myLedger.MyLedgerViewModel
 import app.penny.feature.newLedger.NewLedgerViewModel
 import app.penny.feature.newTransaction.NewTransactionViewModel
@@ -117,7 +120,8 @@ fun commonModule() = module {
     single { AuthApiClient(get()) }
     single { UserApiClient(get(), get()) }
     single { SyncApiClient(get(), get()) }
-    single { AiApiClient(get(), get(),get()) }
+    single { AiApiClient(get(), get(), get()) }
+    single { ThirdPartyApiClient(get(), get()) }
 
 
 
@@ -179,7 +183,7 @@ fun commonModule() = module {
     }
 
 
-    single { ApiClient(get(), get(), get(), get()) }
+    single { ApiClient(get(), get(), get(), get(), get()) }
 
     // 提供 UseCase
     factory { GetAllLedgerUseCase(get()) }
@@ -213,7 +217,6 @@ fun commonModule() = module {
 
 
     factory { GetSummaryUseCase(get()) }
-
 
 
     // 注入 ViewModel
@@ -262,7 +265,9 @@ fun commonModule() = module {
             get()
         )
     }
+    factory { LoanCalculatorViewModel() }
 
+    factory { CurrencyConverterViewModel(get()) }
 
     factory { (transactionUuid: Uuid) -> TransactionDetailViewModel(transactionUuid, get(), get()) }
 

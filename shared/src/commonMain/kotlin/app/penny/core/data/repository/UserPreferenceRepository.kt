@@ -34,4 +34,9 @@ interface UserPreferenceRepository {
     fun setBudgetReachedNotificationEnabled(enabled: Boolean)
 
 
+
+    fun getAutoCloudSyncEnabled(): Boolean
+    fun setAutoCloudSyncEnabled(enabled: Boolean)
+
+
 }

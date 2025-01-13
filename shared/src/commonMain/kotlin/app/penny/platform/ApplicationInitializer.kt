@@ -3,6 +3,8 @@ package app.penny.platform
 import app.penny.core.data.kvstore.TokenManager
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.data.repository.UserPreferenceRepository
+import app.penny.core.domain.usecase.SyncDataUseCase
 import app.penny.di.getKoinInstance
 import co.touchlab.kermit.Logger
 
@@ -28,6 +30,7 @@ fun ApplicationInitializer.initSession(
     val userDataRepository = getKoinInstance<UserDataRepository>()
     val tokenManager = getKoinInstance<TokenManager>()
     val authRepository = getKoinInstance<AuthRepository>()
+    val userPreferenceRepository = getKoinInstance<UserPreferenceRepository>()
 
     CoroutineScope(Dispatchers.Default).launch {
         val isFirstTime = userDataRepository.getIsFirstTime()
@@ -41,6 +44,16 @@ fun ApplicationInitializer.initSession(
         Logger.i { "Initializing session..." }
         try {
             val accessToken = tokenManager.getAccessToken()
+
+            val autoCloudSyncEnabled = userPreferenceRepository.getAutoCloudSyncEnabled()
+
+            if (autoCloudSyncEnabled) {
+                val syncDateUseCase = getKoinInstance<SyncDataUseCase>()
+                syncDateUseCase()
+            }
+
+
+
             Logger.i { "Access token loaded successfully: $accessToken" }
         } catch (e: IllegalStateException) {
             Logger.w(e) { "Failed to get access token" }

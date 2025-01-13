@@ -160,7 +160,7 @@ fun LedgerItem(
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(
-                text = ledger.currency.currencyCode,
+                text = ledger.currency.code,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

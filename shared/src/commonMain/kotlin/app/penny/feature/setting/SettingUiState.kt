@@ -18,5 +18,8 @@ data class SettingUiState(
     val language: Language = Language.entries.first(),
     val languages: List<Language> = Language.entries,
 
-    val showColorPicker: Boolean = false
+    val showColorPicker: Boolean = false,
+
+
+    val autoCloudSyncEnabled: Boolean = false,
 )

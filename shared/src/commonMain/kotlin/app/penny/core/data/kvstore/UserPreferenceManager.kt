@@ -30,6 +30,7 @@ class UserPreferenceManager(
         const val NOTIFICATION_ENABLED = "notification_enabled"
         const val SCHEDULED_NOTIFICATION_ENABLED = "scheduled_notification_enabled"
         const val BUDGET_REACHED_NOTIFICATION_ENABLED = "budget_reached_notification_enabled"
+        const val AUTO_CLOUD_SYNC_ENABLED = "auto_cloud_sync_enabled"
 
     }
 

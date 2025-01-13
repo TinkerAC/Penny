@@ -378,12 +378,72 @@
     <string name="notification_budget_reached_help">Budget Reached Notification Help</string>
 
 
-
-
     <string name="tool_data_export">Data Export</string>
     <string name="tool_exchange_rate_conversion">Exchange Rate Conversion</string>
-    <string name="tool_debt_calculator">Debt Calculator</string>
+    <string name="tool_loan_calculator">Loan Calculator</string>
 
     <string name="pick_a_color">Pick a color</string>
+
+    <string name="set_up_your_ledger">Set up your ledger</string>
+    <string name="set_up_your_ledger_description">Enter your ledger's basic info to start managing
+        your finances with Penny!
+    </string>
+
+    <string name="ledger_cover">Ledger Cover</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="create_ledger">Create Ledger</string>
+    <string name="loginOrRegister">Login/Register</string>
+    <string name="skip">Skip</string>
+    <string name="previous">Previous</string>
+    <string name="done">Done</string>
+    <string name="ledger_name_cannot_be_empty">Ledger name cannot be empty</string>
+    <string name="failed_to_create_ledger">Failed to create ledger</string>
+    <string name="ledger_created_successfully">Ledger created successfully</string>
+
+    <string name="monday_short">Mon</string>
+    <string name="tuesday_short">Tue</string>
+    <string name="wednesday_short">Wed</string>
+    <string name="thursday_short">Thu</string>
+    <string name="friday_short">Fri</string>
+    <string name="saturday_short">Sat</string>
+    <string name="sunday_short">Sun</string>
+    <string name="previous_month">Previous Month</string>
+    <string name="next_month">Next Month</string>
+    <string name="category_pie_chart">Category Pie Chart</string>
+
+    <string name="close">Close</string>
+
+    <string name="show_password">Show Password</string>
+    <string name="hide_password">Hide Password</string>
+
+    <string name="currency_usd">US Dollar</string>
+    <string name="currency_eur">Euro</string>
+    <string name="currency_jpy">Japanese Yen</string>
+    <string name="currency_cny">Chinese Yuan</string>
+    <string name="currency_rub">Russian Ruble</string>
+    <string name="currency_krw">South Korean Won</string>
+    <string name="currency_gbp">British Pound</string>
+    <string name="currency_aud">Australian Dollar</string>
+    <string name="currency_cad">Canadian Dollar</string>
+    <string name="currency_chf">Swiss Franc</string>
+    <string name="currency_hkd">Hong Kong Dollar</string>
+    <string name="currency_sek">Swedish Krona</string>
+    <string name="currency_nzd">New Zealand Dollar</string>
+    <string name="currency_converter">Currency Converter</string>
+    <string name="from_currency">From Currency</string>
+    <string name="to_currency">To Currency</string>
+    <string name="today_exchange_rate">Today's Exchange Rate</string>
+    <string name="calculate">Calculate</string>
+    <string name="error">Error</string>
+    <string name="annual_interest_rate">Annual Interest Rate</string>
+    <string name="loan_term_years">Loan Term (Year)</string>
+    <string name="repayment_method">Repayment Method</string>
+    <string name="loan_amount">Loan Amount</string>
+    <string name="data">Data</string>
+    <string name="data_setting_description">Keep your data safe</string>
+    <string name="auto_cloud_sync">Auto Cloud Sync</string>
+    <string name="equal_principal_and_interest">Equal Principal and Interest</string>
+    <string name="equal_principal">Equal Installment</string>
+
 
 </resources>
