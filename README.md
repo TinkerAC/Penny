@@ -1,10 +1,11 @@
-<div style="text-align: center;">
+<div align="center">
     <img src="images/icon_round_corner.png" alt="logo" width="120" height="120">
     <h2>Penny</h2>
 </div>
 
 ---
-<div style="text-align: center;">
+
+<div align="center">
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.0.20-blueviolet)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -47,20 +48,30 @@ helps you track expenses, analyze spending patterns, and make smarter financial 
 
 ### Dashboard
 
-<img src="screenshot/dashboard_purple.png" alt="Dashboard" width="200" height="365"/>
-<img src="screenshot/dashboard_green.png" alt="Dashboard" width="200" height="365"/>
-<img src="screenshot/dashboard_terracotta.png" alt="Dashboard" width="200" height="365"/>
+<table>
+  <tr>
+    <td><img src="screenshot/dashboard_purple.png" alt="Dashboard Purple" width="200" height="365"/></td>
+    <td><img src="screenshot/dashboard_green.png" alt="Dashboard Green" width="200" height="365"/></td>
+    <td><img src="screenshot/dashboard_terracotta.png" alt="Dashboard Terracotta" width="200" height="365"/></td>
+  </tr>
+</table>
 
 ### Analytics
 
-<img src="screenshot/analytic_1.png" alt="Analysis" width="200" height="365"/>
-<img src="screenshot/analytic_2.png" alt="Analysis" width="200" height="365"/>
+<table>
+  <tr>
+    <td><img src="screenshot/analytic_1.png" alt="Analytics 1" width="200" height="365"/></td>
+    <td><img src="screenshot/analytic_2.png" alt="Analytics 2" width="200" height="365"/></td>
+  </tr>
+</table>
 
 ### Profile
 
 <img src="screenshot/profile_screen.png" alt="Profile" width="200" height="365"/>
 
 ### And More...
+
+## Getting Started
 
 ## Getting Started
 
@@ -178,8 +189,8 @@ Run the `Penny Desktop` configuration at "Run Configurations"
 </details>
 
 #### Using Pre-built Application
-Go to the release page and download the latest version of the application for your platform.
 
+Go to the release page and download the latest version of the application for your platform.
 
 ## To Try Key Features
 
