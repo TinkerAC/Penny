@@ -8,7 +8,9 @@
 <div align="center">
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.0.20-blueviolet)
-![License](https://img.shields.io/badge/License-MIT-green)
+![License](https://img.shields.io/badge/License-Apache%202.0-blue)
+![Platform](https://img.shields.io/badge/Platform-Desktop%20%7C%20Android%20%7C%20iOS-lightgrey)
+![Version](https://img.shields.io/badge/Version-1.0.0-green)
 
 </div>
 A modern, AI-powered financial management application built for the next generation of users. Penny
@@ -67,11 +69,16 @@ helps you track expenses, analyze spending patterns, and make smarter financial 
 
 ### Profile
 
-<img src="screenshot/profile_screen.png" alt="Profile" width="200" height="365"/>
+<table>
+<tr>
+<td><img src="screenshot/profile_screen.png" alt="Profile" width="200" height="365"/></td>
+<td><img src="screenshot/setting_screen.png" alt="Setting" width="200" height="365"/></td>
+</tr>
+</table>
 
-### And More...
+### Multiplatform
 
-## Getting Started
+[![Multiplatform](screenshot/multiplatform.png)](screenshot/multiplatform.png)
 
 ## Getting Started
 
@@ -94,6 +101,8 @@ helps you track expenses, analyze spending patterns, and make smarter financial 
 
 Penny is a full-stack project. For a complete experience, you'll need to set up both the server and
 client applications.
+
+The instructions below are for setting up a test environment at your **local network**.
 
 ### Cloning the Repository first
 
@@ -149,6 +158,10 @@ environments.
 ### Client Application Setup
 
 #### Building the Application from Source
+
+1. getting your running server IP address and port(such as "http://192.168.1.2:8080")
+2. Navigate to the `shared/src/commonMain/kotlin/app/penny/config/Config.kt` file
+3. Modify the `DEFAULT_URL` constant to your server address
 
 <details>
 <summary> 🖥️ Desktop Application</summary>

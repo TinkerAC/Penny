@@ -76,15 +76,13 @@ class ProfileScreen : Screen {
             viewModel.eventFlow.collect() { event ->
                 if (event) {
                     localNavigator.push(
-                        NewLedgerScreen()
+                        NewLedgerScreen(
+                            asDefault = true
+                        )
                     )
                 }
             }
         }
-
-
-
-
 
 
         if (uiState.value.loggingModalVisible) {

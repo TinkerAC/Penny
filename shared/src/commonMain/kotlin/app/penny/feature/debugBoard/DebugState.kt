@@ -20,4 +20,5 @@ data class DebugState(
     val settingStorePath: Path? = null,
     val accessToken: String? = null,
     val refreshToken: String? = null,
+    val debugUrl : String? = null,
 )

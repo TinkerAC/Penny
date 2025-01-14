@@ -35,5 +35,8 @@ interface UserDataRepository {
     suspend fun getIsFirstTime(): Boolean
     suspend fun setIsFirstTime(isFirstTime: Boolean)
 
+    suspend fun clearLoginUserData()
+
+
 
 }

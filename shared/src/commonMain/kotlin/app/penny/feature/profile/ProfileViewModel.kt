@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class ProfileViewModel(
@@ -88,10 +89,6 @@ class ProfileViewModel(
         }
 
         screenModelScope.launch {
-
-            val isEmailRegistered = checkEmailAvailability(email)
-
-            val localUser = userRepository.findByEmailIsNull()
             val errorMessage: String? = null
 
             _uiState.value = _uiState.value.copy(errorMessage = errorMessage)
@@ -123,6 +120,7 @@ class ProfileViewModel(
                     isLoggedIn = true
                 )
                 fetchProfileStatistics()
+
                 //check if user has any ledger ,if not create one
                 val user = userDataRepository.getUser()
                 val ledger = ledgerRepository.findByUserUuid(user.uuid)
@@ -143,11 +141,9 @@ class ProfileViewModel(
 
             try {
 
-                val isEmailRegistered = checkEmailAvailability(email)
-                val localUser = userRepository.findByEmailIsNull()
 
                 val registerResponse =
-                    registerUseCase(email, password, confirmPassword, localUser?.uuid.toString())
+                    registerUseCase(email, password, confirmPassword, Uuid.random().toString())
                 if (registerResponse.success) {
                     // 注册成功
                     _uiState.value = _uiState.value.copy(
@@ -205,7 +201,7 @@ class ProfileViewModel(
             ledgerCount = ledgerRepository.countByUser(user),
             totalTransactionCount = statisticRepository.getTotalTransactionCountByUser(user),
             isLoading = false,
-            userAvatarUrl = user.email?.let { generateGravatarUrl("2058666094@qq.com") }
+            userAvatarUrl = user.email?.let { generateGravatarUrl(it) } ?: ""
         )
     }
 }

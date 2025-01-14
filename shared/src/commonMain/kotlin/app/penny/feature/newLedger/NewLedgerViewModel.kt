@@ -78,6 +78,12 @@ class NewLedgerViewModel(
                     description = ""
                 )
                 ledgerRepository.insert(newLedger)
+
+                if (ledgerRepository.countByUser(userDataRepository.getUser()).toInt() == 1) {
+                    userDataRepository.setDefaultLedger(newLedger)
+                }
+
+
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 _eventFlow.emit(
                     NewLedgerUiEvent.ShowSnackBar(

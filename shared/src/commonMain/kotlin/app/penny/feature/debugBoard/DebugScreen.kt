@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.penny.config.Config
 import app.penny.feature.myLedger.MyLedgerScreen
 import app.penny.feature.newTransaction.NewTransactionScreen
 import app.penny.presentation.ui.components.DisplayColorScheme
@@ -63,6 +64,27 @@ class DebugScreen : Screen {
             LazyColumn(
                 modifier = Modifier.padding(innerPadding)
             ) {
+
+
+                item {
+                    var debugUrl by remember { mutableStateOf(Config.DEBUG_URL) }
+
+                    Text("Debug Url, All requests will be sent to this url temporarily if set, leave it empty to use the default url")
+                    Text("Default is http://localhost:8080 ,could be replaced with the local ip address your server is running on")
+                    TextField(
+                        value = debugUrl,
+                        onValueChange = {
+                            debugUrl = it
+                            Config.DEBUG_URL = it // 同步到 Config
+                        },
+                        placeholder = { Text("e.g. http://192.168.1.2:8080 ") },
+                        modifier = Modifier
+                            .height(56.dp)
+                            .padding(top = 4.dp),
+                        colors = TextFieldDefaults.colors()
+                    )
+                }
+
                 /**
                  * 1. 交易相关 (Transaction Section)
                  */
@@ -118,7 +140,8 @@ class DebugScreen : Screen {
                         lastSyncedAt = uiState.value.lastSyncedAt?.toString() ?: "Never",
                         activeUser = uiState.value.activeUser?.toString() ?: "No Active User",
                         message = uiState.value.message ?: "",
-                        defaultLedger = uiState.value.defaultLedger?.toString() ?: "No Default Ledger",
+                        defaultLedger = uiState.value.defaultLedger?.toString()
+                            ?: "No Default Ledger",
                         databasePath = uiState.value.databasePath?.toString() ?: "Unknown",
                         settingStorePath = uiState.value.settingStorePath?.toString() ?: "Unknown",
                         accessToken = uiState.value.accessToken ?: "Unknown",

@@ -61,6 +61,9 @@ class LoginUseCase(
     private suspend fun handleSuccessfulLogin(response: LoginResponse) {
 
 
+        //clear logged in user
+        userDataRepository.clearLoginUserData()
+
         // sync data
         val accessToken = response.accessToken!!
         val refreshToken = response.refreshToken!!

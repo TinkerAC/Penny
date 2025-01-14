@@ -95,4 +95,10 @@ class UserDataRepositoryImpl(
     override suspend fun setIsFirstTime(isFirstTime: Boolean) {
         userDataManager.putBoolean(UserDataManager.IS_FIRST_TIME, isFirstTime)
     }
+
+    override suspend fun clearLoginUserData() {
+        userDataManager.remove(UserDataManager.USER_UUID)
+        userDataManager.remove(UserDataManager.USER_NAME)
+        userDataManager.remove(UserDataManager.USER_EMAIL)
+    }
 }

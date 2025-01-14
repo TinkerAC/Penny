@@ -27,11 +27,11 @@ kotlin {
 
 
     jvm {
-        compilations.all {
-            kotlinOptions {
-                freeCompilerArgs += listOf("-Xdisable-optimizations")
-            }
-        }
+//        compilations.all {
+//            kotlinOptions {
+//                freeCompilerArgs += listOf("-Xdisable-optimizations")
+//            }
+//        }
     }
 
 

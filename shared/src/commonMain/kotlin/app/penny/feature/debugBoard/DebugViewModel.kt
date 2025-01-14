@@ -1,6 +1,7 @@
 // file: /Users/tinker/StudioProjects/Penny/shared/src/commonMain/kotlin/app/penny/feature/debugBoard/DebugViewModel.kt
 package app.penny.feature.debugBoard
 
+import app.penny.config.Config
 import app.penny.core.data.repository.AuthRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
@@ -95,7 +96,8 @@ class DebugViewModel(
                 lastSyncedAt = lastSyncedAt,
                 activeUser = user,
                 defaultLedger = defaultLedger,
-                accessToken = accessToken
+                accessToken = accessToken,
+                debugUrl = Config.DEBUG_URL
             )
 
             // 构造本地数据库路径，仅作为示例

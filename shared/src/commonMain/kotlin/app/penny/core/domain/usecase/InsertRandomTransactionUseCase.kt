@@ -2,6 +2,7 @@ package app.penny.core.domain.usecase
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
+import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.enumerate.Category
 import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.TransactionModel
@@ -17,14 +18,17 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 class InsertRandomTransactionUseCase(
     private val ledgerRepository: LedgerRepository,
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val userDataRepository: UserDataRepository
 ) {
 
     suspend operator fun invoke(
         count: Int,
         recentDays: Int
     ) {
-        val ledgers = ledgerRepository.findAll()
+        val ledgers = ledgerRepository.findByUserUuid(
+            userUuid = userDataRepository.getUser().uuid
+        )
         val random = Random.Default
         val transactionTypes = TransactionType.entries.toTypedArray()
         val currentTime = Clock.System.now().epochSeconds
@@ -66,6 +70,8 @@ class InsertRandomTransactionUseCase(
                     currency = ledger.currency
                 )
             )
+
+//            println("inserting transaction $it")
         }
 
 

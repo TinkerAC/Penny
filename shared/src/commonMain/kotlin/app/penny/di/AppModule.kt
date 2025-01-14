@@ -187,7 +187,7 @@ fun commonModule() = module {
 
     // 提供 UseCase
     factory { GetAllLedgerUseCase(get()) }
-    factory { InsertRandomTransactionUseCase(get(), get()) }
+    factory { InsertRandomTransactionUseCase(get(), get(),get()) }
     factory { InitLocalUserUseCase(get(), get()) }
     factory { SearchTransactionsUseCase(get()) }
     factory { LoginUseCase(get(), get(), get(), get(), get()) }
