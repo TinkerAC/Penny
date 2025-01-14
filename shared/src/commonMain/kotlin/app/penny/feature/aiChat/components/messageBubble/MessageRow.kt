@@ -1,14 +1,16 @@
 // MessageBubble.kt
 package app.penny.feature.aiChat.components.messageBubble
 
-import ModernSystemMessageBubble
+import SystemMessageBubble
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.ChatMessage
@@ -21,7 +23,7 @@ import app.penny.servershared.dto.BaseEntityDto
 
 @Composable
 fun MessageRow(
-    userAvatarUrl: String?,
+    userAvatarUrl: String,
     message: ChatMessage,
     onActionConfirm: (SystemMessage, BaseEntityDto?) -> Unit,
     onActionDismiss: (SystemMessage) -> Unit
@@ -32,17 +34,19 @@ fun MessageRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.Top // 改为顶部对齐
             ) {
-
-                SystemAvatar()
+                SystemAvatar(
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
                 Spacer(modifier = Modifier.width(8.dp))
-                ModernSystemMessageBubble(
+                SystemMessageBubble(
+                    modifier = Modifier.offset(y = 8.dp), // 根据需要调整偏移量
                     message = message as SystemMessage,
                     onActionConfirm = onActionConfirm,
                     onActionDismiss = onActionDismiss
                 )
-
             }
         }
 
@@ -51,12 +55,17 @@ fun MessageRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Top // 改为顶部对齐
             ) {
-                UserMessageBubble(message = message)
+                UserMessageBubble(
+                    modifier = Modifier.offset(y = 8.dp), // 根据需要调整偏移量
+                    message = message
+                )
                 Spacer(modifier = Modifier.width(8.dp))
                 UserAvatar(
-                    imageUrl = userAvatarUrl ?: ""
+                    imageUrl = userAvatarUrl,
+                    modifier = Modifier.align(Alignment.CenterVertically)
                 )
             }
         }

@@ -1,15 +1,17 @@
-// file: shared/src/commonMain/kotlin/app/penny/feature/newTransaction/NewTransactionViewModel.kt
 // file: composeApp/src/commonMain/kotlin/app/penny/presentation/ui/screens/newTransaction/NewTransactionViewModel.kt
 package app.penny.feature.newTransaction
+
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
+import app.penny.core.data.repository.UserPreferenceRepository
 import app.penny.core.domain.enumerate.Category
 import app.penny.core.domain.enumerate.Currency
 import app.penny.core.domain.enumerate.TransactionType
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.TransactionModel
+import app.penny.core.domain.usecase.SyncDataUseCase
 import app.penny.feature.newTransaction.component.DoneButtonState
 import app.penny.feature.newTransaction.component.NumPadButton
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlin.uuid.ExperimentalUuidApi
@@ -31,7 +34,9 @@ import kotlin.uuid.ExperimentalUuidApi
 class NewTransactionViewModel(
     private val transactionRepository: TransactionRepository,
     private val ledgerRepository: LedgerRepository,
-    private val userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository,
+    private val userPreferenceRepository: UserPreferenceRepository,
+    private val syncDataUseCase: SyncDataUseCase
 ) : ScreenModel {
 
     private val _uiState = MutableStateFlow(
@@ -39,10 +44,12 @@ class NewTransactionViewModel(
     )
     val uiState: StateFlow<NewTransactionUiState> = _uiState.asStateFlow()
 
+
     private val _eventFlow = MutableSharedFlow<NewTransactionUiEvent>(
         replay = 0
     )
     val eventFlow = _eventFlow.asSharedFlow()
+
 
     private val decimalMode =
         DecimalMode(20, roundingMode = RoundingMode.ROUND_HALF_CEILING, scale = 2)
@@ -63,10 +70,12 @@ class NewTransactionViewModel(
         }
     }
 
+    private var autoCloudSync: Boolean = false
+
 
     init {
-
         refreshData()
+        autoCloudSync = userPreferenceRepository.getAutoCloudSyncEnabled()
 
     }
 
@@ -176,7 +185,7 @@ class NewTransactionViewModel(
             is NumPadButton.Decimal -> handleDecimal()
             is NumPadButton.Backspace -> handleBackspace()
             is NumPadButton.Operator -> handleOperator(numPadButton)
-            is NumPadButton.Function.AddAnotherTransaction -> handleAddAnotherTransaction()
+            is NumPadButton.Function.AddAnotherTransaction -> {}
             else -> Unit
         }
         updateDoneButtonState()
@@ -197,10 +206,28 @@ class NewTransactionViewModel(
                     _uiState.value = _uiState.value.copy(transactionCompleted = true)
                     screenModelScope.launch {
                         // Show snackbar
-                        _eventFlow.emit(NewTransactionUiEvent.ShowSnackBar("Transaction completed"))
+                        _eventFlow.emit(
+                            NewTransactionUiEvent.ShowSnackBar(
+                                "Transaction completed",
+                                pop = true
+                            )
+                        )
                         // hide num pad
                         _uiState.value = _uiState.value.copy(showNumPad = false)
+
+                        try {
+                            if (autoCloudSync) {
+                                syncDataUseCase()
+                            }
+                        } catch (e: Exception) {
+                            Logger.d("Failed to sync transaction: ${e.message}")
+                        }
+
                         _eventFlow.emit(NewTransactionUiEvent.NavigateBack)
+
+
+
+
                     }
                 }
             }
@@ -209,6 +236,7 @@ class NewTransactionViewModel(
                 calculate()
                 _uiState.value = _uiState.value.copy(doneButtonState = DoneButtonState.COMPLETE)
             }
+
         }
         updateDoneButtonState()
     }
@@ -306,7 +334,22 @@ class NewTransactionViewModel(
     }
 
     private fun handleAddAnotherTransaction() {
-        _uiState.value = NewTransactionUiState()
+        try {
+            calculate()
+            onDoneButtonClicked()
+            _uiState.update {
+                it.copy(
+                    operand1 = "0.00",
+                    operator = "",
+                    operand2 = "",
+                    amountText = "0.00",
+                    remarkText = "",
+                    doneButtonState = DoneButtonState.CANCEL
+                )
+            }
+        } catch (e: Exception) {
+            Logger.d("Failed to add ,${e.message}")
+        }
     }
 
     private fun validateTransaction(): Boolean {
@@ -333,7 +376,7 @@ class NewTransactionViewModel(
         }
         if (!result) {
             screenModelScope.launch {
-                _eventFlow.emit(NewTransactionUiEvent.ShowSnackBar(errorMessage))
+                _eventFlow.emit(NewTransactionUiEvent.ShowSnackBar(errorMessage, pop = false))
             }
         }
         return result
@@ -401,7 +444,7 @@ class NewTransactionViewModel(
         val isInitialState =
             (operand1 == "0.00" || operand1.isEmpty()) && operator.isEmpty() && operand2.isEmpty()
         val hasOperatorAndOperand2 = operator.isNotEmpty() && operand2.isNotEmpty()
-        val hasError = operand1 == "错误"
+        val hasError = operand1 == "Error"
 
         val newState = when {
             isInitialState || hasError -> DoneButtonState.CANCEL

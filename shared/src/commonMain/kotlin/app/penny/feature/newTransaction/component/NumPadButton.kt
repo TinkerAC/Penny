@@ -14,7 +14,7 @@ sealed class NumPadButton(
     // functional buttons
     sealed class Function(text: String) : NumPadButton(text) {
         data object Done : Function("Done")
-        data object AddAnotherTransaction : Function("Add Another")
+        data object AddAnotherTransaction : Function("")
     }
 
     // other buttons

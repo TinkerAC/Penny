@@ -2,6 +2,7 @@ package app.penny.core.domain.usecase
 
 import app.penny.core.data.enumerate.toUserModel
 import app.penny.core.data.repository.AuthRepository
+import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserRepository
 import app.penny.core.domain.exception.LoginException
@@ -9,12 +10,14 @@ import app.penny.servershared.dto.responseDto.LoginResponse
 import co.touchlab.kermit.Logger
 import kotlinx.io.IOException
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class LoginUseCase(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     private val userDataRepository: UserDataRepository,
-    private val syncDataUseCase: SyncDataUseCase
+    private val syncDataUseCase: SyncDataUseCase,
+    private val ledgerRepository: LedgerRepository,
 ) {
     @OptIn(ExperimentalUuidApi::class)
     suspend operator fun invoke(
@@ -37,10 +40,6 @@ class LoginUseCase(
                 throw LoginException.InvalidCredentialsException
             }
 
-            // sync data
-
-            syncDataUseCase()
-
 
             return response
         } catch (e: IOException) {
@@ -59,6 +58,9 @@ class LoginUseCase(
 
     @OptIn(ExperimentalUuidApi::class)
     private suspend fun handleSuccessfulLogin(response: LoginResponse) {
+
+
+        // sync data
         val accessToken = response.accessToken!!
         val refreshToken = response.refreshToken!!
         Logger.d(response.toString())
@@ -67,9 +69,22 @@ class LoginUseCase(
         authRepository.saveAccessToken(accessToken)
         authRepository.saveRefreshToken(refreshToken)
 
+
+        syncDataUseCase()
+
+
+        //set user data
+
+        userDataRepository.setUser(response.userDto!!.toUserModel())
+        userDataRepository.setUserEmail(response.userDto.email)
+        response.userDto.username?.let { userDataRepository.setUserName(it) }
+        val ledgers = ledgerRepository.findByUserUuid(Uuid.parse(response.userDto.uuid))
+        ledgers.firstOrNull()?.let { userDataRepository.setDefaultLedger(it) }
+
+
         // Create or update local user
         try {
-            val userDto = response.userDto!!
+            val userDto = response.userDto
             val userModel = userDto.toUserModel()
 
             // upsert user

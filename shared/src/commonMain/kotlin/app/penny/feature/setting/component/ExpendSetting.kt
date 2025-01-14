@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.penny.presentation.ui.theme.AppTheme
@@ -37,6 +38,7 @@ import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun <T> ExpendSetting(
+    settingIcon: ImageVector? = null,
     settingName: String,
     currentValue: T,
     options: List<T>,
@@ -60,15 +62,31 @@ fun <T> ExpendSetting(
                 )
                 .padding(12.dp)
                 .clickable { expanded = !expanded },
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = settingName,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.weight(1f)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                settingIcon?.let {
+                    // 左侧图标
+                    Icon(
+                        imageVector = settingIcon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f),
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                }
+                Text(
+                    text = settingName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 折叠状态时显示较小的OptionContent
@@ -151,7 +169,6 @@ fun ThemeColorOptionContent(
                     appTheme.primaryColor,
                     shape = RoundedCornerShape(4.dp)
                 )
-
         )
 
         Spacer(modifier = Modifier.height(4.dp))

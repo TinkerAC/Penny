@@ -2,6 +2,7 @@ package app.penny.feature.aiChat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,11 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,7 +51,6 @@ import dev.icerock.moko.resources.compose.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 
 class AIChatScreen : Screen {
-
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
@@ -68,8 +70,6 @@ class AIChatScreen : Screen {
                 }) {
                     Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
                 }
-            }, actions = {
-                // Placeholder for any future actions
             },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceContainer
@@ -79,6 +79,7 @@ class AIChatScreen : Screen {
             ChatInputBar(
                 inputMode = uiState.inputMode,
                 inputText = uiState.inputText,
+                isRecording = uiState.isRecording,
                 onModeToggle = {
                     viewModel.handleIntent(AIChatIntent.ToggleInputMode)
                 },
@@ -88,7 +89,9 @@ class AIChatScreen : Screen {
                 onStartRecord = {
                     viewModel.handleIntent(AIChatIntent.StartRecord)
                 },
-                onStopRecord = {},
+                onStopRecord = {
+
+                },
             )
         }) { paddingValues ->
             Box(
@@ -111,6 +114,7 @@ class AIChatScreen : Screen {
                         ) {
                             items(uiState.messages.reversed()) { message ->
                                 MessageRow(
+                                    userAvatarUrl = uiState.userAvatarUrl,
                                     message = message,
                                     onActionConfirm = { msg, baseEntityDto ->
                                         viewModel.handleIntent(
@@ -130,7 +134,6 @@ class AIChatScreen : Screen {
                                             )
                                         )
                                     },
-                                    userAvatarUrl = uiState.userAvatarUrl
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
@@ -143,17 +146,19 @@ class AIChatScreen : Screen {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color.Gray.copy(alpha = 0.5f))
+                            .background(Color.Gray.copy(alpha = 0.7f))
                             .clickable(enabled = false) { /* 防止点击穿透 */ },
                         contentAlignment = Alignment.BottomCenter
                     ) {
 
                         Row(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
                         ) {
                             Column(
-                                modifier = Modifier.weight(1f)
-                            ) { // 圆形取消按钮
+                                horizontalAlignment = Alignment.CenterHorizontally, // 让按钮和文本居中
+                                modifier = Modifier.padding(16.dp) // 可选：给每个按钮添加间距
+                            ) {
                                 IconButton(
                                     onClick = {
                                         viewModel.handleIntent(AIChatIntent.StopRecordAndDiscard)
@@ -169,11 +174,14 @@ class AIChatScreen : Screen {
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text("点击取消")
+                                Text(stringResource(SharedRes.strings.cancel))
                             }
-                            //confirm button
+
+                            Spacer(modifier = Modifier.width(32.dp)) // 添加按钮之间的间距
+
                             Column(
-                                modifier = Modifier.weight(1f)
+                                horizontalAlignment = Alignment.CenterHorizontally, // 让按钮和文本居中
+                                modifier = Modifier.padding(16.dp)
                             ) {
                                 IconButton(
                                     onClick = {
@@ -184,18 +192,14 @@ class AIChatScreen : Screen {
                                         .background(Color.White, shape = CircleShape)
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Close,
+                                        imageVector = Icons.Default.Check,
                                         contentDescription = "Stop Recording",
                                         tint = Color.Green
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text("点击发送")
-
-
+                                Text(stringResource(SharedRes.strings.send))
                             }
-
-
                         }
 
 

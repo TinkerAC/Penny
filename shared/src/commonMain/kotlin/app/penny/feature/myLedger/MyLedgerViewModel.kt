@@ -1,6 +1,7 @@
 package app.penny.feature.myLedger
 
 import app.penny.core.data.repository.LedgerRepository
+import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.model.LedgerModel
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -10,11 +11,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class MyLedgerViewModel(
     private val ledgerRepository: LedgerRepository,
-    private val userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository,
+    private val transactionRepository: TransactionRepository
 ) : ScreenModel {
 
 
@@ -51,6 +54,14 @@ class MyLedgerViewModel(
                 isLoading = false
             )
         }
+    }
+
+    fun getLedgerCount(ledgerUuid: Uuid): Long {
+        var result: Long = 0
+        screenModelScope.launch {
+            result = transactionRepository.countByLedgerUuid(ledgerUuid)
+        }
+        return result
     }
 
 

@@ -1,3 +1,4 @@
+// file: /Users/tinker/StudioProjects/Penny/shared/src/commonMain/kotlin/app/penny/feature/loanCalculator/LoanCalculatorUiState.kt
 package app.penny.feature.loanCalculator
 
 import app.penny.shared.SharedRes
@@ -15,7 +16,7 @@ data class LoanCalculatorUiState(
 )
 
 enum class RepaymentMethod(
-    displayText: StringResource,
+    val displayText: StringResource,
 ) {
     EqualPrincipalAndInterest(SharedRes.strings.equal_principal_and_interest), // 等额本息
     EqualPrincipal(SharedRes.strings.equal_principal), // 等额本金

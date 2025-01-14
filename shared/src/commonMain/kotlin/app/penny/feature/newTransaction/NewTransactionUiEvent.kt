@@ -2,6 +2,6 @@
 package app.penny.feature.newTransaction
 
 sealed class NewTransactionUiEvent {
-    data class ShowSnackBar(val message: String) : NewTransactionUiEvent()
+    data class ShowSnackBar(val message: String, val pop:Boolean) : NewTransactionUiEvent()
     data object NavigateBack : NewTransactionUiEvent()
 }

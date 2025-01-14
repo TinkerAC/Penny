@@ -22,7 +22,7 @@ class InsertRandomTransactionUseCase(
 
     suspend operator fun invoke(
         count: Int,
-        tier: Int
+        recentDays: Int
     ) {
         val ledgers = ledgerRepository.findAll()
         val random = Random.Default
@@ -31,13 +31,7 @@ class InsertRandomTransactionUseCase(
         val rangeEnd = currentTime
 
         // 根据层级参数设置时间范围
-        val rangeStart = when (tier) {
-            1 -> currentTime - 3600 * 24 // 最近 1 天
-            2 -> currentTime - 3600 * 24 * 7 // 最近 7 天
-            3 -> currentTime - 3600 * 24 * 30 // 最近 30 天
-            4 -> currentTime - 3600 * 24 * 365 // 最近 365 天
-            else -> currentTime - 3600 * 24 * 365 // 默认最近 365 天
-        }
+        val rangeStart = rangeEnd - (recentDays * 24 * 60 * 60)
 
         repeat(count) {
             val amount = BigDecimal.fromDouble(round(random.nextDouble(0.0, 1000.0) * 100) / 100)
@@ -75,7 +69,7 @@ class InsertRandomTransactionUseCase(
         }
 
 
-        Logger.d("Inserted $count random transactions at tier $tier")
+        Logger.d("Inserted $count random transactions at tier $recentDays")
     }
 
 }

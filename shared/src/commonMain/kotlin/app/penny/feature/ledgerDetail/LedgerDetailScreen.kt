@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -40,9 +39,8 @@ import org.koin.core.parameter.parametersOf
 import kotlin.uuid.ExperimentalUuidApi
 
 
-//TODO:refactor LedgerDetailScreen UI
 @OptIn(ExperimentalUuidApi::class)
-class LedgerDetailScreen constructor(
+class LedgerDetailScreen(
     private val ledger: LedgerModel
 ) : Screen {
 
@@ -55,9 +53,7 @@ class LedgerDetailScreen constructor(
         val viewModel = koinScreenModel<LedgerDetailViewModel> {
             parametersOf(ledger)
         }
-
-
-        val uiState by viewModel.uiState.collectAsState()
+        val uiState = viewModel.uiState.collectAsState()
 
         val rootNavigator = LocalNavigator.currentOrThrow
 
@@ -88,13 +84,12 @@ class LedgerDetailScreen constructor(
             },
             content = { innerPadding ->
                 LedgerDetailContent(
-                    uiState = uiState,
+                    uiState = uiState.value,
                     onNameChange = { newName ->
                         viewModel.handleIntent(
                             LedgerDetailIntent.ChangeName(newName)
                         )
                     },
-
                     modifier = Modifier.padding(innerPadding)
                 )
 
@@ -156,11 +151,12 @@ fun LedgerDetailContent(
         LedgerCard(
             ledger = uiState.ledger,
             name = uiState.ledger.name,
-            entryCount = uiState.ledger.count,
+            entryCount = uiState.entryCount,
             onNameChange = onNameChange
         )
 
         BalanceSummarySection(
+            currencySymbol = uiState.ledger.currency.currencySymbol,
             totalIncome = uiState.totalIncome,
             totalExpense = uiState.totalExpense,
             balance = uiState.balance

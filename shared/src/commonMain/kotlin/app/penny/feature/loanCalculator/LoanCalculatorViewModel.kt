@@ -1,5 +1,5 @@
+// file: /Users/tinker/StudioProjects/Penny/shared/src/commonMain/kotlin/app/penny/feature/loanCalculator/LoanCalculatorViewModel.kt
 package app.penny.feature.loanCalculator
-
 
 import app.penny.core.utils.roundToDecimals
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -9,11 +9,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.math.pow
 
-
-class  LoanCalculatorViewModel : ScreenModel {
+class LoanCalculatorViewModel : ScreenModel {
     private val _uiState = MutableStateFlow(LoanCalculatorUiState())
     val uiState: StateFlow<LoanCalculatorUiState> = _uiState.asStateFlow()
-
 
     fun updateLoanAmount(amount: String) {
         _uiState.update { it.copy(loanAmount = amount) }
@@ -40,9 +38,9 @@ class  LoanCalculatorViewModel : ScreenModel {
     fun calculateLoan() {
         try {
             val amount = _uiState.value.loanAmount.toDoubleOrNull()
-                ?: throw IllegalArgumentException("贷款金额无效")
+                ?: throw IllegalArgumentException("Invalid loan amount")
             val rate = _uiState.value.interestRate.toDoubleOrNull()?.div(100)?.div(12)
-                ?: throw IllegalArgumentException("利率无效")
+                ?: throw IllegalArgumentException("Invalid interest rate")
             val months = _uiState.value.loanYears * 12
 
             when (_uiState.value.repaymentMethod) {
@@ -58,7 +56,6 @@ class  LoanCalculatorViewModel : ScreenModel {
                             errorMessage = null
                         )
                     }
-
                 }
 
                 RepaymentMethod.EqualPrincipal -> {
@@ -69,13 +66,16 @@ class  LoanCalculatorViewModel : ScreenModel {
                     }
                     _uiState.update {
                         it.copy(
-                            monthlyPayment = (monthlyPrincipal + amount * rate).roundToDecimals(2).toString(),
-                            totalInterest = totalInterest.toString(),
-                            totalAmount = (amount + totalInterest).roundToDecimals(2).toString(),
+                            monthlyPayment = (monthlyPrincipal + amount * rate)
+                                .roundToDecimals(2)
+                                .toString(),
+                            totalInterest = totalInterest.roundToDecimals(2).toString(),
+                            totalAmount = (amount + totalInterest)
+                                .roundToDecimals(2)
+                                .toString(),
                             errorMessage = null
                         )
                     }
-
                 }
             }
         } catch (e: Exception) {

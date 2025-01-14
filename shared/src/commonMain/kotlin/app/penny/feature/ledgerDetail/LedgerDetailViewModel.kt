@@ -3,6 +3,7 @@ package app.penny.feature.ledgerDetail
 
 import app.penny.core.data.repository.LedgerRepository
 import app.penny.core.data.repository.StatisticRepository
+import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.domain.exception.LedgerException
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.usecase.DeleteLedgerUseCase
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -22,6 +24,7 @@ class LedgerDetailViewModel(
     private val ledger: LedgerModel,
     private val deleteLedgerUseCase: DeleteLedgerUseCase,
     private val statisticRepository: StatisticRepository,
+    private val transactionRepository: TransactionRepository,
     private val ledgerRepository: LedgerRepository
 ) : ScreenModel {
 
@@ -55,6 +58,7 @@ class LedgerDetailViewModel(
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     private fun loadLedger() {
         screenModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -62,6 +66,9 @@ class LedgerDetailViewModel(
             val summary = statisticRepository.getSummary(
                 listOf(ledger)
             )
+
+            val count = transactionRepository.countByLedgerUuid(ledger.uuid)
+            _uiState.update { it.copy(entryCount = count.toInt()) }
 
 
             try {
@@ -114,4 +121,6 @@ class LedgerDetailViewModel(
 
         }
     }
+
+
 }

@@ -29,14 +29,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import app.penny.core.data.enumerate.MessageType
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun ChatInputBar(
+    isRecording: Boolean = false,
     inputMode: MessageType = MessageType.TEXT,
     inputText: String,
     onSendClicked: (String) -> Unit,
@@ -73,7 +77,7 @@ fun ChatInputBar(
                             onValueChange = {
                                 textFieldValue = it
                             },
-                            placeholder = { Text("Type a message") },
+                            placeholder = { Text(stringResource(SharedRes.strings.type_a_message)) },
                             modifier = Modifier
                                 .padding(8.dp)
                                 .weight(1f)
@@ -86,7 +90,9 @@ fun ChatInputBar(
                                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
                                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                                cursorColor = MaterialTheme.colorScheme.primary
+                                cursorColor = MaterialTheme.colorScheme.primary,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
                             ),
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 imeAction = ImeAction.Send
@@ -118,7 +124,12 @@ fun ChatInputBar(
                                 },
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("点击说话")
+                            Text(
+                                stringResource(
+                                    if (isRecording) SharedRes.strings.recording else SharedRes.strings.tap_to_speak
+                                )
+                            )
+
                         }
                     }
                 }

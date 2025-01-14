@@ -51,7 +51,7 @@ internal fun LedgerCard(
         ) {
             Image(
                 painter = painterResource(ledger.cover.drawable),
-                contentDescription = "账本封面",
+                contentDescription = null,
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(8.dp))
@@ -73,14 +73,18 @@ internal fun LedgerCard(
                 OutlinedTextField(
                     value = name,
                     onValueChange = onNameChange,
-                    label = { Text("名称") },
+                    label = {
+                        Text(
+                            stringResource(SharedRes.strings.ledger_name)
+                        )
+                    },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Text(
-                    text = "已记条目数: $entryCount",
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(SharedRes.strings.entry_count) + ": $entryCount",
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

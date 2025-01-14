@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.penny.presentation.ui.components.FilterChipDropDown
@@ -25,6 +28,7 @@ fun <T> ExposedDropDownSetting(
     enabled: Boolean = true,
     items: List<T>,
     selectedItem: T,
+    settingIcon: ImageVector? = null,
     onItemSelected: (T) -> Unit,
     displayMapper: @Composable (T) -> String // Function to get the display text from T
 ) {
@@ -36,7 +40,6 @@ fun <T> ExposedDropDownSetting(
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(12.dp)
-            // 是否要对大区域也加 clickable 根据需求决定
             .clickable(onClick = { /* 可选：让整个区域点击也展开菜单，或啥都不做 */ })
     ) {
         Row(
@@ -44,14 +47,32 @@ fun <T> ExposedDropDownSetting(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // 左侧标题
-            Text(
-                text = settingName,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                settingIcon?.let {
+                    Icon(
+                        imageVector = settingIcon,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = if (enabled) MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.9f
+                        ) else MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.5f
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                // 左侧标题
+                Text(
+                    text = settingName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+            }
+
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 FilterChipDropDown(

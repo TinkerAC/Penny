@@ -41,20 +41,21 @@ class AIChatViewModel(
 
     private val _uiState = MutableStateFlow(AIChatUiState())
     val uiState: StateFlow<AIChatUiState> = _uiState.asStateFlow()
-    val recorder =
+    private val recorder =
         AudioRecorderFactory.createAudioRecorder(appCacheDirectory("app.penny").toString())
 
     init {
         screenModelScope.launch {
             // 初始化用户 & 默认账本
             val user = userDataRepository.getUser()
+            val email = userDataRepository.getUserEmailOrNull()
             val defaultLedger = userDataRepository.getDefaultLedger()
             _uiState.update {
                 it.copy(
                     user = user,
                     ledgerList = ledgerRepository.findByUserUuid(user.uuid),
                     selectedLedger = defaultLedger,
-                    userAvatarUrl = user.email?.let { it1 -> generateGravatarUrl(it1) }
+                    userAvatarUrl = email?.let { generateGravatarUrl(email) } ?: ""
                 )
             }
             // 立即加载聊天记录

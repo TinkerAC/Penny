@@ -1,14 +1,11 @@
 // ToolBoxScreen.kt
 package app.penny.feature.toolBox
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.CurrencyExchange
-import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -41,12 +38,7 @@ class ToolBoxScreen : Screen {
         // 示例工具列表
         val toolList = listOf(
             Tool(
-                displayName = SharedRes.strings.tool_data_export,
-                icon = Icons.Filled.IosShare,
-
-                ),
-            Tool(
-                displayName = SharedRes.strings.tool_exchange_rate_conversion,
+                displayName = SharedRes.strings.tool_currency_converter,
                 icon = Icons.Filled.CurrencyExchange,
                 screen = CurrencyConverterScreen()
             ),
@@ -65,13 +57,12 @@ class ToolBoxScreen : Screen {
                     })
             },
         ) { innerPadding ->
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.padding(innerPadding).padding(36.dp),
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp),
-                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
+
+            Column(
+                modifier = Modifier.padding(innerPadding).padding(16.dp)
             ) {
-                items(toolList) { tool ->
+
+                toolList.forEach { tool ->
                     ToolCard(
                         toolName = stringResource(tool.displayName), icon = tool.icon, onClick = {
                             tool.screen?.let { screen ->
@@ -81,7 +72,10 @@ class ToolBoxScreen : Screen {
 
                     )
                 }
+
             }
         }
+
     }
 }
+

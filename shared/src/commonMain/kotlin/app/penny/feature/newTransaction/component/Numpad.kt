@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -84,18 +83,6 @@ fun NumPad(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.End
             )
-//            IconButton(
-//                onClick = {
-//                    // TODO: attach file
-//                },
-//                modifier = Modifier.size(48.dp)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.AttachFile,
-//                    contentDescription = "添加附件",
-//                    tint = MaterialTheme.colorScheme.primary
-//                )
-//            }
 
             IconButton(onClick = onCloseClicked) {
                 Icon(
@@ -155,26 +142,36 @@ fun NumPad(
                                     text = doneButtonState.displayText,
                                     onClick = onDoneButtonClicked,
                                     modifier = Modifier
-                                        .weight(1f)
+                                        .weight(2f)
                                         .height(56.dp)
                                 )
                             }
 
                             is NumPadButton.Backspace -> {
-                                IconButton(
+                                ActionButton(
                                     onClick = { onNumPadButtonClicked(button) },
                                     modifier = Modifier
                                         .weight(2f)
                                         .height(56.dp)
-                                        .aspectRatio(1f)
                                 ) {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Default.Backspace,
-                                        contentDescription = "删除",
-                                        tint = MaterialTheme.colorScheme.onSurface
+                                        contentDescription = stringResource(SharedRes.strings.delete),
+                                        tint = MaterialTheme.colorScheme.onPrimary
                                     )
                                 }
                             }
+
+                            is NumPadButton.Function.AddAnotherTransaction -> {
+                                NumPadButtonComponent(
+                                    numPadButton = button,
+                                    onClick = {},
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(56.dp)
+                                )
+                            }
+
 
                             else -> {
                                 NumPadButtonComponent(
@@ -220,9 +217,11 @@ fun NumPadButtonComponent(
 
 @Composable
 fun ActionButton(
-    text: String,
+    text: String? = null,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit = {}
+
 ) {
     Button(
         onClick = onClick,
@@ -233,12 +232,16 @@ fun ActionButton(
         ),
         modifier = modifier
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
-            maxLines = 1
-        )
+        text?.let {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1
+            )
+        }
+        content()
+
     }
 }

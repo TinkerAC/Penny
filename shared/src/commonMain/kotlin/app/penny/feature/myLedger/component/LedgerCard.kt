@@ -34,13 +34,17 @@ import app.penny.shared.SharedRes
 import cafe.adriel.voyager.navigator.Navigator
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun LedgerCard(
     ledgerModel: LedgerModel,
     rootNavigator: Navigator,
     isDefault: Boolean = false,
-    onSetDefault: (LedgerModel) -> Unit = {}
+    onSetDefault: (LedgerModel) -> Unit = {},
+    onGetLedgerCount: (Uuid) -> Long
 ) {
     // 用于控制下拉菜单的展开/收起
     val (menuExpanded, setMenuExpanded) = androidx.compose.runtime.remember {
@@ -164,15 +168,8 @@ fun LedgerCard(
                     }
                 }
 
-                // 显示余额和条目数量
                 Text(
-                    text = "Balance: ${ledgerModel.balance}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "Entries: ${ledgerModel.count}",
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = "Entries: ${onGetLedgerCount(ledgerModel.uuid)}",
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

@@ -346,7 +346,8 @@
 
 
     <string name="tool_data_export">数据导出</string>
-    <string name="tool_exchange_rate_conversion">汇率转换</string>
+    <string name="tool_currency_converter">汇率换算器</string>
+
     <string name="tool_loan_calculator">贷款计算器</string>
     <string name="pick_a_color">选择颜色</string>
 
@@ -414,5 +415,15 @@
 
     <string name="equal_principal_and_interest">等额本息</string>
     <string name="equal_principal">等额本金</string>
+    <!--    monthly_payment-->
+    <string name="monthly_payment">月供</string>
+    <string name="total_interest">总利息</string>
+    <string name="total_payment">总还款</string>
+    <string name="entry_count">条目数</string>
+    <string name="new_ledger">新建账本</string>
+    <string name="tap_to_speak">点击说话</string>
+    <string name="type_a_message">输入消息</string>
+    <string name="recording">录音中...</string>
+    <string name="send">发送</string>
 
 </resources>

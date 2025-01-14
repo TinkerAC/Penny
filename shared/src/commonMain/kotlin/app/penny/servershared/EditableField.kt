@@ -2,18 +2,17 @@
 package app.penny.servershared
 
 /**
- * 字段类型枚举，支持多种不同类型的字段。
+ * Enum class representing the types of fields that can be edited.
  */
 enum class FieldType {
     TEXT,
     DATE,
     CATEGORY,
     CURRENCY,
-    // 可根据需求添加更多类型
 }
 
 /**
- * 可编辑字段的数据类，包含字段名称、标签、类型和值。
+ * Represents a field that can be edited.
  */
 data class EditableField(
     val name: String,

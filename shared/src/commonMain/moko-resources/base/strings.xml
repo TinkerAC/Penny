@@ -379,7 +379,7 @@
 
 
     <string name="tool_data_export">Data Export</string>
-    <string name="tool_exchange_rate_conversion">Exchange Rate Conversion</string>
+    <string name="tool_currency_converter">Currency Converter</string>
     <string name="tool_loan_calculator">Loan Calculator</string>
 
     <string name="pick_a_color">Pick a color</string>
@@ -409,7 +409,7 @@
     <string name="sunday_short">Sun</string>
     <string name="previous_month">Previous Month</string>
     <string name="next_month">Next Month</string>
-    <string name="category_pie_chart">Category Pie Chart</string>
+    <string name="category_pie_chart">Category Breakdown</string>
 
     <string name="close">Close</string>
 
@@ -444,6 +444,17 @@
     <string name="auto_cloud_sync">Auto Cloud Sync</string>
     <string name="equal_principal_and_interest">Equal Principal and Interest</string>
     <string name="equal_principal">Equal Installment</string>
+
+    <string name="monthly_payment">Monthly Payment</string>
+    <string name="total_interest">Total Interest</string>
+    <string name="total_payment">Total Payment</string>
+    <string name="entry_count">Entry Count</string>
+    <string name="new_ledger">New Ledger</string>
+    <string name="tap_to_speak">Tap to speak</string>
+    <string name="type_a_message">Type a message</string>
+
+    <string name="recording">Recording...</string>
+    <string name="send">Send</string>
 
 
 </resources>

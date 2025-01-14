@@ -73,7 +73,10 @@ class MyLedgerScreen : Screen {
                             viewModel.handleIntent(
                                 MyLedgerIntent.SetDefaultLedger(it)
                             )
-                        }
+                        },
+                        onGetLedgerCount =
+                            { uuid -> viewModel.getLedgerCount(uuid) }
+
                     )
                 }
             }

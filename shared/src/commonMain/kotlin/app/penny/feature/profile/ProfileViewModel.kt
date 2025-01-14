@@ -87,23 +87,7 @@ class ProfileViewModel(
             val isEmailRegistered = checkEmailAvailability(email)
 
             val localUser = userRepository.findByEmailIsNull()
-            val errorMessage: String? = when {
-                isEmailRegistered == null -> {
-                    null
-                }
-
-                localUser == null -> {
-                    // 无本地匿名用户
-                    if (isEmailRegistered) "This email has been registered, please login"
-                    else "This email is not registered, please register"
-                }
-
-                else -> {
-                    // 有本地匿名用户（意味着绑定）
-                    if (isEmailRegistered) "This email has been registered, please login"
-                    else "This email is not registered, and your local data will be bound to the new account"
-                }
-            }
+            val errorMessage: String? = null
 
             _uiState.value = _uiState.value.copy(errorMessage = errorMessage)
         }

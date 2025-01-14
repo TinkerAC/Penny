@@ -21,7 +21,6 @@ fun initKoin() {
             )
         }
     } catch (e:Exception) {
-        // 打印堆栈跟踪
         e.printStackTrace()
 
 //        // 或者获取 Kotlin/Native 堆栈信息

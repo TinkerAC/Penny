@@ -27,19 +27,19 @@ helps you track expenses, analyze spending patterns, and make smarter financial 
 - Smart chatbot assistant for financial advice and queries
 - Automated monthly report generation with insights and recommendations
 - Natural language processing for quick and easy expense entry
-
-### 🎨 Customizable Themes
-
-- Modern and youth-oriented design philosophy
-- Extensive theme customization options to match your style
-- Personalized dashboard layouts and widgets
-- Dark/Light mode support with custom color schemes
+- Voice input for hands-free transaction recording
 
 ### 📊 Data Visualization
 
 - Interactive spending trend analysis
 - Category-wise expense distribution through intuitive pie charts
-- Custom report generation with exportable charts
+- Daily asset change tracking for better financial planning
+
+### 🎨 Customizable Themes
+
+- Modern and youth-oriented design philosophy
+- Extensive theme customization options to match your style
+- Dark/Light mode support with custom color schemes
 
 ## Gallery
 
@@ -47,21 +47,24 @@ helps you track expenses, analyze spending patterns, and make smarter financial 
 
 ### Dashboard
 
-[Dashboard](screenshot/dashboard.png)
+<img src="screenshot/dashboard_purple.png" alt="Dashboard" width="200" height="365"/>
+<img src="screenshot/dashboard_green.png" alt="Dashboard" width="200" height="365"/>
+<img src="screenshot/dashboard_terracotta.png" alt="Dashboard" width="200" height="365"/>
 
-### New Transaction Screen
+### Analytics
 
-[New Transaction Screen](screenshot/new_transaction.png)
+<img src="screenshot/analytic_1.png" alt="Analysis" width="200" height="365"/>
+<img src="screenshot/analytic_2.png" alt="Analysis" width="200" height="365"/>
 
-### Analysis Screen
+### Profile
 
-[Analysis Screen](screenshot/analysis.png)
+<img src="screenshot/profile_screen.png" alt="Profile" width="200" height="365"/>
 
-### Settings Screen
-
-[Settings Screen](screenshot/settings.png)
+### And More...
 
 ## Getting Started
+
+---
 
 ### Prerequisites
 
@@ -78,15 +81,63 @@ helps you track expenses, analyze spending patterns, and make smarter financial 
 
 ## Installation
 
-1. Run Git clone
+Penny is a full-stack project. For a complete experience, you'll need to set up both the server and
+client applications.
 
-```
+### Cloning the Repository first
+
+```shell
 git clone https://www.github.com/TinkerAC/penny.git
 ```
 
-2. Open the project in Android Studio and wait for the Gradle sync to complete
+### Server Setup
 
-### 🏗️ Building the Application And Run
+#### Building from Source
+
+1. Navigate to `server/src/main/resources` directory
+2. Modify the configuration blocks for:
+    - port
+    - database
+    - openai
+      (At minimum, you need to configure the database settings for your MySQL environment)
+3. Create a database named `penny_server` in your specified database. The Exposed ORM will
+   automatically create tables on startup.
+4. Run the following command in the project root directory:
+   ```shell
+    ./gradlew :server:shadowJar
+   ```
+   After completion, find `server-all.jar` in the `server/build/libs/` directory
+   5.Run the server:
+   ```shell
+   java -jar server-all.jar
+   ```
+
+#### Using Pre-built Application
+
+1. Download the latest server program `penny_server.jar` from the release page.
+
+2. You may need to extract `penny_server.jar` and modify the configuration file (`application.conf`)
+   located in the same directory.
+
+3. Follow the same configuration steps as building from source, then repackage the server program
+   using:
+   ```shell
+   jar cvfm penny_server.jar META-INF/MANIFEST.MF -C penny_server/ .
+   ```
+
+4. Run the server using:
+   ```shell
+   java -jar penny_server.jar
+   ```
+   The server should start and listen for requests on your local network.
+
+Note: While you can deploy the server to a cloud provider, please be aware that the default
+configuration is not secure. Modify the configuration file appropriately for production
+environments.
+
+### Client Application Setup
+
+#### Building the Application from Source
 
 <details>
 <summary> 🖥️ Desktop Application</summary>
@@ -109,13 +160,9 @@ Run the `Penny Desktop` configuration at "Run Configurations"
 
 </details>
 
+
 <details>
 <summary>🍎iOS Application </summary>
-
-### Android Studio
-
-1. edit the configuration `Penny IOS` to match your environment(Simulator or Device)
-2. Click the "Run" button or press `Shift + F10`
 
 ### Xcode
 
@@ -129,6 +176,16 @@ Run the `Penny Desktop` configuration at "Run Configurations"
 > and you need to trust the developer certificate on the device.
 
 </details>
+
+#### Using Pre-built Application
+Go to the release page and download the latest version of the application for your platform.
+
+
+## To Try Key Features
+
+---
+
+See [Here](docs/Guide_en.md) for a detailed guide on how to use the key features of the application.
 
 ## Tech Stack
 
@@ -199,15 +256,9 @@ request/response encapsulation.
 
 ---
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
-
-- [Organiks1_KMP_Server](https://github.com/samAricha/Organiks1_KMP_Server):
-  One of the winner project
-  Of [Kotlin Multiplatform Contest 2024](https://kotlinconf.com/2024/contest/)
-  by [Aricha Samson](https://github.com/samAricha).
-
 
 - [AAY-chart](https://github.com/TheChance101/AAY-chart)  
   A library contains several chart composables for usage in Kotlin Multiplatform projects and

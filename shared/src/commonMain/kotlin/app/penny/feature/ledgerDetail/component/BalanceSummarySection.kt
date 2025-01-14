@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,18 +16,18 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
-internal fun BalanceSummarySection(
+fun BalanceSummarySection(
+    currencySymbol: String,
     totalIncome: BigDecimal,
     totalExpense: BigDecimal,
-    balance: BigDecimal
-) {
+    balance: BigDecimal,
+    ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         // 标题和结余信息在同一行
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = stringResource(SharedRes.strings.balance_summary),
@@ -40,7 +39,7 @@ internal fun BalanceSummarySection(
             )
 
             Text(
-                text = "¥${balance.toPlainString()}",
+                text = "${currencySymbol}${balance.toPlainString()}",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                 ),
@@ -52,8 +51,7 @@ internal fun BalanceSummarySection(
 
         // 展示收入和支出信息
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
                 modifier = Modifier.weight(1f)
@@ -67,7 +65,7 @@ internal fun BalanceSummarySection(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "¥${totalIncome.toPlainString()}",
+                    text = "${currencySymbol}${totalIncome.toPlainString()}",
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                     ),
@@ -85,7 +83,7 @@ internal fun BalanceSummarySection(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "¥${totalExpense.toPlainString()}",
+                    text = "${currencySymbol}${totalExpense.toPlainString()}",
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                     ),

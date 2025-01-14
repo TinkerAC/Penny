@@ -73,7 +73,7 @@ class NewLedgerScreen(
         Scaffold(
             topBar = {
                 SingleNavigateBackTopBar(
-                    title = "新建账本",
+                    title = stringResource(SharedRes.strings.new_ledger),
                     onNavigateBack = {
                         navigator?.pop()
                     }

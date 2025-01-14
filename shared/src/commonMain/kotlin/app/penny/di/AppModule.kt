@@ -190,7 +190,7 @@ fun commonModule() = module {
     factory { InsertRandomTransactionUseCase(get(), get()) }
     factory { InitLocalUserUseCase(get(), get()) }
     factory { SearchTransactionsUseCase(get()) }
-    factory { LoginUseCase(get(), get(), get(), get()) }
+    factory { LoginUseCase(get(), get(), get(), get(), get()) }
     factory { UploadUnsyncedLedgerUseCase(get(), get()) }
     factory { RegisterUseCase(get()) }
     factory { DownloadUnsyncedLedgerUseCase(get(), get()) }
@@ -222,10 +222,10 @@ fun commonModule() = module {
     // 注入 ViewModel
 
     factory { SettingViewModel(get()) }
-    factory { (ledger: LedgerModel) -> LedgerDetailViewModel(ledger, get(), get(), get()) }
+    factory { (ledger: LedgerModel) -> LedgerDetailViewModel(ledger, get(), get(), get(), get()) }
 
 
-    factory { NewTransactionViewModel(get(), get(), get()) }
+    factory { NewTransactionViewModel(get(), get(), get(), get(), get()) }
 
 
     factory {
@@ -246,11 +246,11 @@ fun commonModule() = module {
     factory { AnalyticViewModel(get(), get(), get()) }
     factory { TransactionViewModel(get(), get(), get(), get()) }
     factory { MainViewModel(get(), get()) }
-    factory { MyLedgerViewModel(get(), get()) }
+    factory { MyLedgerViewModel(get(), get(), get()) }
     factory { NewLedgerViewModel(get(), get()) }
     factory { ProfileViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 
-    factory { MyLedgerViewModel(get(), get()) }
+    factory { MyLedgerViewModel(get(), get(), get()) }
 
     factory { NewLedgerViewModel(get(), get()) }
 

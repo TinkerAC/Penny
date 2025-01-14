@@ -44,6 +44,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
 import co.touchlab.kermit.Logger
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class, ExperimentalVoyagerApi::class)
@@ -69,14 +70,21 @@ class NewTransactionScreen : Screen, ScreenTransition {
                 when (event) {
                     is NewTransactionUiEvent.NavigateBack -> navigator.pop()
                     is NewTransactionUiEvent.ShowSnackBar -> {
-                        uiState.snackBarHostState.showSnackbar(
-                            message = event.message,
-                            duration = SnackbarDuration.Short
-                        )
+                        launch {
+                            uiState.snackBarHostState.showSnackbar(
+                                message = event.message,
+                                duration = SnackbarDuration.Indefinite // 设置为手动控制
+                            )
+                        }
+
+                        if (event.pop) {
+                            navigator.pop()
+                        }
                     }
                 }
             }
         }
+
 
         Scaffold(
             modifier = Modifier.pointerInput(Unit) {

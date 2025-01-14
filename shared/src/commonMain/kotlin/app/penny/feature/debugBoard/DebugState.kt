@@ -1,3 +1,4 @@
+// file: /Users/tinker/StudioProjects/Penny/shared/src/commonMain/kotlin/app/penny/feature/debugBoard/DebugState.kt
 package app.penny.feature.debugBoard
 
 import app.penny.core.domain.model.LedgerModel
@@ -14,7 +15,9 @@ data class DebugState(
     val lastSyncedAt: Instant? = null,
     val message: String? = null,
     val activeUser: UserModel? = null,
-    val defaultLedger:LedgerModel? = null,
-    val databasePath :Path? = null,
-    val settingStorePath: Path? = null
+    val defaultLedger: LedgerModel? = null,
+    val databasePath: Path? = null,
+    val settingStorePath: Path? = null,
+    val accessToken: String? = null,
+    val refreshToken: String? = null,
 )

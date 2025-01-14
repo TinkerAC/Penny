@@ -10,6 +10,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BrightnessMedium
+import androidx.compose.material.icons.filled.Contrast
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.outlined.BrightnessMedium
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -87,6 +96,7 @@ class SettingScreen : Screen {
                                 settingItems = listOf {
 
                                     ExposedDropDownSetting(
+                                        settingIcon = Icons.Outlined.Language,
                                         settingName = stringResource(SharedRes.strings.language),
                                         items = uiState.languages,
                                         selectedItem = uiState.language,
@@ -99,6 +109,7 @@ class SettingScreen : Screen {
                                     )
 
                                     ExpendSetting(
+                                        settingIcon =Icons.Outlined.Palette,
                                         settingName = stringResource(SharedRes.strings.theme_color),
                                         currentValue = uiState.appTheme,
                                         options = uiState.appThemes!!,
@@ -116,6 +127,7 @@ class SettingScreen : Screen {
                                         },
                                     )
                                     ExposedDropDownSetting(
+                                        settingIcon = Icons.Outlined.DarkMode,
                                         settingName = stringResource(SharedRes.strings.display_mode),
                                         items = uiState.displayModes,
                                         selectedItem = uiState.displayMode,
@@ -127,6 +139,7 @@ class SettingScreen : Screen {
                                         displayMapper = { stringResource(it.displayName) }
                                     )
                                     ExposedDropDownSetting(
+                                        settingIcon = Icons.Outlined.BrightnessMedium,
                                         enabled = uiState.appTheme !is AppTheme.DynamicAppTheme,
                                         settingName = stringResource(SharedRes.strings.contrast),
                                         items = uiState.constraints,
