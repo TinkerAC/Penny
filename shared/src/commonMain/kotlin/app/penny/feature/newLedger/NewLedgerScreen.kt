@@ -44,6 +44,7 @@ import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 
 class NewLedgerScreen(
+    private val asDefault: Boolean = false
 ) : Screen {
 
     @Composable
@@ -73,6 +74,7 @@ class NewLedgerScreen(
         Scaffold(
             topBar = {
                 SingleNavigateBackTopBar(
+                    navigateBackEnabled = !asDefault,
                     title = stringResource(SharedRes.strings.new_ledger),
                     onNavigateBack = {
                         navigator?.pop()

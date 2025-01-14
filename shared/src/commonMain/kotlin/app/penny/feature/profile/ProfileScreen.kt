@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.penny.feature.debugBoard.DebugScreen
 import app.penny.feature.myLedger.MyLedgerScreen
+import app.penny.feature.newLedger.NewLedgerScreen
 import app.penny.feature.notification.NotificationScreen
 import app.penny.feature.setting.SettingScreen
 import app.penny.feature.toolBox.ToolBoxScreen
@@ -64,14 +65,25 @@ class ProfileScreen : Screen {
     override fun Content() {
         val viewModel = koinScreenModel<ProfileViewModel>()
         val uiState = viewModel.uiState.collectAsState()
-
+        val localNavigator = LocalNavigator.currentOrThrow
         val bottomSheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = true
         )
 
         LaunchedEffect(Unit) {
             viewModel.refreshData()
+
+            viewModel.eventFlow.collect() { event ->
+                if (event) {
+                    localNavigator.push(
+                        NewLedgerScreen()
+                    )
+                }
+            }
         }
+
+
+
 
 
 
@@ -148,8 +160,8 @@ fun UserInfoSection(
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = when {
-                uiState.isLoggedIn -> uiState.username ?: uiState.email
-                ?: stringResource(SharedRes.strings.default_username)
+                uiState.isLoggedIn -> uiState.email
+                    ?: stringResource(SharedRes.strings.default_username)
 
                 else -> stringResource(SharedRes.strings.tap_to_login)
             },

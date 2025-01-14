@@ -13,7 +13,7 @@ import kotlin.uuid.ExperimentalUuidApi
 class UserDataRepositoryImpl(
     private val userDataManager: UserDataManager,
     private val ledgerLocalDataSource: LedgerLocalDataSource,
-    private val userLocalDataRepository: UserLocalDataSource,
+    private val userLocalDataSource: UserLocalDataSource,
 ) : UserDataRepository {
     override suspend fun getDefaultLedger(): LedgerModel {
         val defaultLedgerUuid = userDataManager.getStringOrNull(UserDataManager.DEFAULT_LEDGER_UUID)
@@ -42,7 +42,7 @@ class UserDataRepositoryImpl(
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun getUser(): UserModel {
         val userUuid = userDataManager.getStringOrNull(UserDataManager.USER_UUID)!!
-        return userLocalDataRepository.findByUuid(
+        return userLocalDataSource.findByUuid(
             uuid = userUuid
         )!!.toModel()
     }

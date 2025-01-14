@@ -1,5 +1,6 @@
 package app.penny.presentation.ui.components
 
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -16,7 +17,7 @@ import androidx.compose.runtime.Composable
 fun SingleNavigateBackTopBar(
     title: String,
     onNavigateBack: () -> Unit,
-
+    navigateBackEnabled: Boolean = true
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -29,12 +30,21 @@ fun SingleNavigateBackTopBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = onNavigateBack) {
+            IconButton(onClick = {
+                if (navigateBackEnabled) {
+                    onNavigateBack()
+                }
+            }
+            ) {
 
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = if (navigateBackEnabled) {
+                        MaterialTheme.colorScheme.onSurface
+                    } else {
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.disabled)
+                    }
                 )
             }
         }

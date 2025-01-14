@@ -19,7 +19,6 @@ class LoginUseCase(
     private val syncDataUseCase: SyncDataUseCase,
     private val ledgerRepository: LedgerRepository,
 ) {
-    @OptIn(ExperimentalUuidApi::class)
     suspend operator fun invoke(
         email: String,
         password: String
@@ -53,6 +52,8 @@ class LoginUseCase(
             // Handle unknown errors
             Logger.e("Unexpected error during login", e)
             throw LoginException.UnknownException(e)
+        } finally {
+            userDataRepository.setIsFirstTime(false)
         }
     }
 
@@ -70,33 +71,20 @@ class LoginUseCase(
         authRepository.saveRefreshToken(refreshToken)
 
 
-        syncDataUseCase()
-
-
-        //set user data
-
-        userDataRepository.setUser(response.userDto!!.toUserModel())
-        userDataRepository.setUserEmail(response.userDto.email)
-        response.userDto.username?.let { userDataRepository.setUserName(it) }
-        val ledgers = ledgerRepository.findByUserUuid(Uuid.parse(response.userDto.uuid))
-        ledgers.firstOrNull()?.let { userDataRepository.setDefaultLedger(it) }
-
-
-        // Create or update local user
         try {
-            val userDto = response.userDto
-            val userModel = userDto.toUserModel()
-
-            // upsert user
-            userRepository.upsertByUuid(userModel)
-
-            // Set user data
-            userDataRepository.setUser(userModel)
-            userModel.email?.let { userDataRepository.setUserEmail(it) }
-
+            //set user data
+            userRepository.upsertByUuid(response.userDto!!.toUserModel())
+            userDataRepository.setUser(response.userDto.toUserModel())
+            userDataRepository.setUserEmail(response.userDto.email)
+            response.userDto.username?.let { userDataRepository.setUserName(it) }
+            val ledgers = ledgerRepository.findByUserUuid(Uuid.parse(response.userDto.uuid))
+            ledgers.firstOrNull()?.let { userDataRepository.setDefaultLedger(it) }
+            syncDataUseCase()
         } catch (e: Exception) {
-            Logger.e("Error processing user data from login response", e)
-            throw LoginException.ServerException
+            Logger.e("Error during login", e)
+            e.printStackTrace()
         }
+
+
     }
 }

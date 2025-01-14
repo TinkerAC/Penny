@@ -47,7 +47,6 @@ fun RegisterAndLoginBottomSheet(
     uiState: State<ProfileUiState>,
     viewModel: ProfileViewModel
 ) {
-    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier

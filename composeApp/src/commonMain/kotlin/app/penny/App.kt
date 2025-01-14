@@ -53,6 +53,7 @@ fun App() {
     LaunchedEffect(Unit) {
         // 1. 获取第一次启动
         isFirstTime = userDataRepository.getIsFirstTime()
+        println("Is first time: $isFirstTime")
 
         // 2. 声明数据损坏标志
         var isUserDataBroken = false

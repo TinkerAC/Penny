@@ -24,7 +24,6 @@ import app.penny.core.domain.model.SystemMessage
 import app.penny.core.domain.model.TransactionModel
 import app.penny.core.domain.model.UserMessage
 import app.penny.core.domain.model.UserModel
-import app.penny.database.AchievementEntity
 import app.penny.database.ChatMessageEntity
 import app.penny.database.LedgerEntity
 import app.penny.database.TransactionEntity
@@ -133,15 +132,7 @@ fun TransactionModel.toDto(
 }
 
 
-fun AchievementEntity.toModel(): AchievementModel {
-    return AchievementModel(
-        id = id,
-        name = name,
-        description = description,
-        iconUri = icon_uri,
-        goal = goal
-    )
-}
+
 
 
 @OptIn(ExperimentalUuidApi::class)

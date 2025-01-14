@@ -15,8 +15,10 @@ import app.penny.servershared.dto.responseDto.LoginResponse
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
@@ -37,6 +39,9 @@ class ProfileViewModel(
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+
+    private val _eventFlow = MutableSharedFlow<Boolean>(replay = 0)
+    val eventFlow = _eventFlow.asSharedFlow()
 
 
     init {
@@ -118,6 +123,12 @@ class ProfileViewModel(
                     isLoggedIn = true
                 )
                 fetchProfileStatistics()
+                //check if user has any ledger ,if not create one
+                val user = userDataRepository.getUser()
+                val ledger = ledgerRepository.findByUserUuid(user.uuid)
+                if (ledger.isEmpty()) {
+                    _eventFlow.emit(true)
+                }
             } else {
                 _uiState.value = _uiState.value.copy(
                     errorMessage = loginResponse.message
@@ -135,13 +146,6 @@ class ProfileViewModel(
                 val isEmailRegistered = checkEmailAvailability(email)
                 val localUser = userRepository.findByEmailIsNull()
 
-                //如果邮箱未注册，且本地无匿名用户，则提示用户将绑定本地数据到新账户
-                if (isEmailRegistered == false && localUser == null) {
-                    _uiState.value = _uiState.value.copy(
-                        errorMessage = "This email is not registered, and your local data will be bound to the new account"
-                    )
-                }
-
                 val registerResponse =
                     registerUseCase(email, password, confirmPassword, localUser?.uuid.toString())
                 if (registerResponse.success) {
@@ -149,6 +153,7 @@ class ProfileViewModel(
                     _uiState.value = _uiState.value.copy(
                         errorMessage = "Register success, please login", modalInLoginMode = true
                     )
+
                 } else {
                     // 理论上这里不会被执行，因为不成功的情况在 usecase 中已抛异常
                     _uiState.value = _uiState.value.copy(
