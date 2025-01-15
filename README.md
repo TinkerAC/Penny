@@ -40,6 +40,7 @@ helps you track expenses, analyze spending patterns, and make smarter financial 
 
 ### 🎨 Customizable Themes
 
+- Fully i18n support with English and Chinese
 - Modern and youth-oriented design philosophy
 - Extensive theme customization options to match your style
 - Dark/Light mode support with custom color schemes
@@ -112,7 +113,7 @@ git clone https://www.github.com/TinkerAC/penny.git
 
 ### Server Setup
 
-#### Building from Source
+#### Building from Source \[Recommended\]
 
 1. Navigate to `server/src/main/resources` directory
 2. Modify the configuration blocks for:
@@ -132,7 +133,7 @@ git clone https://www.github.com/TinkerAC/penny.git
    java -jar server-all.jar
    ```
 
-#### Using Pre-built Application
+#### Using Pre-built Application\[May not be the latest version\]
 
 1. Download the latest server program `penny_server.jar` from the release page.
 
@@ -157,7 +158,7 @@ environments.
 
 ### Client Application Setup
 
-#### Building the Application from Source
+#### Building the Application from Source\[Recommended\]
 
 1. getting your running server IP address and port(such as "http://192.168.1.2:8080")
 2. Navigate to the `shared/src/commonMain/kotlin/app/penny/config/Config.kt` file
@@ -198,10 +199,10 @@ Run the `Penny Desktop` configuration at "Run Configurations"
 > Note: To run the iOS app on a physical device, you need to have a valid Apple Developer account
 > and a provisioning profile set up in Xcode,
 > and you need to trust the developer certificate on the device.
-
+ 
 </details>
 
-#### Using Pre-built Application
+#### Using Pre-built Application\[May not be the latest version\]
 
 Go to the release page and download the latest version of the application for your platform.
 

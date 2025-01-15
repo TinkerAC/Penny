@@ -116,6 +116,7 @@ Access through the Spark icon in bottom navigation:
 - try to add a transaction in one device
 - launch the app in another platform and login with the same account , the transaction should be
   synced to the new device
+- or you can go to setting-LogOut and login again to see the data synced
 
 ## Advanced Features Review
 
