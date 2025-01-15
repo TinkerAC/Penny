@@ -457,4 +457,10 @@
     <string name="send">Send</string>
 
 
+    <string name="action_success">Action completed</string>
+    <string name="action_failed">Action failed</string>
+
+    <string name="transaction_inserted">Transaction inserted</string>
+
+
 </resources>

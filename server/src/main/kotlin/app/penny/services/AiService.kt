@@ -443,7 +443,7 @@ class AiService(
             [Note]
             - Always adhere to the provided fields and do not make additional assumptions.
             - Ensure the report matches the language specified in the input data.
-            - Present the report in a structured and friendly format that highlights key insights and provides actionable advice for financial improvement.
+            - Present the report in a structured and friendly format that highlights key insights and provides actionable advice for financial improvement and Not Use Any MarkDown grammar.
         """.trimIndent()
 
         val chatCompletionRequest = ChatCompletionRequest(

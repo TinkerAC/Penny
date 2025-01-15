@@ -44,16 +44,29 @@ data class TransactionDto(
      */
     override fun getEditableFields(): List<EditableField> {
         return listOf(
-            EditableField("transactionType", "交易类型", FieldType.TEXT, transactionType),
+            EditableField(
+                "transactionType",
+                "Transaction Type",
+                FieldType.TEXT, transactionType
+            ),
             EditableField(
                 "transactionDate",
-                "交易日期",
+                "Transaction Date",
                 FieldType.DATE,
                 transactionDate.toString()
             ),
-            EditableField("categoryName", "分类", FieldType.CATEGORY, categoryName),
-            EditableField("amount", "金额", FieldType.TEXT, amount),
-            EditableField("remark", "备注", FieldType.TEXT, remark),
+            EditableField(
+                "categoryName", "Category",
+                FieldType.CATEGORY, categoryName
+            ),
+            EditableField(
+                "amount", "Amount",
+                FieldType.TEXT, amount
+            ),
+            EditableField(
+                "remark", "Remark",
+                FieldType.TEXT, remark
+            ),
         )
     }
 }

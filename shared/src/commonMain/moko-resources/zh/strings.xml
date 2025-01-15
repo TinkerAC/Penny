@@ -426,4 +426,10 @@
     <string name="recording">录音中...</string>
     <string name="send">发送</string>
 
+
+    <string name="action_success">操作执行成功</string>
+    <string name="action_failed">操作执行失败</string>
+
+    <string name="transaction_inserted">交易已插入</string>
+
 </resources>

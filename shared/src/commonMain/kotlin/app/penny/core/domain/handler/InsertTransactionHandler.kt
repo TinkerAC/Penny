@@ -7,10 +7,12 @@ import app.penny.core.data.repository.TransactionRepository
 import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.domain.model.LedgerModel
 import app.penny.core.domain.model.SystemMessage
+import app.penny.platform.getRawStringResource
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.dto.TransactionDto
 import app.penny.servershared.enumerate.UserIntent
 import app.penny.servershared.enumerate.UserIntentStatus
+import app.penny.shared.SharedRes
 import co.touchlab.kermit.Logger
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -57,8 +59,9 @@ class InsertTransactionHandler(
         }
 
         return message.copy(
-            content = "执行操作成功: ${message.userIntent.displayText}",
-            executeLog = "交易已插入: ${dto.categoryName} ${dto.amount}",
+            content =
+            getRawStringResource(SharedRes.strings.action_success) + getRawStringResource(message.userIntent.displayText),
+            executeLog = getRawStringResource(SharedRes.strings.transaction_inserted) + ":\n" + dto.categoryName + dto.amount,
             userIntent = message.userIntent.copy(
                 status = UserIntentStatus.Completed
             )

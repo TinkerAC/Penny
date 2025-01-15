@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.enumerate.Category
 import app.penny.servershared.dto.TransactionDto
+import app.penny.shared.SharedRes
+import dev.icerock.moko.resources.compose.stringResource
 
 
 @Composable
@@ -42,7 +44,7 @@ fun TransactionEditSheet(
     ) {
         // 1. 交易类型
         EditableTextField(
-            label = "交易类型",
+            label = stringResource(SharedRes.strings.transaction_type),
             value = transactionType.value,
             onValueChange = { newValue ->
                 transactionType.value = newValue
@@ -53,7 +55,7 @@ fun TransactionEditSheet(
 
         // 2. 交易日期
         DatePickerField(
-            label = "交易日期",
+            label = stringResource(SharedRes.strings.date),
             selectedDateEpoch = transactionDate.value,
             onDateSelected = { selectedEpoch ->
                 transactionDate.value = selectedEpoch
@@ -82,7 +84,7 @@ fun TransactionEditSheet(
 
         // 4. 货币
         CurrencySelectorField(
-            label = "货币",
+            label = stringResource(SharedRes.strings.currency),
             selectedCurrency = currencyCode.value,
             onCurrencySelected = { selected ->
                 currencyCode.value = selected
@@ -93,7 +95,7 @@ fun TransactionEditSheet(
 
         // 5. 金额
         EditableTextField(
-            label = "金额",
+            label = stringResource(SharedRes.strings.amount),
             value = amount.value,
             onValueChange = { newValue ->
                 amount.value = newValue
@@ -104,7 +106,7 @@ fun TransactionEditSheet(
 
         // 6. 备注
         EditableTextField(
-            label = "备注",
+            label = stringResource(SharedRes.strings.remarks),
             value = remark.value,
             onValueChange = { newValue ->
                 remark.value = newValue

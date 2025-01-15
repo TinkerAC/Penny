@@ -7,15 +7,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.Surface
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.SystemMessage
-
 import app.penny.feature.aiChat.components.messageBubble.system.IntentPendingContent
 import app.penny.servershared.dto.BaseEntityDto
 import app.penny.servershared.enumerate.SilentIntent
@@ -30,30 +33,27 @@ fun SystemMessageBubble(
     onActionConfirm: (SystemMessage, BaseEntityDto?) -> Unit,
     onActionDismiss: (SystemMessage) -> Unit
 ) {
-    Column(
-        modifier = modifier
-    ) {   // 外层只包裹气泡自身，不填充父容器的宽度
+    Column(modifier = modifier) {
         Surface(
             shape = MaterialTheme.shapes.medium.copy(
-                topStart = CornerSize(0.dp),    // 左上角贴合行方向
+                topStart = CornerSize(0.dp),
                 topEnd = CornerSize(16.dp),
                 bottomEnd = CornerSize(16.dp),
                 bottomStart = CornerSize(16.dp)
             ),
             color = MaterialTheme.colorScheme.surfaceVariant,
-//        tonalElevation = 1.dp,
+            tonalElevation = 2.dp,
             modifier = Modifier
-                .widthIn(min = 40.dp, max = 280.dp) // 控制泡泡最大宽度
-                .padding(horizontal = 4.dp)         // 与头像或边缘留点间隙
+                .widthIn(min = 40.dp, max = 280.dp)
+                .padding(horizontal = 4.dp)
         ) {
             Column(modifier = Modifier.padding(12.dp)) {
-                // 1) 标题 & 状态(Chip) 行 （可选：若需要在气泡顶部显示 “系统消息”+状态等）
+                // 1) 标题 & 状态(Chip) 行
                 if (message.userIntent !is SilentIntent) {
                     TitleAndStatusRow(message)
-
                 }
 
-                // 2) 主要内容：展示 message.content
+                // 2) 主要内容
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = message.content ?: "",
@@ -77,11 +77,7 @@ fun SystemMessageBubble(
                                     }
                                 )
                             }
-
-
-                            else -> {
-
-                            }
+                            else -> {}
                         }
                     }
                 }
@@ -100,34 +96,25 @@ fun SystemMessageBubble(
             }
         }
     }
-
 }
 
-/**
- * 标题 + 状态区：若你不需要此行，可以去掉或将 statusChip 的逻辑移动到下方。
- */
 @Composable
 private fun TitleAndStatusRow(
     message: SystemMessage
 ) {
-    // 如果不想展示标题，可视情况删除此函数
     val userIntent = message.userIntent
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 左侧展示 Intent 的名称 // bold
         Text(
-            text = stringResource(userIntent.displayText), // 如：插入账本、插入交易等
-            style = MaterialTheme.typography.labelLarge.copy(
-                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
-            ),
+            text = stringResource(userIntent.displayText),
+            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(7f)
         )
 
-        // 右侧展示状态Chip
         Column(
             horizontalAlignment = Alignment.End,
             modifier = Modifier.weight(3f)
@@ -137,10 +124,6 @@ private fun TitleAndStatusRow(
     }
 }
 
-/**
- * 状态Chip，仅展示状态文本，如 "Pending"、"Completed" 等。
- * 可根据状态自定义颜色和图标。
- */
 @Composable
 private fun StatusChip(status: UserIntentStatus) {
     val label = when (status) {
@@ -156,6 +139,7 @@ private fun StatusChip(status: UserIntentStatus) {
         UserIntentStatus.Cancelled -> MaterialTheme.colorScheme.surfaceVariant
         UserIntentStatus.Failed -> MaterialTheme.colorScheme.errorContainer
     }
+
     val contentColor = when (status) {
         UserIntentStatus.Pending -> MaterialTheme.colorScheme.onSecondaryContainer
         UserIntentStatus.Completed -> MaterialTheme.colorScheme.onTertiaryContainer
@@ -163,10 +147,17 @@ private fun StatusChip(status: UserIntentStatus) {
         UserIntentStatus.Failed -> MaterialTheme.colorScheme.onErrorContainer
     }
 
-    androidx.compose.material3.AssistChip(
+    AssistChip(
         onClick = { /* no-op */ },
-        label = { Text(text = label, style = MaterialTheme.typography.labelMedium) },
-        colors = androidx.compose.material3.AssistChipDefaults.assistChipColors(
+        label = {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        colors = AssistChipDefaults.assistChipColors(
             containerColor = containerColor,
             labelColor = contentColor
         ),
