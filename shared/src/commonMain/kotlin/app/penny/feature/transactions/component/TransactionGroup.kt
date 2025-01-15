@@ -33,16 +33,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.penny.core.domain.model.GroupIdentifier
 import app.penny.core.domain.model.Summary
+import app.penny.feature.transactionDetail.TransactionDetailScreen
 import app.penny.feature.transactions.GroupByType
 import app.penny.feature.transactions.GroupedTransaction
 import app.penny.presentation.ui.components.TransactionItem
 import app.penny.presentation.utils.formatBigDecimal
 import app.penny.presentation.utils.getLocalizedMonth
 import app.penny.shared.SharedRes
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun TransactionGroup(group: GroupedTransaction) {
+    val localNavigator = LocalNavigator.currentOrThrow
     var isExpanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.fillMaxWidth().animateContentSize()
@@ -92,7 +98,16 @@ fun TransactionGroup(group: GroupedTransaction) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 group.transactions.forEach { transaction ->
-                    TransactionItem(transaction)
+                    TransactionItem(
+                        transaction,
+                        onClick = {
+                            localNavigator.push(
+                                TransactionDetailScreen(
+                                    transactionUuid = transaction.uuid,
+                                )
+                            )
+                        }
+                    )
                 }
             }
         }
