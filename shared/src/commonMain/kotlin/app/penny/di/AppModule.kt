@@ -221,7 +221,7 @@ fun commonModule() = module {
 
     // 注入 ViewModel
 
-    factory { SettingViewModel(get()) }
+    factory { SettingViewModel(get(),get()) }
     factory { (ledger: LedgerModel) -> LedgerDetailViewModel(ledger, get(), get(), get(), get()) }
 
 

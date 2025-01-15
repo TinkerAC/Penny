@@ -1,5 +1,6 @@
 package app.penny.feature.setting
 
+import app.penny.core.data.repository.UserDataRepository
 import app.penny.core.data.repository.UserPreferenceRepository
 import app.penny.presentation.ui.LocaleManager
 import app.penny.presentation.ui.ThemeManager
@@ -14,7 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SettingViewModel(
-    private val userPreferenceRepository: UserPreferenceRepository
+    private val userPreferenceRepository: UserPreferenceRepository,
+    private val userDataRepository: UserDataRepository,
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(SettingUiState())
     val uiState: StateFlow<SettingUiState> = _uiState.asStateFlow()
@@ -138,6 +140,13 @@ class SettingViewModel(
 
             SettingIntent.ToggleAutoCloudSync -> {
                 toggleAutoCloudSync()
+            }
+
+
+            SettingIntent.LogOut -> {
+                screenModelScope.launch {
+                    userDataRepository.clearLoginUserData()
+                }
             }
         }
     }

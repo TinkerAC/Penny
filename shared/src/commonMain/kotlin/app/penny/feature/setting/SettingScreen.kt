@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BrightnessMedium
-import androidx.compose.material.icons.filled.Contrast
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.outlined.BrightnessMedium
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.penny.feature.onBoarding.OnboardingStep3Login
 import app.penny.feature.setting.component.ExpendSetting
 import app.penny.feature.setting.component.ExposedDropDownSetting
 import app.penny.feature.setting.component.SettingSection
@@ -109,7 +108,7 @@ class SettingScreen : Screen {
                                     )
 
                                     ExpendSetting(
-                                        settingIcon =Icons.Outlined.Palette,
+                                        settingIcon = Icons.Outlined.Palette,
                                         settingName = stringResource(SharedRes.strings.theme_color),
                                         currentValue = uiState.appTheme,
                                         options = uiState.appThemes!!,
@@ -176,6 +175,28 @@ class SettingScreen : Screen {
 
                             // 关于信息部分
                             AboutSection()
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            //the Log out
+
+                            Button(
+                                onClick = {
+                                    viewModel.handleIntent(SettingIntent.LogOut)
+
+                                    rootNavigator.replaceAll(
+                                        OnboardingStep3Login()
+                                    )
+
+                                },
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                                colors = ButtonDefaults.textButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.8f),
+                                    contentColor = MaterialTheme.colorScheme.onError
+                                )
+                            ) {
+                                Text(stringResource(SharedRes.strings.logout))
+                            }
                         }
                     }
                 }

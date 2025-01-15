@@ -47,7 +47,7 @@ fun ApplicationInitializer.initSession(
 
             val autoCloudSyncEnabled = userPreferenceRepository.getAutoCloudSyncEnabled()
 
-            if (autoCloudSyncEnabled) {
+            if (autoCloudSyncEnabled && hasUserLoggedInBefore) {
                 val syncDateUseCase = getKoinInstance<SyncDataUseCase>()
                 syncDateUseCase()
             }

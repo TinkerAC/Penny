@@ -15,4 +15,5 @@ sealed class SettingIntent {
     data object HideColorPicker : SettingIntent()
     data class SetLanguage(val language: Language) : SettingIntent()
     data object ToggleAutoCloudSync : SettingIntent()
+    data object LogOut : SettingIntent()
 }
